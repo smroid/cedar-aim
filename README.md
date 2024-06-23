@@ -1,4 +1,4 @@
-# Cedar-aim
+# cedar-aim
 
 Cedar aim is a flutter app that provides a user interface to the Cedar plate solving telescope e-finder system.
 
