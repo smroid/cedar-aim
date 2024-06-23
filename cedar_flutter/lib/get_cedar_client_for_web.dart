@@ -1,3 +1,6 @@
+// Copyright (c) 2024 Steven Rosenthal smr@dt3.org
+// See LICENSE file in root directory for license terms.
+
 import 'dart:html';
 
 import 'package:cedar_flutter/cedar.pbgrpc.dart';
