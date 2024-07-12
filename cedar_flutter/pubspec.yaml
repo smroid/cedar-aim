@@ -228,3 +228,13 @@ flutter:
         - asset: fonts/RobotoMono.ttf
         - asset: fonts/RobotoMono-Italic.ttf
           style: italic
+    - family: Roboto
+      fonts:
+        - asset: fonts/Roboto-Regular.ttf
+        - asset: fonts/Roboto-Italic.ttf
+          style: italic
+        - asset: fonts/Roboto-Bold.ttf
+          weight: 700
+    - family: NotoSansSymbols
+      fonts:
+        - asset: fonts/static/NotoSansSymbols-Regular.ttf
