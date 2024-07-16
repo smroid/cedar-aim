@@ -11,9 +11,17 @@ CedarClient getClient() {
 }
 
 void goFullScreen() {
-  document.documentElement?.requestFullscreen();
+  try {
+    document.documentElement?.requestFullscreen();
+  } catch (e) {
+    print('Could not call requestFullscreen: $e');
+  }
 }
 
 void cancelFullScreen() {
-  document.exitFullscreen();
+  try {
+    document.exitFullscreen();
+  } catch (e) {
+    print('Could not call exitFullscreen: $e');
+  }
 }
