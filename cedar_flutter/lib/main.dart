@@ -296,6 +296,7 @@ class MyHomePageState extends State<MyHomePage> {
   SlewRequest? _slewRequest;
   Preferences? _preferences;
   PolarAlignAdvice? _polarAlignAdvice;
+  List<FovCatalogEntry>? _fovCatalogEntries;
 
   // Calibration happens when _setupMode transitions to false.
   bool _calibrating = false;
@@ -368,6 +369,7 @@ class MyHomePageState extends State<MyHomePage> {
     }
     _preferences = response.preferences;
     _polarAlignAdvice = response.polarAlignAdvice;
+    _fovCatalogEntries = response.catalogEntries;
     var settingsModel = Provider.of<SettingsModel>(context, listen: false);
     settingsModel.preferencesProto = _preferences!.deepCopy();
     settingsModel.opSettingsProto = _operationSettings!.deepCopy();
