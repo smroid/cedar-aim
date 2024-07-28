@@ -657,12 +657,12 @@ class MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  List<Widget> drawerControls() {
+  List<Widget> drawerControls(BuildContext context) {
     return <Widget>[
       CloseButton(
           style: ButtonStyle(
               alignment: Alignment.topLeft,
-              iconColor: MaterialStatePropertyAll(
+              iconColor: WidgetStatePropertyAll(
                   Theme.of(context).colorScheme.primary))),
       const SizedBox(height: 15),
       Column(
@@ -754,9 +754,11 @@ class MyHomePageState extends State<MyHomePage> {
             child: const Text("Show server log"),
             onPressed: () async {
               var logs = await getServerLogs();
-              // ignore: use_build_context_synchronously
-              showDialog(
-                  context: context, builder: (context) => ServerLogPopUp(logs));
+              if (context.mounted) {
+                showDialog(
+                    context: context,
+                    builder: (context) => ServerLogPopUp(logs));
+              }
             }),
       ]),
       const SizedBox(height: 15),
@@ -1213,8 +1215,8 @@ class MyHomePageState extends State<MyHomePage> {
       },
       drawer: Drawer(
           width: 200,
-          child:
-              ListView(padding: EdgeInsets.zero, children: drawerControls())),
+          child: ListView(
+              padding: EdgeInsets.zero, children: drawerControls(context))),
       drawerEdgeDragWidth: 100,
     );
   }
