@@ -3,6 +3,7 @@
 
 import 'dart:developer';
 import 'dart:math' as math;
+import 'package:cedar_flutter/draw_catalog_entries.dart';
 import 'package:cedar_flutter/draw_slew_target.dart';
 import 'package:cedar_flutter/draw_util.dart';
 import 'package:cedar_flutter/exp_values.dart';
@@ -124,6 +125,9 @@ class _MainImagePainter extends CustomPainter {
       }
     }
 
+    final portrait =
+        MediaQuery.of(_context).orientation == Orientation.portrait;
+
     // How many display pixels is the telescope FOV?
     var scopeFov = 0.0;
     if (!state._setupMode && state._hasSolution) {
@@ -138,8 +142,6 @@ class _MainImagePainter extends CustomPainter {
         posInImage = Offset(slew.imagePos.x / state._binFactor,
             slew.imagePos.y / state._binFactor);
       }
-      final portrait =
-          MediaQuery.of(_context).orientation == Orientation.portrait;
       drawSlewTarget(
           canvas,
           color,
@@ -175,6 +177,12 @@ class _MainImagePainter extends CustomPainter {
         drawBullseye(canvas, color, state._boresightPosition, scopeFov / 2,
             rollAngleRad);
       }
+    }
+    if (!state._setupMode &&
+        state._fovCatalogEntries.isNotEmpty &&
+        state._slewRequest == null) {
+      drawCatalogEntries(
+          canvas, color, state._fovCatalogEntries, state._binFactor, portrait);
     }
   }
 
@@ -296,7 +304,7 @@ class MyHomePageState extends State<MyHomePage> {
   SlewRequest? _slewRequest;
   Preferences? _preferences;
   PolarAlignAdvice? _polarAlignAdvice;
-  List<FovCatalogEntry>? _fovCatalogEntries;
+  List<FovCatalogEntry> _fovCatalogEntries = List.empty();
 
   // Calibration happens when _setupMode transitions to false.
   bool _calibrating = false;

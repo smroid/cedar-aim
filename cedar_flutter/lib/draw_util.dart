@@ -81,6 +81,7 @@ void drawGapCross(
         ..strokeWidth = thickness);
 }
 
+// Draw the text centered at `pos`.
 void drawText(
     Canvas canvas, Color color, Offset pos, String text, bool portrait) {
   final textPainter = TextPainter(
@@ -88,14 +89,20 @@ void drawText(
       textDirection: TextDirection.ltr,
       textAlign: TextAlign.center);
   textPainter.layout();
-  final pivot = textPainter.size.center(pos);
+  // The textPainter.paint() call puts the upper left corner of the text at the
+  // passed pos. Adjust the pos passed to textPainter.paint() so that the center
+  // of the next will be at pos.
+  Size textSize = textPainter.size;
+  final adjustedPos =
+      Offset(pos.dx - textSize.width / 2, pos.dy - textSize.height / 2);
+  final pivot = textPainter.size.center(adjustedPos);
   if (portrait) {
     canvas.save();
     canvas.translate(pivot.dx, pivot.dy);
     canvas.rotate(-pi / 2);
     canvas.translate(-pivot.dx, -pivot.dy);
   }
-  textPainter.paint(canvas, pos);
+  textPainter.paint(canvas, adjustedPos);
   if (portrait) {
     canvas.restore();
   }
