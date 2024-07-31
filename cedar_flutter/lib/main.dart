@@ -258,9 +258,11 @@ class MyHomePageState extends State<MyHomePage> {
   late Rect _fullResImageRegion;
   int _binFactor = 1;
 
+  ServerInformation? _serverInformation;
   OperationSettings? _operationSettings;
   bool _setupMode = false;
   bool _canAlign = false;
+  bool _hasCedarSky = false;
 
   int _accuracy = 2; // 1-3.
 
@@ -370,6 +372,8 @@ class MyHomePageState extends State<MyHomePage> {
     } else {
       Provider.of<ThemeModel>(context, listen: false).setNormalTheme();
     }
+    _serverInformation = response.serverInformation;
+    _hasCedarSky = _serverInformation!.featureLevel != FeatureLevel.DIY;
     _setStateFromOpSettings(response.operationSettings);
     _canAlign = false;
     if (_setupMode) {
@@ -595,10 +599,10 @@ class MyHomePageState extends State<MyHomePage> {
   }
 
   Future<String> getServerLogs() async {
-    var request = ServerInformationRequest();
+    var request = ServerLogRequest();
     request.logRequest = 20000;
     try {
-      var infoResult = await client().getServerInformation(request,
+      var infoResult = await client().getServerLog(request,
           options: CallOptions(timeout: const Duration(seconds: 10)));
       return infoResult.logContent;
     } catch (e) {
@@ -838,16 +842,21 @@ class MyHomePageState extends State<MyHomePage> {
       RotatedBox(
           quarterTurns: portrait ? 3 : 0,
           child: SizedBox(
-            width: 120,
-            height: 32,
-            child: _slewRequest != null && !_setupMode
-                ? OutlinedButton(
-                    child: const Text("End goto"),
-                    onPressed: () {
-                      stopSlew();
-                    })
-                : Container(),
-          )),
+              width: 120,
+              height: 32,
+              child: _slewRequest != null && !_setupMode
+                  ? OutlinedButton(
+                      child: const Text("End goto"),
+                      onPressed: () {
+                        stopSlew();
+                      })
+                  : (_slewRequest == null && !_setupMode && _hasCedarSky
+                      ? OutlinedButton(
+                          child: const Text("Catalog"),
+                          onPressed: () {
+                            // TODO
+                          })
+                      : Container()))),
     ];
   }
 
