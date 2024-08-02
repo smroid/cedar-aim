@@ -3,6 +3,7 @@
 
 import 'dart:developer';
 import 'dart:math' as math;
+import 'package:cedar_flutter/catalog_browser.dart';
 import 'package:cedar_flutter/draw_catalog_entries.dart';
 import 'package:cedar_flutter/draw_slew_target.dart';
 import 'package:cedar_flutter/draw_util.dart';
@@ -854,7 +855,7 @@ class MyHomePageState extends State<MyHomePage> {
                       ? OutlinedButton(
                           child: const Text("Catalog"),
                           onPressed: () {
-                            // TODO
+                            showCatalogBrowser(context);
                           })
                       : Container()))),
     ];
