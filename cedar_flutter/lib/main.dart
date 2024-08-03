@@ -787,6 +787,9 @@ class MyHomePageState extends State<MyHomePage> {
 
   List<Widget> controls() {
     final portrait = MediaQuery.of(context).orientation == Orientation.portrait;
+    bool hideAppBar = Provider.of<SettingsModel>(context, listen: false)
+        .preferencesProto
+        .hideAppBar;
     return <Widget>[
       // Fake widget to consume changes to preferences and issue RPC to the
       // server.
@@ -807,57 +810,61 @@ class MyHomePageState extends State<MyHomePage> {
           return Container();
         },
       ),
+      portrait && hideAppBar
+          ? const SizedBox(width: 0, height: 40)
+          : Container(),
       RotatedBox(
           quarterTurns: portrait ? 3 : 0,
-          child: Column(children: <Widget>[
-            Row(children: <Widget>[
-              primaryText("Setup"),
-              Switch(
-                  value: !_setupMode,
-                  onChanged: (bool value) {
-                    setState(() {
-                      if (!value) {
-                        _transitionToSetup = true;
-                      }
-                      setOperatingMode(/*setup=*/ !value);
-                    });
-                  }),
-              primaryText("Aim"),
-            ])
+          child: Row(children: <Widget>[
+            primaryText("Setup"),
+            Switch(
+                value: !_setupMode,
+                onChanged: (bool value) {
+                  setState(() {
+                    if (!value) {
+                      _transitionToSetup = true;
+                    }
+                    setOperatingMode(/*setup=*/ !value);
+                  });
+                }),
+            primaryText("Aim"),
           ])),
-      const SizedBox(width: 15, height: 15),
+      const SizedBox(width: 0, height: 15),
       RotatedBox(
           quarterTurns: portrait ? 3 : 0,
           child: SizedBox(
-            width: 120,
+            width: 100,
             height: 32,
             child: _canAlign
                 ? OutlinedButton(
-                    child: const Text("Set Align"),
+                    child:
+                        const Text(style: TextStyle(fontSize: 12), "Set Align"),
                     onPressed: () {
                       captureBoresight();
                     })
-                : Container(),
+                : (_slewRequest == null && !_setupMode && _hasCedarSky
+                    ? OutlinedButton(
+                        child: const Text(
+                            style: TextStyle(fontSize: 12), "Catalog"),
+                        onPressed: () {
+                          showCatalogBrowser(context);
+                        })
+                    : Container()),
           )),
-      const SizedBox(width: 15, height: 15),
+      const SizedBox(width: 0, height: 15),
       RotatedBox(
           quarterTurns: portrait ? 3 : 0,
           child: SizedBox(
-              width: 120,
+              width: 100,
               height: 32,
               child: _slewRequest != null && !_setupMode
                   ? OutlinedButton(
-                      child: const Text("End goto"),
+                      child: const Text(
+                          style: TextStyle(fontSize: 12), "End goto"),
                       onPressed: () {
                         stopSlew();
                       })
-                  : (_slewRequest == null && !_setupMode && _hasCedarSky
-                      ? OutlinedButton(
-                          child: const Text("Catalog"),
-                          onPressed: () {
-                            showCatalogBrowser(context);
-                          })
-                      : Container()))),
+                  : Container())),
     ];
   }
 
@@ -942,8 +949,11 @@ class MyHomePageState extends State<MyHomePage> {
   }
 
   Text primaryText(String val) {
-    return Text(val,
-        style: TextStyle(color: Theme.of(context).colorScheme.primary));
+    return Text(
+      val,
+      style:
+          TextStyle(color: Theme.of(context).colorScheme.primary, fontSize: 12),
+    );
   }
 
   Text solveText(String val) {
@@ -996,6 +1006,7 @@ class MyHomePageState extends State<MyHomePage> {
                   height: 120,
                   child: Column(
                     children: <Widget>[
+                      const SizedBox(width: 0, height: 15),
                       primaryText("Aim"),
                       solveText(
                           sprintf("%s", [formatRightAscension(_solutionRA)])),
@@ -1184,10 +1195,11 @@ class MyHomePageState extends State<MyHomePage> {
       quarterTurns: portrait ? 1 : 0,
       child: Row(
         children: <Widget>[
-          Column(children: controls()),
-          const SizedBox(width: 15, height: 15),
+          Column(
+              children: portrait ? controls().reversed.toList() : controls()),
+          const SizedBox(width: 10, height: 0),
           imageStack(context),
-          const SizedBox(width: 15, height: 15),
+          const SizedBox(width: 0, height: 0),
           Column(children: dataItems(context)),
         ],
       ),
@@ -1217,7 +1229,7 @@ class MyHomePageState extends State<MyHomePage> {
           foregroundColor: Theme.of(context).colorScheme.primary),
       body: Stack(children: [
         Positioned(
-            left: 8,
+            left: 0,
             top: 0,
             child: hideAppBar
                 ? IconButton(
