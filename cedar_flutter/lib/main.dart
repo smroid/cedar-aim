@@ -260,7 +260,7 @@ class MyHomePageState extends State<MyHomePage> {
   int _binFactor = 1;
 
   ServerInformation? _serverInformation;
-  OperationSettings? _operationSettings;
+  var operationSettings = OperationSettings();
   bool _setupMode = false;
   bool _canAlign = false;
   bool _hasCedarSky = false;
@@ -319,7 +319,7 @@ class MyHomePageState extends State<MyHomePage> {
   bool _transitionToSetup = false;
 
   // Values set from on-screen controls.
-  bool _doRefreshes = true;
+  bool doRefreshes = true;
   int _expSettingMs = 0; // 0 is auto-exposure.
 
   CedarClient? _client;
@@ -341,7 +341,7 @@ class MyHomePageState extends State<MyHomePage> {
   Duration get tzOffset => _tzOffset;
 
   void _setStateFromOpSettings(OperationSettings opSettings) {
-    _operationSettings = opSettings;
+    operationSettings = opSettings;
     _accuracy = opSettings.accuracy.value;
     _expSettingMs = _durationToMs(opSettings.exposureTime).toInt();
     _setupMode = opSettings.operatingMode == OperatingMode.SETUP;
@@ -385,7 +385,7 @@ class MyHomePageState extends State<MyHomePage> {
     _fovCatalogEntries = response.catalogEntries;
     var settingsModel = Provider.of<SettingsModel>(context, listen: false);
     settingsModel.preferencesProto = _preferences!.deepCopy();
-    settingsModel.opSettingsProto = _operationSettings!.deepCopy();
+    settingsModel.opSettingsProto = operationSettings.deepCopy();
     _calibrationData =
         response.hasCalibrationData() ? response.calibrationData : null;
     _processingStats =
@@ -531,11 +531,11 @@ class MyHomePageState extends State<MyHomePage> {
 
     await Future.doWhile(() async {
       var delay = 100;
-      if (_setupMode && !_calibrating && _doRefreshes) {
+      if (_setupMode && !_calibrating && doRefreshes) {
         delay = 10; // Fast updates for focusing.
       }
       await Future.delayed(Duration(milliseconds: delay));
-      if (_doRefreshes) {
+      if (doRefreshes) {
         await getFrameFromServer();
       }
       return true; // Forever!
@@ -803,8 +803,7 @@ class MyHomePageState extends State<MyHomePage> {
           }
           final newOpSettings = settings.opSettingsProto;
           var opSettingsDiff = newOpSettings.deepCopy();
-          if (_operationSettings != null &&
-              diffOperationSettings(_operationSettings!, opSettingsDiff)) {
+          if (diffOperationSettings(operationSettings, opSettingsDiff)) {
             updateOperationSettings(opSettingsDiff);
           }
           return Container();
@@ -847,7 +846,7 @@ class MyHomePageState extends State<MyHomePage> {
                         child: const Text(
                             style: TextStyle(fontSize: 12), "Catalog"),
                         onPressed: () {
-                          showCatalogBrowser(context);
+                          showCatalogBrowser(context, this, portrait);
                         })
                     : Container()),
           )),
@@ -1241,7 +1240,7 @@ class MyHomePageState extends State<MyHomePage> {
         FittedBox(child: orientationLayout(context)),
       ]),
       onDrawerChanged: (isOpened) {
-        _doRefreshes = !isOpened;
+        doRefreshes = !isOpened;
       },
       drawer: Drawer(
           width: 200,
