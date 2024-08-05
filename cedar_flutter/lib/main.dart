@@ -621,14 +621,14 @@ class MyHomePageState extends State<MyHomePage> {
           content: const Text('Shutdown Raspberry Pi?'),
           actions: <Widget>[
             TextButton(
-                child: const Text('Shutdown'),
+                child: const Text('Cancel'),
                 onPressed: () {
-                  shutdown();
                   Navigator.of(context).pop();
                 }),
             TextButton(
-                child: const Text('Cancel'),
+                child: const Text('Shutdown'),
                 onPressed: () {
+                  shutdown();
                   Navigator.of(context).pop();
                 }),
           ],
@@ -1002,7 +1002,7 @@ class MyHomePageState extends State<MyHomePage> {
               ? Container()
               : SizedBox(
                   width: 120,
-                  height: 120,
+                  height: 160,
                   child: Column(
                     children: <Widget>[
                       const SizedBox(width: 0, height: 15),
