@@ -191,7 +191,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ]),
                   title: Text(prefsProto.celestialCoordFormat ==
                           CelestialCoordFormat.HMS_DMS
-                      ? 'RA/Dec format H.M.S/D.M.S'
+                      ? 'RA/Dec format H:M:S/D:M:S'
                       : 'RA/Dec format D.DD/D.DD'),
                 ),
                 SettingsTile(

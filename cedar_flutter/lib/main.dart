@@ -876,7 +876,7 @@ class MyHomePageState extends State<MyHomePage> {
     int minutes = (fracHours * 60.0).floor();
     double fracMinutes = fracHours * 60.0 - minutes;
     int seconds = (fracMinutes * 60).round();
-    return sprintf("RA %02dh %02dm %02ds", [hours, minutes, seconds]);
+    return sprintf("RA %02d:%02d:%02d", [hours, minutes, seconds]);
   }
 
   String formatHourAngle(double ha) {
@@ -892,7 +892,7 @@ class MyHomePageState extends State<MyHomePage> {
     int minutes = (fracHours * 60.0).floor();
     double fracMinutes = fracHours * 60.0 - minutes;
     int seconds = (fracMinutes * 60).round();
-    return sprintf("HA %s%02dh %02dm %02ds", [sign, hours, minutes, seconds]);
+    return sprintf("HA %s%02d:%02d:%02d", [sign, hours, minutes, seconds]);
   }
 
   String formatDeclination(double dec) {
@@ -908,12 +908,11 @@ class MyHomePageState extends State<MyHomePage> {
     int minutes = (fracDegrees * 60.0).floor();
     double fracMinutes = fracDegrees * 60.0 - minutes;
     int seconds = (fracMinutes * 60).round();
-    return sprintf(
-        "Dec %s%02d° %02d' %02d''", [sign, degrees, minutes, seconds]);
+    return sprintf("Dec %s%02d:%02d:%02d", [sign, degrees, minutes, seconds]);
   }
 
   String formatAltitude(double alt) {
-    return sprintf("Alt %.3f°", [alt]);
+    return sprintf("Alt %.2f°", [alt]);
   }
 
   String formatAzimuth(double az) {
@@ -928,7 +927,7 @@ class MyHomePageState extends State<MyHomePage> {
       >= 270 + 22.5 && < 315 + 22.5 => "NW",
       double() => "??",
     };
-    return sprintf("Az %.3f° %s", [az, dir]);
+    return sprintf("Az %.2f° %s", [az, dir]);
   }
 
   String formatAdvice(ErrorBoundedValue? ebv) {

@@ -3,6 +3,7 @@
 
 import 'dart:math' as math;
 import 'dart:math';
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:sprintf/sprintf.dart';
 
@@ -230,4 +231,116 @@ void drawSlewDirections(
   if (portrait) {
     canvas.restore();
   }
+}
+
+void drawObjectSymbol(Canvas canvas, Color color, Offset pos, String label,
+    String broadCategory) {
+  switch (broadCategory) {
+    case "star":
+      drawStar(canvas, color, pos);
+      break;
+    case "galaxy":
+      drawGalaxy(canvas, color, pos);
+      break;
+    case "cluster":
+      drawCluster(canvas, color, pos);
+      break;
+    case "nebula":
+      drawNebula(canvas, color, pos);
+      break;
+    // TODO: planet, asteroid, comet
+    default:
+      canvas.drawCircle(
+          pos,
+          3,
+          Paint()
+            ..color = color
+            ..strokeWidth = 0.5
+            ..style = PaintingStyle.stroke);
+      break;
+  }
+}
+
+void drawStar(Canvas canvas, Color color, Offset pos) {
+  // Fudge factor for character shape offset.
+  pos = Offset(pos.dx, pos.dy - 1);
+  drawText(canvas, color, pos, "☆", false); // Nifty cheat!
+}
+
+void drawGalaxy(Canvas canvas, Color color, Offset pos) {
+  // Fudge factor for character shape offset.
+  pos = Offset(pos.dx, pos.dy - 0.5);
+  drawText(canvas, color, pos, "⬭", false); // Nifty cheat!
+}
+
+void drawNebula(Canvas canvas, Color color, Offset pos) {
+  final paint = Paint()
+    ..color = color
+    ..strokeWidth = 0.75
+    ..style = PaintingStyle.stroke;
+
+  final unitNebulaPoints = [
+    const Offset(-0.37, -0.35),
+    const Offset(-0.25, -0.45),
+    const Offset(0.1, -0.35),
+    const Offset(0.25, -0.5),
+    const Offset(0.35, -0.5),
+    //
+    const Offset(0.5, -0.25),
+    const Offset(0.4, 0),
+    const Offset(0.5, 0.25),
+    const Offset(0.35, 0.45),
+    //
+    const Offset(0.25, 0.5),
+    const Offset(0, 0.37),
+    const Offset(-0.25, 0.5),
+    const Offset(-0.35, 0.5),
+    //
+    const Offset(-0.5, 0.25),
+    const Offset(-0.39, 0),
+    const Offset(-0.5, -0.25),
+  ];
+  final numPoints = unitNebulaPoints.length;
+  final nebulaPoints = unitNebulaPoints.map((point) => point * 8).toList();
+  final path = Path();
+  path.moveTo(pos.dx + nebulaPoints[numPoints - 1].dx,
+      pos.dy + nebulaPoints[numPoints - 1].dy);
+  for (final point in nebulaPoints) {
+    path.lineTo(pos.dx + point.dx, pos.dy + point.dy);
+  }
+  path.close();
+  canvas.drawPath(path, paint);
+}
+
+List<Offset>? unitClusterPoints;
+
+void drawCluster(Canvas canvas, Color color, Offset pos) {
+  final paint = Paint()
+    ..color = color
+    ..strokeWidth = 1.0
+    ..style = PaintingStyle.stroke;
+  unitClusterPoints ??= generateGaussianOffsets(15, 2.5);
+  final clusterPoints = unitClusterPoints!
+      .map((point) => Offset(pos.dx + point.dx, pos.dy + point.dy))
+      .toList();
+  canvas.drawPoints(PointMode.points, clusterPoints, paint);
+}
+
+List<Offset> generateGaussianOffsets(int count, double standardDeviation) {
+  final random = Random(5);
+  final offsets = <Offset>[];
+  for (var i = 0; i < count; i++) {
+    final x = nextGaussian(random) * standardDeviation;
+    final y = nextGaussian(random) * standardDeviation;
+    offsets.add(Offset(x, y));
+  }
+  return offsets;
+}
+
+double nextGaussian(Random random) {
+  // Box-Muller transform
+  var u1 = random.nextDouble();
+  var u2 = random.nextDouble();
+  var z0 = sqrt(-2.0 * log(u1)) * cos(2 * pi * u2);
+  return z0;
 }
