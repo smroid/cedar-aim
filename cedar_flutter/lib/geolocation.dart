@@ -3,7 +3,7 @@
 
 import 'dart:developer';
 
-import 'package:cedar_flutter/main.dart';
+import 'package:cedar_flutter/client_main.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter_map/flutter_map.dart';
