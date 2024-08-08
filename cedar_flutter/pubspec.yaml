@@ -69,6 +69,7 @@ flutter:
   # the material Icons class.
   uses-material-design: true
 
+  # Note: these are duplicated to the hopper-aim project.
   assets:
     - assets/tiles/0/0/
     - assets/tiles/1/0/

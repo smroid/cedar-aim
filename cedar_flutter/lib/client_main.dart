@@ -192,11 +192,10 @@ class _MainImagePainter extends CustomPainter {
     }
     if (!state._setupMode &&
         state._fovCatalogEntries.isNotEmpty &&
-        state._slewRequest == null) {
-      if (_drawCatalogEntries != null) {
-        _drawCatalogEntries!(canvas, color, state._fovCatalogEntries,
-            state._binFactor, portrait);
-      }
+        state._slewRequest == null &&
+        _drawCatalogEntries != null) {
+      _drawCatalogEntries!(
+          canvas, color, state._fovCatalogEntries, state._binFactor, portrait);
     }
   }
 
