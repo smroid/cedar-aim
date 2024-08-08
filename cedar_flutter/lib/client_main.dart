@@ -627,7 +627,6 @@ class MyHomePageState extends State<MyHomePage> {
   void shutdownDialog() {
     showDialog(
       context: context,
-      barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
           content: const Text('Shutdown Raspberry Pi?'),
