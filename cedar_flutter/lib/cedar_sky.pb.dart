@@ -28,6 +28,7 @@ class QueryCatalogRequest extends $pb.GeneratedMessage {
     $core.double? decrowdDistance,
     Ordering? ordering,
     $core.int? limitResult,
+    $core.String? textSearch,
   }) {
     final $result = create();
     if (catalogEntryMatch != null) {
@@ -48,6 +49,9 @@ class QueryCatalogRequest extends $pb.GeneratedMessage {
     if (limitResult != null) {
       $result.limitResult = limitResult;
     }
+    if (textSearch != null) {
+      $result.textSearch = textSearch;
+    }
     return $result;
   }
   QueryCatalogRequest._() : super();
@@ -61,6 +65,7 @@ class QueryCatalogRequest extends $pb.GeneratedMessage {
     ..a<$core.double>(5, _omitFieldNames ? '' : 'decrowdDistance', $pb.PbFieldType.OD)
     ..e<Ordering>(6, _omitFieldNames ? '' : 'ordering', $pb.PbFieldType.OE, defaultOrMaker: Ordering.UNSPECIFIED, valueOf: Ordering.valueOf, enumValues: Ordering.values)
     ..a<$core.int>(7, _omitFieldNames ? '' : 'limitResult', $pb.PbFieldType.O3)
+    ..aOS(8, _omitFieldNames ? '' : 'textSearch')
     ..hasRequiredFields = false
   ;
 
@@ -149,6 +154,20 @@ class QueryCatalogRequest extends $pb.GeneratedMessage {
   $core.bool hasLimitResult() => $_has(5);
   @$pb.TagNumber(7)
   void clearLimitResult() => clearField(7);
+
+  /// If given, applies a text match as an additional constraint. The server
+  /// canonicalizes the given string, removing dangerous characters, tokenizing
+  /// it, etc. Each token is treated as a prefix search term, and multiple
+  /// token terms are combined with implicit AND; order is not significant.
+  /// Thus, |andr gal| and |gal andr| both match "Andromeda Galaxy".
+  @$pb.TagNumber(8)
+  $core.String get textSearch => $_getSZ(6);
+  @$pb.TagNumber(8)
+  set textSearch($core.String v) { $_setString(6, v); }
+  @$pb.TagNumber(8)
+  $core.bool hasTextSearch() => $_has(6);
+  @$pb.TagNumber(8)
+  void clearTextSearch() => clearField(8);
 }
 
 /// Specifies what intrinsic criteria to apply when matching catalog entries.

@@ -881,7 +881,7 @@ class MyHomePageState extends State<MyHomePage> {
     ];
   }
 
-  String formatRightAscension(double ra) {
+  String formatRightAscension(double ra, {bool short = false}) {
     if (_preferences?.celestialCoordFormat == CelestialCoordFormat.DECIMAL) {
       return sprintf("RA %.4f°", [ra]);
     }
@@ -890,7 +890,9 @@ class MyHomePageState extends State<MyHomePage> {
     int minutes = (fracHours * 60.0).floor();
     double fracMinutes = fracHours * 60.0 - minutes;
     int seconds = (fracMinutes * 60).round();
-    return sprintf("RA %02d:%02d:%02d", [hours, minutes, seconds]);
+    return short
+        ? sprintf("RA %02d:%02d", [hours, minutes])
+        : sprintf("RA %02d:%02d:%02d", [hours, minutes, seconds]);
   }
 
   String formatHourAngle(double ha) {
@@ -909,7 +911,7 @@ class MyHomePageState extends State<MyHomePage> {
     return sprintf("HA %s%02d:%02d:%02d", [sign, hours, minutes, seconds]);
   }
 
-  String formatDeclination(double dec) {
+  String formatDeclination(double dec, {bool short = false}) {
     if (_preferences?.celestialCoordFormat == CelestialCoordFormat.DECIMAL) {
       return sprintf("Dec %.4f°", [dec]);
     }
@@ -922,14 +924,18 @@ class MyHomePageState extends State<MyHomePage> {
     int minutes = (fracDegrees * 60.0).floor();
     double fracMinutes = fracDegrees * 60.0 - minutes;
     int seconds = (fracMinutes * 60).round();
-    return sprintf("Dec %s%02d:%02d:%02d", [sign, degrees, minutes, seconds]);
+    return short
+        ? sprintf("Dec %s%02d:%02d", [sign, degrees, minutes])
+        : sprintf("Dec %s%02d:%02d:%02d", [sign, degrees, minutes, seconds]);
   }
 
-  String formatAltitude(double alt) {
-    return sprintf("Alt %.2f°", [alt]);
+  String formatAltitude(double alt, {bool short = false}) {
+    return short
+        ? sprintf("Alt %d°", [alt.round()])
+        : sprintf("Alt %.2f°", [alt]);
   }
 
-  String formatAzimuth(double az) {
+  String formatAzimuth(double az, {bool short = false}) {
     final String dir = switch (az) {
       >= 360 - 22.5 || < 22.5 => "N",
       >= 22.5 && < 45 + 22.5 => "NE",
@@ -941,7 +947,9 @@ class MyHomePageState extends State<MyHomePage> {
       >= 270 + 22.5 && < 315 + 22.5 => "NW",
       double() => "??",
     };
-    return sprintf("Az %.2f° %s", [az, dir]);
+    return short
+        ? sprintf("Az %d° %s", [az.round(), dir])
+        : sprintf("Az %.2f° %s", [az, dir]);
   }
 
   String formatAdvice(ErrorBoundedValue? ebv) {

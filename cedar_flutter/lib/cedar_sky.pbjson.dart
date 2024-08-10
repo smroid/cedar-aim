@@ -39,6 +39,7 @@ const QueryCatalogRequest$json = {
     {'1': 'decrowd_distance', '3': 5, '4': 1, '5': 1, '9': 2, '10': 'decrowdDistance', '17': true},
     {'1': 'ordering', '3': 6, '4': 1, '5': 14, '6': '.cedar_sky.Ordering', '9': 3, '10': 'ordering', '17': true},
     {'1': 'limit_result', '3': 7, '4': 1, '5': 5, '9': 4, '10': 'limitResult', '17': true},
+    {'1': 'text_search', '3': 8, '4': 1, '5': 9, '9': 5, '10': 'textSearch', '17': true},
   ],
   '8': [
     {'1': '_max_distance'},
@@ -46,6 +47,7 @@ const QueryCatalogRequest$json = {
     {'1': '_decrowd_distance'},
     {'1': '_ordering'},
     {'1': '_limit_result'},
+    {'1': '_text_search'},
   ],
 };
 
@@ -56,9 +58,10 @@ final $typed_data.Uint8List queryCatalogRequestDescriptor = $convert.base64Decod
     'YW5jZRgCIAEoAUgAUgttYXhEaXN0YW5jZYgBARIoCg1taW5fZWxldmF0aW9uGAMgASgBSAFSDG'
     '1pbkVsZXZhdGlvbogBARIuChBkZWNyb3dkX2Rpc3RhbmNlGAUgASgBSAJSD2RlY3Jvd2REaXN0'
     'YW5jZYgBARI0CghvcmRlcmluZxgGIAEoDjITLmNlZGFyX3NreS5PcmRlcmluZ0gDUghvcmRlcm'
-    'luZ4gBARImCgxsaW1pdF9yZXN1bHQYByABKAVIBFILbGltaXRSZXN1bHSIAQFCDwoNX21heF9k'
-    'aXN0YW5jZUIQCg5fbWluX2VsZXZhdGlvbkITChFfZGVjcm93ZF9kaXN0YW5jZUILCglfb3JkZX'
-    'JpbmdCDwoNX2xpbWl0X3Jlc3VsdA==');
+    'luZ4gBARImCgxsaW1pdF9yZXN1bHQYByABKAVIBFILbGltaXRSZXN1bHSIAQESJAoLdGV4dF9z'
+    'ZWFyY2gYCCABKAlIBVIKdGV4dFNlYXJjaIgBAUIPCg1fbWF4X2Rpc3RhbmNlQhAKDl9taW5fZW'
+    'xldmF0aW9uQhMKEV9kZWNyb3dkX2Rpc3RhbmNlQgsKCV9vcmRlcmluZ0IPCg1fbGltaXRfcmVz'
+    'dWx0Qg4KDF90ZXh0X3NlYXJjaA==');
 
 @$core.Deprecated('Use catalogEntryMatchDescriptor instead')
 const CatalogEntryMatch$json = {
