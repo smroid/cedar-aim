@@ -3,6 +3,8 @@
 
 import 'dart:developer';
 import 'dart:math' as math;
+import 'package:cedar_flutter/cedar.pb.dart' as cedar_proto;
+import 'package:cedar_flutter/cedar_sky.pb.dart';
 import 'package:cedar_flutter/draw_slew_target.dart';
 import 'package:cedar_flutter/draw_util.dart';
 import 'package:cedar_flutter/exp_values.dart';
@@ -35,13 +37,20 @@ typedef DrawCatalogEntriesFunction = void Function(
 typedef ShowCatalogBrowserFunction = void Function(
     BuildContext, MyHomePageState, bool);
 
+typedef ObjectInfoDialogFunction = void Function(
+    MyHomePageState, BuildContext, SelectedCatalogEntry);
+
 DrawCatalogEntriesFunction? _drawCatalogEntries;
 ShowCatalogBrowserFunction? _showCatalogBrowser;
+ObjectInfoDialogFunction? _objectInfoDialog;
 
-void clientMain(DrawCatalogEntriesFunction? drawCatalogEntries,
-    ShowCatalogBrowserFunction? showCatalogBrowser) {
+void clientMain(
+    DrawCatalogEntriesFunction? drawCatalogEntries,
+    ShowCatalogBrowserFunction? showCatalogBrowser,
+    ObjectInfoDialogFunction? objectInfoDialog) {
   _drawCatalogEntries = drawCatalogEntries;
   _showCatalogBrowser = showCatalogBrowser;
+  _objectInfoDialog = objectInfoDialog;
 
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations(
@@ -1117,8 +1126,29 @@ class MyHomePageState extends State<MyHomePage> {
     return ClipRect(
         child: CustomPaint(
       foregroundPainter: _MainImagePainter(this, context),
-      child: dart_widgets.Image.memory(_imageBytes, gaplessPlayback: true),
+      child: GestureDetector(
+          child: dart_widgets.Image.memory(_imageBytes, gaplessPlayback: true),
+          onTapDown: (TapDownDetails details) {
+            Offset localPosition = Offset(details.localPosition.dx * _binFactor,
+                details.localPosition.dy * _binFactor);
+            var object = _findObjectHit(localPosition, 30);
+            if (object != null && _objectInfoDialog != null) {
+              var selEntry = SelectedCatalogEntry(entry: object.entry);
+              _objectInfoDialog!(this, context, selEntry);
+            }
+          }),
     ));
+  }
+
+  FovCatalogEntry? _findObjectHit(Offset tapPosition, int tolerance) {
+    for (var entry in _fovCatalogEntries) {
+      cedar_proto.ImageCoord imagePos = entry.imagePos;
+      if ((imagePos.x - tapPosition.dx).abs() < tolerance &&
+          (imagePos.y - tapPosition.dy).abs() < tolerance) {
+        return entry;
+      }
+    }
+    return null;
   }
 
   Widget pacifier(BuildContext context, bool calibrating) {

@@ -4,5 +4,6 @@
 import 'package:cedar_flutter/client_main.dart';
 
 void main() {
-  clientMain(/*drawCatalogEntries=*/ null, /*showCatalogBrowser=*/ null);
+  clientMain(/*drawCatalogEntries=*/ null, /*showCatalogBrowser=*/ null,
+      /*objectInfoDialog=*/ null);
 }

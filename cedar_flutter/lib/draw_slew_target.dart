@@ -58,7 +58,7 @@ void drawSlewTarget(
     // Slew target is not in field of view. Draw an arrow pointing to it.
     // Make arrow length proportional to targetDistance (degrees, up to 180).
     final arrowLength =
-        math.min(150, 150 * math.sqrt(targetDistance / 180.0)).toDouble();
+        math.min(100, 100 * math.sqrt(targetDistance / 180.0)).toDouble();
     final arrowRoot = boresightDiameterPix;
     final angleRad = _deg2rad(targetAngle);
     final arrowStart = Offset(boresight.dx - arrowRoot * math.sin(angleRad),
