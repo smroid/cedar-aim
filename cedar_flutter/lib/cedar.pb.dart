@@ -1118,8 +1118,8 @@ class FrameResult extends $pb.GeneratedMessage {
   @$pb.TagNumber(23)
   void clearCalibrationProgress() => clearField(23);
 
-  /// If present, SkySafari is requesting that the telescope's pointing should be
-  /// changed.
+  /// If present, SkySafari or Cedar Sky is requesting that the telescope's
+  /// pointing should be changed.
   @$pb.TagNumber(24)
   SlewRequest get slewRequest => $_getN(17);
   @$pb.TagNumber(24)
@@ -2201,7 +2201,7 @@ class LocationBasedInfo extends $pb.GeneratedMessage {
   void clearHourAngle() => clearField(4);
 }
 
-/// Describes a telescope motion request from SkySafari.
+/// Describes a telescope motion request from SkySafari or Cedar Sky.
 class SlewRequest extends $pb.GeneratedMessage {
   factory SlewRequest({
     $0.CelestialCoord? target,
@@ -2211,6 +2211,8 @@ class SlewRequest extends $pb.GeneratedMessage {
     $core.double? offsetRotationAxis,
     $core.double? offsetTiltAxis,
     $core.bool? targetWithinCenterRegion,
+    $2.CatalogEntry? targetCatalogEntry,
+    $core.double? targetCatalogEntryDistance,
   }) {
     final $result = create();
     if (target != null) {
@@ -2234,6 +2236,12 @@ class SlewRequest extends $pb.GeneratedMessage {
     if (targetWithinCenterRegion != null) {
       $result.targetWithinCenterRegion = targetWithinCenterRegion;
     }
+    if (targetCatalogEntry != null) {
+      $result.targetCatalogEntry = targetCatalogEntry;
+    }
+    if (targetCatalogEntryDistance != null) {
+      $result.targetCatalogEntryDistance = targetCatalogEntryDistance;
+    }
     return $result;
   }
   SlewRequest._() : super();
@@ -2248,6 +2256,8 @@ class SlewRequest extends $pb.GeneratedMessage {
     ..a<$core.double>(5, _omitFieldNames ? '' : 'offsetRotationAxis', $pb.PbFieldType.OD)
     ..a<$core.double>(6, _omitFieldNames ? '' : 'offsetTiltAxis', $pb.PbFieldType.OD)
     ..aOB(7, _omitFieldNames ? '' : 'targetWithinCenterRegion')
+    ..aOM<$2.CatalogEntry>(8, _omitFieldNames ? '' : 'targetCatalogEntry', subBuilder: $2.CatalogEntry.create)
+    ..a<$core.double>(9, _omitFieldNames ? '' : 'targetCatalogEntryDistance', $pb.PbFieldType.OD)
     ..hasRequiredFields = false
   ;
 
@@ -2365,6 +2375,29 @@ class SlewRequest extends $pb.GeneratedMessage {
   $core.bool hasTargetWithinCenterRegion() => $_has(6);
   @$pb.TagNumber(7)
   void clearTargetWithinCenterRegion() => clearField(7);
+
+  /// The Cedar Sky catalog entry, if any, for `target`.
+  @$pb.TagNumber(8)
+  $2.CatalogEntry get targetCatalogEntry => $_getN(7);
+  @$pb.TagNumber(8)
+  set targetCatalogEntry($2.CatalogEntry v) { setField(8, v); }
+  @$pb.TagNumber(8)
+  $core.bool hasTargetCatalogEntry() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearTargetCatalogEntry() => clearField(8);
+  @$pb.TagNumber(8)
+  $2.CatalogEntry ensureTargetCatalogEntry() => $_ensure(7);
+
+  /// If `target_catalog_entry` is given, this field is the distance, in
+  /// degrees, between `target` and `target_catalog_entry.coord`.
+  @$pb.TagNumber(9)
+  $core.double get targetCatalogEntryDistance => $_getN(8);
+  @$pb.TagNumber(9)
+  set targetCatalogEntryDistance($core.double v) { $_setDouble(8, v); }
+  @$pb.TagNumber(9)
+  $core.bool hasTargetCatalogEntryDistance() => $_has(8);
+  @$pb.TagNumber(9)
+  void clearTargetCatalogEntryDistance() => clearField(9);
 }
 
 /// Estimate of alt/az offset of mount's polar axis from celestial pole. Not
@@ -2588,6 +2621,7 @@ class ActionRequest extends $pb.GeneratedMessage {
     $core.bool? shutdownServer,
     $core.bool? stopSlew,
     $core.bool? saveImage,
+    $0.CelestialCoord? initiateSlew,
   }) {
     final $result = create();
     if (captureBoresight != null) {
@@ -2602,6 +2636,9 @@ class ActionRequest extends $pb.GeneratedMessage {
     if (saveImage != null) {
       $result.saveImage = saveImage;
     }
+    if (initiateSlew != null) {
+      $result.initiateSlew = initiateSlew;
+    }
     return $result;
   }
   ActionRequest._() : super();
@@ -2613,6 +2650,7 @@ class ActionRequest extends $pb.GeneratedMessage {
     ..aOB(3, _omitFieldNames ? '' : 'shutdownServer')
     ..aOB(4, _omitFieldNames ? '' : 'stopSlew')
     ..aOB(5, _omitFieldNames ? '' : 'saveImage')
+    ..aOM<$0.CelestialCoord>(6, _omitFieldNames ? '' : 'initiateSlew', subBuilder: $0.CelestialCoord.create)
     ..hasRequiredFields = false
   ;
 
@@ -2694,6 +2732,19 @@ class ActionRequest extends $pb.GeneratedMessage {
   $core.bool hasSaveImage() => $_has(3);
   @$pb.TagNumber(5)
   void clearSaveImage() => clearField(5);
+
+  /// Cedar-aim is initiating a goto operation. This might be from a Cedar Sky
+  /// catalog selection, or it might be a user-entered RA/Dec value.
+  @$pb.TagNumber(6)
+  $0.CelestialCoord get initiateSlew => $_getN(4);
+  @$pb.TagNumber(6)
+  set initiateSlew($0.CelestialCoord v) { setField(6, v); }
+  @$pb.TagNumber(6)
+  $core.bool hasInitiateSlew() => $_has(4);
+  @$pb.TagNumber(6)
+  void clearInitiateSlew() => clearField(6);
+  @$pb.TagNumber(6)
+  $0.CelestialCoord ensureInitiateSlew() => $_ensure(4);
 }
 
 class ServerLogRequest extends $pb.GeneratedMessage {

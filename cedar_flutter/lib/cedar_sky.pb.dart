@@ -232,12 +232,13 @@ class CatalogEntryMatch extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   void clearFaintestMagnitude() => clearField(1);
 
-  /// What catalog(s) to search. Note: if empty, queries will return no results.
+  /// What catalog(s) to search. Note: if empty, no filtering on catalog is
+  /// done.
   @$pb.TagNumber(2)
   $core.List<$core.String> get catalogLabel => $_getList(1);
 
-  /// What object type(s) to search. Note: if empty, queries will return no
-  /// results.
+  /// What object type(s) to search. Note: if empty, no filtering on object
+  /// type is done.
   @$pb.TagNumber(3)
   $core.List<$core.String> get objectTypeLabel => $_getList(2);
 }

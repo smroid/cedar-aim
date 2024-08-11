@@ -148,7 +148,7 @@ class _MainImagePainter extends CustomPainter {
           state._solutionFOV;
     }
     if (state._slewRequest != null && !state._setupMode && state._hasSolution) {
-      var slew = state._slewRequest;
+      final slew = state._slewRequest;
       Offset? posInImage;
       if (slew!.hasImagePos()) {
         posInImage = Offset(slew.imagePos.x / state._binFactor,
@@ -166,6 +166,9 @@ class _MainImagePainter extends CustomPainter {
           /*drawDistanceText=*/ true,
           portrait);
       drawSlewDirections(
+          state,
+          slew.target,
+          slew.targetCatalogEntry,
           canvas,
           color,
           slew.targetAngle >= 0.0 &&
@@ -1044,24 +1047,6 @@ class MyHomePageState extends State<MyHomePage> {
                             [formatAzimuth(_locationBasedInfo!.azimuth)])),
                     ],
                   ))),
-      const SizedBox(width: 15, height: 15),
-      RotatedBox(
-          quarterTurns: portrait ? 3 : 0,
-          child: _slewRequest == null || _setupMode
-              ? Container()
-              : SizedBox(
-                  width: 120,
-                  height: 120,
-                  child: Column(children: <Widget>[
-                    primaryText("Target"),
-                    solveText(sprintf(
-                        "%s", [formatRightAscension(_slewRequest!.target.ra)])),
-                    solveText(sprintf(
-                        "%s", [formatDeclination(_slewRequest!.target.dec)])),
-                    solveText(
-                        sprintf("%.1f° away", [_slewRequest?.targetDistance])),
-                  ]),
-                )),
       const SizedBox(width: 15, height: 15),
       RotatedBox(
           quarterTurns: portrait ? 3 : 0,

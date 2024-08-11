@@ -3,6 +3,9 @@
 
 import 'dart:math' as math;
 import 'dart:math';
+import 'package:cedar_flutter/cedar_sky.pb.dart';
+import 'package:cedar_flutter/client_main.dart';
+import 'package:cedar_flutter/tetra3.pb.dart';
 import 'package:flutter/material.dart';
 import 'package:sprintf/sprintf.dart';
 
@@ -142,6 +145,9 @@ void drawArrow(Canvas canvas, Color color, Offset start, double length,
 }
 
 void drawSlewDirections(
+  MyHomePageState state,
+  CelestialCoord target,
+  CatalogEntry catalogEntry,
   Canvas canvas,
   Color color,
   Offset pos,
@@ -151,6 +157,29 @@ void drawSlewDirections(
   double offsetTiltAxis,
   bool portrait, // degrees, alt or dec movement
 ) {
+  final targetRA = sprintf("%s", [state.formatRightAscension(target.ra)]);
+  final targetDec = sprintf("%s", [state.formatDeclination(target.dec)]);
+
+  var objectLabel = sprintf("%s\n%s", [targetRA, targetDec]);
+  if (catalogEntry.catalogLabel != "") {
+    if (catalogEntry.catalogLabel == "IAU") {
+      objectLabel = catalogEntry.commonName;
+    } else {
+      if (catalogEntry.commonName != "") {
+        objectLabel = sprintf("%s%s\n%s", [
+          catalogEntry.catalogLabel,
+          catalogEntry.catalogEntry,
+          catalogEntry.commonName
+        ]);
+      } else {
+        objectLabel = sprintf("%s%s", [
+          catalogEntry.catalogLabel,
+          catalogEntry.catalogEntry,
+        ]);
+      }
+    }
+  }
+
   final String rotationAxisName = altAz ? "Az " : "RA ";
   final String rotationCue = altAz
       ? (offsetRotationAxis >= 0 ? "clockwise" : "anti-clockwise")
@@ -182,6 +211,11 @@ void drawSlewDirections(
   const largeFont = 40.0;
   final textPainter = TextPainter(
       text: TextSpan(children: [
+        TextSpan(
+          text: "$objectLabel\n",
+          style:
+              const TextStyle(fontSize: smallFont, fontStyle: FontStyle.italic),
+        ),
         TextSpan(
           text: sprintf("%s ", [rotationAxisName]),
           style: const TextStyle(fontSize: smallFont),
