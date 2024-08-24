@@ -248,3 +248,17 @@ final $typed_data.Uint8List constellationResponseDescriptor = $convert.base64Dec
     'ChVDb25zdGVsbGF0aW9uUmVzcG9uc2USQAoOY29uc3RlbGxhdGlvbnMYASADKAsyGC5jZWRhcl'
     '9za3kuQ29uc3RlbGxhdGlvblIOY29uc3RlbGxhdGlvbnM=');
 
+@$core.Deprecated('Use catalogEntryKeyDescriptor instead')
+const CatalogEntryKey$json = {
+  '1': 'CatalogEntryKey',
+  '2': [
+    {'1': 'cat_label', '3': 1, '4': 1, '5': 9, '10': 'catLabel'},
+    {'1': 'entry', '3': 2, '4': 1, '5': 9, '10': 'entry'},
+  ],
+};
+
+/// Descriptor for `CatalogEntryKey`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List catalogEntryKeyDescriptor = $convert.base64Decode(
+    'Cg9DYXRhbG9nRW50cnlLZXkSGwoJY2F0X2xhYmVsGAEgASgJUghjYXRMYWJlbBIUCgVlbnRyeR'
+    'gCIAEoCVIFZW50cnk=');
+

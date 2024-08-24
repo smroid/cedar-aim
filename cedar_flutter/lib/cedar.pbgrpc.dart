@@ -50,6 +50,10 @@ class CedarClient extends $grpc.Client {
       '/cedar.Cedar/QueryCatalogEntries',
       ($2.QueryCatalogRequest value) => value.writeToBuffer(),
       ($core.List<$core.int> value) => $2.QueryCatalogResponse.fromBuffer(value));
+  static final _$getCatalogEntry = $grpc.ClientMethod<$2.CatalogEntryKey, $2.CatalogEntry>(
+      '/cedar.Cedar/GetCatalogEntry',
+      ($2.CatalogEntryKey value) => value.writeToBuffer(),
+      ($core.List<$core.int> value) => $2.CatalogEntry.fromBuffer(value));
   static final _$getCatalogDescriptions = $grpc.ClientMethod<$1.EmptyMessage, $2.CatalogDescriptionResponse>(
       '/cedar.Cedar/GetCatalogDescriptions',
       ($1.EmptyMessage value) => value.writeToBuffer(),
@@ -95,6 +99,10 @@ class CedarClient extends $grpc.Client {
 
   $grpc.ResponseFuture<$2.QueryCatalogResponse> queryCatalogEntries($2.QueryCatalogRequest request, {$grpc.CallOptions? options}) {
     return $createUnaryCall(_$queryCatalogEntries, request, options: options);
+  }
+
+  $grpc.ResponseFuture<$2.CatalogEntry> getCatalogEntry($2.CatalogEntryKey request, {$grpc.CallOptions? options}) {
+    return $createUnaryCall(_$getCatalogEntry, request, options: options);
   }
 
   $grpc.ResponseFuture<$2.CatalogDescriptionResponse> getCatalogDescriptions($1.EmptyMessage request, {$grpc.CallOptions? options}) {
@@ -164,6 +172,13 @@ abstract class CedarServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $2.QueryCatalogRequest.fromBuffer(value),
         ($2.QueryCatalogResponse value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$2.CatalogEntryKey, $2.CatalogEntry>(
+        'GetCatalogEntry',
+        getCatalogEntry_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $2.CatalogEntryKey.fromBuffer(value),
+        ($2.CatalogEntry value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$1.EmptyMessage, $2.CatalogDescriptionResponse>(
         'GetCatalogDescriptions',
         getCatalogDescriptions_Pre,
@@ -215,6 +230,10 @@ abstract class CedarServiceBase extends $grpc.Service {
     return queryCatalogEntries(call, await request);
   }
 
+  $async.Future<$2.CatalogEntry> getCatalogEntry_Pre($grpc.ServiceCall call, $async.Future<$2.CatalogEntryKey> request) async {
+    return getCatalogEntry(call, await request);
+  }
+
   $async.Future<$2.CatalogDescriptionResponse> getCatalogDescriptions_Pre($grpc.ServiceCall call, $async.Future<$1.EmptyMessage> request) async {
     return getCatalogDescriptions(call, await request);
   }
@@ -234,6 +253,7 @@ abstract class CedarServiceBase extends $grpc.Service {
   $async.Future<$1.FrameResult> getFrame($grpc.ServiceCall call, $1.FrameRequest request);
   $async.Future<$1.EmptyMessage> initiateAction($grpc.ServiceCall call, $1.ActionRequest request);
   $async.Future<$2.QueryCatalogResponse> queryCatalogEntries($grpc.ServiceCall call, $2.QueryCatalogRequest request);
+  $async.Future<$2.CatalogEntry> getCatalogEntry($grpc.ServiceCall call, $2.CatalogEntryKey request);
   $async.Future<$2.CatalogDescriptionResponse> getCatalogDescriptions($grpc.ServiceCall call, $1.EmptyMessage request);
   $async.Future<$2.ObjectTypeResponse> getObjectTypes($grpc.ServiceCall call, $1.EmptyMessage request);
   $async.Future<$2.ConstellationResponse> getConstellations($grpc.ServiceCall call, $1.EmptyMessage request);

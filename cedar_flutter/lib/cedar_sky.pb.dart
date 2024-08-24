@@ -957,6 +957,71 @@ class ConstellationResponse extends $pb.GeneratedMessage {
   $core.List<Constellation> get constellations => $_getList(0);
 }
 
+class CatalogEntryKey extends $pb.GeneratedMessage {
+  factory CatalogEntryKey({
+    $core.String? catLabel,
+    $core.String? entry,
+  }) {
+    final $result = create();
+    if (catLabel != null) {
+      $result.catLabel = catLabel;
+    }
+    if (entry != null) {
+      $result.entry = entry;
+    }
+    return $result;
+  }
+  CatalogEntryKey._() : super();
+  factory CatalogEntryKey.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory CatalogEntryKey.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'CatalogEntryKey', package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar_sky'), createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'catLabel')
+    ..aOS(2, _omitFieldNames ? '' : 'entry')
+    ..hasRequiredFields = false
+  ;
+
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  CatalogEntryKey clone() => CatalogEntryKey()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  CatalogEntryKey copyWith(void Function(CatalogEntryKey) updates) => super.copyWith((message) => updates(message as CatalogEntryKey)) as CatalogEntryKey;
+
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static CatalogEntryKey create() => CatalogEntryKey._();
+  CatalogEntryKey createEmptyInstance() => create();
+  static $pb.PbList<CatalogEntryKey> createRepeated() => $pb.PbList<CatalogEntryKey>();
+  @$core.pragma('dart2js:noInline')
+  static CatalogEntryKey getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<CatalogEntryKey>(create);
+  static CatalogEntryKey? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get catLabel => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set catLabel($core.String v) { $_setString(0, v); }
+  @$pb.TagNumber(1)
+  $core.bool hasCatLabel() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearCatLabel() => clearField(1);
+
+  /// or COM.
+  @$pb.TagNumber(2)
+  $core.String get entry => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set entry($core.String v) { $_setString(1, v); }
+  @$pb.TagNumber(2)
+  $core.bool hasEntry() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearEntry() => clearField(2);
+}
+
 
 const _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');
 const _omitMessageNames = $core.bool.fromEnvironment('protobuf.omit_message_names');
