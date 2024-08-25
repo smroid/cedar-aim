@@ -279,7 +279,8 @@ const FrameResult$json = {
     {'1': 'slew_request', '3': 24, '4': 1, '5': 11, '6': '.cedar.SlewRequest', '9': 7, '10': 'slewRequest', '17': true},
     {'1': 'boresight_image', '3': 28, '4': 1, '5': 11, '6': '.cedar.Image', '9': 8, '10': 'boresightImage', '17': true},
     {'1': 'polar_align_advice', '3': 30, '4': 1, '5': 11, '6': '.cedar.PolarAlignAdvice', '10': 'polarAlignAdvice'},
-    {'1': 'catalog_entries', '3': 31, '4': 3, '5': 11, '6': '.cedar.FovCatalogEntry', '10': 'catalogEntries'},
+    {'1': 'labeled_catalog_entries', '3': 31, '4': 3, '5': 11, '6': '.cedar.FovCatalogEntry', '10': 'labeledCatalogEntries'},
+    {'1': 'unlabeled_catalog_entries', '3': 33, '4': 3, '5': 11, '6': '.cedar.FovCatalogEntry', '10': 'unlabeledCatalogEntries'},
   ],
   '8': [
     {'1': '_calibration_progress'},
@@ -323,11 +324,13 @@ final $typed_data.Uint8List frameResultDescriptor = $convert.base64Decode(
     'IAEoCzISLmNlZGFyLlNsZXdSZXF1ZXN0SAdSC3NsZXdSZXF1ZXN0iAEBEjoKD2JvcmVzaWdodF'
     '9pbWFnZRgcIAEoCzIMLmNlZGFyLkltYWdlSAhSDmJvcmVzaWdodEltYWdliAEBEkUKEnBvbGFy'
     'X2FsaWduX2FkdmljZRgeIAEoCzIXLmNlZGFyLlBvbGFyQWxpZ25BZHZpY2VSEHBvbGFyQWxpZ2'
-    '5BZHZpY2USPwoPY2F0YWxvZ19lbnRyaWVzGB8gAygLMhYuY2VkYXIuRm92Q2F0YWxvZ0VudHJ5'
-    'Ug5jYXRhbG9nRW50cmllc0IXChVfY2FsaWJyYXRpb25fcHJvZ3Jlc3NCEAoOX2NlbnRlcl9yZW'
-    'dpb25CFwoVX2NlbnRlcl9wZWFrX3Bvc2l0aW9uQhQKEl9jZW50ZXJfcGVha192YWx1ZUIUChJf'
-    'Y2VudGVyX3BlYWtfaW1hZ2VCEQoPX3BsYXRlX3NvbHV0aW9uQhYKFF9sb2NhdGlvbl9iYXNlZF'
-    '9pbmZvQg8KDV9zbGV3X3JlcXVlc3RCEgoQX2JvcmVzaWdodF9pbWFnZQ==');
+    '5BZHZpY2USTgoXbGFiZWxlZF9jYXRhbG9nX2VudHJpZXMYHyADKAsyFi5jZWRhci5Gb3ZDYXRh'
+    'bG9nRW50cnlSFWxhYmVsZWRDYXRhbG9nRW50cmllcxJSChl1bmxhYmVsZWRfY2F0YWxvZ19lbn'
+    'RyaWVzGCEgAygLMhYuY2VkYXIuRm92Q2F0YWxvZ0VudHJ5Uhd1bmxhYmVsZWRDYXRhbG9nRW50'
+    'cmllc0IXChVfY2FsaWJyYXRpb25fcHJvZ3Jlc3NCEAoOX2NlbnRlcl9yZWdpb25CFwoVX2Nlbn'
+    'Rlcl9wZWFrX3Bvc2l0aW9uQhQKEl9jZW50ZXJfcGVha192YWx1ZUIUChJfY2VudGVyX3BlYWtf'
+    'aW1hZ2VCEQoPX3BsYXRlX3NvbHV0aW9uQhYKFF9sb2NhdGlvbl9iYXNlZF9pbmZvQg8KDV9zbG'
+    'V3X3JlcXVlc3RCEgoQX2JvcmVzaWdodF9pbWFnZQ==');
 
 @$core.Deprecated('Use imageDescriptor instead')
 const Image$json = {

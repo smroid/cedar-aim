@@ -32,7 +32,7 @@ import 'get_cedar_client_for_web.dart'
 // To generate release build: flutter build web
 
 typedef DrawCatalogEntriesFunction = void Function(
-    Canvas, Color, List<FovCatalogEntry>, int, bool);
+    Canvas, Color, List<FovCatalogEntry>, bool, int, bool);
 
 typedef ShowCatalogBrowserFunction = void Function(
     BuildContext, MyHomePageState, bool);
@@ -203,11 +203,13 @@ class _MainImagePainter extends CustomPainter {
       }
     }
     if (!state._setupMode &&
-        state._fovCatalogEntries.isNotEmpty &&
+        state._labeledFovCatalogEntries.isNotEmpty &&
         state._slewRequest == null &&
         _drawCatalogEntries != null) {
-      _drawCatalogEntries!(
-          canvas, color, state._fovCatalogEntries, state._binFactor, portrait);
+      _drawCatalogEntries!(canvas, color, state._labeledFovCatalogEntries,
+          /*drawLabel=*/ true, state._binFactor, portrait);
+      _drawCatalogEntries!(canvas, color, state._unlabeledFovCatalogEntries,
+          /*drawLabel=*/ false, state._binFactor, portrait);
     }
   }
 
@@ -331,7 +333,8 @@ class MyHomePageState extends State<MyHomePage> {
   SlewRequest? _slewRequest;
   Preferences? _preferences;
   PolarAlignAdvice? _polarAlignAdvice;
-  List<FovCatalogEntry> _fovCatalogEntries = List.empty();
+  List<FovCatalogEntry> _labeledFovCatalogEntries = List.empty();
+  List<FovCatalogEntry> _unlabeledFovCatalogEntries = List.empty();
 
   // Calibration happens when _setupMode transitions to false.
   bool _calibrating = false;
@@ -406,7 +409,8 @@ class MyHomePageState extends State<MyHomePage> {
     }
     _preferences = response.preferences;
     _polarAlignAdvice = response.polarAlignAdvice;
-    _fovCatalogEntries = response.catalogEntries;
+    _labeledFovCatalogEntries = response.labeledCatalogEntries;
+    _unlabeledFovCatalogEntries = response.unlabeledCatalogEntries;
     var settingsModel = Provider.of<SettingsModel>(context, listen: false);
     settingsModel.preferencesProto = _preferences!.deepCopy();
     settingsModel.opSettingsProto = operationSettings.deepCopy();
@@ -1141,12 +1145,27 @@ class MyHomePageState extends State<MyHomePage> {
   }
 
   FovCatalogEntry? _findObjectHit(Offset tapPosition, int tolerance) {
-    for (var entry in _fovCatalogEntries) {
-      cedar_proto.ImageCoord imagePos = entry.imagePos;
-      if ((imagePos.x - tapPosition.dx).abs() < tolerance &&
-          (imagePos.y - tapPosition.dy).abs() < tolerance) {
-        return entry;
+    FovCatalogEntry? closest;
+    double closestDistance = 0;
+
+    for (var entry in _labeledFovCatalogEntries) {
+      Offset imagePos = Offset(entry.imagePos.x, entry.imagePos.y);
+      var distance = (imagePos - tapPosition).distance;
+      if (closest == null || distance < closestDistance) {
+        closest = entry;
+        closestDistance = distance;
       }
+    }
+    for (var entry in _unlabeledFovCatalogEntries) {
+      Offset imagePos = Offset(entry.imagePos.x, entry.imagePos.y);
+      var distance = (imagePos - tapPosition).distance;
+      if (closest == null || distance < closestDistance) {
+        closest = entry;
+        closestDistance = distance;
+      }
+    }
+    if (closest != null && closestDistance < tolerance) {
+      return closest;
     }
     return null;
   }

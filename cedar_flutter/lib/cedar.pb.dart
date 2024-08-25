@@ -751,7 +751,7 @@ class FrameRequest extends $pb.GeneratedMessage {
   void clearPrevFrameId() => clearField(1);
 }
 
-/// Next tag: 33.
+/// Next tag: 34.
 class FrameResult extends $pb.GeneratedMessage {
   factory FrameResult({
     $core.int? frameId,
@@ -778,8 +778,9 @@ class FrameResult extends $pb.GeneratedMessage {
     Image? boresightImage,
     LocationBasedInfo? locationBasedInfo,
     PolarAlignAdvice? polarAlignAdvice,
-    $core.Iterable<FovCatalogEntry>? catalogEntries,
+    $core.Iterable<FovCatalogEntry>? labeledCatalogEntries,
     ServerInformation? serverInformation,
+    $core.Iterable<FovCatalogEntry>? unlabeledCatalogEntries,
   }) {
     final $result = create();
     if (frameId != null) {
@@ -854,11 +855,14 @@ class FrameResult extends $pb.GeneratedMessage {
     if (polarAlignAdvice != null) {
       $result.polarAlignAdvice = polarAlignAdvice;
     }
-    if (catalogEntries != null) {
-      $result.catalogEntries.addAll(catalogEntries);
+    if (labeledCatalogEntries != null) {
+      $result.labeledCatalogEntries.addAll(labeledCatalogEntries);
     }
     if (serverInformation != null) {
       $result.serverInformation = serverInformation;
+    }
+    if (unlabeledCatalogEntries != null) {
+      $result.unlabeledCatalogEntries.addAll(unlabeledCatalogEntries);
     }
     return $result;
   }
@@ -891,8 +895,9 @@ class FrameResult extends $pb.GeneratedMessage {
     ..aOM<Image>(28, _omitFieldNames ? '' : 'boresightImage', subBuilder: Image.create)
     ..aOM<LocationBasedInfo>(29, _omitFieldNames ? '' : 'locationBasedInfo', subBuilder: LocationBasedInfo.create)
     ..aOM<PolarAlignAdvice>(30, _omitFieldNames ? '' : 'polarAlignAdvice', subBuilder: PolarAlignAdvice.create)
-    ..pc<FovCatalogEntry>(31, _omitFieldNames ? '' : 'catalogEntries', $pb.PbFieldType.PM, subBuilder: FovCatalogEntry.create)
+    ..pc<FovCatalogEntry>(31, _omitFieldNames ? '' : 'labeledCatalogEntries', $pb.PbFieldType.PM, subBuilder: FovCatalogEntry.create)
     ..aOM<ServerInformation>(32, _omitFieldNames ? '' : 'serverInformation', subBuilder: ServerInformation.create)
+    ..pc<FovCatalogEntry>(33, _omitFieldNames ? '' : 'unlabeledCatalogEntries', $pb.PbFieldType.PM, subBuilder: FovCatalogEntry.create)
     ..hasRequiredFields = false
   ;
 
@@ -1215,8 +1220,9 @@ class FrameResult extends $pb.GeneratedMessage {
   /// determines what entries are included.
   /// Empty if `plate_solution` is absent or failed or if Cedar Sky is not
   /// present.
+  /// The FOV catalog entries that dominate their crowd and should be labelled.
   @$pb.TagNumber(31)
-  $core.List<FovCatalogEntry> get catalogEntries => $_getList(24);
+  $core.List<FovCatalogEntry> get labeledCatalogEntries => $_getList(24);
 
   /// Information about Cedar-server.
   @$pb.TagNumber(32)
@@ -1229,6 +1235,11 @@ class FrameResult extends $pb.GeneratedMessage {
   void clearServerInformation() => clearField(32);
   @$pb.TagNumber(32)
   ServerInformation ensureServerInformation() => $_ensure(25);
+
+  /// The decrowded FOV catalog entries that the UI can display, but should
+  /// not label to avoid clutter.
+  @$pb.TagNumber(33)
+  $core.List<FovCatalogEntry> get unlabeledCatalogEntries => $_getList(26);
 }
 
 class Image extends $pb.GeneratedMessage {
