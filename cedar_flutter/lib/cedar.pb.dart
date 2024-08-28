@@ -15,6 +15,7 @@ import 'package:protobuf/protobuf.dart' as $pb;
 
 import 'cedar.pbenum.dart';
 import 'cedar_sky.pb.dart' as $2;
+import 'cedar_sky.pbenum.dart' as $2;
 import 'google/protobuf/duration.pb.dart' as $4;
 import 'google/protobuf/timestamp.pb.dart' as $3;
 import 'tetra3.pb.dart' as $0;
@@ -567,7 +568,8 @@ class OperationSettings extends $pb.GeneratedMessage {
   $2.CatalogEntryMatch ensureCatalogEntryMatch() => $_ensure(6);
 }
 
-/// User interface preferences that are stored durably on the server.
+/// User interface preferences and operation settings that are stored durably on
+/// the server.
 class Preferences extends $pb.GeneratedMessage {
   factory Preferences({
     CelestialCoordFormat? celestialCoordFormat,
@@ -576,6 +578,15 @@ class Preferences extends $pb.GeneratedMessage {
     $core.bool? showPerfStats,
     $core.bool? hideAppBar,
     MountType? mountType,
+    LatLong? observerLocation,
+    Accuracy? accuracy,
+    $4.Duration? updateInterval,
+    $2.CatalogEntryMatch? catalogEntryMatch,
+    $core.double? maxDistance,
+    $core.double? minElevation,
+    $2.Ordering? ordering,
+    $core.bool? maxDistanceActive,
+    $core.bool? minElevationActive,
   }) {
     final $result = create();
     if (celestialCoordFormat != null) {
@@ -596,6 +607,33 @@ class Preferences extends $pb.GeneratedMessage {
     if (mountType != null) {
       $result.mountType = mountType;
     }
+    if (observerLocation != null) {
+      $result.observerLocation = observerLocation;
+    }
+    if (accuracy != null) {
+      $result.accuracy = accuracy;
+    }
+    if (updateInterval != null) {
+      $result.updateInterval = updateInterval;
+    }
+    if (catalogEntryMatch != null) {
+      $result.catalogEntryMatch = catalogEntryMatch;
+    }
+    if (maxDistance != null) {
+      $result.maxDistance = maxDistance;
+    }
+    if (minElevation != null) {
+      $result.minElevation = minElevation;
+    }
+    if (ordering != null) {
+      $result.ordering = ordering;
+    }
+    if (maxDistanceActive != null) {
+      $result.maxDistanceActive = maxDistanceActive;
+    }
+    if (minElevationActive != null) {
+      $result.minElevationActive = minElevationActive;
+    }
     return $result;
   }
   Preferences._() : super();
@@ -609,6 +647,15 @@ class Preferences extends $pb.GeneratedMessage {
     ..aOB(4, _omitFieldNames ? '' : 'showPerfStats')
     ..aOB(5, _omitFieldNames ? '' : 'hideAppBar')
     ..e<MountType>(6, _omitFieldNames ? '' : 'mountType', $pb.PbFieldType.OE, defaultOrMaker: MountType.MOUNT_UNSPECIFIED, valueOf: MountType.valueOf, enumValues: MountType.values)
+    ..aOM<LatLong>(7, _omitFieldNames ? '' : 'observerLocation', subBuilder: LatLong.create)
+    ..e<Accuracy>(8, _omitFieldNames ? '' : 'accuracy', $pb.PbFieldType.OE, defaultOrMaker: Accuracy.ACCURACY_UNSPECIFIED, valueOf: Accuracy.valueOf, enumValues: Accuracy.values)
+    ..aOM<$4.Duration>(9, _omitFieldNames ? '' : 'updateInterval', subBuilder: $4.Duration.create)
+    ..aOM<$2.CatalogEntryMatch>(11, _omitFieldNames ? '' : 'catalogEntryMatch', subBuilder: $2.CatalogEntryMatch.create)
+    ..a<$core.double>(12, _omitFieldNames ? '' : 'maxDistance', $pb.PbFieldType.OD)
+    ..a<$core.double>(13, _omitFieldNames ? '' : 'minElevation', $pb.PbFieldType.OD)
+    ..e<$2.Ordering>(14, _omitFieldNames ? '' : 'ordering', $pb.PbFieldType.OE, defaultOrMaker: $2.Ordering.UNSPECIFIED, valueOf: $2.Ordering.valueOf, enumValues: $2.Ordering.values)
+    ..aOB(15, _omitFieldNames ? '' : 'maxDistanceActive')
+    ..aOB(16, _omitFieldNames ? '' : 'minElevationActive')
     ..hasRequiredFields = false
   ;
 
@@ -695,6 +742,105 @@ class Preferences extends $pb.GeneratedMessage {
   $core.bool hasMountType() => $_has(5);
   @$pb.TagNumber(6)
   void clearMountType() => clearField(6);
+
+  /// The saved location. On server startup we use this to initialize the
+  /// corresponding FixedSettings field. Note: do not update this via
+  /// UpdatePreferences().
+  @$pb.TagNumber(7)
+  LatLong get observerLocation => $_getN(6);
+  @$pb.TagNumber(7)
+  set observerLocation(LatLong v) { setField(7, v); }
+  @$pb.TagNumber(7)
+  $core.bool hasObserverLocation() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearObserverLocation() => clearField(7);
+  @$pb.TagNumber(7)
+  LatLong ensureObserverLocation() => $_ensure(6);
+
+  /// Saved accuracy setting. On server startup we use this to initialize the
+  /// corresponding OperationSettings field. Note: do not update this via
+  /// UpdatePreferences().
+  @$pb.TagNumber(8)
+  Accuracy get accuracy => $_getN(7);
+  @$pb.TagNumber(8)
+  set accuracy(Accuracy v) { setField(8, v); }
+  @$pb.TagNumber(8)
+  $core.bool hasAccuracy() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearAccuracy() => clearField(8);
+
+  /// Saved dwell interval. On server startup we use this to initialize the
+  /// corresponding OperationSettings field. Note: do not update this via
+  /// UpdatePreferences().
+  @$pb.TagNumber(9)
+  $4.Duration get updateInterval => $_getN(8);
+  @$pb.TagNumber(9)
+  set updateInterval($4.Duration v) { setField(9, v); }
+  @$pb.TagNumber(9)
+  $core.bool hasUpdateInterval() => $_has(8);
+  @$pb.TagNumber(9)
+  void clearUpdateInterval() => clearField(9);
+  @$pb.TagNumber(9)
+  $4.Duration ensureUpdateInterval() => $_ensure(8);
+
+  /// Saved catalog object selection criteria for FOV image decoration. On server
+  /// startup we use this to initialize the corresponding OperationSettings
+  /// field. Note: do not update this via UpdatePreferences().
+  @$pb.TagNumber(11)
+  $2.CatalogEntryMatch get catalogEntryMatch => $_getN(9);
+  @$pb.TagNumber(11)
+  set catalogEntryMatch($2.CatalogEntryMatch v) { setField(11, v); }
+  @$pb.TagNumber(11)
+  $core.bool hasCatalogEntryMatch() => $_has(9);
+  @$pb.TagNumber(11)
+  void clearCatalogEntryMatch() => clearField(11);
+  @$pb.TagNumber(11)
+  $2.CatalogEntryMatch ensureCatalogEntryMatch() => $_ensure(9);
+
+  @$pb.TagNumber(12)
+  $core.double get maxDistance => $_getN(10);
+  @$pb.TagNumber(12)
+  set maxDistance($core.double v) { $_setDouble(10, v); }
+  @$pb.TagNumber(12)
+  $core.bool hasMaxDistance() => $_has(10);
+  @$pb.TagNumber(12)
+  void clearMaxDistance() => clearField(12);
+
+  @$pb.TagNumber(13)
+  $core.double get minElevation => $_getN(11);
+  @$pb.TagNumber(13)
+  set minElevation($core.double v) { $_setDouble(11, v); }
+  @$pb.TagNumber(13)
+  $core.bool hasMinElevation() => $_has(11);
+  @$pb.TagNumber(13)
+  void clearMinElevation() => clearField(13);
+
+  @$pb.TagNumber(14)
+  $2.Ordering get ordering => $_getN(12);
+  @$pb.TagNumber(14)
+  set ordering($2.Ordering v) { setField(14, v); }
+  @$pb.TagNumber(14)
+  $core.bool hasOrdering() => $_has(12);
+  @$pb.TagNumber(14)
+  void clearOrdering() => clearField(14);
+
+  @$pb.TagNumber(15)
+  $core.bool get maxDistanceActive => $_getBF(13);
+  @$pb.TagNumber(15)
+  set maxDistanceActive($core.bool v) { $_setBool(13, v); }
+  @$pb.TagNumber(15)
+  $core.bool hasMaxDistanceActive() => $_has(13);
+  @$pb.TagNumber(15)
+  void clearMaxDistanceActive() => clearField(15);
+
+  @$pb.TagNumber(16)
+  $core.bool get minElevationActive => $_getBF(14);
+  @$pb.TagNumber(16)
+  set minElevationActive($core.bool v) { $_setBool(14, v); }
+  @$pb.TagNumber(16)
+  $core.bool hasMinElevationActive() => $_has(14);
+  @$pb.TagNumber(16)
+  void clearMinElevationActive() => clearField(16);
 }
 
 class FrameRequest extends $pb.GeneratedMessage {

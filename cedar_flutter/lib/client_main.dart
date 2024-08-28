@@ -152,7 +152,7 @@ class _MainImagePainter extends CustomPainter {
     // How many display pixels is the telescope FOV?
     var scopeFov = 0.0;
     if (!state._setupMode && state._hasSolution) {
-      scopeFov = state._preferences!.eyepieceFov *
+      scopeFov = state.preferences!.eyepieceFov *
           state._imageRegion.width /
           state._solutionFOV;
     }
@@ -185,7 +185,7 @@ class _MainImagePainter extends CustomPainter {
                   slew.targetDistance > 0.5
               ? Offset(20, state._imageRegion.height - 220)
               : const Offset(20, 20),
-          state._preferences?.mountType == MountType.ALT_AZ,
+          state.preferences?.mountType == MountType.ALT_AZ,
           state._northernHemisphere,
           slew.offsetRotationAxis,
           slew.offsetTiltAxis,
@@ -242,7 +242,7 @@ class _OverlayImagePainter extends CustomPainter {
     }
     // How many display pixels is the telescope FOV?
     final scopeFov = _scale *
-        _state._preferences!.eyepieceFov *
+        _state.preferences!.eyepieceFov *
         _state._fullResImageRegion.width /
         _state._solutionFOV;
     final portrait =
@@ -331,7 +331,7 @@ class MyHomePageState extends State<MyHomePage> {
   CalibrationData? _calibrationData;
   ProcessingStats? _processingStats;
   SlewRequest? _slewRequest;
-  Preferences? _preferences;
+  Preferences? preferences;
   PolarAlignAdvice? _polarAlignAdvice;
   List<FovCatalogEntry> _labeledFovCatalogEntries = List.empty();
   List<FovCatalogEntry> _unlabeledFovCatalogEntries = List.empty();
@@ -407,12 +407,12 @@ class MyHomePageState extends State<MyHomePage> {
     if (_setupMode) {
       _canAlign = true;
     }
-    _preferences = response.preferences;
+    preferences = response.preferences;
     _polarAlignAdvice = response.polarAlignAdvice;
     _labeledFovCatalogEntries = response.labeledCatalogEntries;
     _unlabeledFovCatalogEntries = response.unlabeledCatalogEntries;
     var settingsModel = Provider.of<SettingsModel>(context, listen: false);
-    settingsModel.preferencesProto = _preferences!.deepCopy();
+    settingsModel.preferencesProto = preferences!.deepCopy();
     settingsModel.opSettingsProto = operationSettings.deepCopy();
     _calibrationData =
         response.hasCalibrationData() ? response.calibrationData : null;
@@ -499,7 +499,7 @@ class MyHomePageState extends State<MyHomePage> {
   }
 
   double bullseyeDirectionIndicator() {
-    if (_preferences?.mountType == MountType.ALT_AZ &&
+    if (preferences?.mountType == MountType.ALT_AZ &&
         _locationBasedInfo != null) {
       return _locationBasedInfo!.zenithRollAngle;
     } else {
@@ -685,12 +685,14 @@ class MyHomePageState extends State<MyHomePage> {
       final newPrefs = await client().updatePreferences(changedPrefs,
           options: CallOptions(timeout: const Duration(seconds: 10)));
       setState(() {
-        _preferences = newPrefs;
+        preferences = newPrefs;
         if (newPrefs.nightVisionTheme) {
           Provider.of<ThemeModel>(context, listen: false).setNightVisionTheme();
         } else {
           Provider.of<ThemeModel>(context, listen: false).setNormalTheme();
         }
+        var settingsModel = Provider.of<SettingsModel>(context, listen: false);
+        settingsModel.preferencesProto = preferences!.deepCopy();
       });
     } catch (e) {
       log('updatePreferences error: $e');
@@ -824,8 +826,7 @@ class MyHomePageState extends State<MyHomePage> {
         builder: (context, settings, child) {
           final newPrefs = settings.preferencesProto;
           var prefsDiff = newPrefs.deepCopy();
-          if (_preferences != null &&
-              diffPreferences(_preferences!, prefsDiff)) {
+          if (preferences != null && diffPreferences(preferences!, prefsDiff)) {
             updatePreferences(prefsDiff);
           }
           final newOpSettings = settings.opSettingsProto;
@@ -898,7 +899,7 @@ class MyHomePageState extends State<MyHomePage> {
   }
 
   String formatRightAscension(double ra, {bool short = false}) {
-    if (_preferences?.celestialCoordFormat == CelestialCoordFormat.DECIMAL) {
+    if (preferences?.celestialCoordFormat == CelestialCoordFormat.DECIMAL) {
       return sprintf("RA %.4f°", [ra]);
     }
     int hours = (ra / 15.0).floor();
@@ -912,7 +913,7 @@ class MyHomePageState extends State<MyHomePage> {
   }
 
   String formatHourAngle(double ha) {
-    if (_preferences?.celestialCoordFormat == CelestialCoordFormat.DECIMAL) {
+    if (preferences?.celestialCoordFormat == CelestialCoordFormat.DECIMAL) {
       return sprintf("HA %.4f°", [ha]);
     }
     String sign = ha < 0 ? "-" : "+";
@@ -928,7 +929,7 @@ class MyHomePageState extends State<MyHomePage> {
   }
 
   String formatDeclination(double dec, {bool short = false}) {
-    if (_preferences?.celestialCoordFormat == CelestialCoordFormat.DECIMAL) {
+    if (preferences?.celestialCoordFormat == CelestialCoordFormat.DECIMAL) {
       return sprintf("Dec %.4f°", [dec]);
     }
     String sign = dec < 0 ? "-" : "+";
@@ -1099,7 +1100,7 @@ class MyHomePageState extends State<MyHomePage> {
           quarterTurns: portrait ? 3 : 0,
           child: _setupMode ||
                   _processingStats == null ||
-                  !_preferences!.showPerfStats
+                  !preferences!.showPerfStats
               ? Container()
               : SizedBox(
                   width: 140,
