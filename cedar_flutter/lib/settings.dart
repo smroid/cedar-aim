@@ -80,6 +80,7 @@ bool diffOperationSettings(OperationSettings prev, OperationSettings curr) {
 class SettingsModel extends ChangeNotifier {
   Preferences preferencesProto = Preferences();
   OperationSettings opSettingsProto = OperationSettings();
+  bool advanced = false;
 
   SettingsModel() {
     preferencesProto.eyepieceFov = 1.0;
@@ -146,6 +147,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final provider = Provider.of<SettingsModel>(context, listen: false);
     final prefsProto = provider.preferencesProto;
     final opSettingsProto = provider.opSettingsProto;
+    final advanced = provider.advanced;
     // Need to inset the switches to match the slider.
     const switchInset = 16.0;
     return Scaffold(
@@ -175,25 +177,26 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ]),
                   title: const Text('Full screen'),
                 ),
-                SettingsTile(
-                  leading: Row(children: <Widget>[
-                    const SizedBox(width: switchInset, height: 10),
-                    Switch(
-                        value: prefsProto.celestialCoordFormat ==
-                            CelestialCoordFormat.HMS_DMS,
-                        onChanged: (bool value) {
-                          setState(() {
-                            provider.updateCelestialCoordFormat(value
-                                ? CelestialCoordFormat.HMS_DMS
-                                : CelestialCoordFormat.DECIMAL);
-                          });
-                        })
-                  ]),
-                  title: Text(prefsProto.celestialCoordFormat ==
-                          CelestialCoordFormat.HMS_DMS
-                      ? 'RA/Dec format H:M:S/D:M:S'
-                      : 'RA/Dec format D.DD/D.DD'),
-                ),
+                if (advanced)
+                  SettingsTile(
+                    leading: Row(children: <Widget>[
+                      const SizedBox(width: switchInset, height: 10),
+                      Switch(
+                          value: prefsProto.celestialCoordFormat ==
+                              CelestialCoordFormat.HMS_DMS,
+                          onChanged: (bool value) {
+                            setState(() {
+                              provider.updateCelestialCoordFormat(value
+                                  ? CelestialCoordFormat.HMS_DMS
+                                  : CelestialCoordFormat.DECIMAL);
+                            });
+                          })
+                    ]),
+                    title: Text(prefsProto.celestialCoordFormat ==
+                            CelestialCoordFormat.HMS_DMS
+                        ? 'RA/Dec format H:M:S/D:M:S'
+                        : 'RA/Dec format D.DD/D.DD'),
+                  ),
                 SettingsTile(
                   leading: Row(children: <Widget>[
                     const SizedBox(width: switchInset, height: 10),
@@ -207,67 +210,69 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ]),
                   title: const Text('Night vision theme'),
                 ),
-                SettingsTile(
-                  leading: Row(children: <Widget>[
-                    const SizedBox(width: switchInset, height: 10),
-                    Switch(
-                        value: prefsProto.showPerfStats,
-                        onChanged: (bool value) {
-                          setState(() {
-                            provider.updateShowPerfStats(value);
-                          });
-                        })
-                  ]),
-                  title: const Text('Show performance stats'),
-                ),
+                if (advanced)
+                  SettingsTile(
+                    leading: Row(children: <Widget>[
+                      const SizedBox(width: switchInset, height: 10),
+                      Switch(
+                          value: prefsProto.showPerfStats,
+                          onChanged: (bool value) {
+                            setState(() {
+                              provider.updateShowPerfStats(value);
+                            });
+                          })
+                    ]),
+                    title: const Text('Show performance stats'),
+                  ),
               ]),
-              SettingsSection(title: const Text('Operation'), tiles: [
-                SettingsTile(
-                  leading: SizedBox(
-                      width: 140,
-                      height: 40,
-                      child: Slider(
-                        // Slider positions represent:
-                        // 1000ms (1Hz), 500ms (2Hz), 200ms (5Hz), 100ms (10Hz),
-                        // and 0ms (fast as possible).
-                        min: 1,
-                        max: 5,
-                        divisions: 4,
-                        value: switch (
-                            _durationToMs(opSettingsProto.updateInterval)) {
-                          1000 => 1,
-                          500 => 2,
-                          200 => 3,
-                          100 => 4,
-                          0 => 5,
-                          _ => 5,
-                        },
-                        onChanged: (double value) {
-                          int intervalMs = switch (value.toInt()) {
-                            1 => 1000,
-                            2 => 500,
-                            3 => 200,
-                            4 => 100,
-                            5 => 0,
-                            _ => 0,
-                          };
-                          setState(() {
-                            provider.updateUpdateInterval(intervalMs.round());
-                          });
-                        },
-                      )),
-                  title: Text(sprintf('Update frequency %s', [
-                    switch (_durationToMs(opSettingsProto.updateInterval)) {
-                      1000 => "1Hz",
-                      500 => "2Hz",
-                      200 => "5Hz",
-                      100 => "10Hz",
-                      0 => "unlimited",
-                      _ => "unknown",
-                    },
-                  ])),
-                ),
-              ]),
+              if (advanced)
+                SettingsSection(title: const Text('Operation'), tiles: [
+                  SettingsTile(
+                    leading: SizedBox(
+                        width: 140,
+                        height: 40,
+                        child: Slider(
+                          // Slider positions represent:
+                          // 1000ms (1Hz), 500ms (2Hz), 200ms (5Hz), 100ms (10Hz),
+                          // and 0ms (fast as possible).
+                          min: 1,
+                          max: 5,
+                          divisions: 4,
+                          value: switch (
+                              _durationToMs(opSettingsProto.updateInterval)) {
+                            1000 => 1,
+                            500 => 2,
+                            200 => 3,
+                            100 => 4,
+                            0 => 5,
+                            _ => 5,
+                          },
+                          onChanged: (double value) {
+                            int intervalMs = switch (value.toInt()) {
+                              1 => 1000,
+                              2 => 500,
+                              3 => 200,
+                              4 => 100,
+                              5 => 0,
+                              _ => 0,
+                            };
+                            setState(() {
+                              provider.updateUpdateInterval(intervalMs.round());
+                            });
+                          },
+                        )),
+                    title: Text(sprintf('Update frequency %s', [
+                      switch (_durationToMs(opSettingsProto.updateInterval)) {
+                        1000 => "1Hz",
+                        500 => "2Hz",
+                        200 => "5Hz",
+                        100 => "10Hz",
+                        0 => "unlimited",
+                        _ => "unknown",
+                      },
+                    ])),
+                  ),
+                ]),
               SettingsSection(title: const Text('Telescope'), tiles: [
                 SettingsTile(
                   leading: SizedBox(
@@ -287,23 +292,24 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   title: Text(
                       sprintf('Eyepiece FOV  %.1f°', [prefsProto.eyepieceFov])),
                 ),
-                SettingsTile(
-                  leading: Row(children: <Widget>[
-                    const SizedBox(width: switchInset, height: 10),
-                    Switch(
-                        value: prefsProto.mountType == MountType.EQUATORIAL,
-                        onChanged: (bool value) {
-                          setState(() {
-                            provider.updateMountType(value
-                                ? MountType.EQUATORIAL
-                                : MountType.ALT_AZ);
-                          });
-                        })
-                  ]),
-                  title: Text(prefsProto.mountType == MountType.EQUATORIAL
-                      ? 'Equatorial mount'
-                      : 'Alt/Az mount'),
-                ),
+                if (advanced)
+                  SettingsTile(
+                    leading: Row(children: <Widget>[
+                      const SizedBox(width: switchInset, height: 10),
+                      Switch(
+                          value: prefsProto.mountType == MountType.EQUATORIAL,
+                          onChanged: (bool value) {
+                            setState(() {
+                              provider.updateMountType(value
+                                  ? MountType.EQUATORIAL
+                                  : MountType.ALT_AZ);
+                            });
+                          })
+                    ]),
+                    title: Text(prefsProto.mountType == MountType.EQUATORIAL
+                        ? 'Equatorial mount'
+                        : 'Alt/Az mount'),
+                  ),
               ]),
             ]));
   }

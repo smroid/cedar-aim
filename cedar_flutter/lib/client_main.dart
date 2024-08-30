@@ -3,11 +3,9 @@
 
 import 'dart:developer';
 import 'dart:math' as math;
-import 'package:cedar_flutter/cedar.pb.dart' as cedar_proto;
 import 'package:cedar_flutter/cedar_sky.pb.dart';
 import 'package:cedar_flutter/draw_slew_target.dart';
 import 'package:cedar_flutter/draw_util.dart';
-import 'package:cedar_flutter/exp_values.dart';
 import 'package:cedar_flutter/geolocation.dart';
 import 'package:cedar_flutter/google/protobuf/timestamp.pb.dart';
 import 'package:cedar_flutter/server_log.dart';
@@ -19,7 +17,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart' as dart_widgets;
 import 'package:grpc/service_api.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:numberpicker/numberpicker.dart';
 import 'package:protobuf/protobuf.dart';
 import 'package:provider/provider.dart';
 import 'package:sprintf/sprintf.dart';
@@ -133,16 +130,18 @@ class _MainImagePainter extends CustomPainter {
             ..strokeWidth = thin
             ..style = PaintingStyle.stroke);
       // Draw circles around the detected stars.
-      for (var star in state._stars) {
-        var offset = Offset(star.centroidPosition.x / state._binFactor,
-            star.centroidPosition.y / state._binFactor);
-        canvas.drawCircle(
-            offset,
-            3,
-            Paint()
-              ..color = color
-              ..strokeWidth = hairline
-              ..style = PaintingStyle.stroke);
+      if (state._focusAid && state._advanced) {
+        for (var star in state._stars) {
+          var offset = Offset(star.centroidPosition.x / state._binFactor,
+              star.centroidPosition.y / state._binFactor);
+          canvas.drawCircle(
+              offset,
+              3,
+              Paint()
+                ..color = color
+                ..strokeWidth = hairline
+                ..style = PaintingStyle.stroke);
+        }
       }
     }
 
@@ -288,6 +287,8 @@ class MyHomePageState extends State<MyHomePage> {
   ServerInformation? _serverInformation;
   var operationSettings = OperationSettings();
   bool _setupMode = false;
+  bool _focusAid = false;
+  bool _advanced = false; // TODO: persist to preferences
   bool _canAlign = false;
   bool _hasCedarSky = false;
 
@@ -414,6 +415,7 @@ class MyHomePageState extends State<MyHomePage> {
     var settingsModel = Provider.of<SettingsModel>(context, listen: false);
     settingsModel.preferencesProto = preferences!.deepCopy();
     settingsModel.opSettingsProto = operationSettings.deepCopy();
+    settingsModel.advanced = _advanced;
     _calibrationData =
         response.hasCalibrationData() ? response.calibrationData : null;
     _processingStats =
@@ -706,110 +708,115 @@ class MyHomePageState extends State<MyHomePage> {
               alignment: Alignment.topLeft,
               iconColor: WidgetStatePropertyAll(
                   Theme.of(context).colorScheme.primary))),
+      Align(
+          alignment: Alignment.topLeft,
+          child: TextButton.icon(
+              label: const Text("Preferences"),
+              icon: const Icon(Icons.settings),
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const SettingsScreen()));
+              })),
       const SizedBox(height: 15),
-      Column(
-        children: <Widget>[
-          const Text("Fast              Accurate"),
-          Slider(
-            min: 1,
-            max: 3,
-            value: _accuracy.toDouble(),
-            onChanged: (double value) => {
-              setState(() {
-                _accuracy = value.toInt();
-                setAccuracy(value.toInt());
-              })
-            },
-          ),
-        ],
-      ),
-      const SizedBox(height: 15),
-      Column(
-        children: <Widget>[
-          primaryText("Exposure time"),
-          NumberPicker(
-            axis: Axis.horizontal,
-            itemWidth: 50,
-            itemHeight: 40,
-            minValue: 0,
-            maxValue: expMsToIndex(_maxExposureTimeMs),
-            value: _expSettingMs == 0 ? 0 : expMsToIndex(_expSettingMs),
-            onChanged: (value) => {
-              setState(() {
-                _expSettingMs = value == 0 ? 0 : expMsFromIndex(value);
-                setExpTime();
-              })
-            },
-            textMapper: (numberText) {
-              int expIndex = int.parse(numberText);
-              if (expIndex == 0) {
-                return "auto";
-              }
-              int expMs = expMsFromIndex(expIndex);
-              if (expMs < 1000) {
-                return sprintf("%d", [expMs]);
-              } else {
-                return sprintf("%.1fs", [expMs / 1000]);
-              }
-            },
-            // selectedTextStyle: TextStyle(fontSize: 20),
-          ),
-          _expSettingMs == 0
-              ? primaryText(sprintf("auto %.1f ms", [_exposureTimeMs]))
-              : primaryText(sprintf("%d ms", [_expSettingMs])),
-          const SizedBox(height: 15),
-        ],
-      ),
-      TextButton.icon(
-          label: const Text("Preferences"),
-          icon: const Icon(Icons.settings),
-          onPressed: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const SettingsScreen()));
-          }),
-      const SizedBox(height: 15),
-      TextButton.icon(
-          label: _mapPosition == null
-              ? const Text("Location unknown")
-              : Text(sprintf("Location %.1f %.1f",
-                  [_mapPosition!.latitude, _mapPosition!.longitude])),
-          icon: Icon(_mapPosition == null
-              ? Icons.not_listed_location
-              : Icons.edit_location_alt),
-          onPressed: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => MapScreen(this)));
-          }),
+      Align(
+          alignment: Alignment.topLeft,
+          child: TextButton.icon(
+              label: _mapPosition == null
+                  ? const Text("Location unknown")
+                  : Text(sprintf("Location %.1f %.1f",
+                      [_mapPosition!.latitude, _mapPosition!.longitude])),
+              icon: Icon(_mapPosition == null
+                  ? Icons.not_listed_location
+                  : Icons.edit_location_alt),
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => MapScreen(this)));
+              })),
       const SizedBox(height: 15),
       Column(children: <Widget>[
-        OutlinedButton(
-            child: const Text("Save image"),
-            onPressed: () {
-              saveImage();
-            }),
+        Align(
+            alignment: Alignment.topLeft,
+            child: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+              const SizedBox(width: 10),
+              Checkbox(
+                value: _advanced,
+                onChanged: (bool? selected) async {
+                  setState(() {
+                    _advanced = selected!;
+                    var settingsModel =
+                        Provider.of<SettingsModel>(context, listen: false);
+                    settingsModel.advanced = _advanced;
+                  });
+                },
+                activeColor: Theme.of(context).colorScheme.surface,
+                checkColor: Theme.of(context).colorScheme.primary,
+              ),
+              const Text("Advanced"),
+            ]))
       ]),
+      _advanced
+          ? Column(
+              children: <Widget>[
+                const SizedBox(height: 15),
+                const Text("Fast               Accurate"),
+                SizedBox(
+                    width: 180,
+                    height: 25,
+                    child: Slider(
+                      min: 1,
+                      max: 3,
+                      value: _accuracy.toDouble(),
+                      onChanged: (double value) => {
+                        setState(() {
+                          _accuracy = value.toInt();
+                          setAccuracy(value.toInt());
+                        })
+                      },
+                    )),
+                Text(sprintf("exposure: %.1f ms", [_exposureTimeMs])),
+              ],
+            )
+          : Container(),
+      _advanced
+          ? Column(children: <Widget>[
+              const SizedBox(height: 15),
+              SizedBox(
+                  width: 160,
+                  child: OutlinedButton(
+                      child: const Text("Save image"),
+                      onPressed: () {
+                        saveImage();
+                      })),
+            ])
+          : Container(),
+      _advanced
+          ? Column(children: <Widget>[
+              const SizedBox(height: 15),
+              SizedBox(
+                  width: 160,
+                  child: OutlinedButton(
+                      child: const Text("Show server log"),
+                      onPressed: () async {
+                        var logs = await getServerLogs();
+                        if (context.mounted) {
+                          showDialog(
+                              context: context,
+                              builder: (context) => ServerLogPopUp(logs));
+                        }
+                      })),
+            ])
+          : Container(),
       const SizedBox(height: 15),
       Column(children: <Widget>[
-        OutlinedButton(
-            child: const Text("Show server log"),
-            onPressed: () async {
-              var logs = await getServerLogs();
-              if (context.mounted) {
-                showDialog(
-                    context: context,
-                    builder: (context) => ServerLogPopUp(logs));
-              }
-            }),
-      ]),
-      const SizedBox(height: 15),
-      Column(children: <Widget>[
-        OutlinedButton(
-            child: const Text("Shutdown"),
-            onPressed: () {
-              shutdownDialog();
-            }),
+        SizedBox(
+            width: 160,
+            child: OutlinedButton(
+                child: const Text("Shutdown"),
+                onPressed: () {
+                  shutdownDialog();
+                })),
       ]),
     ];
   }
@@ -1010,30 +1017,53 @@ class MyHomePageState extends State<MyHomePage> {
     return <Widget>[
       RotatedBox(
           quarterTurns: portrait ? 3 : 0,
-          child: Column(children: <Widget>[
-            SizedBox(
-                width: 130,
-                height: 20,
-                child: Slider(
-                  min: 0,
-                  max: 10,
-                  value: math.min(10, math.sqrt(_numStars)),
-                  onChanged: (double value) {},
-                  activeColor: starsSliderColor(),
-                  thumbColor: starsSliderColor(),
-                )),
-            primaryText("$_numStars stars"),
-            const SizedBox(width: 15, height: 15),
-            _calibrationData != null && _calibrationData!.fovHorizontal > 0
-                ? Column(children: <Widget>[
-                    primaryText(sprintf(
-                        "FOV %.1f°", [_calibrationData!.fovHorizontal])),
-                    primaryText(
-                        sprintf("Lens %.1f mm", [_calibrationData!.lensFlMm])),
-                  ])
-                : Container(),
-          ])),
+          child: _setupMode && !(_focusAid && _advanced)
+              ? const SizedBox(width: 130, height: 52)
+              : Column(children: <Widget>[
+                  SizedBox(
+                      width: 130,
+                      height: 20,
+                      child: Slider(
+                        min: 0,
+                        max: 10,
+                        value: math.min(10, math.sqrt(_numStars)),
+                        onChanged: (double value) {},
+                        activeColor: starsSliderColor(),
+                        thumbColor: starsSliderColor(),
+                      )),
+                  primaryText("$_numStars stars"),
+                  const SizedBox(width: 15, height: 15),
+                  // TODO: move calibration data elsewhere, make more comprehensive
+                  _calibrationData != null &&
+                          _calibrationData!.fovHorizontal > 0
+                      ? Column(children: <Widget>[
+                          primaryText(sprintf(
+                              "FOV %.1f°", [_calibrationData!.fovHorizontal])),
+                          primaryText(sprintf(
+                              "Lens %.1f mm", [_calibrationData!.lensFlMm])),
+                        ])
+                      : Container(),
+                ])),
       const SizedBox(width: 15, height: 15),
+      RotatedBox(
+        quarterTurns: portrait ? 3 : 0,
+        child: _setupMode
+            ? Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+                const SizedBox(width: 10),
+                Checkbox(
+                  value: _focusAid,
+                  onChanged: (bool? selected) async {
+                    setState(() {
+                      _focusAid = selected!;
+                    });
+                  },
+                  activeColor: Theme.of(context).colorScheme.surface,
+                  checkColor: Theme.of(context).colorScheme.primary,
+                ),
+                const Text("Focus aid"),
+              ])
+            : Container(),
+      ),
       RotatedBox(
           quarterTurns: portrait ? 3 : 0,
           child: _setupMode
@@ -1207,7 +1237,7 @@ class MyHomePageState extends State<MyHomePage> {
 
   Widget imageStack(BuildContext context) {
     Widget? overlayWidget;
-    if (_setupMode && _centerPeakImageBytes != null) {
+    if (_setupMode && _focusAid && _centerPeakImageBytes != null) {
       overlayWidget = dart_widgets.Image.memory(_centerPeakImageBytes!,
           height: _imageRegion.width / 6,
           width: _imageRegion.width / 6,
@@ -1282,19 +1312,21 @@ class MyHomePageState extends State<MyHomePage> {
           toolbarOpacity: hideAppBar ? 0.0 : 1.0,
           title: Text(widget.title),
           foregroundColor: Theme.of(context).colorScheme.primary),
-      body: Stack(children: [
-        Positioned(
-            left: 0,
-            top: 0,
-            child: hideAppBar
-                ? IconButton(
-                    icon: const Icon(Icons.menu),
-                    onPressed: () {
-                      _scaffoldKey.currentState!.openDrawer();
-                    })
-                : Container()),
-        FittedBox(child: orientationLayout(context)),
-      ]),
+      body: Container(
+          color: Theme.of(context).colorScheme.surface,
+          child: Stack(children: [
+            Positioned(
+                left: 0,
+                top: 0,
+                child: hideAppBar
+                    ? IconButton(
+                        icon: const Icon(Icons.menu),
+                        onPressed: () {
+                          _scaffoldKey.currentState!.openDrawer();
+                        })
+                    : Container()),
+            FittedBox(child: orientationLayout(context)),
+          ])),
       onDrawerChanged: (isOpened) {
         doRefreshes = !isOpened;
       },
