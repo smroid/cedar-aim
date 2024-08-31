@@ -1424,19 +1424,24 @@ class MyHomePageState extends State<MyHomePage> {
           foregroundColor: Theme.of(context).colorScheme.primary),
       body: Container(
           color: Theme.of(context).colorScheme.surface,
-          child: Stack(children: [
-            Positioned(
-                left: 0,
-                top: 0,
-                child: hideAppBar
-                    ? IconButton(
-                        icon: const Icon(Icons.menu),
-                        onPressed: () {
-                          _scaffoldKey.currentState!.openDrawer();
-                        })
-                    : Container()),
-            FittedBox(child: orientationLayout(context)),
-          ])),
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              Positioned(
+                  left: 0,
+                  top: 0,
+                  child: hideAppBar
+                      ? IconButton(
+                          icon: const Icon(Icons.menu),
+                          onPressed: () {
+                            _scaffoldKey.currentState!.openDrawer();
+                          })
+                      : Container()),
+              FittedBox(
+                child: orientationLayout(context),
+              ),
+            ],
+          )),
       onDrawerChanged: (isOpened) {
         doRefreshes = !isOpened;
       },
