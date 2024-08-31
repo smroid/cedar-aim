@@ -20,6 +20,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:protobuf/protobuf.dart';
 import 'package:provider/provider.dart';
 import 'package:sprintf/sprintf.dart';
+// import 'package:syncfusion_flutter_gauges/gauges.dart';
 import 'cedar.pbgrpc.dart';
 import 'tetra3.pb.dart';
 import 'google/protobuf/duration.pb.dart' as proto_duration;
@@ -933,8 +934,8 @@ class MyHomePageState extends State<MyHomePage> {
           : Container(),
       RotatedBox(
           quarterTurns: portrait ? 3 : 0,
-          child: Row(children: <Widget>[
-            primaryText("Setup"),
+          child: Column(children: <Widget>[
+            primaryText("Setup  Aim"),
             Switch(
                 value: !_setupMode,
                 onChanged: (bool value) {
@@ -945,7 +946,6 @@ class MyHomePageState extends State<MyHomePage> {
                     setOperatingMode(/*setup=*/ !value);
                   });
                 }),
-            primaryText("Aim"),
           ])),
       const SizedBox(width: 0, height: 15),
       RotatedBox(
@@ -1122,38 +1122,38 @@ class MyHomePageState extends State<MyHomePage> {
       RotatedBox(
           quarterTurns: portrait ? 3 : 0,
           child: _setupMode && !(_focusAid && _advanced)
-              ? const SizedBox(width: 130, height: 52)
+              ? const SizedBox(height: 52)
               : Column(children: <Widget>[
                   SizedBox(
-                      width: 130,
-                      height: 20,
-                      child: Slider(
-                        min: 0,
-                        max: 10,
-                        value: math.min(10, math.sqrt(_numStars)),
-                        onChanged: (double value) {},
-                        activeColor: starsSliderColor(),
-                        thumbColor: starsSliderColor(),
-                      )),
+                    width: 130,
+                    height: 20,
+                    child: Slider(
+                      min: 0,
+                      max: 10,
+                      value: math.min(10, math.sqrt(_numStars)),
+                      onChanged: (double value) {},
+                      activeColor: starsSliderColor(),
+                      thumbColor: starsSliderColor(),
+                    ),
+                  ),
                   primaryText("$_numStars stars"),
                   const SizedBox(width: 15, height: 15),
                   // TODO: move calibration data elsewhere, make more comprehensive
-                  _calibrationData != null &&
-                          _calibrationData!.fovHorizontal > 0
-                      ? Column(children: <Widget>[
-                          primaryText(sprintf(
-                              "FOV %.1f°", [_calibrationData!.fovHorizontal])),
-                          primaryText(sprintf(
-                              "Lens %.1f mm", [_calibrationData!.lensFlMm])),
-                        ])
-                      : Container(),
+                  // _calibrationData != null &&
+                  //         _calibrationData!.fovHorizontal > 0
+                  //     ? Column(children: <Widget>[
+                  //         primaryText(sprintf(
+                  //             "FOV %.1f°", [_calibrationData!.fovHorizontal])),
+                  //         primaryText(sprintf(
+                  //             "Lens %.1f mm", [_calibrationData!.lensFlMm])),
+                  //       ])
+                  //     : Container(),
                 ])),
       const SizedBox(width: 15, height: 15),
       RotatedBox(
         quarterTurns: portrait ? 3 : 0,
         child: _setupMode
             ? Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-                const SizedBox(width: 10),
                 Checkbox(
                   value: _focusAid,
                   onChanged: (bool? selected) async {
@@ -1176,7 +1176,7 @@ class MyHomePageState extends State<MyHomePage> {
           child: _setupMode
               ? Container()
               : SizedBox(
-                  width: 120,
+                  width: 110 * textScaleFactor(context),
                   height: 180,
                   child: Column(
                     children: <Widget>[
@@ -1186,9 +1186,9 @@ class MyHomePageState extends State<MyHomePage> {
                       solveText(
                           sprintf("%s", [formatDeclination(_solutionDec)])),
                       solveText(sprintf("RMSE %.1f", [_solutionRMSE])),
-                      if (_locationBasedInfo != null)
-                        solveText(sprintf("%s",
-                            [formatHourAngle(_locationBasedInfo!.hourAngle)])),
+                      // if (_locationBasedInfo != null)
+                      //   solveText(sprintf("%s",
+                      //       [formatHourAngle(_locationBasedInfo!.hourAngle)])),
                       if (_locationBasedInfo != null)
                         solveText(sprintf("%s",
                             [formatAltitude(_locationBasedInfo!.altitude)])),
@@ -1390,12 +1390,14 @@ class MyHomePageState extends State<MyHomePage> {
       quarterTurns: portrait ? 1 : 0,
       child: Row(
         children: <Widget>[
+          const SizedBox(width: 5, height: 0),
           Column(
               children: portrait ? controls().reversed.toList() : controls()),
-          const SizedBox(width: 10, height: 0),
+          const SizedBox(width: 5, height: 0),
           imageStack(context),
           const SizedBox(width: 0, height: 0),
           Column(children: dataItems(context)),
+          const SizedBox(width: 5, height: 0),
         ],
       ),
     );
