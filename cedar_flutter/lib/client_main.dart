@@ -20,7 +20,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:protobuf/protobuf.dart';
 import 'package:provider/provider.dart';
 import 'package:sprintf/sprintf.dart';
-// import 'package:syncfusion_flutter_gauges/gauges.dart';
+import 'package:syncfusion_flutter_gauges/gauges.dart';
 import 'cedar.pbgrpc.dart';
 import 'tetra3.pb.dart';
 import 'google/protobuf/duration.pb.dart' as proto_duration;
@@ -1122,22 +1122,55 @@ class MyHomePageState extends State<MyHomePage> {
       RotatedBox(
           quarterTurns: portrait ? 3 : 0,
           child: _setupMode && !(_focusAid && _advanced)
-              ? const SizedBox(height: 52)
+              ? const SizedBox(height: 75)
               : Column(children: <Widget>[
                   SizedBox(
-                    width: 130,
-                    height: 20,
-                    child: Slider(
-                      min: 0,
-                      max: 10,
-                      value: math.min(10, math.sqrt(_numStars)),
-                      onChanged: (double value) {},
-                      activeColor: starsSliderColor(),
-                      thumbColor: starsSliderColor(),
+                    width: 75,
+                    height: 75,
+                    child: SfRadialGauge(
+                      axes: <RadialAxis>[
+                        RadialAxis(
+                          startAngle: 170,
+                          endAngle: 10,
+                          showLabels: false,
+                          showTicks: false,
+                          showAxisLine: false,
+                          minimum: 0,
+                          maximum: 10,
+                          annotations: <GaugeAnnotation>[
+                            GaugeAnnotation(
+                                positionFactor: 0.3,
+                                angle: 270,
+                                widget: Text(sprintf("%d", [_numStars]),
+                                    textScaler: textScaler(context))),
+                            GaugeAnnotation(
+                                positionFactor: 0.4,
+                                angle: 90,
+                                widget: Text("stars",
+                                    style: const TextStyle(
+                                      fontSize: 12.0,
+                                    ),
+                                    textScaler: textScaler(context))),
+                          ],
+                          ranges: <GaugeRange>[
+                            GaugeRange(
+                                startWidth: 3,
+                                endWidth: 3,
+                                startValue: 0,
+                                endValue: 10,
+                                color: Theme.of(context).colorScheme.onPrimary),
+                            GaugeRange(
+                                startWidth: 3,
+                                endWidth: 3,
+                                startValue: 0,
+                                endValue: math.min(10, math.sqrt(_numStars)),
+                                color: starsSliderColor()),
+                          ],
+                        )
+                      ],
                     ),
                   ),
-                  primaryText("$_numStars stars"),
-                  const SizedBox(width: 15, height: 15),
+                  // const SizedBox(width: 15, height: 15),
                   // TODO: move calibration data elsewhere, make more comprehensive
                   // _calibrationData != null &&
                   //         _calibrationData!.fovHorizontal > 0
@@ -1149,7 +1182,6 @@ class MyHomePageState extends State<MyHomePage> {
                   //       ])
                   //     : Container(),
                 ])),
-      const SizedBox(width: 15, height: 15),
       RotatedBox(
         quarterTurns: portrait ? 3 : 0,
         child: _setupMode

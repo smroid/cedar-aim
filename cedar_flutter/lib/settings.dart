@@ -187,10 +187,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 : const SettingsThemeData(),
             sections: [
               SettingsSection(
-                  title: Text(
-                    'Appearance',
-                    textScaler: textScaler(context),
-                  ),
+                  title: SizedBox(
+                      height: 22,
+                      child: Text(
+                        'Appearance',
+                        textScaler: textScaler(context),
+                      )),
                   tiles: [
                     // settings_ui has a bug on Web where the 'trailing' element
                     // is not visible. We work around this by putting the important
@@ -290,10 +292,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ]),
               if (advanced)
                 SettingsSection(
-                    title: Text(
-                      'Operation',
-                      textScaler: textScaler(context),
-                    ),
+                    title: SizedBox(
+                        height: 22,
+                        child: Text(
+                          'Operation',
+                          textScaler: textScaler(context),
+                        )),
                     tiles: [
                       SettingsTile(
                         leading: SizedBox(
@@ -347,10 +351,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       ),
                     ]),
               SettingsSection(
-                  title: Text(
-                    'Telescope',
-                    textScaler: textScaler(context),
-                  ),
+                  title: SizedBox(
+                      height: 22,
+                      child: Text(
+                        'Telescope',
+                        textScaler: textScaler(context),
+                      )),
                   tiles: [
                     SettingsTile(
                       leading: SizedBox(
