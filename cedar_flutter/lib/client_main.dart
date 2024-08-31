@@ -951,12 +951,12 @@ class MyHomePageState extends State<MyHomePage> {
       RotatedBox(
           quarterTurns: portrait ? 3 : 0,
           child: SizedBox(
-            width: 90 * textScaleFactor(context),
+            width: 70 * textScaleFactor(context),
             height: 32,
             child: _canAlign
                 ? OutlinedButton(
                     style: OutlinedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(horizontal: 2)),
+                        padding: const EdgeInsets.symmetric(horizontal: 0)),
                     child: Text(
                       style: const TextStyle(fontSize: 12),
                       "Set Align",
@@ -971,7 +971,7 @@ class MyHomePageState extends State<MyHomePage> {
                         _showCatalogBrowser != null
                     ? OutlinedButton(
                         style: OutlinedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(horizontal: 2)),
+                            padding: const EdgeInsets.symmetric(horizontal: 0)),
                         child: Text(
                           style: const TextStyle(fontSize: 12),
                           "Catalog",
@@ -986,12 +986,12 @@ class MyHomePageState extends State<MyHomePage> {
       RotatedBox(
           quarterTurns: portrait ? 3 : 0,
           child: SizedBox(
-              width: 90 * textScaleFactor(context),
+              width: 70 * textScaleFactor(context),
               height: 32,
               child: _slewRequest != null && !_setupMode
                   ? OutlinedButton(
                       style: OutlinedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(horizontal: 2)),
+                          padding: const EdgeInsets.symmetric(horizontal: 0)),
                       child: Text(
                         style: const TextStyle(fontSize: 12),
                         "End goto",
@@ -1130,8 +1130,8 @@ class MyHomePageState extends State<MyHomePage> {
                     child: SfRadialGauge(
                       axes: <RadialAxis>[
                         RadialAxis(
-                          startAngle: 170,
-                          endAngle: 10,
+                          startAngle: 150,
+                          endAngle: 30,
                           showLabels: false,
                           showTicks: false,
                           showAxisLine: false,
@@ -1182,6 +1182,7 @@ class MyHomePageState extends State<MyHomePage> {
                   //       ])
                   //     : Container(),
                 ])),
+      const SizedBox(width: 10, height: 10),
       RotatedBox(
         quarterTurns: portrait ? 3 : 0,
         child: _setupMode

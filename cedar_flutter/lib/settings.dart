@@ -188,7 +188,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             sections: [
               SettingsSection(
                   title: SizedBox(
-                      height: 22,
+                      height: 30,
                       child: Text(
                         'Appearance',
                         textScaler: textScaler(context),
@@ -293,7 +293,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               if (advanced)
                 SettingsSection(
                     title: SizedBox(
-                        height: 22,
+                        height: 30,
                         child: Text(
                           'Operation',
                           textScaler: textScaler(context),
@@ -352,7 +352,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ]),
               SettingsSection(
                   title: SizedBox(
-                      height: 22,
+                      height: 30,
                       child: Text(
                         'Telescope',
                         textScaler: textScaler(context),
