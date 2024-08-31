@@ -188,11 +188,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
             sections: [
               SettingsSection(
                   title: SizedBox(
-                      height: 30,
                       child: Text(
-                        'Appearance',
-                        textScaler: textScaler(context),
-                      )),
+                    textHeightBehavior: const TextHeightBehavior(
+                      applyHeightToFirstAscent: false,
+                      applyHeightToLastDescent: true,
+                    ),
+                    style: const TextStyle(height: 2),
+                    'Appearance',
+                    textScaler: textScaler(context),
+                  )),
                   tiles: [
                     // settings_ui has a bug on Web where the 'trailing' element
                     // is not visible. We work around this by putting the important
@@ -293,11 +297,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
               if (advanced)
                 SettingsSection(
                     title: SizedBox(
-                        height: 30,
                         child: Text(
-                          'Operation',
-                          textScaler: textScaler(context),
-                        )),
+                      textHeightBehavior: const TextHeightBehavior(
+                        applyHeightToFirstAscent: false,
+                        applyHeightToLastDescent: true,
+                      ),
+                      style: const TextStyle(height: 2),
+                      'Operation',
+                      textScaler: textScaler(context),
+                    )),
                     tiles: [
                       SettingsTile(
                         leading: SizedBox(
@@ -352,11 +360,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ]),
               SettingsSection(
                   title: SizedBox(
-                      height: 30,
                       child: Text(
-                        'Telescope',
-                        textScaler: textScaler(context),
-                      )),
+                    textHeightBehavior: const TextHeightBehavior(
+                      applyHeightToFirstAscent: false,
+                      applyHeightToLastDescent: true,
+                    ),
+                    style: const TextStyle(height: 2),
+                    'Telescope',
+                    textScaler: textScaler(context),
+                  )),
                   tiles: [
                     SettingsTile(
                       leading: SizedBox(
