@@ -1,6 +1,7 @@
 // Copyright (c) 2024 Steven Rosenthal smr@dt3.org
 // See LICENSE file in root directory for license terms.
 
+import 'package:cedar_flutter/settings.dart';
 import 'package:flutter/material.dart';
 
 class ServerLogPopUp extends StatelessWidget {
@@ -19,9 +20,13 @@ class ServerLogPopUp extends StatelessWidget {
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const SizedBox(
-              height: 25,
-              child: Text('Cedar server log', style: TextStyle(fontSize: 16))),
+          SizedBox(
+              height: 30,
+              child: Text(
+                'Cedar server log',
+                style: const TextStyle(fontSize: 16),
+                textScaler: textScaler(context),
+              )),
           SizedBox(
               height: 25,
               child: IconButton(
@@ -35,7 +40,11 @@ class ServerLogPopUp extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(_content, style: const TextStyle(fontSize: 10)),
+            Text(
+              _content,
+              style: const TextStyle(fontSize: 12),
+              textScaler: textScaler(context),
+            ),
           ],
         ),
       ),

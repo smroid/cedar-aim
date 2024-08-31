@@ -29,7 +29,7 @@ import 'get_cedar_client_for_web.dart'
 // To generate release build: flutter build web
 
 typedef DrawCatalogEntriesFunction = void Function(
-    Canvas, Color, List<FovCatalogEntry>, bool, int, bool);
+    BuildContext, Canvas, Color, List<FovCatalogEntry>, bool, int, bool);
 
 typedef ShowCatalogBrowserFunction = void Function(
     BuildContext, MyHomePageState, bool);
@@ -163,6 +163,7 @@ class _MainImagePainter extends CustomPainter {
             slew.imagePos.y / state._binFactor);
       }
       drawSlewTarget(
+          _context,
           canvas,
           color,
           state._boresightPosition,
@@ -205,10 +206,22 @@ class _MainImagePainter extends CustomPainter {
         state._labeledFovCatalogEntries.isNotEmpty &&
         state._slewRequest == null &&
         _drawCatalogEntries != null) {
-      _drawCatalogEntries!(canvas, color, state._labeledFovCatalogEntries,
-          /*drawLabel=*/ true, state._binFactor, portrait);
-      _drawCatalogEntries!(canvas, color, state._unlabeledFovCatalogEntries,
-          /*drawLabel=*/ false, state._binFactor, portrait);
+      _drawCatalogEntries!(
+          _context,
+          canvas,
+          color,
+          state._labeledFovCatalogEntries,
+          /*drawLabel=*/ true,
+          state._binFactor,
+          portrait);
+      _drawCatalogEntries!(
+          _context,
+          canvas,
+          color,
+          state._unlabeledFovCatalogEntries,
+          /*drawLabel=*/ false,
+          state._binFactor,
+          portrait);
     }
   }
 
@@ -247,6 +260,7 @@ class _OverlayImagePainter extends CustomPainter {
     final portrait =
         MediaQuery.of(_context).orientation == Orientation.portrait;
     drawSlewTarget(
+        _context,
         canvas,
         color,
         overlayCenter,
@@ -291,6 +305,9 @@ class MyHomePageState extends State<MyHomePage> {
   bool _advanced = false; // TODO: persist to preferences
   bool _canAlign = false;
   bool _hasCedarSky = false;
+
+  // 0: normal; +1: larger; -1: smaller (and maybe also -2, +2, etc).
+  int _textSizeIndex = 0; // TODO: persist to preferences -- no? is client local
 
   int _accuracy = 2; // 1-3.
 
@@ -416,6 +433,7 @@ class MyHomePageState extends State<MyHomePage> {
     settingsModel.preferencesProto = preferences!.deepCopy();
     settingsModel.opSettingsProto = operationSettings.deepCopy();
     settingsModel.advanced = _advanced;
+    // settingsModel.textSizeIndex = _textSizeIndex;
     _calibrationData =
         response.hasCalibrationData() ? response.calibrationData : null;
     _processingStats =
@@ -647,15 +665,24 @@ class MyHomePageState extends State<MyHomePage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          content: const Text('Shutdown Raspberry Pi?'),
+          content: Text(
+            'Shutdown Raspberry Pi?',
+            textScaler: textScaler(context),
+          ),
           actions: <Widget>[
             TextButton(
-                child: const Text('Cancel'),
+                child: Text(
+                  'Cancel',
+                  textScaler: textScaler(context),
+                ),
                 onPressed: () {
                   Navigator.of(context).pop();
                 }),
             TextButton(
-                child: const Text('Shutdown'),
+                child: Text(
+                  'Shutdown',
+                  textScaler: textScaler(context),
+                ),
                 onPressed: () {
                   shutdown();
                   Navigator.of(context).pop();
@@ -708,25 +735,38 @@ class MyHomePageState extends State<MyHomePage> {
               alignment: Alignment.topLeft,
               iconColor: WidgetStatePropertyAll(
                   Theme.of(context).colorScheme.primary))),
+      const SizedBox(height: 15),
       Align(
           alignment: Alignment.topLeft,
           child: TextButton.icon(
-              label: const Text("Preferences"),
+              label: Text(
+                "Preferences",
+                textScaler: textScaler(context),
+              ),
               icon: const Icon(Icons.settings),
               onPressed: () {
                 Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const SettingsScreen()));
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const SettingsScreen()))
+                    .then((value) {
+                  setState(() {}); // Force rebuild of the drawer.
+                });
               })),
       const SizedBox(height: 15),
       Align(
           alignment: Alignment.topLeft,
           child: TextButton.icon(
               label: _mapPosition == null
-                  ? const Text("Location unknown")
-                  : Text(sprintf("Location %.1f %.1f",
-                      [_mapPosition!.latitude, _mapPosition!.longitude])),
+                  ? Text(
+                      "Location unknown",
+                      textScaler: textScaler(context),
+                    )
+                  : Text(
+                      sprintf("Location %.1f %.1f",
+                          [_mapPosition!.latitude, _mapPosition!.longitude]),
+                      textScaler: textScaler(context),
+                    ),
               icon: Icon(_mapPosition == null
                   ? Icons.not_listed_location
                   : Icons.edit_location_alt),
@@ -753,71 +793,115 @@ class MyHomePageState extends State<MyHomePage> {
                 activeColor: Theme.of(context).colorScheme.surface,
                 checkColor: Theme.of(context).colorScheme.primary,
               ),
-              const Text("Advanced"),
+              Text(
+                "Advanced",
+                textScaler: textScaler(context),
+              ),
             ]))
       ]),
       _advanced
-          ? Column(
-              children: <Widget>[
-                const SizedBox(height: 15),
-                const Text("Fast               Accurate"),
-                SizedBox(
-                    width: 180,
-                    height: 25,
-                    child: Slider(
-                      min: 1,
-                      max: 3,
-                      value: _accuracy.toDouble(),
-                      onChanged: (double value) => {
-                        setState(() {
-                          _accuracy = value.toInt();
-                          setAccuracy(value.toInt());
-                        })
-                      },
-                    )),
-                Text(sprintf("exposure: %.1f ms", [_exposureTimeMs])),
-              ],
-            )
+          ? Align(
+              alignment: Alignment.topLeft,
+              child: Column(
+                children: <Widget>[
+                  const SizedBox(height: 15),
+                  Text(
+                    "Fast               Accurate",
+                    textScaler: textScaler(context),
+                  ),
+                  SizedBox(
+                      width: 180 * textScaleFactor(context),
+                      height: 25,
+                      child: Slider(
+                        min: 1,
+                        max: 3,
+                        value: _accuracy.toDouble(),
+                        onChanged: (double value) => {
+                          setState(() {
+                            _accuracy = value.toInt();
+                            setAccuracy(value.toInt());
+                          })
+                        },
+                      )),
+                  Text(
+                    sprintf("exposure: %.1f ms", [_exposureTimeMs]),
+                    textScaler: textScaler(context),
+                  ),
+                  const SizedBox(height: 15),
+                ],
+              ))
           : Container(),
       _advanced
-          ? Column(children: <Widget>[
-              const SizedBox(height: 15),
-              SizedBox(
-                  width: 160,
-                  child: OutlinedButton(
-                      child: const Text("Save image"),
-                      onPressed: () {
-                        saveImage();
-                      })),
-            ])
+          ? Align(
+              alignment: Alignment.topLeft,
+              child: Row(children: [
+                Container(width: 20),
+                Column(children: <Widget>[
+                  const SizedBox(height: 15),
+                  SizedBox(
+                      width: 140 * textScaleFactor(context),
+                      child: OutlinedButton(
+                          style: OutlinedButton.styleFrom(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 2)),
+                          child: Text(
+                            "Save image",
+                            textScaler: textScaler(context),
+                          ),
+                          onPressed: () {
+                            saveImage();
+                          })),
+                ]),
+              ]))
           : Container(),
       _advanced
-          ? Column(children: <Widget>[
-              const SizedBox(height: 15),
-              SizedBox(
-                  width: 160,
-                  child: OutlinedButton(
-                      child: const Text("Show server log"),
-                      onPressed: () async {
-                        var logs = await getServerLogs();
-                        if (context.mounted) {
-                          showDialog(
-                              context: context,
-                              builder: (context) => ServerLogPopUp(logs));
-                        }
-                      })),
-            ])
+          ? Align(
+              alignment: Alignment.topLeft,
+              child: Row(children: [
+                Container(width: 20),
+                Column(children: <Widget>[
+                  const SizedBox(height: 15),
+                  SizedBox(
+                      width: 140 * textScaleFactor(context),
+                      child: OutlinedButton(
+                          style: OutlinedButton.styleFrom(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 2)),
+                          child: Text(
+                            "Show server log",
+                            textScaler: textScaler(context),
+                          ),
+                          onPressed: () async {
+                            var logs = await getServerLogs();
+                            if (context.mounted) {
+                              showDialog(
+                                  context: context,
+                                  builder: (context) => ServerLogPopUp(logs));
+                            }
+                          })),
+                ])
+              ]))
           : Container(),
       const SizedBox(height: 15),
-      Column(children: <Widget>[
-        SizedBox(
-            width: 160,
-            child: OutlinedButton(
-                child: const Text("Shutdown"),
-                onPressed: () {
-                  shutdownDialog();
-                })),
-      ]),
+      Align(
+          alignment: Alignment.topLeft,
+          child: Row(children: [
+            Container(width: 20),
+            Column(children: <Widget>[
+              SizedBox(
+                  width: 140 * textScaleFactor(context),
+                  child: OutlinedButton(
+                      style: OutlinedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(horizontal: 2)),
+                      child: Text(
+                        "Shutdown",
+                        textScaler: textScaler(context),
+                      ),
+                      onPressed: () {
+                        shutdownDialog();
+                      })),
+            ]),
+          ]))
     ];
   }
 
@@ -867,12 +951,17 @@ class MyHomePageState extends State<MyHomePage> {
       RotatedBox(
           quarterTurns: portrait ? 3 : 0,
           child: SizedBox(
-            width: 100,
+            width: 90 * textScaleFactor(context),
             height: 32,
             child: _canAlign
                 ? OutlinedButton(
-                    child:
-                        const Text(style: TextStyle(fontSize: 12), "Set Align"),
+                    style: OutlinedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(horizontal: 2)),
+                    child: Text(
+                      style: const TextStyle(fontSize: 12),
+                      "Set Align",
+                      textScaler: textScaler(context),
+                    ),
                     onPressed: () {
                       captureBoresight();
                     })
@@ -881,8 +970,13 @@ class MyHomePageState extends State<MyHomePage> {
                         _hasCedarSky &&
                         _showCatalogBrowser != null
                     ? OutlinedButton(
-                        child: const Text(
-                            style: TextStyle(fontSize: 12), "Catalog"),
+                        style: OutlinedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(horizontal: 2)),
+                        child: Text(
+                          style: const TextStyle(fontSize: 12),
+                          "Catalog",
+                          textScaler: textScaler(context),
+                        ),
                         onPressed: () {
                           _showCatalogBrowser!(context, this, portrait);
                         })
@@ -892,12 +986,17 @@ class MyHomePageState extends State<MyHomePage> {
       RotatedBox(
           quarterTurns: portrait ? 3 : 0,
           child: SizedBox(
-              width: 100,
+              width: 90 * textScaleFactor(context),
               height: 32,
               child: _slewRequest != null && !_setupMode
                   ? OutlinedButton(
-                      child: const Text(
-                          style: TextStyle(fontSize: 12), "End goto"),
+                      style: OutlinedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(horizontal: 2)),
+                      child: Text(
+                        style: const TextStyle(fontSize: 12),
+                        "End goto",
+                        textScaler: textScaler(context),
+                      ),
                       onPressed: () {
                         stopSlew();
                       })
@@ -997,11 +1096,16 @@ class MyHomePageState extends State<MyHomePage> {
       val,
       style:
           TextStyle(color: Theme.of(context).colorScheme.primary, fontSize: 12),
+      textScaler: textScaler(context),
     );
   }
 
   Text solveText(String val) {
-    return Text(val, style: TextStyle(color: solveTextColor()));
+    return Text(
+      val,
+      style: TextStyle(color: solveTextColor()),
+      textScaler: textScaler(context),
+    );
   }
 
   bool hasPolarAdvice() {
@@ -1060,7 +1164,10 @@ class MyHomePageState extends State<MyHomePage> {
                   activeColor: Theme.of(context).colorScheme.surface,
                   checkColor: Theme.of(context).colorScheme.primary,
                 ),
-                const Text("Focus aid"),
+                Text(
+                  "Focus aid",
+                  textScaler: textScaler(context),
+                ),
               ])
             : Container(),
       ),
@@ -1070,11 +1177,10 @@ class MyHomePageState extends State<MyHomePage> {
               ? Container()
               : SizedBox(
                   width: 120,
-                  height: 160,
+                  height: 180,
                   child: Column(
                     children: <Widget>[
                       const SizedBox(width: 0, height: 15),
-                      primaryText("Aim"),
                       solveText(
                           sprintf("%s", [formatRightAscension(_solutionRA)])),
                       solveText(
@@ -1210,6 +1316,7 @@ class MyHomePageState extends State<MyHomePage> {
             children: <Widget>[
               calibrating
                   ? Text("Calibrating",
+                      textScaler: textScaler(context),
                       style: TextStyle(
                           fontSize: 20,
                           backgroundColor: Colors.black,
@@ -1229,7 +1336,10 @@ class MyHomePageState extends State<MyHomePage> {
                           backgroundColor: Colors.black,
                           foregroundColor:
                               Theme.of(context).colorScheme.primary),
-                      child: const Text('Cancel'),
+                      child: Text(
+                        'Cancel',
+                        textScaler: textScaler(context),
+                      ),
                     )
                   : Container(),
             ]));
@@ -1331,7 +1441,7 @@ class MyHomePageState extends State<MyHomePage> {
         doRefreshes = !isOpened;
       },
       drawer: Drawer(
-          width: 200,
+          width: 210 * textScaleFactor(context),
           child: ListView(
               padding: EdgeInsets.zero, children: drawerControls(context))),
       drawerEdgeDragWidth: 100,

@@ -81,6 +81,7 @@ class SettingsModel extends ChangeNotifier {
   Preferences preferencesProto = Preferences();
   OperationSettings opSettingsProto = OperationSettings();
   bool advanced = false;
+  int textSizeIndex = 0;
 
   SettingsModel() {
     preferencesProto.eyepieceFov = 1.0;
@@ -120,6 +121,11 @@ class SettingsModel extends ChangeNotifier {
     opSettingsProto.updateInterval = _durationFromMs(intervalMs);
     notifyListeners();
   }
+
+  void updateTextSize(int textSizeIndex) {
+    this.textSizeIndex = textSizeIndex;
+    notifyListeners();
+  }
 }
 
 proto_duration.Duration _durationFromMs(int intervalMs) {
@@ -132,6 +138,23 @@ proto_duration.Duration _durationFromMs(int intervalMs) {
 
 int _durationToMs(proto_duration.Duration duration) {
   return (duration.seconds * 1000 + duration.nanos ~/ 1000000).toInt();
+}
+
+double textScaleFactor(BuildContext context) {
+  final provider = Provider.of<SettingsModel>(context, listen: false);
+  switch (provider.textSizeIndex) {
+    case -1:
+      return 0.8;
+    case 0:
+      return 1.0;
+    case 1:
+      return 1.25;
+  }
+  return 1.0;
+}
+
+TextScaler textScaler(BuildContext context) {
+  return TextScaler.linear(textScaleFactor(context));
 }
 
 class SettingsScreen extends StatefulWidget {
@@ -151,7 +174,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
     // Need to inset the switches to match the slider.
     const switchInset = 16.0;
     return Scaffold(
-        appBar: AppBar(title: const Text('Preferences')),
+        appBar: AppBar(
+            title: const Text(
+          'Preferences',
+        )),
         body: SettingsList(
             darkTheme: prefsProto.nightVisionTheme
                 ? const SettingsThemeData(
@@ -160,157 +186,216 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     leadingIconsColor: Colors.red)
                 : const SettingsThemeData(),
             sections: [
-              SettingsSection(title: const Text('Appearance'), tiles: [
-                // settings_ui has a bug on Web where the 'trailing' element
-                // is not visible. We work around this by putting the important
-                // element (the control) in the 'leading' position.
-                SettingsTile(
-                  leading: Row(children: <Widget>[
-                    const SizedBox(width: switchInset, height: 10),
-                    Switch(
-                        value: prefsProto.hideAppBar,
-                        onChanged: (bool value) {
-                          setState(() {
-                            provider.updateHideAppBar(value);
-                          });
-                        })
-                  ]),
-                  title: const Text('Full screen'),
-                ),
-                if (advanced)
-                  SettingsTile(
-                    leading: Row(children: <Widget>[
-                      const SizedBox(width: switchInset, height: 10),
-                      Switch(
-                          value: prefsProto.celestialCoordFormat ==
-                              CelestialCoordFormat.HMS_DMS,
-                          onChanged: (bool value) {
-                            setState(() {
-                              provider.updateCelestialCoordFormat(value
-                                  ? CelestialCoordFormat.HMS_DMS
-                                  : CelestialCoordFormat.DECIMAL);
-                            });
-                          })
-                    ]),
-                    title: Text(prefsProto.celestialCoordFormat ==
-                            CelestialCoordFormat.HMS_DMS
-                        ? 'RA/Dec format H:M:S/D:M:S'
-                        : 'RA/Dec format D.DD/D.DD'),
-                  ),
-                SettingsTile(
-                  leading: Row(children: <Widget>[
-                    const SizedBox(width: switchInset, height: 10),
-                    Switch(
-                        value: prefsProto.nightVisionTheme,
-                        onChanged: (bool value) {
-                          setState(() {
-                            provider.updateNightVisionEnabled(value);
-                          });
-                        })
-                  ]),
-                  title: const Text('Night vision theme'),
-                ),
-                if (advanced)
-                  SettingsTile(
-                    leading: Row(children: <Widget>[
-                      const SizedBox(width: switchInset, height: 10),
-                      Switch(
-                          value: prefsProto.showPerfStats,
-                          onChanged: (bool value) {
-                            setState(() {
-                              provider.updateShowPerfStats(value);
-                            });
-                          })
-                    ]),
-                    title: const Text('Show performance stats'),
-                  ),
-              ]),
-              if (advanced)
-                SettingsSection(title: const Text('Operation'), tiles: [
-                  SettingsTile(
-                    leading: SizedBox(
-                        width: 140,
-                        height: 40,
-                        child: Slider(
-                          // Slider positions represent:
-                          // 1000ms (1Hz), 500ms (2Hz), 200ms (5Hz), 100ms (10Hz),
-                          // and 0ms (fast as possible).
-                          min: 1,
-                          max: 5,
-                          divisions: 4,
-                          value: switch (
-                              _durationToMs(opSettingsProto.updateInterval)) {
-                            1000 => 1,
-                            500 => 2,
-                            200 => 3,
-                            100 => 4,
-                            0 => 5,
-                            _ => 5,
-                          },
-                          onChanged: (double value) {
-                            int intervalMs = switch (value.toInt()) {
-                              1 => 1000,
-                              2 => 500,
-                              3 => 200,
-                              4 => 100,
-                              5 => 0,
-                              _ => 0,
-                            };
-                            setState(() {
-                              provider.updateUpdateInterval(intervalMs.round());
-                            });
-                          },
-                        )),
-                    title: Text(sprintf('Update frequency %s', [
-                      switch (_durationToMs(opSettingsProto.updateInterval)) {
-                        1000 => "1Hz",
-                        500 => "2Hz",
-                        200 => "5Hz",
-                        100 => "10Hz",
-                        0 => "unlimited",
-                        _ => "unknown",
-                      },
-                    ])),
-                  ),
-                ]),
-              SettingsSection(title: const Text('Telescope'), tiles: [
-                SettingsTile(
-                  leading: SizedBox(
-                      width: 140,
-                      height: 40,
-                      child: Slider(
-                        min: 0.1,
-                        max: 2.0,
-                        divisions: 19,
-                        value: min(prefsProto.eyepieceFov, 2.0),
-                        onChanged: (double value) {
-                          setState(() {
-                            provider.updateSlewBullseyeSize(value);
-                          });
-                        },
-                      )),
+              SettingsSection(
                   title: Text(
-                      sprintf('Eyepiece FOV  %.1f°', [prefsProto.eyepieceFov])),
-                ),
-                if (advanced)
-                  SettingsTile(
-                    leading: Row(children: <Widget>[
-                      const SizedBox(width: switchInset, height: 10),
-                      Switch(
-                          value: prefsProto.mountType == MountType.EQUATORIAL,
-                          onChanged: (bool value) {
-                            setState(() {
-                              provider.updateMountType(value
-                                  ? MountType.EQUATORIAL
-                                  : MountType.ALT_AZ);
-                            });
-                          })
-                    ]),
-                    title: Text(prefsProto.mountType == MountType.EQUATORIAL
-                        ? 'Equatorial mount'
-                        : 'Alt/Az mount'),
+                    'Appearance',
+                    textScaler: textScaler(context),
                   ),
-              ]),
+                  tiles: [
+                    // settings_ui has a bug on Web where the 'trailing' element
+                    // is not visible. We work around this by putting the important
+                    // element (the control) in the 'leading' position.
+                    SettingsTile(
+                      leading: SizedBox(
+                          width: 140,
+                          height: 40,
+                          child: Slider(
+                            min: -1,
+                            max: 1,
+                            divisions: 2,
+                            value: provider.textSizeIndex.toDouble(),
+                            onChanged: (double value) {
+                              setState(() {
+                                provider.updateTextSize(value.toInt());
+                              });
+                            },
+                          )),
+                      title: Text(
+                        'Text size',
+                        textScaler: textScaler(context),
+                      ),
+                    ),
+                    SettingsTile(
+                      leading: Row(children: <Widget>[
+                        const SizedBox(width: switchInset, height: 10),
+                        Switch(
+                            value: prefsProto.hideAppBar,
+                            onChanged: (bool value) {
+                              setState(() {
+                                provider.updateHideAppBar(value);
+                              });
+                            })
+                      ]),
+                      title: Text(
+                        'Full screen',
+                        textScaler: textScaler(context),
+                      ),
+                    ),
+                    if (advanced)
+                      SettingsTile(
+                        leading: Row(children: <Widget>[
+                          const SizedBox(width: switchInset, height: 10),
+                          Switch(
+                              value: prefsProto.celestialCoordFormat ==
+                                  CelestialCoordFormat.HMS_DMS,
+                              onChanged: (bool value) {
+                                setState(() {
+                                  provider.updateCelestialCoordFormat(value
+                                      ? CelestialCoordFormat.HMS_DMS
+                                      : CelestialCoordFormat.DECIMAL);
+                                });
+                              })
+                        ]),
+                        title: Text(
+                          prefsProto.celestialCoordFormat ==
+                                  CelestialCoordFormat.HMS_DMS
+                              ? 'RA/Dec format H:M:S/D:M:S'
+                              : 'RA/Dec format D.DD/D.DD',
+                          textScaler: textScaler(context),
+                        ),
+                      ),
+                    SettingsTile(
+                      leading: Row(children: <Widget>[
+                        const SizedBox(width: switchInset, height: 10),
+                        Switch(
+                            value: prefsProto.nightVisionTheme,
+                            onChanged: (bool value) {
+                              setState(() {
+                                provider.updateNightVisionEnabled(value);
+                              });
+                            })
+                      ]),
+                      title: Text(
+                        'Night vision theme',
+                        textScaler: textScaler(context),
+                      ),
+                    ),
+                    if (advanced)
+                      SettingsTile(
+                        leading: Row(children: <Widget>[
+                          const SizedBox(width: switchInset, height: 10),
+                          Switch(
+                              value: prefsProto.showPerfStats,
+                              onChanged: (bool value) {
+                                setState(() {
+                                  provider.updateShowPerfStats(value);
+                                });
+                              })
+                        ]),
+                        title: Text(
+                          'Show performance stats',
+                          textScaler: textScaler(context),
+                        ),
+                      ),
+                  ]),
+              if (advanced)
+                SettingsSection(
+                    title: Text(
+                      'Operation',
+                      textScaler: textScaler(context),
+                    ),
+                    tiles: [
+                      SettingsTile(
+                        leading: SizedBox(
+                            width: 140,
+                            height: 40,
+                            child: Slider(
+                              // Slider positions represent:
+                              // 1000ms (1Hz), 500ms (2Hz), 200ms (5Hz), 100ms (10Hz),
+                              // and 0ms (fast as possible).
+                              min: 1,
+                              max: 5,
+                              divisions: 4,
+                              value: switch (_durationToMs(
+                                  opSettingsProto.updateInterval)) {
+                                1000 => 1,
+                                500 => 2,
+                                200 => 3,
+                                100 => 4,
+                                0 => 5,
+                                _ => 5,
+                              },
+                              onChanged: (double value) {
+                                int intervalMs = switch (value.toInt()) {
+                                  1 => 1000,
+                                  2 => 500,
+                                  3 => 200,
+                                  4 => 100,
+                                  5 => 0,
+                                  _ => 0,
+                                };
+                                setState(() {
+                                  provider
+                                      .updateUpdateInterval(intervalMs.round());
+                                });
+                              },
+                            )),
+                        title: Text(
+                          sprintf('Update frequency %s', [
+                            switch (
+                                _durationToMs(opSettingsProto.updateInterval)) {
+                              1000 => "1Hz",
+                              500 => "2Hz",
+                              200 => "5Hz",
+                              100 => "10Hz",
+                              0 => "unlimited",
+                              _ => "unknown",
+                            },
+                          ]),
+                          textScaler: textScaler(context),
+                        ),
+                      ),
+                    ]),
+              SettingsSection(
+                  title: Text(
+                    'Telescope',
+                    textScaler: textScaler(context),
+                  ),
+                  tiles: [
+                    SettingsTile(
+                      leading: SizedBox(
+                          width: 140,
+                          height: 40,
+                          child: Slider(
+                            min: 0.1,
+                            max: 2.0,
+                            divisions: 19,
+                            value: min(prefsProto.eyepieceFov, 2.0),
+                            onChanged: (double value) {
+                              setState(() {
+                                provider.updateSlewBullseyeSize(value);
+                              });
+                            },
+                          )),
+                      title: Text(
+                        sprintf(
+                            'Eyepiece FOV  %.1f°', [prefsProto.eyepieceFov]),
+                        textScaler: textScaler(context),
+                      ),
+                    ),
+                    if (advanced)
+                      SettingsTile(
+                        leading: Row(children: <Widget>[
+                          const SizedBox(width: switchInset, height: 10),
+                          Switch(
+                              value:
+                                  prefsProto.mountType == MountType.EQUATORIAL,
+                              onChanged: (bool value) {
+                                setState(() {
+                                  provider.updateMountType(value
+                                      ? MountType.EQUATORIAL
+                                      : MountType.ALT_AZ);
+                                });
+                              })
+                        ]),
+                        title: Text(
+                          prefsProto.mountType == MountType.EQUATORIAL
+                              ? 'Equatorial mount'
+                              : 'Alt/Az mount',
+                          textScaler: textScaler(context),
+                        ),
+                      ),
+                  ]),
             ]));
   }
 }

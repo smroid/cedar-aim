@@ -5,6 +5,7 @@ import 'dart:math' as math;
 import 'dart:math';
 import 'package:cedar_flutter/cedar_sky.pb.dart';
 import 'package:cedar_flutter/client_main.dart';
+import 'package:cedar_flutter/settings.dart';
 import 'package:cedar_flutter/tetra3.pb.dart';
 import 'package:flutter/material.dart';
 import 'package:sprintf/sprintf.dart';
@@ -85,12 +86,13 @@ void drawGapCross(
 }
 
 // Draw the text centered at `pos`.
-void drawText(
-    Canvas canvas, Color color, Offset pos, String text, bool portrait) {
+void drawText(BuildContext context, Canvas canvas, Color color, Offset pos,
+    String text, bool portrait) {
   final textPainter = TextPainter(
       text: TextSpan(text: text, style: TextStyle(color: color, fontSize: 14)),
       textDirection: TextDirection.ltr,
-      textAlign: TextAlign.center);
+      textAlign: TextAlign.center,
+      textScaler: textScaler(context));
   textPainter.layout();
   // The textPainter.paint() call puts the upper left corner of the text at the
   // passed pos. Adjust the pos passed to textPainter.paint() so that the center
@@ -113,8 +115,16 @@ void drawText(
 
 // angleRad is counter-clockwise starting from up direction, where y increases
 // downward.
-void drawArrow(Canvas canvas, Color color, Offset start, double length,
-    double angleRad, String text, bool portrait, double thickness) {
+void drawArrow(
+    BuildContext context,
+    Canvas canvas,
+    Color color,
+    Offset start,
+    double length,
+    double angleRad,
+    String text,
+    bool portrait,
+    double thickness) {
   angleRad +=
       math.pi / 2; // The math below wants angle to start from +x direction.
   var end = Offset(start.dx + length * math.cos(angleRad),
@@ -140,8 +150,28 @@ void drawArrow(Canvas canvas, Color color, Offset start, double length,
   if (text.isNotEmpty) {
     var textPos = Offset(start.dx + (length + 20) * math.cos(angleRad) - 10,
         start.dy - (length + 20) * math.sin(angleRad) - 10);
-    drawText(canvas, color, textPos, text, portrait);
+    drawText(context, canvas, color, textPos, text, portrait);
   }
+}
+
+String labelForEntry(CatalogEntry entry) {
+  if (entry.catalogLabel == "IAU" ||
+      entry.catalogLabel == "AST" ||
+      entry.catalogLabel == "COM" ||
+      entry.catalogLabel == "PL") {
+    return entry.catalogEntry;
+  }
+  return entry.catalogLabel + entry.catalogEntry;
+}
+
+String commonNameForEntry(CatalogEntry entry) {
+  if (entry.catalogLabel == "IAU" ||
+      entry.catalogLabel == "AST" ||
+      entry.catalogLabel == "COM" ||
+      entry.catalogLabel == "PL") {
+    return "";
+  }
+  return entry.commonName;
 }
 
 void drawSlewDirections(
@@ -162,21 +192,10 @@ void drawSlewDirections(
 
   var objectLabel = sprintf("%s\n%s", [targetRA, targetDec]);
   if (catalogEntry.catalogLabel != "") {
-    if (catalogEntry.catalogLabel == "IAU") {
-      objectLabel = catalogEntry.commonName;
-    } else {
-      if (catalogEntry.commonName != "") {
-        objectLabel = sprintf("%s%s\n%s", [
-          catalogEntry.catalogLabel,
-          catalogEntry.catalogEntry,
-          catalogEntry.commonName
-        ]);
-      } else {
-        objectLabel = sprintf("%s%s", [
-          catalogEntry.catalogLabel,
-          catalogEntry.catalogEntry,
-        ]);
-      }
+    objectLabel = labelForEntry(catalogEntry);
+    var commonName = commonNameForEntry(catalogEntry);
+    if (commonName.isNotEmpty) {
+      objectLabel = sprintf("%s\n%s", [objectLabel, commonName]);
     }
   }
 

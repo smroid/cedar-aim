@@ -32,6 +32,7 @@ void drawBullseye(Canvas canvas, Color color, Offset boresight, double radius,
 }
 
 void drawSlewTarget(
+    BuildContext context,
     Canvas canvas,
     Color color,
     Offset boresight,
@@ -63,8 +64,8 @@ void drawSlewTarget(
     final angleRad = _deg2rad(targetAngle);
     final arrowStart = Offset(boresight.dx - arrowRoot * math.sin(angleRad),
         boresight.dy - arrowRoot * math.cos(angleRad));
-    drawArrow(canvas, color, arrowStart, arrowLength, angleRad, distanceText,
-        portrait, _thin);
+    drawArrow(context, canvas, color, arrowStart, arrowLength, angleRad,
+        distanceText, portrait, _thin);
     drawDistanceText = false;
   } else {
     // Slew target is in the field of view.
@@ -78,6 +79,6 @@ void drawSlewTarget(
   drawBullseye(canvas, color, boresight, bsRadius, rollAngleRad);
   if (drawDistanceText) {
     final textPos = Offset(boresight.dx - bsRadius - 40, boresight.dy);
-    drawText(canvas, color, textPos, distanceText, portrait);
+    drawText(context, canvas, color, textPos, distanceText, portrait);
   }
 }
