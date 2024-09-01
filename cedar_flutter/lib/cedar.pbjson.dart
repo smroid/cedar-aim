@@ -220,6 +220,8 @@ const Preferences$json = {
     {'1': 'min_elevation_active', '3': 16, '4': 1, '5': 8, '9': 12, '10': 'minElevationActive', '17': true},
     {'1': 'min_elevation', '3': 13, '4': 1, '5': 1, '9': 13, '10': 'minElevation', '17': true},
     {'1': 'ordering', '3': 14, '4': 1, '5': 14, '6': '.cedar_sky.Ordering', '9': 14, '10': 'ordering', '17': true},
+    {'1': 'advanced', '3': 17, '4': 1, '5': 8, '9': 15, '10': 'advanced', '17': true},
+    {'1': 'text_size_index', '3': 18, '4': 1, '5': 5, '9': 16, '10': 'textSizeIndex', '17': true},
   ],
   '8': [
     {'1': '_celestial_coord_format'},
@@ -237,6 +239,8 @@ const Preferences$json = {
     {'1': '_min_elevation_active'},
     {'1': '_min_elevation'},
     {'1': '_ordering'},
+    {'1': '_advanced'},
+    {'1': '_text_size_index'},
   ],
 };
 
@@ -257,12 +261,14 @@ final $typed_data.Uint8List preferencesDescriptor = $convert.base64Decode(
     'dGFuY2UYDCABKAFIC1ILbWF4RGlzdGFuY2WIAQESNQoUbWluX2VsZXZhdGlvbl9hY3RpdmUYEC'
     'ABKAhIDFISbWluRWxldmF0aW9uQWN0aXZliAEBEigKDW1pbl9lbGV2YXRpb24YDSABKAFIDVIM'
     'bWluRWxldmF0aW9uiAEBEjQKCG9yZGVyaW5nGA4gASgOMhMuY2VkYXJfc2t5Lk9yZGVyaW5nSA'
-    '5SCG9yZGVyaW5niAEBQhkKF19jZWxlc3RpYWxfY29vcmRfZm9ybWF0Qg8KDV9leWVwaWVjZV9m'
-    'b3ZCFQoTX25pZ2h0X3Zpc2lvbl90aGVtZUISChBfc2hvd19wZXJmX3N0YXRzQg8KDV9oaWRlX2'
-    'FwcF9iYXJCDQoLX21vdW50X3R5cGVCFAoSX29ic2VydmVyX2xvY2F0aW9uQgsKCV9hY2N1cmFj'
-    'eUISChBfdXBkYXRlX2ludGVydmFsQhYKFF9jYXRhbG9nX2VudHJ5X21hdGNoQhYKFF9tYXhfZG'
-    'lzdGFuY2VfYWN0aXZlQg8KDV9tYXhfZGlzdGFuY2VCFwoVX21pbl9lbGV2YXRpb25fYWN0aXZl'
-    'QhAKDl9taW5fZWxldmF0aW9uQgsKCV9vcmRlcmluZw==');
+    '5SCG9yZGVyaW5niAEBEh8KCGFkdmFuY2VkGBEgASgISA9SCGFkdmFuY2VkiAEBEisKD3RleHRf'
+    'c2l6ZV9pbmRleBgSIAEoBUgQUg10ZXh0U2l6ZUluZGV4iAEBQhkKF19jZWxlc3RpYWxfY29vcm'
+    'RfZm9ybWF0Qg8KDV9leWVwaWVjZV9mb3ZCFQoTX25pZ2h0X3Zpc2lvbl90aGVtZUISChBfc2hv'
+    'd19wZXJmX3N0YXRzQg8KDV9oaWRlX2FwcF9iYXJCDQoLX21vdW50X3R5cGVCFAoSX29ic2Vydm'
+    'VyX2xvY2F0aW9uQgsKCV9hY2N1cmFjeUISChBfdXBkYXRlX2ludGVydmFsQhYKFF9jYXRhbG9n'
+    'X2VudHJ5X21hdGNoQhYKFF9tYXhfZGlzdGFuY2VfYWN0aXZlQg8KDV9tYXhfZGlzdGFuY2VCFw'
+    'oVX21pbl9lbGV2YXRpb25fYWN0aXZlQhAKDl9taW5fZWxldmF0aW9uQgsKCV9vcmRlcmluZ0IL'
+    'CglfYWR2YW5jZWRCEgoQX3RleHRfc2l6ZV9pbmRleA==');
 
 @$core.Deprecated('Use frameRequestDescriptor instead')
 const FrameRequest$json = {

@@ -45,6 +45,16 @@ bool diffPreferences(Preferences prev, Preferences curr) {
   } else {
     curr.clearHideAppBar();
   }
+  if (curr.advanced != prev.advanced) {
+    hasDiff = true;
+  } else {
+    curr.clearAdvanced();
+  }
+  if (curr.textSizeIndex != prev.textSizeIndex) {
+    hasDiff = true;
+  } else {
+    curr.clearTextSizeIndex();
+  }
   return hasDiff;
 }
 
@@ -80,8 +90,6 @@ bool diffOperationSettings(OperationSettings prev, OperationSettings curr) {
 class SettingsModel extends ChangeNotifier {
   Preferences preferencesProto = Preferences();
   OperationSettings opSettingsProto = OperationSettings();
-  bool advanced = false;
-  int textSizeIndex = 0;
 
   SettingsModel() {
     preferencesProto.eyepieceFov = 1.0;
@@ -123,7 +131,7 @@ class SettingsModel extends ChangeNotifier {
   }
 
   void updateTextSize(int textSizeIndex) {
-    this.textSizeIndex = textSizeIndex;
+    preferencesProto.textSizeIndex = textSizeIndex;
     notifyListeners();
   }
 }
@@ -142,7 +150,7 @@ int _durationToMs(proto_duration.Duration duration) {
 
 double textScaleFactor(BuildContext context) {
   final provider = Provider.of<SettingsModel>(context, listen: false);
-  switch (provider.textSizeIndex) {
+  switch (provider.preferencesProto.textSizeIndex) {
     case -1:
       return 1.0;
     case 0:
@@ -170,7 +178,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final provider = Provider.of<SettingsModel>(context, listen: false);
     final prefsProto = provider.preferencesProto;
     final opSettingsProto = provider.opSettingsProto;
-    final advanced = provider.advanced;
+    final advanced = provider.preferencesProto.advanced;
     // Need to inset the switches to match the slider.
     const switchInset = 16.0;
     return Scaffold(
@@ -209,7 +217,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             min: -1,
                             max: 1,
                             divisions: 2,
-                            value: provider.textSizeIndex.toDouble(),
+                            value: provider.preferencesProto.textSizeIndex
+                                .toDouble(),
                             onChanged: (double value) {
                               setState(() {
                                 provider.updateTextSize(value.toInt());

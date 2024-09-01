@@ -303,12 +303,9 @@ class MyHomePageState extends State<MyHomePage> {
   var operationSettings = OperationSettings();
   bool _setupMode = false;
   bool _focusAid = false;
-  bool _advanced = false; // TODO: persist to preferences
+  bool _advanced = false;
   bool _canAlign = false;
   bool _hasCedarSky = false;
-
-  // 0: normal; +1: larger; -1: smaller (and maybe also -2, +2, etc).
-  int _textSizeIndex = 0; // TODO: persist to preferences
 
   int _accuracy = 2; // 1-3.
 
@@ -433,8 +430,7 @@ class MyHomePageState extends State<MyHomePage> {
     var settingsModel = Provider.of<SettingsModel>(context, listen: false);
     settingsModel.preferencesProto = preferences!.deepCopy();
     settingsModel.opSettingsProto = operationSettings.deepCopy();
-    settingsModel.advanced = _advanced;
-    // settingsModel.textSizeIndex = _textSizeIndex;
+    _advanced = preferences!.advanced;
     _calibrationData =
         response.hasCalibrationData() ? response.calibrationData : null;
     _processingStats =
@@ -784,11 +780,14 @@ class MyHomePageState extends State<MyHomePage> {
               Checkbox(
                 value: _advanced,
                 onChanged: (bool? selected) async {
-                  setState(() {
+                  setState(() async {
                     _advanced = selected!;
                     var settingsModel =
                         Provider.of<SettingsModel>(context, listen: false);
-                    settingsModel.advanced = _advanced;
+                    settingsModel.preferencesProto.advanced = _advanced;
+                    var prefs = Preferences();
+                    prefs.advanced = _advanced;
+                    await updatePreferences(prefs);
                   });
                 },
                 activeColor: Theme.of(context).colorScheme.surface,
@@ -1202,18 +1201,15 @@ class MyHomePageState extends State<MyHomePage> {
                           maximum: 10,
                           annotations: <GaugeAnnotation>[
                             GaugeAnnotation(
-                                positionFactor: 0.3,
-                                angle: 270,
-                                widget: Text(sprintf("%d", [_numStars]),
-                                    textScaler: textScaler(context))),
+                              positionFactor: 0.3,
+                              angle: 270,
+                              widget: solveText(sprintf("%d", [_numStars])),
+                            ),
                             GaugeAnnotation(
-                                positionFactor: 0.4,
-                                angle: 90,
-                                widget: Text("stars",
-                                    style: const TextStyle(
-                                      fontSize: 12.0,
-                                    ),
-                                    textScaler: textScaler(context))),
+                              positionFactor: 0.4,
+                              angle: 90,
+                              widget: solveText("stars", size: 12),
+                            ),
                           ],
                           ranges: <GaugeRange>[
                             GaugeRange(

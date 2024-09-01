@@ -587,6 +587,8 @@ class Preferences extends $pb.GeneratedMessage {
     $2.Ordering? ordering,
     $core.bool? maxDistanceActive,
     $core.bool? minElevationActive,
+    $core.bool? advanced,
+    $core.int? textSizeIndex,
   }) {
     final $result = create();
     if (celestialCoordFormat != null) {
@@ -634,6 +636,12 @@ class Preferences extends $pb.GeneratedMessage {
     if (minElevationActive != null) {
       $result.minElevationActive = minElevationActive;
     }
+    if (advanced != null) {
+      $result.advanced = advanced;
+    }
+    if (textSizeIndex != null) {
+      $result.textSizeIndex = textSizeIndex;
+    }
     return $result;
   }
   Preferences._() : super();
@@ -656,6 +664,8 @@ class Preferences extends $pb.GeneratedMessage {
     ..e<$2.Ordering>(14, _omitFieldNames ? '' : 'ordering', $pb.PbFieldType.OE, defaultOrMaker: $2.Ordering.UNSPECIFIED, valueOf: $2.Ordering.valueOf, enumValues: $2.Ordering.values)
     ..aOB(15, _omitFieldNames ? '' : 'maxDistanceActive')
     ..aOB(16, _omitFieldNames ? '' : 'minElevationActive')
+    ..aOB(17, _omitFieldNames ? '' : 'advanced')
+    ..a<$core.int>(18, _omitFieldNames ? '' : 'textSizeIndex', $pb.PbFieldType.O3)
     ..hasRequiredFields = false
   ;
 
@@ -841,6 +851,26 @@ class Preferences extends $pb.GeneratedMessage {
   $core.bool hasMinElevationActive() => $_has(14);
   @$pb.TagNumber(16)
   void clearMinElevationActive() => clearField(16);
+
+  /// Advanced mode vs. basic mode.
+  @$pb.TagNumber(17)
+  $core.bool get advanced => $_getBF(15);
+  @$pb.TagNumber(17)
+  set advanced($core.bool v) { $_setBool(15, v); }
+  @$pb.TagNumber(17)
+  $core.bool hasAdvanced() => $_has(15);
+  @$pb.TagNumber(17)
+  void clearAdvanced() => clearField(17);
+
+  /// 0: normal; -1: smaller; +1: bigger.
+  @$pb.TagNumber(18)
+  $core.int get textSizeIndex => $_getIZ(16);
+  @$pb.TagNumber(18)
+  set textSizeIndex($core.int v) { $_setSignedInt32(16, v); }
+  @$pb.TagNumber(18)
+  $core.bool hasTextSizeIndex() => $_has(16);
+  @$pb.TagNumber(18)
+  void clearTextSizeIndex() => clearField(18);
 }
 
 class FrameRequest extends $pb.GeneratedMessage {
