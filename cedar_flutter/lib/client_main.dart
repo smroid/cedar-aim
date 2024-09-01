@@ -33,7 +33,7 @@ typedef DrawCatalogEntriesFunction = void Function(
     BuildContext, Canvas, Color, List<FovCatalogEntry>, bool, int, bool);
 
 typedef ShowCatalogBrowserFunction = void Function(
-    BuildContext, MyHomePageState, bool);
+    BuildContext, MyHomePageState);
 
 typedef ObjectInfoDialogFunction = void Function(
     MyHomePageState, BuildContext, SelectedCatalogEntry);
@@ -308,7 +308,7 @@ class MyHomePageState extends State<MyHomePage> {
   bool _hasCedarSky = false;
 
   // 0: normal; +1: larger; -1: smaller (and maybe also -2, +2, etc).
-  int _textSizeIndex = 0; // TODO: persist to preferences -- no? is client local
+  int _textSizeIndex = 0; // TODO: persist to preferences
 
   int _accuracy = 2; // 1-3.
 
@@ -937,6 +937,13 @@ class MyHomePageState extends State<MyHomePage> {
           child: Column(children: <Widget>[
             primaryText("Setup  Aim"),
             Switch(
+                activeTrackColor: Theme.of(context).colorScheme.surface,
+                activeColor: Theme.of(context).colorScheme.primary,
+                trackOutlineColor: WidgetStateProperty.all(
+                    Theme.of(context).colorScheme.primary),
+                thumbColor: WidgetStateProperty.all(
+                  const Color(0xa0F44336),
+                ),
                 value: !_setupMode,
                 onChanged: (bool value) {
                   setState(() {
@@ -978,7 +985,7 @@ class MyHomePageState extends State<MyHomePage> {
                           textScaler: textScaler(context),
                         ),
                         onPressed: () {
-                          _showCatalogBrowser!(context, this, portrait);
+                          _showCatalogBrowser!(context, this);
                         })
                     : Container()),
           )),
@@ -1069,8 +1076,8 @@ class MyHomePageState extends State<MyHomePage> {
       double() => "??",
     };
     return short
-        ? sprintf("%d° %s", [az.round(), dir])
-        : sprintf("%.2f° %s", [az, dir]);
+        ? sprintf("%s %d°", [dir, az.round()])
+        : sprintf("%s %.2f°", [dir, az]);
   }
 
   String formatAdvice(ErrorBoundedValue? ebv) {
@@ -1137,17 +1144,8 @@ class MyHomePageState extends State<MyHomePage> {
     ];
   }
 
-  List<Widget> altAz() {
+  List<Widget> azAlt() {
     return [
-      SizedBox(
-          width: 80 * textScaleFactor(context),
-          height: 14 * textScaleFactor(context),
-          child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                solveText("Alt"),
-                solveText(formatAltitude(_locationBasedInfo!.altitude))
-              ])),
       SizedBox(
           width: 80 * textScaleFactor(context),
           height: 14 * textScaleFactor(context),
@@ -1157,17 +1155,26 @@ class MyHomePageState extends State<MyHomePage> {
                 solveText("Az"),
                 solveText(formatAzimuth(_locationBasedInfo!.azimuth))
               ])),
+      SizedBox(
+          width: 80 * textScaleFactor(context),
+          height: 14 * textScaleFactor(context),
+          child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                solveText("Alt"),
+                solveText(formatAltitude(_locationBasedInfo!.altitude))
+              ])),
     ];
   }
 
   List<Widget> coordInfo(bool mountAltAz) {
     if (mountAltAz && _locationBasedInfo != null) {
-      return altAz() + [const SizedBox(width: 15, height: 15)] + raDec();
+      return azAlt() + [const SizedBox(width: 15, height: 15)] + raDec();
     } else {
       if (_locationBasedInfo == null) {
         return raDec();
       } else {
-        return raDec() + [const SizedBox(width: 15, height: 15)] + altAz();
+        return raDec() + [const SizedBox(width: 15, height: 15)] + azAlt();
       }
     }
   }
