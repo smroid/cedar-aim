@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 ThemeData _normalTheme() {
   return ThemeData(
     brightness: Brightness.dark,
+    // colorScheme: const ColorScheme.dark(),
     useMaterial3: true,
   );
 }
@@ -21,7 +22,7 @@ ThemeData _nightVisionTheme() {
       colorScheme: const ColorScheme.dark(
         background: Color(0xff202020),
         onBackground: Colors.red,
-        surface: Color(0xff101010),
+        surface: Color(0xff100000),
         onSurface: Colors.red,
         primary: Colors.red,
         onPrimary: Color(0xff404040),

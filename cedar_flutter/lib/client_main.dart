@@ -941,7 +941,7 @@ class MyHomePageState extends State<MyHomePage> {
                 trackOutlineColor: WidgetStateProperty.all(
                     Theme.of(context).colorScheme.primary),
                 thumbColor: WidgetStateProperty.all(
-                  const Color(0xa0F44336),
+                  Theme.of(context).colorScheme.primary.withOpacity(0.6),
                 ),
                 value: !_setupMode,
                 onChanged: (bool value) {
@@ -1168,12 +1168,12 @@ class MyHomePageState extends State<MyHomePage> {
 
   List<Widget> coordInfo(bool mountAltAz) {
     if (mountAltAz && _locationBasedInfo != null) {
-      return azAlt() + [const SizedBox(width: 15, height: 15)] + raDec();
+      return azAlt() + [const SizedBox(height: 10)] + raDec();
     } else {
       if (_locationBasedInfo == null) {
         return raDec();
       } else {
-        return raDec() + [const SizedBox(width: 15, height: 15)] + azAlt();
+        return raDec() + [const SizedBox(height: 10)] + azAlt();
       }
     }
   }
@@ -1269,7 +1269,7 @@ class MyHomePageState extends State<MyHomePage> {
               ? Container()
               : SizedBox(
                   width: 90 * textScaleFactor(context),
-                  height: 90 * textScaleFactor(context),
+                  height: 70 * textScaleFactor(context),
                   child: Column(
                     children:
                         coordInfo(preferences?.mountType == MountType.ALT_AZ),
