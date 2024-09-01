@@ -187,8 +187,8 @@ void drawSlewDirections(
   double offsetTiltAxis,
   bool portrait, // degrees, alt or dec movement
 ) {
-  final targetRA = sprintf("%s", [state.formatRightAscension(target.ra)]);
-  final targetDec = sprintf("%s", [state.formatDeclination(target.dec)]);
+  final targetRA = sprintf("RA %s", [state.formatRightAscension(target.ra)]);
+  final targetDec = sprintf("Dec %s", [state.formatDeclination(target.dec)]);
 
   var objectLabel = sprintf("%s\n%s", [targetRA, targetDec]);
   if (catalogEntry.catalogLabel != "") {

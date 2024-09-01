@@ -1006,7 +1006,7 @@ class MyHomePageState extends State<MyHomePage> {
 
   String formatRightAscension(double ra, {bool short = false}) {
     if (preferences?.celestialCoordFormat == CelestialCoordFormat.DECIMAL) {
-      return sprintf("RA %.4f°", [ra]);
+      return sprintf("%.4f°", [ra]);
     }
     int hours = (ra / 15.0).floor();
     double fracHours = ra / 15.0 - hours;
@@ -1014,13 +1014,13 @@ class MyHomePageState extends State<MyHomePage> {
     double fracMinutes = fracHours * 60.0 - minutes;
     int seconds = (fracMinutes * 60).round();
     return short
-        ? sprintf("RA %02d:%02d", [hours, minutes])
-        : sprintf("RA %02d:%02d:%02d", [hours, minutes, seconds]);
+        ? sprintf("%02d:%02d", [hours, minutes])
+        : sprintf("%02d:%02d:%02d", [hours, minutes, seconds]);
   }
 
   String formatHourAngle(double ha) {
     if (preferences?.celestialCoordFormat == CelestialCoordFormat.DECIMAL) {
-      return sprintf("HA %.4f°", [ha]);
+      return sprintf("%.4f°", [ha]);
     }
     String sign = ha < 0 ? "-" : "+";
     if (ha < 0) {
@@ -1031,12 +1031,12 @@ class MyHomePageState extends State<MyHomePage> {
     int minutes = (fracHours * 60.0).floor();
     double fracMinutes = fracHours * 60.0 - minutes;
     int seconds = (fracMinutes * 60).round();
-    return sprintf("HA %s%02d:%02d:%02d", [sign, hours, minutes, seconds]);
+    return sprintf("%s%02d:%02d:%02d", [sign, hours, minutes, seconds]);
   }
 
   String formatDeclination(double dec, {bool short = false}) {
     if (preferences?.celestialCoordFormat == CelestialCoordFormat.DECIMAL) {
-      return sprintf("Dec %.4f°", [dec]);
+      return sprintf("%.4f°", [dec]);
     }
     String sign = dec < 0 ? "-" : "+";
     if (dec < 0) {
@@ -1048,14 +1048,12 @@ class MyHomePageState extends State<MyHomePage> {
     double fracMinutes = fracDegrees * 60.0 - minutes;
     int seconds = (fracMinutes * 60).round();
     return short
-        ? sprintf("Dec %s%02d:%02d", [sign, degrees, minutes])
-        : sprintf("Dec %s%02d:%02d:%02d", [sign, degrees, minutes, seconds]);
+        ? sprintf("%s%02d:%02d", [sign, degrees, minutes])
+        : sprintf("%s%02d:%02d:%02d", [sign, degrees, minutes, seconds]);
   }
 
   String formatAltitude(double alt, {bool short = false}) {
-    return short
-        ? sprintf("Alt %d°", [alt.round()])
-        : sprintf("Alt %.2f°", [alt]);
+    return short ? sprintf("%d°", [alt.round()]) : sprintf("%.2f°", [alt]);
   }
 
   String formatAzimuth(double az, {bool short = false}) {
@@ -1071,8 +1069,8 @@ class MyHomePageState extends State<MyHomePage> {
       double() => "??",
     };
     return short
-        ? sprintf("Az %d° %s", [az.round(), dir])
-        : sprintf("Az %.2f° %s", [az, dir]);
+        ? sprintf("%d° %s", [az.round(), dir])
+        : sprintf("%.2f° %s", [az, dir]);
   }
 
   String formatAdvice(ErrorBoundedValue? ebv) {
@@ -1100,10 +1098,10 @@ class MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  Text solveText(String val) {
+  Text solveText(String val, {double? size = 12}) {
     return Text(
       val,
-      style: TextStyle(color: solveTextColor()),
+      style: TextStyle(color: solveTextColor(), fontSize: size),
       textScaler: textScaler(context),
     );
   }
@@ -1114,6 +1112,64 @@ class MyHomePageState extends State<MyHomePage> {
     }
     return _polarAlignAdvice!.hasAltitudeCorrection() ||
         _polarAlignAdvice!.hasAzimuthCorrection();
+  }
+
+  List<Widget> raDec() {
+    return [
+      SizedBox(
+          width: 80 * textScaleFactor(context),
+          height: 14 * textScaleFactor(context),
+          child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                solveText("RA"),
+                solveText(formatRightAscension(_solutionRA))
+              ])),
+      SizedBox(
+          width: 80 * textScaleFactor(context),
+          height: 14 * textScaleFactor(context),
+          child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                solveText("Dec"),
+                solveText(formatDeclination(_solutionDec))
+              ]))
+    ];
+  }
+
+  List<Widget> altAz() {
+    return [
+      SizedBox(
+          width: 80 * textScaleFactor(context),
+          height: 14 * textScaleFactor(context),
+          child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                solveText("Alt"),
+                solveText(formatAltitude(_locationBasedInfo!.altitude))
+              ])),
+      SizedBox(
+          width: 80 * textScaleFactor(context),
+          height: 14 * textScaleFactor(context),
+          child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                solveText("Az"),
+                solveText(formatAzimuth(_locationBasedInfo!.azimuth))
+              ])),
+    ];
+  }
+
+  List<Widget> coordInfo(bool mountAltAz) {
+    if (mountAltAz && _locationBasedInfo != null) {
+      return altAz() + [const SizedBox(width: 15, height: 15)] + raDec();
+    } else {
+      if (_locationBasedInfo == null) {
+        return raDec();
+      } else {
+        return raDec() + [const SizedBox(width: 15, height: 15)] + altAz();
+      }
+    }
   }
 
   List<Widget> dataItems(BuildContext context) {
@@ -1209,27 +1265,17 @@ class MyHomePageState extends State<MyHomePage> {
           child: _setupMode
               ? Container()
               : SizedBox(
-                  width: 110 * textScaleFactor(context),
-                  height: 180,
+                  width: 90 * textScaleFactor(context),
+                  height: 90 * textScaleFactor(context),
                   child: Column(
-                    children: <Widget>[
-                      const SizedBox(width: 0, height: 15),
-                      solveText(
-                          sprintf("%s", [formatRightAscension(_solutionRA)])),
-                      solveText(
-                          sprintf("%s", [formatDeclination(_solutionDec)])),
-                      solveText(sprintf("RMSE %.1f", [_solutionRMSE])),
-                      // if (_locationBasedInfo != null)
-                      //   solveText(sprintf("%s",
-                      //       [formatHourAngle(_locationBasedInfo!.hourAngle)])),
-                      if (_locationBasedInfo != null)
-                        solveText(sprintf("%s",
-                            [formatAltitude(_locationBasedInfo!.altitude)])),
-                      if (_locationBasedInfo != null)
-                        solveText(sprintf("%s",
-                            [formatAzimuth(_locationBasedInfo!.azimuth)])),
-                    ],
-                  ))),
+                    children:
+                        coordInfo(preferences?.mountType == MountType.ALT_AZ),
+                  ),
+                  // solveText(sprintf("RMSE %.1f", [_solutionRMSE])),
+                  // if (_locationBasedInfo != null)
+                  //   solveText(sprintf("HA %s",
+                  //       [formatHourAngle(_locationBasedInfo!.hourAngle)])),
+                )),
       const SizedBox(width: 15, height: 15),
       RotatedBox(
           quarterTurns: portrait ? 3 : 0,
