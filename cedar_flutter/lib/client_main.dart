@@ -8,6 +8,7 @@ import 'package:cedar_flutter/draw_slew_target.dart';
 import 'package:cedar_flutter/draw_util.dart';
 import 'package:cedar_flutter/geolocation.dart';
 import 'package:cedar_flutter/google/protobuf/timestamp.pb.dart';
+import 'package:cedar_flutter/perf_stats_dialog.dart';
 import 'package:cedar_flutter/server_log.dart';
 import 'package:cedar_flutter/settings.dart';
 import 'package:cedar_flutter/themes.dart';
@@ -327,7 +328,7 @@ class MyHomePageState extends State<MyHomePage> {
   int _prevFrameId = -1;
   late List<StarCentroid> _stars;
   int _numStars = 0;
-  double _exposureTimeMs = 0.0;
+  var exposureTimeMs = 0.0;
   int _maxExposureTimeMs = 0;
   bool _hasSolution = false;
 
@@ -340,12 +341,12 @@ class MyHomePageState extends State<MyHomePage> {
   double _solutionFOV = 0.0; // Degrees.
 
   // Arcsec.
-  double _solutionRMSE = 0.0;
+  double solutionRMSE = 0.0;
 
   LocationBasedInfo? _locationBasedInfo;
 
   CalibrationData? _calibrationData;
-  ProcessingStats? _processingStats;
+  ProcessingStats? processingStats;
   SlewRequest? _slewRequest;
   Preferences? preferences;
   PolarAlignAdvice? _polarAlignAdvice;
@@ -433,7 +434,7 @@ class MyHomePageState extends State<MyHomePage> {
     _advanced = preferences!.advanced;
     _calibrationData =
         response.hasCalibrationData() ? response.calibrationData : null;
-    _processingStats =
+    processingStats =
         response.hasProcessingStats() ? response.processingStats : null;
     _slewRequest = response.hasSlewRequest() ? response.slewRequest : null;
     if (_slewRequest != null && _slewRequest!.targetWithinCenterRegion) {
@@ -456,7 +457,7 @@ class MyHomePageState extends State<MyHomePage> {
           _solutionDec = plateSolution.imageCenterCoords.dec;
         }
         _solutionRollAngle = plateSolution.roll;
-        _solutionRMSE = plateSolution.rmse;
+        solutionRMSE = plateSolution.rmse;
         _solutionFOV = plateSolution.fov;
         if (response.hasLocationBasedInfo()) {
           _locationBasedInfo = response.locationBasedInfo;
@@ -490,7 +491,7 @@ class MyHomePageState extends State<MyHomePage> {
           cr.height.toDouble() / _binFactor);
     }
     if (response.hasExposureTime()) {
-      _exposureTimeMs = _durationToMs(response.exposureTime);
+      exposureTimeMs = _durationToMs(response.exposureTime);
     }
     _centerPeakImageBytes = null;
     if (response.hasCenterPeakImage()) {
@@ -824,7 +825,7 @@ class MyHomePageState extends State<MyHomePage> {
                         },
                       )),
                   Text(
-                    sprintf("exposure: %.1f ms", [_exposureTimeMs]),
+                    sprintf("exposure: %.1f ms", [exposureTimeMs]),
                     textScaler: textScaler(context),
                   ),
                   const SizedBox(height: 15),
@@ -1163,6 +1164,15 @@ class MyHomePageState extends State<MyHomePage> {
                 solveText("Alt"),
                 solveText(formatAltitude(_locationBasedInfo!.altitude))
               ])),
+      SizedBox(
+          width: 80 * textScaleFactor(context),
+          height: 14 * textScaleFactor(context),
+          child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                solveText("HA"),
+                solveText(formatHourAngle(_locationBasedInfo!.hourAngle))
+              ])),
     ];
   }
 
@@ -1189,45 +1199,55 @@ class MyHomePageState extends State<MyHomePage> {
                   SizedBox(
                     width: 75,
                     height: 75,
-                    child: SfRadialGauge(
-                      axes: <RadialAxis>[
-                        RadialAxis(
-                          startAngle: 150,
-                          endAngle: 30,
-                          showLabels: false,
-                          showTicks: false,
-                          showAxisLine: false,
-                          minimum: 0,
-                          maximum: 10,
-                          annotations: <GaugeAnnotation>[
-                            GaugeAnnotation(
-                              positionFactor: 0.3,
-                              angle: 270,
-                              widget: solveText(sprintf("%d", [_numStars])),
-                            ),
-                            GaugeAnnotation(
-                              positionFactor: 0.4,
-                              angle: 90,
-                              widget: solveText("stars", size: 12),
-                            ),
+                    child: GestureDetector(
+                        onTap: () {
+                          perfStatsDialog(this, context);
+                        },
+                        child: SfRadialGauge(
+                          axes: <RadialAxis>[
+                            RadialAxis(
+                              onAxisTapped: (double value) {
+                                perfStatsDialog(this, context);
+                              },
+                              startAngle: 150,
+                              endAngle: 30,
+                              showLabels: false,
+                              showTicks: false,
+                              showAxisLine: false,
+                              minimum: 0,
+                              maximum: 10,
+                              annotations: <GaugeAnnotation>[
+                                GaugeAnnotation(
+                                  positionFactor: 0.3,
+                                  angle: 270,
+                                  widget: solveText(sprintf("%d", [_numStars])),
+                                ),
+                                GaugeAnnotation(
+                                  positionFactor: 0.4,
+                                  angle: 90,
+                                  widget: solveText("stars", size: 12),
+                                ),
+                              ],
+                              ranges: <GaugeRange>[
+                                GaugeRange(
+                                    startWidth: 3,
+                                    endWidth: 3,
+                                    startValue: 0,
+                                    endValue: 10,
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onPrimary),
+                                GaugeRange(
+                                    startWidth: 3,
+                                    endWidth: 3,
+                                    startValue: 0,
+                                    endValue:
+                                        math.min(10, math.sqrt(_numStars)),
+                                    color: starsSliderColor()),
+                              ],
+                            )
                           ],
-                          ranges: <GaugeRange>[
-                            GaugeRange(
-                                startWidth: 3,
-                                endWidth: 3,
-                                startValue: 0,
-                                endValue: 10,
-                                color: Theme.of(context).colorScheme.onPrimary),
-                            GaugeRange(
-                                startWidth: 3,
-                                endWidth: 3,
-                                startValue: 0,
-                                endValue: math.min(10, math.sqrt(_numStars)),
-                                color: starsSliderColor()),
-                          ],
-                        )
-                      ],
-                    ),
+                        )),
                   ),
                   // const SizedBox(width: 15, height: 15),
                   // TODO: move calibration data elsewhere, make more comprehensive
@@ -1269,15 +1289,11 @@ class MyHomePageState extends State<MyHomePage> {
               ? Container()
               : SizedBox(
                   width: 90 * textScaleFactor(context),
-                  height: 70 * textScaleFactor(context),
+                  height: 85 * textScaleFactor(context),
                   child: Column(
                     children:
                         coordInfo(preferences?.mountType == MountType.ALT_AZ),
                   ),
-                  // solveText(sprintf("RMSE %.1f", [_solutionRMSE])),
-                  // if (_locationBasedInfo != null)
-                  //   solveText(sprintf("HA %s",
-                  //       [formatHourAngle(_locationBasedInfo!.hourAngle)])),
                 )),
       const SizedBox(width: 15, height: 15),
       RotatedBox(
@@ -1313,35 +1329,6 @@ class MyHomePageState extends State<MyHomePage> {
                         : Container(),
                   ]),
                 )),
-      const SizedBox(width: 15, height: 15),
-      RotatedBox(
-          quarterTurns: portrait ? 3 : 0,
-          child: _setupMode ||
-                  _processingStats == null ||
-                  !preferences!.showPerfStats
-              ? Container()
-              : SizedBox(
-                  width: 140,
-                  height: 120,
-                  child: Column(
-                    children: <Widget>[
-                      primaryText(sprintf("Detect %.1f ms", [
-                        _processingStats!.detectLatency.recent.mean * 1000
-                      ])),
-                      primaryText(sprintf("Solve %.1f ms",
-                          [_processingStats!.solveLatency.recent.mean * 1000])),
-                      primaryText(sprintf("Solve attempt %2d%%", [
-                        (_processingStats!.solveAttemptFraction.recent.mean *
-                                100)
-                            .toInt()
-                      ])),
-                      primaryText(sprintf("Solve success %d%%", [
-                        (_processingStats!.solveSuccessFraction.recent.mean *
-                                100)
-                            .toInt()
-                      ])),
-                    ],
-                  ))),
     ];
   }
 

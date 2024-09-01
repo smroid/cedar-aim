@@ -12,21 +12,23 @@ ThemeData _normalTheme() {
 }
 
 ThemeData _nightVisionTheme() {
+  const Color pureRed = Color.fromARGB(255, 255, 0, 0);
   return ThemeData(
-      primaryColor: Colors.red,
+      primaryColor: pureRed,
       textTheme: const TextTheme(
-        bodySmall: TextStyle(color: Colors.red),
-        bodyMedium: TextStyle(color: Colors.red),
-        bodyLarge: TextStyle(color: Colors.red),
+        bodySmall: TextStyle(color: pureRed),
+        bodyMedium: TextStyle(color: pureRed),
+        bodyLarge: TextStyle(color: pureRed),
       ),
       colorScheme: const ColorScheme.dark(
         background: Color(0xff202020),
-        onBackground: Colors.red,
-        surface: Color(0xff100000),
-        onSurface: Colors.red,
-        primary: Colors.red,
+        onBackground: pureRed,
+        surface: Color(0xff200000),
+        onSurface: pureRed,
+        primary: pureRed,
+        // primary: Colors.red,
         onPrimary: Color(0xff404040),
-        secondary: Colors.red,
+        secondary: pureRed,
         onSecondary: Color(0xff404040),
         tertiary: Color(0xff808080),
       ),
