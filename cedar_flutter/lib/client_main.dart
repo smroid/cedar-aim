@@ -1121,10 +1121,10 @@ class MyHomePageState extends State<MyHomePage> {
         _polarAlignAdvice!.hasAzimuthCorrection();
   }
 
-  List<Widget> raDec() {
+  List<Widget> raDec(int width) {
     return [
       SizedBox(
-          width: 80 * textScaleFactor(context),
+          width: width * textScaleFactor(context),
           height: 14 * textScaleFactor(context),
           child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1133,7 +1133,7 @@ class MyHomePageState extends State<MyHomePage> {
                 solveText(formatRightAscension(_solutionRA))
               ])),
       SizedBox(
-          width: 80 * textScaleFactor(context),
+          width: width * textScaleFactor(context),
           height: 14 * textScaleFactor(context),
           child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1144,10 +1144,10 @@ class MyHomePageState extends State<MyHomePage> {
     ];
   }
 
-  List<Widget> azAlt() {
+  List<Widget> azAlt(int width) {
     return [
       SizedBox(
-          width: 80 * textScaleFactor(context),
+          width: width * textScaleFactor(context),
           height: 14 * textScaleFactor(context),
           child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1156,7 +1156,7 @@ class MyHomePageState extends State<MyHomePage> {
                 solveText(formatAzimuth(_locationBasedInfo!.azimuth))
               ])),
       SizedBox(
-          width: 80 * textScaleFactor(context),
+          width: width * textScaleFactor(context),
           height: 14 * textScaleFactor(context),
           child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1165,7 +1165,7 @@ class MyHomePageState extends State<MyHomePage> {
                 solveText(formatAltitude(_locationBasedInfo!.altitude))
               ])),
       SizedBox(
-          width: 80 * textScaleFactor(context),
+          width: width * textScaleFactor(context),
           height: 14 * textScaleFactor(context),
           child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1176,14 +1176,14 @@ class MyHomePageState extends State<MyHomePage> {
     ];
   }
 
-  List<Widget> coordInfo(bool mountAltAz) {
+  List<Widget> coordInfo(bool mountAltAz, int width) {
     if (mountAltAz && _locationBasedInfo != null) {
-      return azAlt() + [const SizedBox(height: 10)] + raDec();
+      return azAlt(width) + [const SizedBox(height: 10)] + raDec(width);
     } else {
       if (_locationBasedInfo == null) {
-        return raDec();
+        return raDec(width);
       } else {
-        return raDec() + [const SizedBox(height: 10)] + azAlt();
+        return raDec(width) + [const SizedBox(height: 10)] + azAlt(width);
       }
     }
   }
@@ -1291,8 +1291,9 @@ class MyHomePageState extends State<MyHomePage> {
                   width: 90 * textScaleFactor(context),
                   height: 85 * textScaleFactor(context),
                   child: Column(
-                    children:
-                        coordInfo(preferences?.mountType == MountType.ALT_AZ),
+                    children: coordInfo(
+                        preferences?.mountType == MountType.ALT_AZ,
+                        /*width=*/ 85),
                   ),
                 )),
       const SizedBox(width: 15, height: 15),

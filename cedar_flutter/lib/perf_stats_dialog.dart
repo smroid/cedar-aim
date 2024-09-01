@@ -17,7 +17,7 @@ Future<void> perfStatsDialog(
   });
 
   Color color = Theme.of(context).colorScheme.primary;
-  final width = 180.0 * textScaleFactor(context);
+  final width = 200.0 * textScaleFactor(context);
 
   dialogOverlayEntry = OverlayEntry(builder: (BuildContext context) {
     return GestureDetector(
