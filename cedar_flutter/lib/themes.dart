@@ -23,7 +23,7 @@ ThemeData _nightVisionTheme() {
       colorScheme: const ColorScheme.dark(
         background: Color(0xff202020),
         onBackground: pureRed,
-        surface: Color(0xff200000),
+        surface: Color(0xff180000),
         onSurface: pureRed,
         primary: pureRed,
         // primary: Colors.red,
