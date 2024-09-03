@@ -401,6 +401,7 @@ class LatLong extends $pb.GeneratedMessage {
 
 class OperationSettings extends $pb.GeneratedMessage {
   factory OperationSettings({
+    $core.bool? daylightMode,
     Accuracy? accuracy,
     OperatingMode? operatingMode,
     $4.Duration? exposureTime,
@@ -410,6 +411,9 @@ class OperationSettings extends $pb.GeneratedMessage {
     $2.CatalogEntryMatch? catalogEntryMatch,
   }) {
     final $result = create();
+    if (daylightMode != null) {
+      $result.daylightMode = daylightMode;
+    }
     if (accuracy != null) {
       $result.accuracy = accuracy;
     }
@@ -438,6 +442,7 @@ class OperationSettings extends $pb.GeneratedMessage {
   factory OperationSettings.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'OperationSettings', package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'), createEmptyInstance: create)
+    ..aOB(1, _omitFieldNames ? '' : 'daylightMode')
     ..e<Accuracy>(3, _omitFieldNames ? '' : 'accuracy', $pb.PbFieldType.OE, defaultOrMaker: Accuracy.ACCURACY_UNSPECIFIED, valueOf: Accuracy.valueOf, enumValues: Accuracy.values)
     ..e<OperatingMode>(4, _omitFieldNames ? '' : 'operatingMode', $pb.PbFieldType.OE, defaultOrMaker: OperatingMode.MODE_UNSPECIFIED, valueOf: OperatingMode.valueOf, enumValues: OperatingMode.values)
     ..aOM<$4.Duration>(5, _omitFieldNames ? '' : 'exposureTime', subBuilder: $4.Duration.create)
@@ -469,6 +474,22 @@ class OperationSettings extends $pb.GeneratedMessage {
   static OperationSettings getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<OperationSettings>(create);
   static OperationSettings? _defaultInstance;
 
+  /// Relevant only in SETUP mode. Instead of trying to detect a star in the
+  /// central region (for focusing and boresight aligning), Cedar server instead
+  /// exposes the image in a conventional photographic fashion and returns the
+  /// central third of the image for magnified display at the client.
+  /// ActionRequest.designate_boresight is then used to convey the user's
+  /// identification of the image coordinate corresponding to the telescope's FOV
+  /// center.
+  @$pb.TagNumber(1)
+  $core.bool get daylightMode => $_getBF(0);
+  @$pb.TagNumber(1)
+  set daylightMode($core.bool v) { $_setBool(0, v); }
+  @$pb.TagNumber(1)
+  $core.bool hasDaylightMode() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearDaylightMode() => clearField(1);
+
   /// Controls the speed vs accuracy. Default is BALANCED. Only relevant in
   /// OPERATE mode.
   /// ACCURATE: uses longer exposures to obtain more detected stars. Also
@@ -480,65 +501,65 @@ class OperationSettings extends $pb.GeneratedMessage {
   ///   exposures. Benefit: faster cycle time. Drawback: risk of failed plate
   ///   solves from too few stars and more spurious detections.
   @$pb.TagNumber(3)
-  Accuracy get accuracy => $_getN(0);
+  Accuracy get accuracy => $_getN(1);
   @$pb.TagNumber(3)
   set accuracy(Accuracy v) { setField(3, v); }
   @$pb.TagNumber(3)
-  $core.bool hasAccuracy() => $_has(0);
+  $core.bool hasAccuracy() => $_has(1);
   @$pb.TagNumber(3)
   void clearAccuracy() => clearField(3);
 
   /// Defaults to SETUP mode.
   @$pb.TagNumber(4)
-  OperatingMode get operatingMode => $_getN(1);
+  OperatingMode get operatingMode => $_getN(2);
   @$pb.TagNumber(4)
   set operatingMode(OperatingMode v) { setField(4, v); }
   @$pb.TagNumber(4)
-  $core.bool hasOperatingMode() => $_has(1);
+  $core.bool hasOperatingMode() => $_has(2);
   @$pb.TagNumber(4)
   void clearOperatingMode() => clearField(4);
 
   /// The camera exposure integration time. Zero selects automatic exposure.
-  /// Default is zero (auto).
+  /// Default is zero (auto). TODO: remove this?
   @$pb.TagNumber(5)
-  $4.Duration get exposureTime => $_getN(2);
+  $4.Duration get exposureTime => $_getN(3);
   @$pb.TagNumber(5)
   set exposureTime($4.Duration v) { setField(5, v); }
   @$pb.TagNumber(5)
-  $core.bool hasExposureTime() => $_has(2);
+  $core.bool hasExposureTime() => $_has(3);
   @$pb.TagNumber(5)
   void clearExposureTime() => clearField(5);
   @$pb.TagNumber(5)
-  $4.Duration ensureExposureTime() => $_ensure(2);
+  $4.Duration ensureExposureTime() => $_ensure(3);
 
   /// The desired time interval at which Cedar should replace its current frame
   /// result. Default is zero, meaning go as fast as possible. Ignored in SETUP
   /// mode.
   @$pb.TagNumber(7)
-  $4.Duration get updateInterval => $_getN(3);
+  $4.Duration get updateInterval => $_getN(4);
   @$pb.TagNumber(7)
   set updateInterval($4.Duration v) { setField(7, v); }
   @$pb.TagNumber(7)
-  $core.bool hasUpdateInterval() => $_has(3);
+  $core.bool hasUpdateInterval() => $_has(4);
   @$pb.TagNumber(7)
   void clearUpdateInterval() => clearField(7);
   @$pb.TagNumber(7)
-  $4.Duration ensureUpdateInterval() => $_ensure(3);
+  $4.Duration ensureUpdateInterval() => $_ensure(4);
 
   /// In OPERATE mode, when Cedar detects that the camera is dwelling
   /// (motionless) for more than some number of seconds, `dwell_update_interval`
   /// is used instead of `update_interval`. Default is 1sec. Ignored in SETUP
   /// mode.
   @$pb.TagNumber(8)
-  $4.Duration get dwellUpdateInterval => $_getN(4);
+  $4.Duration get dwellUpdateInterval => $_getN(5);
   @$pb.TagNumber(8)
   set dwellUpdateInterval($4.Duration v) { setField(8, v); }
   @$pb.TagNumber(8)
-  $core.bool hasDwellUpdateInterval() => $_has(4);
+  $core.bool hasDwellUpdateInterval() => $_has(5);
   @$pb.TagNumber(8)
   void clearDwellUpdateInterval() => clearField(8);
   @$pb.TagNumber(8)
-  $4.Duration ensureDwellUpdateInterval() => $_ensure(4);
+  $4.Duration ensureDwellUpdateInterval() => $_ensure(5);
 
   /// If true, when Cedar detects that the camera is dwelling (motionless) for
   /// more than some number of seconds, the RA/DEC is logged. Note that if the
@@ -546,26 +567,26 @@ class OperationSettings extends $pb.GeneratedMessage {
   /// mount) or polar misalighment (tracked equatorial mount), only the RA/DEC
   /// at the onset of dwelling is logged.
   @$pb.TagNumber(10)
-  $core.bool get logDwelledPositions => $_getBF(5);
+  $core.bool get logDwelledPositions => $_getBF(6);
   @$pb.TagNumber(10)
-  set logDwelledPositions($core.bool v) { $_setBool(5, v); }
+  set logDwelledPositions($core.bool v) { $_setBool(6, v); }
   @$pb.TagNumber(10)
-  $core.bool hasLogDwelledPositions() => $_has(5);
+  $core.bool hasLogDwelledPositions() => $_has(6);
   @$pb.TagNumber(10)
   void clearLogDwelledPositions() => clearField(10);
 
   /// In OPERATE mode, if `catalog_entry_match` is present, this is used to
   /// determine the `catalog_entries` returned in each FrameResult.
   @$pb.TagNumber(11)
-  $2.CatalogEntryMatch get catalogEntryMatch => $_getN(6);
+  $2.CatalogEntryMatch get catalogEntryMatch => $_getN(7);
   @$pb.TagNumber(11)
   set catalogEntryMatch($2.CatalogEntryMatch v) { setField(11, v); }
   @$pb.TagNumber(11)
-  $core.bool hasCatalogEntryMatch() => $_has(6);
+  $core.bool hasCatalogEntryMatch() => $_has(7);
   @$pb.TagNumber(11)
   void clearCatalogEntryMatch() => clearField(11);
   @$pb.TagNumber(11)
-  $2.CatalogEntryMatch ensureCatalogEntryMatch() => $_ensure(6);
+  $2.CatalogEntryMatch ensureCatalogEntryMatch() => $_ensure(7);
 }
 
 /// User interface preferences and operation settings that are stored durably on
@@ -575,7 +596,6 @@ class Preferences extends $pb.GeneratedMessage {
     CelestialCoordFormat? celestialCoordFormat,
     $core.double? eyepieceFov,
     $core.bool? nightVisionTheme,
-    $core.bool? showPerfStats,
     $core.bool? hideAppBar,
     MountType? mountType,
     LatLong? observerLocation,
@@ -589,6 +609,7 @@ class Preferences extends $pb.GeneratedMessage {
     $core.bool? minElevationActive,
     $core.bool? advanced,
     $core.int? textSizeIndex,
+    ImageCoord? boresightPixel,
   }) {
     final $result = create();
     if (celestialCoordFormat != null) {
@@ -599,9 +620,6 @@ class Preferences extends $pb.GeneratedMessage {
     }
     if (nightVisionTheme != null) {
       $result.nightVisionTheme = nightVisionTheme;
-    }
-    if (showPerfStats != null) {
-      $result.showPerfStats = showPerfStats;
     }
     if (hideAppBar != null) {
       $result.hideAppBar = hideAppBar;
@@ -642,6 +660,9 @@ class Preferences extends $pb.GeneratedMessage {
     if (textSizeIndex != null) {
       $result.textSizeIndex = textSizeIndex;
     }
+    if (boresightPixel != null) {
+      $result.boresightPixel = boresightPixel;
+    }
     return $result;
   }
   Preferences._() : super();
@@ -652,7 +673,6 @@ class Preferences extends $pb.GeneratedMessage {
     ..e<CelestialCoordFormat>(1, _omitFieldNames ? '' : 'celestialCoordFormat', $pb.PbFieldType.OE, defaultOrMaker: CelestialCoordFormat.FORMAT_UNSPECIFIED, valueOf: CelestialCoordFormat.valueOf, enumValues: CelestialCoordFormat.values)
     ..a<$core.double>(2, _omitFieldNames ? '' : 'eyepieceFov', $pb.PbFieldType.OD)
     ..aOB(3, _omitFieldNames ? '' : 'nightVisionTheme')
-    ..aOB(4, _omitFieldNames ? '' : 'showPerfStats')
     ..aOB(5, _omitFieldNames ? '' : 'hideAppBar')
     ..e<MountType>(6, _omitFieldNames ? '' : 'mountType', $pb.PbFieldType.OE, defaultOrMaker: MountType.MOUNT_UNSPECIFIED, valueOf: MountType.valueOf, enumValues: MountType.values)
     ..aOM<LatLong>(7, _omitFieldNames ? '' : 'observerLocation', subBuilder: LatLong.create)
@@ -666,6 +686,7 @@ class Preferences extends $pb.GeneratedMessage {
     ..aOB(16, _omitFieldNames ? '' : 'minElevationActive')
     ..aOB(17, _omitFieldNames ? '' : 'advanced')
     ..a<$core.int>(18, _omitFieldNames ? '' : 'textSizeIndex', $pb.PbFieldType.O3)
+    ..aOM<ImageCoord>(19, _omitFieldNames ? '' : 'boresightPixel', subBuilder: ImageCoord.create)
     ..hasRequiredFields = false
   ;
 
@@ -721,23 +742,13 @@ class Preferences extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   void clearNightVisionTheme() => clearField(3);
 
-  /// If true, the UI continuously displays (some) Cedar performance statistics.
-  @$pb.TagNumber(4)
-  $core.bool get showPerfStats => $_getBF(3);
-  @$pb.TagNumber(4)
-  set showPerfStats($core.bool v) { $_setBool(3, v); }
-  @$pb.TagNumber(4)
-  $core.bool hasShowPerfStats() => $_has(3);
-  @$pb.TagNumber(4)
-  void clearShowPerfStats() => clearField(4);
-
   /// If true, the UI app bar is hidden to allow full screen operation.
   @$pb.TagNumber(5)
-  $core.bool get hideAppBar => $_getBF(4);
+  $core.bool get hideAppBar => $_getBF(3);
   @$pb.TagNumber(5)
-  set hideAppBar($core.bool v) { $_setBool(4, v); }
+  set hideAppBar($core.bool v) { $_setBool(3, v); }
   @$pb.TagNumber(5)
-  $core.bool hasHideAppBar() => $_has(4);
+  $core.bool hasHideAppBar() => $_has(3);
   @$pb.TagNumber(5)
   void clearHideAppBar() => clearField(5);
 
@@ -745,11 +756,11 @@ class Preferences extends $pb.GeneratedMessage {
   /// circle (cross aligned to north for EQUATORIAL or to zenith for ALT_AZ) and
   /// target slew direction instructions.
   @$pb.TagNumber(6)
-  MountType get mountType => $_getN(5);
+  MountType get mountType => $_getN(4);
   @$pb.TagNumber(6)
   set mountType(MountType v) { setField(6, v); }
   @$pb.TagNumber(6)
-  $core.bool hasMountType() => $_has(5);
+  $core.bool hasMountType() => $_has(4);
   @$pb.TagNumber(6)
   void clearMountType() => clearField(6);
 
@@ -757,25 +768,25 @@ class Preferences extends $pb.GeneratedMessage {
   /// corresponding FixedSettings field. Note: do not update this via
   /// UpdatePreferences().
   @$pb.TagNumber(7)
-  LatLong get observerLocation => $_getN(6);
+  LatLong get observerLocation => $_getN(5);
   @$pb.TagNumber(7)
   set observerLocation(LatLong v) { setField(7, v); }
   @$pb.TagNumber(7)
-  $core.bool hasObserverLocation() => $_has(6);
+  $core.bool hasObserverLocation() => $_has(5);
   @$pb.TagNumber(7)
   void clearObserverLocation() => clearField(7);
   @$pb.TagNumber(7)
-  LatLong ensureObserverLocation() => $_ensure(6);
+  LatLong ensureObserverLocation() => $_ensure(5);
 
   /// Saved accuracy setting. On server startup we use this to initialize the
   /// corresponding OperationSettings field. Note: do not update this via
   /// UpdatePreferences().
   @$pb.TagNumber(8)
-  Accuracy get accuracy => $_getN(7);
+  Accuracy get accuracy => $_getN(6);
   @$pb.TagNumber(8)
   set accuracy(Accuracy v) { setField(8, v); }
   @$pb.TagNumber(8)
-  $core.bool hasAccuracy() => $_has(7);
+  $core.bool hasAccuracy() => $_has(6);
   @$pb.TagNumber(8)
   void clearAccuracy() => clearField(8);
 
@@ -783,94 +794,108 @@ class Preferences extends $pb.GeneratedMessage {
   /// corresponding OperationSettings field. Note: do not update this via
   /// UpdatePreferences().
   @$pb.TagNumber(9)
-  $4.Duration get updateInterval => $_getN(8);
+  $4.Duration get updateInterval => $_getN(7);
   @$pb.TagNumber(9)
   set updateInterval($4.Duration v) { setField(9, v); }
   @$pb.TagNumber(9)
-  $core.bool hasUpdateInterval() => $_has(8);
+  $core.bool hasUpdateInterval() => $_has(7);
   @$pb.TagNumber(9)
   void clearUpdateInterval() => clearField(9);
   @$pb.TagNumber(9)
-  $4.Duration ensureUpdateInterval() => $_ensure(8);
+  $4.Duration ensureUpdateInterval() => $_ensure(7);
 
   /// Saved catalog object selection criteria for FOV image decoration. On server
   /// startup we use this to initialize the corresponding OperationSettings
   /// field. Note: do not update this via UpdatePreferences().
   @$pb.TagNumber(11)
-  $2.CatalogEntryMatch get catalogEntryMatch => $_getN(9);
+  $2.CatalogEntryMatch get catalogEntryMatch => $_getN(8);
   @$pb.TagNumber(11)
   set catalogEntryMatch($2.CatalogEntryMatch v) { setField(11, v); }
   @$pb.TagNumber(11)
-  $core.bool hasCatalogEntryMatch() => $_has(9);
+  $core.bool hasCatalogEntryMatch() => $_has(8);
   @$pb.TagNumber(11)
   void clearCatalogEntryMatch() => clearField(11);
   @$pb.TagNumber(11)
-  $2.CatalogEntryMatch ensureCatalogEntryMatch() => $_ensure(9);
+  $2.CatalogEntryMatch ensureCatalogEntryMatch() => $_ensure(8);
 
   @$pb.TagNumber(12)
-  $core.double get maxDistance => $_getN(10);
+  $core.double get maxDistance => $_getN(9);
   @$pb.TagNumber(12)
-  set maxDistance($core.double v) { $_setDouble(10, v); }
+  set maxDistance($core.double v) { $_setDouble(9, v); }
   @$pb.TagNumber(12)
-  $core.bool hasMaxDistance() => $_has(10);
+  $core.bool hasMaxDistance() => $_has(9);
   @$pb.TagNumber(12)
   void clearMaxDistance() => clearField(12);
 
   @$pb.TagNumber(13)
-  $core.double get minElevation => $_getN(11);
+  $core.double get minElevation => $_getN(10);
   @$pb.TagNumber(13)
-  set minElevation($core.double v) { $_setDouble(11, v); }
+  set minElevation($core.double v) { $_setDouble(10, v); }
   @$pb.TagNumber(13)
-  $core.bool hasMinElevation() => $_has(11);
+  $core.bool hasMinElevation() => $_has(10);
   @$pb.TagNumber(13)
   void clearMinElevation() => clearField(13);
 
   @$pb.TagNumber(14)
-  $2.Ordering get ordering => $_getN(12);
+  $2.Ordering get ordering => $_getN(11);
   @$pb.TagNumber(14)
   set ordering($2.Ordering v) { setField(14, v); }
   @$pb.TagNumber(14)
-  $core.bool hasOrdering() => $_has(12);
+  $core.bool hasOrdering() => $_has(11);
   @$pb.TagNumber(14)
   void clearOrdering() => clearField(14);
 
   @$pb.TagNumber(15)
-  $core.bool get maxDistanceActive => $_getBF(13);
+  $core.bool get maxDistanceActive => $_getBF(12);
   @$pb.TagNumber(15)
-  set maxDistanceActive($core.bool v) { $_setBool(13, v); }
+  set maxDistanceActive($core.bool v) { $_setBool(12, v); }
   @$pb.TagNumber(15)
-  $core.bool hasMaxDistanceActive() => $_has(13);
+  $core.bool hasMaxDistanceActive() => $_has(12);
   @$pb.TagNumber(15)
   void clearMaxDistanceActive() => clearField(15);
 
   @$pb.TagNumber(16)
-  $core.bool get minElevationActive => $_getBF(14);
+  $core.bool get minElevationActive => $_getBF(13);
   @$pb.TagNumber(16)
-  set minElevationActive($core.bool v) { $_setBool(14, v); }
+  set minElevationActive($core.bool v) { $_setBool(13, v); }
   @$pb.TagNumber(16)
-  $core.bool hasMinElevationActive() => $_has(14);
+  $core.bool hasMinElevationActive() => $_has(13);
   @$pb.TagNumber(16)
   void clearMinElevationActive() => clearField(16);
 
   /// Advanced mode vs. basic mode.
   @$pb.TagNumber(17)
-  $core.bool get advanced => $_getBF(15);
+  $core.bool get advanced => $_getBF(14);
   @$pb.TagNumber(17)
-  set advanced($core.bool v) { $_setBool(15, v); }
+  set advanced($core.bool v) { $_setBool(14, v); }
   @$pb.TagNumber(17)
-  $core.bool hasAdvanced() => $_has(15);
+  $core.bool hasAdvanced() => $_has(14);
   @$pb.TagNumber(17)
   void clearAdvanced() => clearField(17);
 
   /// 0: normal; -1: smaller; +1: bigger.
   @$pb.TagNumber(18)
-  $core.int get textSizeIndex => $_getIZ(16);
+  $core.int get textSizeIndex => $_getIZ(15);
   @$pb.TagNumber(18)
-  set textSizeIndex($core.int v) { $_setSignedInt32(16, v); }
+  set textSizeIndex($core.int v) { $_setSignedInt32(15, v); }
   @$pb.TagNumber(18)
-  $core.bool hasTextSizeIndex() => $_has(16);
+  $core.bool hasTextSizeIndex() => $_has(15);
   @$pb.TagNumber(18)
   void clearTextSizeIndex() => clearField(18);
+
+  /// Saved boresight position. On server startup we use this to initialize the
+  /// internal state which appears at FrameResult.boresight_position. Note: do
+  /// not update this via UpdatePreferences().
+  @$pb.TagNumber(19)
+  ImageCoord get boresightPixel => $_getN(16);
+  @$pb.TagNumber(19)
+  set boresightPixel(ImageCoord v) { setField(19, v); }
+  @$pb.TagNumber(19)
+  $core.bool hasBoresightPixel() => $_has(16);
+  @$pb.TagNumber(19)
+  void clearBoresightPixel() => clearField(19);
+  @$pb.TagNumber(19)
+  ImageCoord ensureBoresightPixel() => $_ensure(16);
 }
 
 class FrameRequest extends $pb.GeneratedMessage {
@@ -1121,9 +1146,13 @@ class FrameResult extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   OperationSettings ensureOperationSettings() => $_ensure(1);
 
-  /// The image from which information in this FrameResult is derived. Note that
-  /// this image has stretch/gamma applied for better visibility of dark
-  /// features.
+  /// The image from which information in this FrameResult is derived. This image
+  /// is from the entire sensor, typically with some amount of binning. However,
+  /// if OperationSettings.daylight_mode is in effect, the image is only of
+  /// `center_region` and is not binned. Note that this image has stretch/gamma
+  /// applied for better visibility of dark features (unless
+  /// OperationSettings.daylight_mode is in effect, in which case a more natural
+  /// rendering is used).
   @$pb.TagNumber(3)
   Image get image => $_getN(2);
   @$pb.TagNumber(3)
@@ -1152,7 +1181,7 @@ class FrameResult extends $pb.GeneratedMessage {
   @$pb.TagNumber(5)
   CalibrationData ensureCalibrationData() => $_ensure(4);
 
-  /// The pixel value at the center_peak_position.
+  /// The pixel value at the center_peak_position. Not used in `daylight_mode`.
   @$pb.TagNumber(6)
   $core.int get centerPeakValue => $_getIZ(5);
   @$pb.TagNumber(6)
@@ -1209,7 +1238,7 @@ class FrameResult extends $pb.GeneratedMessage {
   void clearCameraTemperatureCelsius() => clearField(10);
 
   /// Identifies the center region used for brightest-star detection for focusing
-  /// support. In full resolution image coordinates.
+  /// support, and also in `daylight_mode`. In full resolution image coordinates.
   @$pb.TagNumber(11)
   Rectangle get centerRegion => $_getN(10);
   @$pb.TagNumber(11)
@@ -1222,7 +1251,7 @@ class FrameResult extends $pb.GeneratedMessage {
   Rectangle ensureCenterRegion() => $_ensure(10);
 
   /// The estimated position of the brightest point in `center_region`. In full
-  /// resolution image coordinates.
+  /// resolution image coordinates. Not used in `daylight_mode`.
   @$pb.TagNumber(12)
   ImageCoord get centerPeakPosition => $_getN(11);
   @$pb.TagNumber(12)
@@ -1236,7 +1265,7 @@ class FrameResult extends $pb.GeneratedMessage {
 
   /// A small high resolution crop of `image` centered at `center_peak_position`.
   /// Note that this image has stretch/gamma applied for better visibility of
-  /// dark features.
+  /// dark features. Not used in `daylight_mode`.
   @$pb.TagNumber(13)
   Image get centerPeakImage => $_getN(12);
   @$pb.TagNumber(13)
@@ -1263,7 +1292,7 @@ class FrameResult extends $pb.GeneratedMessage {
 
   /// The position in full resolution image coordinates of the captured
   /// boresight. If no boresight has been captured, is the image center. See
-  /// ActionRequest.capture_boresight.
+  /// ActionRequest.capture_boresight and designate_boresight.
   @$pb.TagNumber(21)
   ImageCoord get boresightPosition => $_getN(14);
   @$pb.TagNumber(21)
@@ -2805,6 +2834,7 @@ class FovCatalogEntry extends $pb.GeneratedMessage {
 class ActionRequest extends $pb.GeneratedMessage {
   factory ActionRequest({
     $core.bool? captureBoresight,
+    ImageCoord? designateBoresight,
     $core.bool? shutdownServer,
     $core.bool? stopSlew,
     $core.bool? saveImage,
@@ -2813,6 +2843,9 @@ class ActionRequest extends $pb.GeneratedMessage {
     final $result = create();
     if (captureBoresight != null) {
       $result.captureBoresight = captureBoresight;
+    }
+    if (designateBoresight != null) {
+      $result.designateBoresight = designateBoresight;
     }
     if (shutdownServer != null) {
       $result.shutdownServer = shutdownServer;
@@ -2834,6 +2867,7 @@ class ActionRequest extends $pb.GeneratedMessage {
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'ActionRequest', package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'), createEmptyInstance: create)
     ..aOB(1, _omitFieldNames ? '' : 'captureBoresight')
+    ..aOM<ImageCoord>(2, _omitFieldNames ? '' : 'designateBoresight', subBuilder: ImageCoord.create)
     ..aOB(3, _omitFieldNames ? '' : 'shutdownServer')
     ..aOB(4, _omitFieldNames ? '' : 'stopSlew')
     ..aOB(5, _omitFieldNames ? '' : 'saveImage')
@@ -2887,24 +2921,40 @@ class ActionRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   void clearCaptureBoresight() => clearField(1);
 
+  /// In SETUP mode with OperationSettings.daylight_mode in effect, this conveys
+  /// which part of the image the user tapped to designate the telescope's FOV
+  /// center. The image coordinates are within FrameResult.image; Cedar server
+  /// logic reconstructs the full-image coordinates by taking
+  /// FrameResult.center_region into account.
+  @$pb.TagNumber(2)
+  ImageCoord get designateBoresight => $_getN(1);
+  @$pb.TagNumber(2)
+  set designateBoresight(ImageCoord v) { setField(2, v); }
+  @$pb.TagNumber(2)
+  $core.bool hasDesignateBoresight() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearDesignateBoresight() => clearField(2);
+  @$pb.TagNumber(2)
+  ImageCoord ensureDesignateBoresight() => $_ensure(1);
+
   /// Shut down the computer on which the Cedar server is running. Do this before
   /// unplugging the power!
   @$pb.TagNumber(3)
-  $core.bool get shutdownServer => $_getBF(1);
+  $core.bool get shutdownServer => $_getBF(2);
   @$pb.TagNumber(3)
-  set shutdownServer($core.bool v) { $_setBool(1, v); }
+  set shutdownServer($core.bool v) { $_setBool(2, v); }
   @$pb.TagNumber(3)
-  $core.bool hasShutdownServer() => $_has(1);
+  $core.bool hasShutdownServer() => $_has(2);
   @$pb.TagNumber(3)
   void clearShutdownServer() => clearField(3);
 
   /// Tells SkySafari that the slew is finished (or discontinued).
   @$pb.TagNumber(4)
-  $core.bool get stopSlew => $_getBF(2);
+  $core.bool get stopSlew => $_getBF(3);
   @$pb.TagNumber(4)
-  set stopSlew($core.bool v) { $_setBool(2, v); }
+  set stopSlew($core.bool v) { $_setBool(3, v); }
   @$pb.TagNumber(4)
-  $core.bool hasStopSlew() => $_has(2);
+  $core.bool hasStopSlew() => $_has(3);
   @$pb.TagNumber(4)
   void clearStopSlew() => clearField(4);
 
@@ -2912,26 +2962,26 @@ class ActionRequest extends $pb.GeneratedMessage {
   /// on the server with the current date/time incorporated into the filename.
   /// TODO: return filename? Provide rename action?
   @$pb.TagNumber(5)
-  $core.bool get saveImage => $_getBF(3);
+  $core.bool get saveImage => $_getBF(4);
   @$pb.TagNumber(5)
-  set saveImage($core.bool v) { $_setBool(3, v); }
+  set saveImage($core.bool v) { $_setBool(4, v); }
   @$pb.TagNumber(5)
-  $core.bool hasSaveImage() => $_has(3);
+  $core.bool hasSaveImage() => $_has(4);
   @$pb.TagNumber(5)
   void clearSaveImage() => clearField(5);
 
   /// Cedar-aim is initiating a goto operation. This might be from a Cedar Sky
   /// catalog selection, or it might be a user-entered RA/Dec value.
   @$pb.TagNumber(6)
-  $0.CelestialCoord get initiateSlew => $_getN(4);
+  $0.CelestialCoord get initiateSlew => $_getN(5);
   @$pb.TagNumber(6)
   set initiateSlew($0.CelestialCoord v) { setField(6, v); }
   @$pb.TagNumber(6)
-  $core.bool hasInitiateSlew() => $_has(4);
+  $core.bool hasInitiateSlew() => $_has(5);
   @$pb.TagNumber(6)
   void clearInitiateSlew() => clearField(6);
   @$pb.TagNumber(6)
-  $0.CelestialCoord ensureInitiateSlew() => $_ensure(4);
+  $0.CelestialCoord ensureInitiateSlew() => $_ensure(5);
 }
 
 class ServerLogRequest extends $pb.GeneratedMessage {
