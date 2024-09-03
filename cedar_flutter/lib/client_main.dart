@@ -22,7 +22,7 @@ import 'package:protobuf/protobuf.dart';
 import 'package:provider/provider.dart';
 import 'package:sprintf/sprintf.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
-import 'cedar.pbgrpc.dart';
+import 'cedar.pbgrpc.dart' as cedar_rpc;
 import 'tetra3.pb.dart';
 import 'google/protobuf/duration.pb.dart' as proto_duration;
 import 'get_cedar_client_for_web.dart'
@@ -30,8 +30,8 @@ import 'get_cedar_client_for_web.dart'
 
 // To generate release build: flutter build web
 
-typedef DrawCatalogEntriesFunction = void Function(
-    BuildContext, Canvas, Color, List<FovCatalogEntry>, bool, int, bool);
+typedef DrawCatalogEntriesFunction = void Function(BuildContext, Canvas, Color,
+    List<cedar_rpc.FovCatalogEntry>, bool, int, bool);
 
 typedef ShowCatalogBrowserFunction = void Function(
     BuildContext, MyHomePageState);
@@ -115,7 +115,9 @@ class _MainImagePainter extends CustomPainter {
     const double hairline = 0.5;
     const double thin = 1;
     final Color color = Theme.of(_context).colorScheme.primary;
-    if (state._setupMode && state._centerRegion != null) {
+    if (state._setupMode &&
+        !state._daylightMode &&
+        state._centerRegion != null) {
       // Draw search box within which we search for the brightest star for
       // focusing.
       canvas.drawRect(
@@ -187,7 +189,7 @@ class _MainImagePainter extends CustomPainter {
                   slew.targetDistance > 0.5
               ? Offset(20, state._imageRegion.height - 220)
               : const Offset(20, 20),
-          state.preferences?.mountType == MountType.ALT_AZ,
+          state.preferences?.mountType == cedar_rpc.MountType.ALT_AZ,
           state._northernHemisphere,
           slew.offsetRotationAxis,
           slew.offsetTiltAxis,
@@ -196,7 +198,15 @@ class _MainImagePainter extends CustomPainter {
       // Make a cross at the boresight position (if any) or else the image
       // center.
       if (state._setupMode || !state._hasSolution) {
-        drawCross(canvas, color, state._boresightPosition, /*radius=*/ 8,
+        var bsPos = state._boresightPosition;
+        if (state._daylightMode && state._centerRegion != null) {
+          // Compute boresight position within the central region.
+          bsPos = Offset(
+            state._fullResBoresightPosition.dx - state._centerRegion!.left,
+            state._fullResBoresightPosition.dy - state._centerRegion!.top,
+          );
+        }
+        drawGapCross(canvas, color, bsPos, /*radius=*/ 8, /*gapRadius=*/ 2,
             /*rollAngleRad=*/ 0.0, thin, thin);
       } else {
         var rollAngleRad = _deg2rad(state.bullseyeDirectionIndicator());
@@ -300,10 +310,11 @@ class MyHomePageState extends State<MyHomePage> {
   late Rect _fullResImageRegion;
   int _binFactor = 1;
 
-  ServerInformation? _serverInformation;
-  var operationSettings = OperationSettings();
+  cedar_rpc.ServerInformation? _serverInformation;
+  var operationSettings = cedar_rpc.OperationSettings();
   bool _setupMode = false;
   bool _focusAid = false;
+  bool _daylightMode = false;
   bool _advanced = false;
   bool _canAlign = false;
   bool _hasCedarSky = false;
@@ -326,7 +337,7 @@ class MyHomePageState extends State<MyHomePage> {
   Uint8List? _boresightImageBytes;
 
   int _prevFrameId = -1;
-  late List<StarCentroid> _stars;
+  late List<cedar_rpc.StarCentroid> _stars;
   int _numStars = 0;
   var exposureTimeMs = 0.0;
   int _maxExposureTimeMs = 0;
@@ -343,15 +354,15 @@ class MyHomePageState extends State<MyHomePage> {
   // Arcsec.
   double solutionRMSE = 0.0;
 
-  LocationBasedInfo? _locationBasedInfo;
+  cedar_rpc.LocationBasedInfo? _locationBasedInfo;
 
-  CalibrationData? _calibrationData;
-  ProcessingStats? processingStats;
-  SlewRequest? _slewRequest;
-  Preferences? preferences;
-  PolarAlignAdvice? _polarAlignAdvice;
-  List<FovCatalogEntry> _labeledFovCatalogEntries = List.empty();
-  List<FovCatalogEntry> _unlabeledFovCatalogEntries = List.empty();
+  cedar_rpc.CalibrationData? _calibrationData;
+  cedar_rpc.ProcessingStats? processingStats;
+  cedar_rpc.SlewRequest? _slewRequest;
+  cedar_rpc.Preferences? preferences;
+  cedar_rpc.PolarAlignAdvice? _polarAlignAdvice;
+  List<cedar_rpc.FovCatalogEntry> _labeledFovCatalogEntries = List.empty();
+  List<cedar_rpc.FovCatalogEntry> _unlabeledFovCatalogEntries = List.empty();
 
   // Calibration happens when _setupMode transitions to false.
   bool _calibrating = false;
@@ -366,8 +377,8 @@ class MyHomePageState extends State<MyHomePage> {
   bool doRefreshes = true;
   int _expSettingMs = 0; // 0 is auto-exposure.
 
-  CedarClient? _client;
-  CedarClient client() {
+  cedar_rpc.CedarClient? _client;
+  cedar_rpc.CedarClient client() {
     _client ??= getClient(); // Initialize if null.
     return _client!;
   }
@@ -384,17 +395,18 @@ class MyHomePageState extends State<MyHomePage> {
 
   Duration get tzOffset => _tzOffset;
 
-  void _setStateFromOpSettings(OperationSettings opSettings) {
+  void _setStateFromOpSettings(cedar_rpc.OperationSettings opSettings) {
     operationSettings = opSettings;
     _accuracy = opSettings.accuracy.value;
     _expSettingMs = _durationToMs(opSettings.exposureTime).toInt();
-    _setupMode = opSettings.operatingMode == OperatingMode.SETUP;
+    _setupMode = opSettings.operatingMode == cedar_rpc.OperatingMode.SETUP;
+    _daylightMode = opSettings.daylightMode;
     if (_setupMode) {
       _transitionToSetup = false;
     }
   }
 
-  void setStateFromFrameResult(FrameResult response) {
+  void setStateFromFrameResult(cedar_rpc.FrameResult response) {
     _prevFrameId = response.frameId;
     _stars = response.starCandidates;
     _numStars = _stars.length;
@@ -418,7 +430,8 @@ class MyHomePageState extends State<MyHomePage> {
       Provider.of<ThemeModel>(context, listen: false).setNormalTheme();
     }
     _serverInformation = response.serverInformation;
-    _hasCedarSky = _serverInformation!.featureLevel != FeatureLevel.DIY;
+    _hasCedarSky =
+        _serverInformation!.featureLevel != cedar_rpc.FeatureLevel.DIY;
     _setStateFromOpSettings(response.operationSettings);
     _canAlign = false;
     if (_setupMode) {
@@ -517,7 +530,7 @@ class MyHomePageState extends State<MyHomePage> {
   }
 
   double bullseyeDirectionIndicator() {
-    if (preferences?.mountType == MountType.ALT_AZ &&
+    if (preferences?.mountType == cedar_rpc.MountType.ALT_AZ &&
         _locationBasedInfo != null) {
       return _locationBasedInfo!.zenithRollAngle;
     } else {
@@ -525,7 +538,7 @@ class MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  Future<void> updateFixedSettings(FixedSettings request) async {
+  Future<void> updateFixedSettings(cedar_rpc.FixedSettings request) async {
     try {
       await client().updateFixedSettings(request,
           options: CallOptions(timeout: const Duration(seconds: 10)));
@@ -534,7 +547,8 @@ class MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  Future<void> updateOperationSettings(OperationSettings request) async {
+  Future<void> updateOperationSettings(
+      cedar_rpc.OperationSettings request) async {
     try {
       var newOpSettings = await client().updateOperationSettings(request,
           options: CallOptions(timeout: const Duration(seconds: 10)));
@@ -548,7 +562,7 @@ class MyHomePageState extends State<MyHomePage> {
 
   // Use request/response style of RPC.
   Future<void> getFrameFromServer() async {
-    final request = FrameRequest()..prevFrameId = _prevFrameId;
+    final request = cedar_rpc.FrameRequest()..prevFrameId = _prevFrameId;
     try {
       final response = await client().getFrame(request,
           options: CallOptions(timeout: const Duration(seconds: 10)));
@@ -588,7 +602,7 @@ class MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  Future<void> initiateAction(ActionRequest request) async {
+  Future<void> initiateAction(cedar_rpc.ActionRequest request) async {
     try {
       await client().initiateAction(request,
           options: CallOptions(timeout: const Duration(seconds: 10)));
@@ -601,52 +615,66 @@ class MyHomePageState extends State<MyHomePage> {
     Timestamp ts = Timestamp();
     ts.seconds = Int64(now.millisecondsSinceEpoch ~/ 1000.0);
     ts.nanos = (now.millisecondsSinceEpoch % 1000) * 1000000;
-    var request = FixedSettings();
+    var request = cedar_rpc.FixedSettings();
     request.currentTime = ts;
     await updateFixedSettings(request);
   }
 
   Future<void> setObserverLocation(LatLng pos) async {
-    LatLong posProto = LatLong();
+    cedar_rpc.LatLong posProto = cedar_rpc.LatLong();
     posProto.latitude = pos.latitude;
     posProto.longitude = pos.longitude;
-    var request = FixedSettings();
+    var request = cedar_rpc.FixedSettings();
     request.observerLocation = posProto;
     await updateFixedSettings(request);
   }
 
   Future<void> setExpTime() async {
-    var request = OperationSettings();
+    var request = cedar_rpc.OperationSettings();
     request.exposureTime = _msToDuration(_expSettingMs);
     await updateOperationSettings(request);
   }
 
   Future<void> captureBoresight() async {
-    var request = ActionRequest();
+    var request = cedar_rpc.ActionRequest();
     request.captureBoresight = true;
     await initiateAction(request);
   }
 
+  Future<void> designateBoresight(Offset pos) async {
+    final coord = cedar_rpc.ImageCoord(x: pos.dx, y: pos.dy);
+    var request = cedar_rpc.ActionRequest();
+    request.designateBoresight = coord;
+    await initiateAction(request);
+  }
+
   Future<void> stopSlew() async {
-    var request = ActionRequest();
+    var request = cedar_rpc.ActionRequest();
     request.stopSlew = true;
     await initiateAction(request);
   }
 
   Future<void> setOperatingMode(bool setup) async {
-    var request = OperationSettings();
-    request.operatingMode = setup ? OperatingMode.SETUP : OperatingMode.OPERATE;
+    var request = cedar_rpc.OperationSettings();
+    request.operatingMode =
+        setup ? cedar_rpc.OperatingMode.SETUP : cedar_rpc.OperatingMode.OPERATE;
     await updateOperationSettings(request);
   }
 
   Future<void> setAccuracy(int value) async {
-    var request = OperationSettings();
-    request.accuracy = Accuracy.valueOf(value)!;
+    var request = cedar_rpc.OperationSettings();
+    request.accuracy = cedar_rpc.Accuracy.valueOf(value)!;
+    await updateOperationSettings(request);
+  }
+
+  Future<void> setDaylightMode(bool value) async {
+    var request = cedar_rpc.OperationSettings();
+    request.daylightMode = value;
     await updateOperationSettings(request);
   }
 
   Future<String> getServerLogs() async {
-    var request = ServerLogRequest();
+    var request = cedar_rpc.ServerLogRequest();
     request.logRequest = 20000;
     try {
       var infoResult = await client().getServerLog(request,
@@ -692,13 +720,13 @@ class MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> shutdown() async {
-    var request = ActionRequest();
+    var request = cedar_rpc.ActionRequest();
     request.shutdownServer = true;
     await initiateAction(request);
   }
 
   Future<void> saveImage() async {
-    var request = ActionRequest();
+    var request = cedar_rpc.ActionRequest();
     request.saveImage = true;
     await initiateAction(request);
   }
@@ -707,7 +735,7 @@ class MyHomePageState extends State<MyHomePage> {
     await setOperatingMode(/*setup=*/ true);
   }
 
-  Future<void> updatePreferences(Preferences changedPrefs) async {
+  Future<void> updatePreferences(cedar_rpc.Preferences changedPrefs) async {
     try {
       final newPrefs = await client().updatePreferences(changedPrefs,
           options: CallOptions(timeout: const Duration(seconds: 10)));
@@ -786,7 +814,7 @@ class MyHomePageState extends State<MyHomePage> {
                     var settingsModel =
                         Provider.of<SettingsModel>(context, listen: false);
                     settingsModel.preferencesProto.advanced = _advanced;
-                    var prefs = Preferences();
+                    var prefs = cedar_rpc.Preferences();
                     prefs.advanced = _advanced;
                     await updatePreferences(prefs);
                   });
@@ -960,7 +988,7 @@ class MyHomePageState extends State<MyHomePage> {
           child: SizedBox(
             width: 70 * textScaleFactor(context),
             height: 32,
-            child: _canAlign
+            child: _canAlign && !_daylightMode
                 ? OutlinedButton(
                     style: OutlinedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(horizontal: 0)),
@@ -1012,7 +1040,8 @@ class MyHomePageState extends State<MyHomePage> {
   }
 
   String formatRightAscension(double ra, {bool short = false}) {
-    if (preferences?.celestialCoordFormat == CelestialCoordFormat.DECIMAL) {
+    if (preferences?.celestialCoordFormat ==
+        cedar_rpc.CelestialCoordFormat.DECIMAL) {
       return sprintf("%.4f°", [ra]);
     }
     int hours = (ra / 15.0).floor();
@@ -1026,7 +1055,8 @@ class MyHomePageState extends State<MyHomePage> {
   }
 
   String formatHourAngle(double ha) {
-    if (preferences?.celestialCoordFormat == CelestialCoordFormat.DECIMAL) {
+    if (preferences?.celestialCoordFormat ==
+        cedar_rpc.CelestialCoordFormat.DECIMAL) {
       return sprintf("%.4f°", [ha]);
     }
     String sign = ha < 0 ? "-" : "+";
@@ -1042,7 +1072,8 @@ class MyHomePageState extends State<MyHomePage> {
   }
 
   String formatDeclination(double dec, {bool short = false}) {
-    if (preferences?.celestialCoordFormat == CelestialCoordFormat.DECIMAL) {
+    if (preferences?.celestialCoordFormat ==
+        cedar_rpc.CelestialCoordFormat.DECIMAL) {
       return sprintf("%.4f°", [dec]);
     }
     String sign = dec < 0 ? "-" : "+";
@@ -1080,7 +1111,7 @@ class MyHomePageState extends State<MyHomePage> {
         : sprintf("%s %.2f°", [dir, az]);
   }
 
-  String formatAdvice(ErrorBoundedValue? ebv) {
+  String formatAdvice(cedar_rpc.ErrorBoundedValue? ebv) {
     return sprintf("%.2f±%.2f", [ebv!.value, ebv.error]);
   }
 
@@ -1265,22 +1296,56 @@ class MyHomePageState extends State<MyHomePage> {
       RotatedBox(
         quarterTurns: portrait ? 3 : 0,
         child: _setupMode
-            ? Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-                Checkbox(
-                  value: _focusAid,
-                  onChanged: (bool? selected) async {
-                    setState(() {
-                      _focusAid = selected!;
-                    });
-                  },
-                  activeColor: Theme.of(context).colorScheme.surface,
-                  checkColor: Theme.of(context).colorScheme.primary,
-                ),
-                Text(
-                  "Focus aid",
-                  textScaler: textScaler(context),
-                ),
-              ])
+            ? SizedBox(
+                width: 100 * textScaleFactor(context),
+                child:
+                    Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+                  Checkbox(
+                    value: _focusAid,
+                    onChanged: _daylightMode
+                        ? null
+                        : (bool? selected) {
+                            setState(() {
+                              _focusAid = selected!;
+                            });
+                          },
+                    activeColor: Theme.of(context).colorScheme.surface,
+                    checkColor: Theme.of(context).colorScheme.primary,
+                  ),
+                  Text(
+                    "Focus aid",
+                    textScaler: textScaler(context),
+                  ),
+                ]))
+            : Container(),
+      ),
+      const SizedBox(width: 10, height: 10),
+      RotatedBox(
+        quarterTurns: portrait ? 3 : 0,
+        child: _setupMode
+            ? SizedBox(
+                width: 100 * textScaleFactor(context),
+                child:
+                    Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+                  Checkbox(
+                    value: _daylightMode,
+                    onChanged: (bool? selected) {
+                      setState(() {
+                        _daylightMode = selected!;
+                        if (_daylightMode) {
+                          _focusAid = false;
+                        }
+                        setDaylightMode(_daylightMode);
+                      });
+                    },
+                    activeColor: Theme.of(context).colorScheme.surface,
+                    checkColor: Theme.of(context).colorScheme.primary,
+                  ),
+                  Text(
+                    "Zoom",
+                    textScaler: textScaler(context),
+                  ),
+                ]))
             : Container(),
       ),
       RotatedBox(
@@ -1292,7 +1357,7 @@ class MyHomePageState extends State<MyHomePage> {
                   height: 85 * textScaleFactor(context),
                   child: Column(
                     children: coordInfo(
-                        preferences?.mountType == MountType.ALT_AZ,
+                        preferences?.mountType == cedar_rpc.MountType.ALT_AZ,
                         /*width=*/ 85),
                   ),
                 )),
@@ -1336,23 +1401,31 @@ class MyHomePageState extends State<MyHomePage> {
   Widget mainImage() {
     return ClipRect(
         child: CustomPaint(
-      foregroundPainter: _MainImagePainter(this, context),
-      child: GestureDetector(
-          child: dart_widgets.Image.memory(_imageBytes, gaplessPlayback: true),
-          onTapDown: (TapDownDetails details) {
-            Offset localPosition = Offset(details.localPosition.dx * _binFactor,
-                details.localPosition.dy * _binFactor);
-            var object = _findObjectHit(localPosition, 30);
-            if (object != null && _objectInfoDialog != null) {
-              var selEntry = SelectedCatalogEntry(entry: object.entry);
-              _objectInfoDialog!(this, context, selEntry);
-            }
-          }),
-    ));
+            foregroundPainter: _MainImagePainter(this, context),
+            child: GestureDetector(
+              child:
+                  dart_widgets.Image.memory(_imageBytes, gaplessPlayback: true),
+              onTapDown: (TapDownDetails details) async {
+                setState(() {
+                  Offset localPosition = Offset(
+                      details.localPosition.dx * _binFactor,
+                      details.localPosition.dy * _binFactor);
+                  if (_daylightMode) {
+                    designateBoresight(localPosition);
+                  } else {
+                    var object = _findObjectHit(localPosition, 30);
+                    if (object != null && _objectInfoDialog != null) {
+                      var selEntry = SelectedCatalogEntry(entry: object.entry);
+                      _objectInfoDialog!(this, context, selEntry);
+                    }
+                  }
+                });
+              },
+            )));
   }
 
-  FovCatalogEntry? _findObjectHit(Offset tapPosition, int tolerance) {
-    FovCatalogEntry? closest;
+  cedar_rpc.FovCatalogEntry? _findObjectHit(Offset tapPosition, int tolerance) {
+    cedar_rpc.FovCatalogEntry? closest;
     double closestDistance = 0;
 
     for (var entry in _labeledFovCatalogEntries) {
