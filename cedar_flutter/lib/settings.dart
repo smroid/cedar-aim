@@ -35,11 +35,6 @@ bool diffPreferences(Preferences prev, Preferences curr) {
   } else {
     curr.clearNightVisionTheme();
   }
-  if (curr.showPerfStats != prev.showPerfStats) {
-    hasDiff = true;
-  } else {
-    curr.clearShowPerfStats();
-  }
   if (curr.hideAppBar != prev.hideAppBar) {
     hasDiff = true;
   } else {
@@ -112,11 +107,6 @@ class SettingsModel extends ChangeNotifier {
 
   void updateNightVisionEnabled(bool enabled) {
     preferencesProto.nightVisionTheme = enabled;
-    notifyListeners();
-  }
-
-  void updateShowPerfStats(bool enabled) {
-    preferencesProto.showPerfStats = enabled;
     notifyListeners();
   }
 
@@ -281,27 +271,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             })
                       ]),
                       title: Text(
-                        'Night vision theme',
+                        'Night vision',
                         textScaler: textScaler(context),
                       ),
                     ),
-                    if (advanced)
-                      SettingsTile(
-                        leading: Row(children: <Widget>[
-                          const SizedBox(width: switchInset, height: 10),
-                          Switch(
-                              value: prefsProto.showPerfStats,
-                              onChanged: (bool value) {
-                                setState(() {
-                                  provider.updateShowPerfStats(value);
-                                });
-                              })
-                        ]),
-                        title: Text(
-                          'Show performance stats',
-                          textScaler: textScaler(context),
-                        ),
-                      ),
                   ]),
               if (advanced)
                 SettingsSection(
