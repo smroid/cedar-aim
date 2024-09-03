@@ -401,6 +401,9 @@ class MyHomePageState extends State<MyHomePage> {
     _expSettingMs = _durationToMs(opSettings.exposureTime).toInt();
     _setupMode = opSettings.operatingMode == cedar_rpc.OperatingMode.SETUP;
     _daylightMode = opSettings.daylightMode;
+    if (_daylightMode) {
+      _focusAid = false;
+    }
     if (_setupMode) {
       _transitionToSetup = false;
     }
@@ -1331,11 +1334,7 @@ class MyHomePageState extends State<MyHomePage> {
                     value: _daylightMode,
                     onChanged: (bool? selected) {
                       setState(() {
-                        _daylightMode = selected!;
-                        if (_daylightMode) {
-                          _focusAid = false;
-                        }
-                        setDaylightMode(_daylightMode);
+                        setDaylightMode(selected!);
                       });
                     },
                     activeColor: Theme.of(context).colorScheme.surface,
