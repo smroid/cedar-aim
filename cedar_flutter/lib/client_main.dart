@@ -108,7 +108,9 @@ class _MainImagePainter extends CustomPainter {
   final MyHomePageState state;
   final BuildContext _context;
 
-  _MainImagePainter(this.state, this._context);
+  _MainImagePainter(this.state, this._context) {
+    PaintingBinding.instance.imageCache.maximumSize = 0;
+  }
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -545,7 +547,7 @@ class MyHomePageState extends State<MyHomePage> {
   Future<void> updateFixedSettings(cedar_rpc.FixedSettings request) async {
     try {
       await client().updateFixedSettings(request,
-          options: CallOptions(timeout: const Duration(seconds: 10)));
+          options: CallOptions(timeout: const Duration(seconds: 2)));
     } catch (e) {
       log('updateFixedSettings error: $e');
     }
@@ -555,7 +557,7 @@ class MyHomePageState extends State<MyHomePage> {
       cedar_rpc.OperationSettings request) async {
     try {
       await client().updateOperationSettings(request,
-          options: CallOptions(timeout: const Duration(seconds: 10)));
+          options: CallOptions(timeout: const Duration(seconds: 2)));
     } catch (e) {
       log('updateOperationSettings error: $e');
     }
@@ -566,8 +568,9 @@ class MyHomePageState extends State<MyHomePage> {
     final request = cedar_rpc.FrameRequest()..prevFrameId = _prevFrameId;
     try {
       final response = await client().getFrame(request,
-          options: CallOptions(timeout: const Duration(seconds: 10)));
+          options: CallOptions(timeout: const Duration(seconds: 2)));
       if (_skipCount > 0) {
+        setStateFromFrameResult(response);
         --_skipCount;
       } else {
         setState(() {
@@ -610,7 +613,7 @@ class MyHomePageState extends State<MyHomePage> {
   Future<void> initiateAction(cedar_rpc.ActionRequest request) async {
     try {
       await client().initiateAction(request,
-          options: CallOptions(timeout: const Duration(seconds: 10)));
+          options: CallOptions(timeout: const Duration(seconds: 2)));
     } catch (e) {
       log('initiateAction error: $e');
     }
@@ -683,7 +686,7 @@ class MyHomePageState extends State<MyHomePage> {
     request.logRequest = 20000;
     try {
       var infoResult = await client().getServerLog(request,
-          options: CallOptions(timeout: const Duration(seconds: 10)));
+          options: CallOptions(timeout: const Duration(seconds: 2)));
       return infoResult.logContent;
     } catch (e) {
       log('getServerLogs error: $e');
@@ -743,7 +746,7 @@ class MyHomePageState extends State<MyHomePage> {
   Future<void> updatePreferences(cedar_rpc.Preferences changedPrefs) async {
     try {
       final newPrefs = await client().updatePreferences(changedPrefs,
-          options: CallOptions(timeout: const Duration(seconds: 10)));
+          options: CallOptions(timeout: const Duration(seconds: 2)));
       setState(() {
         preferences = newPrefs;
         if (newPrefs.nightVisionTheme) {
@@ -1397,8 +1400,10 @@ class MyHomePageState extends State<MyHomePage> {
         child: CustomPaint(
             foregroundPainter: _MainImagePainter(this, context),
             child: GestureDetector(
-              child:
-                  dart_widgets.Image.memory(_imageBytes, gaplessPlayback: true),
+              child: dart_widgets.Image.memory(_imageBytes,
+                  gaplessPlayback: true,
+                  width: _imageRegion.width,
+                  height: _imageRegion.height),
               onTapDown: (TapDownDetails details) async {
                 Offset localPosition = Offset(
                     details.localPosition.dx * _binFactor,
