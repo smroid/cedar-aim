@@ -555,9 +555,9 @@ class MyHomePageState extends State<MyHomePage> {
     try {
       var newOpSettings = await client().updateOperationSettings(request,
           options: CallOptions(timeout: const Duration(seconds: 10)));
-      setState(() {
-        _setStateFromOpSettings(newOpSettings);
-      });
+      // setState(() {
+      // _setStateFromOpSettings(newOpSettings);
+      // });
     } catch (e) {
       log('updateOperationSettings error: $e');
     }
@@ -673,7 +673,16 @@ class MyHomePageState extends State<MyHomePage> {
   Future<void> setDaylightMode(bool value) async {
     var request = cedar_rpc.OperationSettings();
     request.daylightMode = value;
-    await updateOperationSettings(request);
+    // await updateOperationSettings(request);
+    try {
+      var newOpSettings = await client().updateOperationSettings(request,
+          options: CallOptions(timeout: const Duration(seconds: 10)));
+      // setState(() {
+      // _setStateFromOpSettings(newOpSettings);
+      // });
+    } catch (e) {
+      log('updateOperationSettings error: $e');
+    }
   }
 
   Future<String> getServerLogs() async {
@@ -812,15 +821,15 @@ class MyHomePageState extends State<MyHomePage> {
               Checkbox(
                 value: _advanced,
                 onChanged: (bool? selected) async {
-                  setState(() async {
-                    _advanced = selected!;
-                    var settingsModel =
-                        Provider.of<SettingsModel>(context, listen: false);
-                    settingsModel.preferencesProto.advanced = _advanced;
-                    var prefs = cedar_rpc.Preferences();
-                    prefs.advanced = _advanced;
-                    await updatePreferences(prefs);
-                  });
+                  // setState(() async {
+                  _advanced = selected!;
+                  var settingsModel =
+                      Provider.of<SettingsModel>(context, listen: false);
+                  settingsModel.preferencesProto.advanced = _advanced;
+                  var prefs = cedar_rpc.Preferences();
+                  prefs.advanced = _advanced;
+                  await updatePreferences(prefs);
+                  // });
                 },
                 activeColor: Theme.of(context).colorScheme.surface,
                 checkColor: Theme.of(context).colorScheme.primary,
@@ -977,12 +986,12 @@ class MyHomePageState extends State<MyHomePage> {
                 ),
                 value: !_setupMode,
                 onChanged: (bool value) {
-                  setState(() {
-                    if (!value) {
-                      _transitionToSetup = true;
-                    }
-                    setOperatingMode(/*setup=*/ !value);
-                  });
+                  // setState(() {
+                  if (!value) {
+                    _transitionToSetup = true;
+                  }
+                  setOperatingMode(/*setup=*/ !value);
+                  // });
                 }),
           ])),
       const SizedBox(width: 0, height: 15),
@@ -1308,9 +1317,9 @@ class MyHomePageState extends State<MyHomePage> {
                     onChanged: _daylightMode
                         ? null
                         : (bool? selected) {
-                            setState(() {
-                              _focusAid = selected!;
-                            });
+                            // setState(() {
+                            _focusAid = selected!;
+                            // });
                           },
                     activeColor: Theme.of(context).colorScheme.surface,
                     checkColor: Theme.of(context).colorScheme.primary,
@@ -1333,9 +1342,9 @@ class MyHomePageState extends State<MyHomePage> {
                   Checkbox(
                     value: _daylightMode,
                     onChanged: (bool? selected) {
-                      setState(() {
-                        setDaylightMode(selected!);
-                      });
+                      // setState(() {
+                      setDaylightMode(selected!);
+                      // });
                     },
                     activeColor: Theme.of(context).colorScheme.surface,
                     checkColor: Theme.of(context).colorScheme.primary,
@@ -1405,20 +1414,20 @@ class MyHomePageState extends State<MyHomePage> {
               child:
                   dart_widgets.Image.memory(_imageBytes, gaplessPlayback: true),
               onTapDown: (TapDownDetails details) async {
-                setState(() {
-                  Offset localPosition = Offset(
-                      details.localPosition.dx * _binFactor,
-                      details.localPosition.dy * _binFactor);
-                  if (_daylightMode) {
-                    designateBoresight(localPosition);
-                  } else {
-                    var object = _findObjectHit(localPosition, 30);
-                    if (object != null && _objectInfoDialog != null) {
-                      var selEntry = SelectedCatalogEntry(entry: object.entry);
-                      _objectInfoDialog!(this, context, selEntry);
-                    }
+                // setState(() {
+                Offset localPosition = Offset(
+                    details.localPosition.dx * _binFactor,
+                    details.localPosition.dy * _binFactor);
+                if (_daylightMode) {
+                  designateBoresight(localPosition);
+                } else {
+                  var object = _findObjectHit(localPosition, 30);
+                  if (object != null && _objectInfoDialog != null) {
+                    var selEntry = SelectedCatalogEntry(entry: object.entry);
+                    _objectInfoDialog!(this, context, selEntry);
                   }
-                });
+                }
+                // });
               },
             )));
   }
