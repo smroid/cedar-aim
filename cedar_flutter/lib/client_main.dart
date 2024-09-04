@@ -199,11 +199,11 @@ class _MainImagePainter extends CustomPainter {
       // center.
       if (state._setupMode || !state._hasSolution) {
         var bsPos = state._boresightPosition;
-        if (state._daylightMode && state._centerRegion != null) {
-          // Compute boresight position within the central region.
+        if (state._daylightMode) {
+          // Compute boresight position within the zoomed image.
           bsPos = Offset(
-            state._fullResBoresightPosition.dx - state._centerRegion!.left,
-            state._fullResBoresightPosition.dy - state._centerRegion!.top,
+            state._fullResBoresightPosition.dx - state._fullResImageRegion.left,
+            state._fullResBoresightPosition.dy - state._fullResImageRegion.top,
           );
         }
         drawGapCross(canvas, color, bsPos, /*radius=*/ 8, /*gapRadius=*/ 2,
@@ -302,6 +302,8 @@ class MyHomePageState extends State<MyHomePage> {
 
   Duration _tzOffset = const Duration();
 
+  int _skipCount = 0;
+
   // Information from most recent FrameResult.
 
   // Image data, binned by server.
@@ -395,20 +397,6 @@ class MyHomePageState extends State<MyHomePage> {
 
   Duration get tzOffset => _tzOffset;
 
-  void _setStateFromOpSettings(cedar_rpc.OperationSettings opSettings) {
-    operationSettings = opSettings;
-    _accuracy = opSettings.accuracy.value;
-    _expSettingMs = _durationToMs(opSettings.exposureTime).toInt();
-    _setupMode = opSettings.operatingMode == cedar_rpc.OperatingMode.SETUP;
-    _daylightMode = opSettings.daylightMode;
-    if (_daylightMode) {
-      _focusAid = false;
-    }
-    if (_setupMode) {
-      _transitionToSetup = false;
-    }
-  }
-
   void setStateFromFrameResult(cedar_rpc.FrameResult response) {
     _prevFrameId = response.frameId;
     _stars = response.starCandidates;
@@ -435,7 +423,20 @@ class MyHomePageState extends State<MyHomePage> {
     _serverInformation = response.serverInformation;
     _hasCedarSky =
         _serverInformation!.featureLevel != cedar_rpc.FeatureLevel.DIY;
-    _setStateFromOpSettings(response.operationSettings);
+
+    operationSettings = response.operationSettings;
+    _accuracy = operationSettings.accuracy.value;
+    _expSettingMs = _durationToMs(operationSettings.exposureTime).toInt();
+    _setupMode =
+        operationSettings.operatingMode == cedar_rpc.OperatingMode.SETUP;
+    _daylightMode = operationSettings.daylightMode;
+    if (_daylightMode) {
+      _focusAid = false;
+    }
+    if (_setupMode) {
+      _transitionToSetup = false;
+    }
+
     _canAlign = false;
     if (_setupMode) {
       _canAlign = true;
@@ -484,13 +485,13 @@ class MyHomePageState extends State<MyHomePage> {
       _imageBytes = Uint8List.fromList(response.image.imageData);
       _binFactor = response.image.binningFactor;
       _imageRegion = Rect.fromLTWH(
-          0,
-          0,
+          response.image.rectangle.originX.toDouble() / _binFactor,
+          response.image.rectangle.originY.toDouble() / _binFactor,
           response.image.rectangle.width.toDouble() / _binFactor,
           response.image.rectangle.height.toDouble() / _binFactor);
       _fullResImageRegion = Rect.fromLTWH(
-          0,
-          0,
+          response.image.rectangle.originX.toDouble(),
+          response.image.rectangle.originY.toDouble(),
           response.image.rectangle.width.toDouble(),
           response.image.rectangle.height.toDouble());
     }
@@ -553,11 +554,8 @@ class MyHomePageState extends State<MyHomePage> {
   Future<void> updateOperationSettings(
       cedar_rpc.OperationSettings request) async {
     try {
-      var newOpSettings = await client().updateOperationSettings(request,
+      await client().updateOperationSettings(request,
           options: CallOptions(timeout: const Duration(seconds: 10)));
-      // setState(() {
-      // _setStateFromOpSettings(newOpSettings);
-      // });
     } catch (e) {
       log('updateOperationSettings error: $e');
     }
@@ -569,9 +567,13 @@ class MyHomePageState extends State<MyHomePage> {
     try {
       final response = await client().getFrame(request,
           options: CallOptions(timeout: const Duration(seconds: 10)));
-      setState(() {
-        setStateFromFrameResult(response);
-      });
+      if (_skipCount > 0) {
+        --_skipCount;
+      } else {
+        setState(() {
+          setStateFromFrameResult(response);
+        });
+      }
     } catch (e) {
       log('getFrameFromServer error: $e');
     }
@@ -593,7 +595,7 @@ class MyHomePageState extends State<MyHomePage> {
     setServerTime(now);
 
     await Future.doWhile(() async {
-      var delay = 100;
+      var delay = 50;
       if (_setupMode && !_calibrating && doRefreshes) {
         delay = 10; // Fast updates for focusing.
       }
@@ -673,16 +675,7 @@ class MyHomePageState extends State<MyHomePage> {
   Future<void> setDaylightMode(bool value) async {
     var request = cedar_rpc.OperationSettings();
     request.daylightMode = value;
-    // await updateOperationSettings(request);
-    try {
-      var newOpSettings = await client().updateOperationSettings(request,
-          options: CallOptions(timeout: const Duration(seconds: 10)));
-      // setState(() {
-      // _setStateFromOpSettings(newOpSettings);
-      // });
-    } catch (e) {
-      log('updateOperationSettings error: $e');
-    }
+    await updateOperationSettings(request);
   }
 
   Future<String> getServerLogs() async {
@@ -821,7 +814,6 @@ class MyHomePageState extends State<MyHomePage> {
               Checkbox(
                 value: _advanced,
                 onChanged: (bool? selected) async {
-                  // setState(() async {
                   _advanced = selected!;
                   var settingsModel =
                       Provider.of<SettingsModel>(context, listen: false);
@@ -829,7 +821,6 @@ class MyHomePageState extends State<MyHomePage> {
                   var prefs = cedar_rpc.Preferences();
                   prefs.advanced = _advanced;
                   await updatePreferences(prefs);
-                  // });
                 },
                 activeColor: Theme.of(context).colorScheme.surface,
                 checkColor: Theme.of(context).colorScheme.primary,
@@ -986,12 +977,10 @@ class MyHomePageState extends State<MyHomePage> {
                 ),
                 value: !_setupMode,
                 onChanged: (bool value) {
-                  // setState(() {
                   if (!value) {
                     _transitionToSetup = true;
                   }
                   setOperatingMode(/*setup=*/ !value);
-                  // });
                 }),
           ])),
       const SizedBox(width: 0, height: 15),
@@ -1317,9 +1306,7 @@ class MyHomePageState extends State<MyHomePage> {
                     onChanged: _daylightMode
                         ? null
                         : (bool? selected) {
-                            // setState(() {
                             _focusAid = selected!;
-                            // });
                           },
                     activeColor: Theme.of(context).colorScheme.surface,
                     checkColor: Theme.of(context).colorScheme.primary,
@@ -1342,9 +1329,8 @@ class MyHomePageState extends State<MyHomePage> {
                   Checkbox(
                     value: _daylightMode,
                     onChanged: (bool? selected) {
-                      // setState(() {
+                      _skipCount = 2;
                       setDaylightMode(selected!);
-                      // });
                     },
                     activeColor: Theme.of(context).colorScheme.surface,
                     checkColor: Theme.of(context).colorScheme.primary,
@@ -1414,7 +1400,6 @@ class MyHomePageState extends State<MyHomePage> {
               child:
                   dart_widgets.Image.memory(_imageBytes, gaplessPlayback: true),
               onTapDown: (TapDownDetails details) async {
-                // setState(() {
                 Offset localPosition = Offset(
                     details.localPosition.dx * _binFactor,
                     details.localPosition.dy * _binFactor);
@@ -1427,7 +1412,6 @@ class MyHomePageState extends State<MyHomePage> {
                     _objectInfoDialog!(this, context, selEntry);
                   }
                 }
-                // });
               },
             )));
   }
@@ -1596,6 +1580,7 @@ class MyHomePageState extends State<MyHomePage> {
             ],
           )),
       onDrawerChanged: (isOpened) {
+        // This helps prevent jank on the fast/accurate slider.
         doRefreshes = !isOpened;
       },
       drawer: Drawer(
