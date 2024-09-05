@@ -117,36 +117,51 @@ class _MainImagePainter extends CustomPainter {
     const double hairline = 0.5;
     const double thin = 1;
     final Color color = Theme.of(_context).colorScheme.primary;
-    if (state._setupMode &&
-        !state._daylightMode &&
-        state._centerRegion != null) {
+    if (state._setupMode && state._centerRegion != null) {
       // Draw search box within which we search for the brightest star for
       // focusing.
-      canvas.drawRect(
-          state._centerRegion as Rect,
-          Paint()
-            ..color = color
-            ..strokeWidth = thin
-            ..style = PaintingStyle.stroke);
-      // Draw box around location of the brightest star in search box.
-      canvas.drawRect(
-          state._centerPeakRegion as Rect,
-          Paint()
-            ..color = color
-            ..strokeWidth = thin
-            ..style = PaintingStyle.stroke);
-      // Draw circles around the detected stars.
-      if (state._focusAid && state._advanced) {
-        for (var star in state._stars) {
-          var offset = Offset(star.centroidPosition.x / state._binFactor,
-              star.centroidPosition.y / state._binFactor);
-          canvas.drawCircle(
-              offset,
-              3,
-              Paint()
-                ..color = color
-                ..strokeWidth = hairline
-                ..style = PaintingStyle.stroke);
+      if (state._daylightMode) {
+        // In zoom mode we're cropped in to the center by 2x.
+        final uncroppedWidth = state._imageRegion.width * 2;
+        final uncroppedHeight = state._imageRegion.height * 2;
+        final adjustedCenterRegion = Rect.fromLTWH(
+            state._centerRegion!.left - uncroppedWidth / 4,
+            state._centerRegion!.top - uncroppedHeight / 4,
+            state._centerRegion!.width,
+            state._centerRegion!.height);
+        canvas.drawRect(
+            adjustedCenterRegion,
+            Paint()
+              ..color = color
+              ..strokeWidth = thin
+              ..style = PaintingStyle.stroke);
+      } else {
+        canvas.drawRect(
+            state._centerRegion as Rect,
+            Paint()
+              ..color = color
+              ..strokeWidth = thin
+              ..style = PaintingStyle.stroke);
+        // Draw box around location of the brightest star in search box.
+        canvas.drawRect(
+            state._centerPeakRegion as Rect,
+            Paint()
+              ..color = color
+              ..strokeWidth = thin
+              ..style = PaintingStyle.stroke);
+        // Draw circles around the detected stars.
+        if (state._focusAid && state._advanced) {
+          for (var star in state._stars) {
+            var offset = Offset(star.centroidPosition.x / state._binFactor,
+                star.centroidPosition.y / state._binFactor);
+            canvas.drawCircle(
+                offset,
+                3,
+                Paint()
+                  ..color = color
+                  ..strokeWidth = hairline
+                  ..style = PaintingStyle.stroke);
+          }
         }
       }
     }
@@ -303,8 +318,6 @@ class MyHomePageState extends State<MyHomePage> {
   bool _northernHemisphere = true;
 
   Duration _tzOffset = const Duration();
-
-  int _skipCount = 0;
 
   // Information from most recent FrameResult.
 
@@ -569,14 +582,9 @@ class MyHomePageState extends State<MyHomePage> {
     try {
       final response = await client().getFrame(request,
           options: CallOptions(timeout: const Duration(seconds: 2)));
-      if (_skipCount > 0) {
+      setState(() {
         setStateFromFrameResult(response);
-        --_skipCount;
-      } else {
-        setState(() {
-          setStateFromFrameResult(response);
-        });
-      }
+      });
     } catch (e) {
       log('getFrameFromServer error: $e');
     }
@@ -1301,7 +1309,7 @@ class MyHomePageState extends State<MyHomePage> {
         quarterTurns: portrait ? 3 : 0,
         child: _setupMode
             ? SizedBox(
-                width: 100 * textScaleFactor(context),
+                width: 90 * textScaleFactor(context),
                 child:
                     Row(mainAxisAlignment: MainAxisAlignment.start, children: [
                   Checkbox(
@@ -1315,7 +1323,7 @@ class MyHomePageState extends State<MyHomePage> {
                     checkColor: Theme.of(context).colorScheme.primary,
                   ),
                   Text(
-                    "Focus aid",
+                    "Focus",
                     textScaler: textScaler(context),
                   ),
                 ]))
@@ -1326,13 +1334,12 @@ class MyHomePageState extends State<MyHomePage> {
         quarterTurns: portrait ? 3 : 0,
         child: _setupMode
             ? SizedBox(
-                width: 100 * textScaleFactor(context),
+                width: 90 * textScaleFactor(context),
                 child:
                     Row(mainAxisAlignment: MainAxisAlignment.start, children: [
                   Checkbox(
                     value: _daylightMode,
                     onChanged: (bool? selected) {
-                      _skipCount = 2;
                       setDaylightMode(selected!);
                     },
                     activeColor: Theme.of(context).colorScheme.surface,
@@ -1400,10 +1407,8 @@ class MyHomePageState extends State<MyHomePage> {
         child: CustomPaint(
             foregroundPainter: _MainImagePainter(this, context),
             child: GestureDetector(
-              child: dart_widgets.Image.memory(_imageBytes,
-                  gaplessPlayback: true,
-                  width: _imageRegion.width,
-                  height: _imageRegion.height),
+              child:
+                  dart_widgets.Image.memory(_imageBytes, gaplessPlayback: true),
               onTapDown: (TapDownDetails details) async {
                 Offset localPosition = Offset(
                     details.localPosition.dx * _binFactor,
