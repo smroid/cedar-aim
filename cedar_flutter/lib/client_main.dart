@@ -12,6 +12,7 @@ import 'package:cedar_flutter/perf_stats_dialog.dart';
 import 'package:cedar_flutter/server_log.dart';
 import 'package:cedar_flutter/settings.dart';
 import 'package:cedar_flutter/themes.dart';
+import 'package:extended_image/extended_image.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -1410,6 +1411,10 @@ class MyHomePageState extends State<MyHomePage> {
     ];
   }
 
+  Widget loadImage() {
+    return ExtendedImage(image: ExtendedMemoryImageProvider(_imageBytes));
+  }
+
   Widget mainImage() {
     imageCache.clear();
     imageCache.clearLiveImages();
@@ -1418,8 +1423,8 @@ class MyHomePageState extends State<MyHomePage> {
         child: CustomPaint(
             foregroundPainter: _MainImagePainter(this, context),
             child: GestureDetector(
-              child:
-                  dart_widgets.Image.memory(_imageBytes, gaplessPlayback: true),
+              child: loadImage(),
+              // dart_widgets.Image.memory(_imageBytes, gaplessPlayback: true),
               onTapDown: (TapDownDetails details) async {
                 Offset localPosition = Offset(
                     details.localPosition.dx * _binFactor,
