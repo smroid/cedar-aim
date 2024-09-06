@@ -114,6 +114,14 @@ class _MainImagePainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
+    try {
+      _paint(canvas, size);
+    } finally {
+      state._paintPending = false;
+    }
+  }
+
+  void _paint(Canvas canvas, Size size) {
     const double hairline = 0.5;
     const double thin = 1;
     final Color color = Theme.of(_context).colorScheme.primary;
@@ -318,6 +326,7 @@ class MyHomePageState extends State<MyHomePage> {
   bool _northernHemisphere = true;
 
   Duration _tzOffset = const Duration();
+  bool _paintPending = false;
 
   // Information from most recent FrameResult.
 
@@ -582,6 +591,7 @@ class MyHomePageState extends State<MyHomePage> {
     try {
       final response = await client().getFrame(request,
           options: CallOptions(timeout: const Duration(seconds: 2)));
+      _paintPending = true;
       setState(() {
         setStateFromFrameResult(response);
       });
@@ -606,13 +616,11 @@ class MyHomePageState extends State<MyHomePage> {
     setServerTime(now);
 
     await Future.doWhile(() async {
-      var delay = 50;
-      if (_setupMode && !_calibrating && doRefreshes) {
-        delay = 10; // Fast updates for focusing.
-      }
-      await Future.delayed(Duration(milliseconds: delay));
       if (doRefreshes) {
         await getFrameFromServer();
+        while (_paintPending) {
+          await Future.delayed(const Duration(milliseconds: 10));
+        }
       }
       return true; // Forever!
     });
@@ -1404,6 +1412,8 @@ class MyHomePageState extends State<MyHomePage> {
 
   Widget mainImage() {
     imageCache.clear();
+    imageCache.clearLiveImages();
+    imageCache.maximumSize = 0;
     return ClipRect(
         child: CustomPaint(
             foregroundPainter: _MainImagePainter(this, context),
