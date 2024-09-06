@@ -1411,20 +1411,18 @@ class MyHomePageState extends State<MyHomePage> {
   }
 
   Widget loadImage() {
-    return dart_widgets.Image.memory(_imageBytes,
-        gaplessPlayback: true, cacheWidth: 600);
+    var image = dart_widgets.Image.memory(_imageBytes, gaplessPlayback: true);
+    var provider = image.image;
+    provider.evict();
+    return image;
   }
 
   Widget mainImage() {
-    imageCache.clear();
-    imageCache.clearLiveImages();
-    imageCache.maximumSize = 0;
     return ClipRect(
         child: CustomPaint(
             foregroundPainter: _MainImagePainter(this, context),
             child: GestureDetector(
               child: loadImage(),
-              // dart_widgets.Image.memory(_imageBytes, gaplessPlayback: true),
               onTapDown: (TapDownDetails details) async {
                 Offset localPosition = Offset(
                     details.localPosition.dx * _binFactor,
