@@ -12,7 +12,6 @@ import 'package:cedar_flutter/perf_stats_dialog.dart';
 import 'package:cedar_flutter/server_log.dart';
 import 'package:cedar_flutter/settings.dart';
 import 'package:cedar_flutter/themes.dart';
-import 'package:extended_image/extended_image.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -1412,7 +1411,8 @@ class MyHomePageState extends State<MyHomePage> {
   }
 
   Widget loadImage() {
-    return ExtendedImage(image: ExtendedMemoryImageProvider(_imageBytes));
+    return dart_widgets.Image.memory(_imageBytes,
+        gaplessPlayback: true, cacheWidth: 600);
   }
 
   Widget mainImage() {
