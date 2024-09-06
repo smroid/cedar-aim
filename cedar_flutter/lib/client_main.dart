@@ -1403,6 +1403,7 @@ class MyHomePageState extends State<MyHomePage> {
   }
 
   Widget mainImage() {
+    imageCache.clear();
     return ClipRect(
         child: CustomPaint(
             foregroundPainter: _MainImagePainter(this, context),
@@ -1511,7 +1512,9 @@ class MyHomePageState extends State<MyHomePage> {
               child: overlayImage));
     }
     return Stack(alignment: Alignment.topRight, children: <Widget>[
-      _prevFrameId != -1 ? mainImage() : Container(),
+      _prevFrameId != -1
+          ? mainImage()
+          : const SizedBox(width: 500, height: 500),
       _prevFrameId != -1 && overlayWidget != null
           ? Container(
               decoration: BoxDecoration(
@@ -1552,6 +1555,7 @@ class MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    // This method is rerun every time setState() is called.
     bool hideAppBar = Provider.of<SettingsModel>(context, listen: false)
         .preferencesProto
         .hideAppBar;
@@ -1560,8 +1564,6 @@ class MyHomePageState extends State<MyHomePage> {
     } else {
       cancelFullScreen();
     }
-
-    // This method is rerun every time setState() is called.
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
