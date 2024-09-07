@@ -454,9 +454,6 @@ class MyHomePageState extends State<MyHomePage> {
     _setupMode =
         operationSettings.operatingMode == cedar_rpc.OperatingMode.SETUP;
     _daylightMode = operationSettings.daylightMode;
-    if (_daylightMode) {
-      _focusAid = false;
-    }
     if (_setupMode) {
       _transitionToSetup = false;
     }
@@ -982,24 +979,32 @@ class MyHomePageState extends State<MyHomePage> {
           : Container(),
       RotatedBox(
           quarterTurns: portrait ? 3 : 0,
-          child: Column(children: <Widget>[
-            primaryText("Setup  Aim"),
-            Switch(
-                activeTrackColor: Theme.of(context).colorScheme.surface,
-                activeColor: Theme.of(context).colorScheme.primary,
-                trackOutlineColor: WidgetStateProperty.all(
-                    Theme.of(context).colorScheme.primary),
-                thumbColor: WidgetStateProperty.all(
-                  Theme.of(context).colorScheme.primary.withOpacity(0.6),
-                ),
-                value: !_setupMode,
-                onChanged: (bool value) {
-                  if (!value) {
-                    _transitionToSetup = true;
-                  }
-                  setOperatingMode(/*setup=*/ !value);
-                }),
-          ])),
+          child: GestureDetector(
+              onTap: () {
+                _setupMode = !_setupMode;
+                if (!_setupMode) {
+                  _transitionToSetup = true;
+                }
+                setOperatingMode(_setupMode);
+              },
+              child: Column(children: <Widget>[
+                primaryText("Setup  Aim"),
+                Switch(
+                    activeTrackColor: Theme.of(context).colorScheme.surface,
+                    activeColor: Theme.of(context).colorScheme.primary,
+                    trackOutlineColor: WidgetStateProperty.all(
+                        Theme.of(context).colorScheme.primary),
+                    thumbColor: WidgetStateProperty.all(
+                      Theme.of(context).colorScheme.primary.withOpacity(0.6),
+                    ),
+                    value: !_setupMode,
+                    onChanged: (bool value) {
+                      if (!value) {
+                        _transitionToSetup = true;
+                      }
+                      setOperatingMode(/*setup=*/ !value);
+                    }),
+              ]))),
       const SizedBox(width: 0, height: 15),
       RotatedBox(
           quarterTurns: portrait ? 3 : 0,
@@ -1012,7 +1017,7 @@ class MyHomePageState extends State<MyHomePage> {
                         padding: const EdgeInsets.symmetric(horizontal: 0)),
                     child: Text(
                       style: const TextStyle(fontSize: 12),
-                      "Set Align",
+                      "Star Align",
                       textScaler: textScaler(context),
                     ),
                     onPressed: () {
@@ -1242,7 +1247,7 @@ class MyHomePageState extends State<MyHomePage> {
     return <Widget>[
       RotatedBox(
           quarterTurns: portrait ? 3 : 0,
-          child: _setupMode && !(_focusAid && _advanced)
+          child: _setupMode && !(_focusAid && _advanced && !_daylightMode)
               ? const SizedBox(height: 75)
               : Column(children: <Widget>[
                   SizedBox(
@@ -1316,23 +1321,30 @@ class MyHomePageState extends State<MyHomePage> {
         child: _setupMode
             ? SizedBox(
                 width: 90 * textScaleFactor(context),
-                child:
-                    Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-                  Checkbox(
-                    value: _focusAid,
-                    onChanged: _daylightMode
-                        ? null
-                        : (bool? selected) {
-                            _focusAid = selected!;
-                          },
-                    activeColor: Theme.of(context).colorScheme.surface,
-                    checkColor: Theme.of(context).colorScheme.primary,
-                  ),
-                  Text(
-                    "Focus",
-                    textScaler: textScaler(context),
-                  ),
-                ]))
+                child: GestureDetector(
+                    onTap: () {
+                      if (!_daylightMode) {
+                        _focusAid = !_focusAid;
+                      }
+                    },
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Checkbox(
+                            value: _focusAid,
+                            onChanged: _daylightMode
+                                ? null
+                                : (bool? selected) {
+                                    _focusAid = selected!;
+                                  },
+                            activeColor: Theme.of(context).colorScheme.surface,
+                            checkColor: Theme.of(context).colorScheme.primary,
+                          ),
+                          Text(
+                            "Focus",
+                            textScaler: textScaler(context),
+                          ),
+                        ])))
             : Container(),
       ),
       const SizedBox(width: 10, height: 10),
@@ -1341,21 +1353,26 @@ class MyHomePageState extends State<MyHomePage> {
         child: _setupMode
             ? SizedBox(
                 width: 90 * textScaleFactor(context),
-                child:
-                    Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-                  Checkbox(
-                    value: _daylightMode,
-                    onChanged: (bool? selected) {
-                      setDaylightMode(selected!);
+                child: GestureDetector(
+                    onTap: () {
+                      setDaylightMode(!_daylightMode);
                     },
-                    activeColor: Theme.of(context).colorScheme.surface,
-                    checkColor: Theme.of(context).colorScheme.primary,
-                  ),
-                  Text(
-                    "Zoom",
-                    textScaler: textScaler(context),
-                  ),
-                ]))
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Checkbox(
+                            value: _daylightMode,
+                            onChanged: (bool? selected) {
+                              setDaylightMode(selected!);
+                            },
+                            activeColor: Theme.of(context).colorScheme.surface,
+                            checkColor: Theme.of(context).colorScheme.primary,
+                          ),
+                          Text(
+                            "Zoom",
+                            textScaler: textScaler(context),
+                          ),
+                        ])))
             : Container(),
       ),
       RotatedBox(
