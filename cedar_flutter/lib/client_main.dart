@@ -616,7 +616,7 @@ class MyHomePageState extends State<MyHomePage> {
     setServerTime(now);
 
     await Future.doWhile(() async {
-      await Future.delayed(const Duration(milliseconds: 10));
+      await Future.delayed(const Duration(milliseconds: 50));
       if (doRefreshes && !_paintPending) {
         await getFrameFromServer();
       }
