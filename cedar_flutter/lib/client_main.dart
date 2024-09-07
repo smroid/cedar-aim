@@ -616,11 +616,9 @@ class MyHomePageState extends State<MyHomePage> {
     setServerTime(now);
 
     await Future.doWhile(() async {
-      if (doRefreshes) {
+      await Future.delayed(const Duration(milliseconds: 10));
+      if (doRefreshes && !_paintPending) {
         await getFrameFromServer();
-        while (_paintPending) {
-          await Future.delayed(const Duration(milliseconds: 10));
-        }
       }
       return true; // Forever!
     });
