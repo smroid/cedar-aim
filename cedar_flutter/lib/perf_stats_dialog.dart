@@ -10,6 +10,10 @@ import 'package:sprintf/sprintf.dart';
 
 Future<void> perfStatsDialog(
     MyHomePageState state, BuildContext context) async {
+  Text scaledText(String str) {
+    return Text(str, textScaler: textScaler(context));
+  }
+
   OverlayEntry? dialogOverlayEntry;
 
   Timer timer = Timer.periodic(const Duration(seconds: 1), (_) async {
@@ -45,105 +49,64 @@ Future<void> perfStatsDialog(
             mainAxisSize: MainAxisSize.min,
             children: [
               Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                Text(
-                  "Performance",
-                  textScaler: textScaler(context),
-                ),
+                scaledText("Performance"),
               ]),
               const SizedBox(height: 5),
               Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                Text(
-                  "Exposure time",
-                  textScaler: textScaler(context),
-                ),
-                Text(
-                  sprintf("%.1f ms", [state.exposureTimeMs]),
-                  textScaler: textScaler(context),
-                ),
+                scaledText("Exposure time"),
+                scaledText(sprintf("%.1f ms", [state.exposureTimeMs])),
               ]),
               state.processingStats != null
                   ? Column(children: [
                       Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
-                              "Detect",
-                              textScaler: textScaler(context),
-                            ),
-                            Text(
-                              sprintf("%.1f ms", [
-                                state.processingStats!.detectLatency.recent
-                                        .mean *
-                                    1000
-                              ]),
-                              textScaler: textScaler(context),
-                            ),
+                            scaledText("Detect"),
+                            scaledText(sprintf("%.1f ms", [
+                              state.processingStats!.detectLatency.recent.mean *
+                                  1000
+                            ])),
                           ]),
                       Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
-                              "Solve",
-                              textScaler: textScaler(context),
-                            ),
-                            Text(
-                              sprintf("%.1f ms", [
-                                state.processingStats!.solveLatency.recent
-                                        .mean *
-                                    1000
-                              ]),
-                              textScaler: textScaler(context),
-                            ),
+                            scaledText("Solve"),
+                            scaledText(sprintf("%.1f ms", [
+                              state.processingStats!.solveLatency.recent.mean *
+                                  1000
+                            ])),
                           ]),
                       const SizedBox(height: 10),
                       Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
-                              "Solve attempt",
-                              textScaler: textScaler(context),
-                            ),
-                            Text(
-                              sprintf("%2d%%", [
-                                (state.processingStats!.solveAttemptFraction
-                                            .recent.mean *
-                                        100)
-                                    .toInt()
-                              ]),
-                              textScaler: textScaler(context),
-                            ),
+                            scaledText("Solve attempt"),
+                            scaledText(sprintf("%2d%%", [
+                              (state.processingStats!.solveAttemptFraction
+                                          .recent.mean *
+                                      100)
+                                  .toInt()
+                            ])),
                           ]),
                       Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
-                              "Solve success",
-                              textScaler: textScaler(context),
-                            ),
-                            Text(
-                              sprintf("%2d%%", [
-                                (state.processingStats!.solveSuccessFraction
-                                            .recent.mean *
-                                        100)
-                                    .toInt()
-                              ]),
-                              textScaler: textScaler(context),
-                            ),
+                            scaledText("Solve success"),
+                            scaledText(sprintf("%2d%%", [
+                              (state.processingStats!.solveSuccessFraction
+                                          .recent.mean *
+                                      100)
+                                  .toInt()
+                            ])),
                           ]),
                     ])
                   : Container(),
               const SizedBox(height: 10),
               Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                Text(
-                  "RMS Error",
-                  textScaler: textScaler(context),
-                ),
-                Text(
-                  state.solutionRMSE > 60
-                      ? sprintf("%.1f arcmin", [state.solutionRMSE / 60])
-                      : sprintf("%.0f arcsec", [state.solutionRMSE]),
-                  textScaler: textScaler(context),
-                ),
+                scaledText("RMS Error"),
+                scaledText(state.solutionRMSE > 60
+                    ? sprintf("%.1f arcmin", [state.solutionRMSE / 60])
+                    : sprintf("%.0f arcsec", [state.solutionRMSE])),
                 // solveText(),
               ]),
             ],

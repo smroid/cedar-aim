@@ -165,6 +165,10 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
+    Text scaledText(String str) {
+      return Text(str, textScaler: textScaler(context));
+    }
+
     final provider = Provider.of<SettingsModel>(context, listen: false);
     final prefsProto = provider.preferencesProto;
     final opSettingsProto = provider.opSettingsProto;
@@ -215,10 +219,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               });
                             },
                           )),
-                      title: Text(
-                        'Text size',
-                        textScaler: textScaler(context),
-                      ),
+                      title: scaledText('Text size'),
                     ),
                     SettingsTile(
                       leading: Row(children: <Widget>[
@@ -231,10 +232,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               });
                             })
                       ]),
-                      title: Text(
-                        'Full screen',
-                        textScaler: textScaler(context),
-                      ),
+                      title: scaledText('Full screen'),
                     ),
                     if (advanced)
                       SettingsTile(
@@ -251,13 +249,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 });
                               })
                         ]),
-                        title: Text(
-                          prefsProto.celestialCoordFormat ==
-                                  CelestialCoordFormat.HMS_DMS
-                              ? 'RA/Dec format H:M:S/D:M:S'
-                              : 'RA/Dec format D.DD/D.DD',
-                          textScaler: textScaler(context),
-                        ),
+                        title: scaledText(prefsProto.celestialCoordFormat ==
+                                CelestialCoordFormat.HMS_DMS
+                            ? 'RA/Dec format H:M:S/D:M:S'
+                            : 'RA/Dec format D.DD/D.DD'),
                       ),
                     SettingsTile(
                       leading: Row(children: <Widget>[
@@ -270,10 +265,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               });
                             })
                       ]),
-                      title: Text(
-                        'Night vision',
-                        textScaler: textScaler(context),
-                      ),
+                      title: scaledText('Night vision'),
                     ),
                   ]),
               if (advanced)
@@ -324,20 +316,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 });
                               },
                             )),
-                        title: Text(
-                          sprintf('Update frequency %s', [
-                            switch (
-                                _durationToMs(opSettingsProto.updateInterval)) {
-                              1000 => "1Hz",
-                              500 => "2Hz",
-                              200 => "5Hz",
-                              100 => "10Hz",
-                              0 => "unlimited",
-                              _ => "unknown",
-                            },
-                          ]),
-                          textScaler: textScaler(context),
-                        ),
+                        title: scaledText(sprintf('Update frequency %s', [
+                          switch (
+                              _durationToMs(opSettingsProto.updateInterval)) {
+                            1000 => "1Hz",
+                            500 => "2Hz",
+                            200 => "5Hz",
+                            100 => "10Hz",
+                            0 => "unlimited",
+                            _ => "unknown",
+                          },
+                        ])),
                       ),
                     ]),
               SettingsSection(
@@ -367,11 +356,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               });
                             },
                           )),
-                      title: Text(
-                        sprintf(
-                            'Eyepiece FOV  %.1f°', [prefsProto.eyepieceFov]),
-                        textScaler: textScaler(context),
-                      ),
+                      title: scaledText(sprintf(
+                          'Eyepiece FOV  %.1f°', [prefsProto.eyepieceFov])),
                     ),
                     if (advanced)
                       SettingsTile(
@@ -388,12 +374,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 });
                               })
                         ]),
-                        title: Text(
-                          prefsProto.mountType == MountType.EQUATORIAL
-                              ? 'Equatorial mount'
-                              : 'Alt/Az mount',
-                          textScaler: textScaler(context),
-                        ),
+                        title: scaledText(
+                            prefsProto.mountType == MountType.EQUATORIAL
+                                ? 'Equatorial mount'
+                                : 'Alt/Az mount'),
                       ),
                   ]),
             ]));

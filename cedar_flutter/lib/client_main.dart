@@ -3,6 +3,7 @@
 
 import 'dart:developer';
 import 'dart:math' as math;
+import 'package:cedar_flutter/about.dart';
 import 'package:cedar_flutter/cedar_sky.pb.dart';
 import 'package:cedar_flutter/draw_slew_target.dart';
 import 'package:cedar_flutter/draw_util.dart';
@@ -337,6 +338,7 @@ class MyHomePageState extends State<MyHomePage> {
   int _binFactor = 1;
 
   cedar_rpc.ServerInformation? _serverInformation;
+  var _fixedSettings = cedar_rpc.FixedSettings();
   var operationSettings = cedar_rpc.OperationSettings();
   bool _setupMode = false;
   bool _focusAid = false;
@@ -366,7 +368,6 @@ class MyHomePageState extends State<MyHomePage> {
   late List<cedar_rpc.StarCentroid> _stars;
   int _numStars = 0;
   var exposureTimeMs = 0.0;
-  int _maxExposureTimeMs = 0;
   bool _hasSolution = false;
 
   List<MatchedStar>? _solutionMatches;
@@ -425,8 +426,6 @@ class MyHomePageState extends State<MyHomePage> {
     _prevFrameId = response.frameId;
     _stars = response.starCandidates;
     _numStars = _stars.length;
-    _maxExposureTimeMs =
-        _durationToMs(response.fixedSettings.maxExposureTime).toInt();
     if (response.fixedSettings.hasObserverLocation()) {
       _mapPosition = LatLng(response.fixedSettings.observerLocation.latitude,
           response.fixedSettings.observerLocation.longitude);
@@ -448,6 +447,7 @@ class MyHomePageState extends State<MyHomePage> {
     _hasCedarSky =
         _serverInformation!.featureLevel != cedar_rpc.FeatureLevel.DIY;
 
+    _fixedSettings = response.fixedSettings;
     operationSettings = response.operationSettings;
     _accuracy = operationSettings.accuracy.value;
     _expSettingMs = _durationToMs(operationSettings.exposureTime).toInt();
@@ -705,29 +705,24 @@ class MyHomePageState extends State<MyHomePage> {
     }
   }
 
+  Text scaledText(String str) {
+    return Text(str, textScaler: textScaler(context));
+  }
+
   void shutdownDialog() {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          content: Text(
-            'Shutdown Raspberry Pi?',
-            textScaler: textScaler(context),
-          ),
+          content: scaledText('Shutdown Raspberry Pi?'),
           actions: <Widget>[
             TextButton(
-                child: Text(
-                  'Cancel',
-                  textScaler: textScaler(context),
-                ),
+                child: scaledText('Cancel'),
                 onPressed: () {
                   Navigator.of(context).pop();
                 }),
             TextButton(
-                child: Text(
-                  'Shutdown',
-                  textScaler: textScaler(context),
-                ),
+                child: scaledText('Shutdown'),
                 onPressed: () {
                   shutdown();
                   Navigator.of(context).pop();
@@ -784,10 +779,7 @@ class MyHomePageState extends State<MyHomePage> {
       Align(
           alignment: Alignment.topLeft,
           child: TextButton.icon(
-              label: Text(
-                "Preferences",
-                textScaler: textScaler(context),
-              ),
+              label: scaledText("Preferences"),
               icon: const Icon(Icons.settings),
               onPressed: () {
                 Navigator.push(
@@ -803,15 +795,9 @@ class MyHomePageState extends State<MyHomePage> {
           alignment: Alignment.topLeft,
           child: TextButton.icon(
               label: _mapPosition == null
-                  ? Text(
-                      "Location unknown",
-                      textScaler: textScaler(context),
-                    )
-                  : Text(
-                      sprintf("Location %.1f %.1f",
-                          [_mapPosition!.latitude, _mapPosition!.longitude]),
-                      textScaler: textScaler(context),
-                    ),
+                  ? scaledText("Location unknown")
+                  : scaledText(sprintf("Location %.1f %.1f",
+                      [_mapPosition!.latitude, _mapPosition!.longitude])),
               icon: Icon(_mapPosition == null
                   ? Icons.not_listed_location
                   : Icons.edit_location_alt),
@@ -823,10 +809,7 @@ class MyHomePageState extends State<MyHomePage> {
       Align(
           alignment: Alignment.topLeft,
           child: TextButton.icon(
-              label: Text(
-                "Advanced",
-                textScaler: textScaler(context),
-              ),
+              label: scaledText("Advanced"),
               icon: _advanced
                   ? const Icon(Icons.check)
                   : const Icon(Icons.check_box_outline_blank),
@@ -859,8 +842,7 @@ class MyHomePageState extends State<MyHomePage> {
                                     }
                                   });
                                 },
-                                child: Text("Fast",
-                                    textScaler: textScaler(context))),
+                                child: scaledText("Fast")),
                             GestureDetector(
                                 onTap: () {
                                   setState(() {
@@ -870,8 +852,7 @@ class MyHomePageState extends State<MyHomePage> {
                                     }
                                   });
                                 },
-                                child: Text("Accurate",
-                                    textScaler: textScaler(context)))
+                                child: scaledText("Accurate"))
                           ])),
                   SizedBox(
                       width: 180 * textScaleFactor(context),
@@ -887,85 +868,83 @@ class MyHomePageState extends State<MyHomePage> {
                           })
                         },
                       )),
-                  Text(
-                    sprintf("exposure: %.1f ms", [exposureTimeMs]),
-                    textScaler: textScaler(context),
-                  ),
+                  scaledText(sprintf("exposure: %.1f ms", [exposureTimeMs])),
                   const SizedBox(height: 15),
                 ],
               ))
           : Container(),
       _advanced
-          ? Align(
-              alignment: Alignment.topLeft,
-              child: Row(children: [
-                Container(width: 20),
-                Column(children: <Widget>[
-                  const SizedBox(height: 15),
-                  SizedBox(
-                      width: 140 * textScaleFactor(context),
-                      child: OutlinedButton(
-                          style: OutlinedButton.styleFrom(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 2)),
-                          child: Text(
-                            "Save image",
-                            textScaler: textScaler(context),
-                          ),
-                          onPressed: () {
-                            saveImage();
-                          })),
-                ]),
-              ]))
+          ? Row(children: [
+              Container(width: 20),
+              Column(children: <Widget>[
+                const SizedBox(height: 15),
+                SizedBox(
+                    width: 140 * textScaleFactor(context),
+                    child: OutlinedButton(
+                        style: OutlinedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(horizontal: 2)),
+                        child: scaledText("Save image"),
+                        onPressed: () {
+                          saveImage();
+                        })),
+              ]),
+            ])
           : Container(),
       _advanced
-          ? Align(
-              alignment: Alignment.topLeft,
-              child: Row(children: [
-                Container(width: 20),
-                Column(children: <Widget>[
-                  const SizedBox(height: 15),
-                  SizedBox(
-                      width: 140 * textScaleFactor(context),
-                      child: OutlinedButton(
-                          style: OutlinedButton.styleFrom(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 2)),
-                          child: Text(
-                            "Show server log",
-                            textScaler: textScaler(context),
-                          ),
-                          onPressed: () async {
-                            var logs = await getServerLogs();
-                            if (context.mounted) {
-                              showDialog(
-                                  context: context,
-                                  builder: (context) => ServerLogPopUp(logs));
-                            }
-                          })),
-                ])
-              ]))
+          ? Row(children: [
+              Container(width: 20),
+              Column(children: <Widget>[
+                const SizedBox(height: 15),
+                SizedBox(
+                    width: 140 * textScaleFactor(context),
+                    child: OutlinedButton(
+                        style: OutlinedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(horizontal: 2)),
+                        child: scaledText("Show server log"),
+                        onPressed: () async {
+                          var logs = await getServerLogs();
+                          if (context.mounted) {
+                            showDialog(
+                                context: context,
+                                builder: (context) => ServerLogPopUp(logs));
+                          }
+                        })),
+              ])
+            ])
           : Container(),
       const SizedBox(height: 15),
-      Align(
-          alignment: Alignment.topLeft,
-          child: Row(children: [
-            Container(width: 20),
-            Column(children: <Widget>[
-              SizedBox(
-                  width: 140 * textScaleFactor(context),
-                  child: OutlinedButton(
-                      style: OutlinedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(horizontal: 2)),
-                      child: Text(
-                        "Shutdown",
-                        textScaler: textScaler(context),
-                      ),
-                      onPressed: () {
-                        shutdownDialog();
-                      })),
-            ]),
-          ]))
+      Row(children: [
+        Container(width: 20),
+        Column(children: <Widget>[
+          SizedBox(
+              width: 140 * textScaleFactor(context),
+              child: OutlinedButton(
+                  style: OutlinedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(horizontal: 2)),
+                  child: Text(
+                    "About",
+                    textScaler: textScaler(context),
+                  ),
+                  onPressed: () {
+                    aboutScreen(this, context);
+                  })),
+        ]),
+      ]),
+      const SizedBox(height: 15),
+      Row(children: [
+        Container(width: 20),
+        Column(children: <Widget>[
+          SizedBox(
+              width: 140 * textScaleFactor(context),
+              child: OutlinedButton(
+                  style: OutlinedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(horizontal: 2)),
+                  child: scaledText("Shutdown"),
+                  onPressed: () {
+                    shutdownDialog();
+                  })),
+        ]),
+      ])
     ];
   }
 
@@ -1358,10 +1337,7 @@ class MyHomePageState extends State<MyHomePage> {
                             activeColor: Theme.of(context).colorScheme.surface,
                             checkColor: Theme.of(context).colorScheme.primary,
                           ),
-                          Text(
-                            "Focus",
-                            textScaler: textScaler(context),
-                          ),
+                          scaledText("Focus"),
                         ])))
             : Container(),
       ),
@@ -1386,10 +1362,7 @@ class MyHomePageState extends State<MyHomePage> {
                             activeColor: Theme.of(context).colorScheme.surface,
                             checkColor: Theme.of(context).colorScheme.primary,
                           ),
-                          Text(
-                            "Zoom",
-                            textScaler: textScaler(context),
-                          ),
+                          scaledText("Zoom"),
                         ])))
             : Container(),
       ),
@@ -1525,10 +1498,7 @@ class MyHomePageState extends State<MyHomePage> {
                           backgroundColor: Colors.black,
                           foregroundColor:
                               Theme.of(context).colorScheme.primary),
-                      child: Text(
-                        'Cancel',
-                        textScaler: textScaler(context),
-                      ),
+                      child: scaledText('Cancel'),
                     )
                   : Container(),
             ]));
