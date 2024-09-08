@@ -820,41 +820,59 @@ class MyHomePageState extends State<MyHomePage> {
                     MaterialPageRoute(builder: (context) => MapScreen(this)));
               })),
       const SizedBox(height: 15),
-      Column(children: <Widget>[
-        Align(
-            alignment: Alignment.topLeft,
-            child: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-              const SizedBox(width: 10),
-              Checkbox(
-                value: _advanced,
-                onChanged: (bool? selected) async {
-                  _advanced = selected!;
-                  var settingsModel =
-                      Provider.of<SettingsModel>(context, listen: false);
-                  settingsModel.preferencesProto.advanced = _advanced;
-                  var prefs = cedar_rpc.Preferences();
-                  prefs.advanced = _advanced;
-                  await updatePreferences(prefs);
-                },
-                activeColor: Theme.of(context).colorScheme.surface,
-                checkColor: Theme.of(context).colorScheme.primary,
-              ),
-              Text(
+      Align(
+          alignment: Alignment.topLeft,
+          child: TextButton.icon(
+              label: Text(
                 "Advanced",
                 textScaler: textScaler(context),
               ),
-            ]))
-      ]),
+              icon: _advanced
+                  ? const Icon(Icons.check)
+                  : const Icon(Icons.check_box_outline_blank),
+              onPressed: () async {
+                _advanced = !_advanced;
+                var settingsModel =
+                    Provider.of<SettingsModel>(context, listen: false);
+                settingsModel.preferencesProto.advanced = _advanced;
+                var prefs = cedar_rpc.Preferences();
+                prefs.advanced = _advanced;
+                await updatePreferences(prefs);
+              })),
       _advanced
           ? Align(
               alignment: Alignment.topLeft,
               child: Column(
                 children: <Widget>[
                   const SizedBox(height: 15),
-                  Text(
-                    "Fast               Accurate",
-                    textScaler: textScaler(context),
-                  ),
+                  SizedBox(
+                      width: 140 * textScaleFactor(context),
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    if (_accuracy > 1) {
+                                      --_accuracy;
+                                      setAccuracy(_accuracy);
+                                    }
+                                  });
+                                },
+                                child: Text("Fast",
+                                    textScaler: textScaler(context))),
+                            GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    if (_accuracy < 3) {
+                                      ++_accuracy;
+                                      setAccuracy(_accuracy);
+                                    }
+                                  });
+                                },
+                                child: Text("Accurate",
+                                    textScaler: textScaler(context)))
+                          ])),
                   SizedBox(
                       width: 180 * textScaleFactor(context),
                       height: 25,
@@ -1017,7 +1035,7 @@ class MyHomePageState extends State<MyHomePage> {
                         padding: const EdgeInsets.symmetric(horizontal: 0)),
                     child: Text(
                       style: const TextStyle(fontSize: 12),
-                      "Star Align",
+                      "Star align",
                       textScaler: textScaler(context),
                     ),
                     onPressed: () {
