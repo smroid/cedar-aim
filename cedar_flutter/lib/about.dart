@@ -3,7 +3,6 @@
 
 import 'dart:async';
 
-import 'package:cedar_flutter/cedar.pb.dart';
 import 'package:cedar_flutter/client_main.dart';
 import 'package:cedar_flutter/settings.dart';
 import 'package:flutter/material.dart';

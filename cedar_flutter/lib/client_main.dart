@@ -314,6 +314,8 @@ class MyHomePageState extends State<MyHomePage> {
   bool _northernHemisphere = true;
 
   Duration _tzOffset = const Duration();
+  bool _serverConnected = false;
+  bool _everConnected = false;
   bool _paintPending = false;
 
   // Information from most recent FrameResult.
@@ -572,10 +574,15 @@ class MyHomePageState extends State<MyHomePage> {
           options: CallOptions(timeout: const Duration(seconds: 2)));
       _paintPending = true;
       setState(() {
+        _serverConnected = true;
+        _everConnected = true;
         setStateFromFrameResult(response);
       });
     } catch (e) {
       log('getFrameFromServer error: $e');
+      setState(() {
+        _serverConnected = false;
+      });
     }
   }
 
@@ -1542,31 +1549,68 @@ class MyHomePageState extends State<MyHomePage> {
           toolbarOpacity: hideAppBar ? 0.0 : 1.0,
           title: Text(widget.title),
           foregroundColor: Theme.of(context).colorScheme.primary),
-      body: Container(
-          color: Theme.of(context).colorScheme.surface,
-          child: Stack(
-            fit: StackFit.expand,
-            children: [
-              Positioned(
-                  left: 0,
-                  top: 0,
-                  child: hideAppBar
-                      ? IconButton(
-                          icon: const Icon(Icons.menu),
-                          onPressed: () {
-                            _scaffoldKey.currentState!.openDrawer();
-                          })
-                      : Container()),
-              FittedBox(
-                child: orientationLayout(context),
-              ),
-            ],
-          )),
-      drawer: Drawer(
-          width: 210 * textScaleFactor(context),
-          child: ListView(
-              padding: EdgeInsets.zero, children: drawerControls(context))),
+      body: _serverConnected
+          ? Container(
+              color: Theme.of(context).colorScheme.surface,
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  Positioned(
+                      left: 0,
+                      top: 0,
+                      child: hideAppBar
+                          ? IconButton(
+                              icon: const Icon(Icons.menu),
+                              onPressed: () {
+                                _scaffoldKey.currentState!.openDrawer();
+                              })
+                          : Container()),
+                  FittedBox(
+                    child: orientationLayout(context),
+                  ),
+                ],
+              ))
+          : noConnection(),
+      drawer: _serverConnected
+          ? Drawer(
+              width: 210 * textScaleFactor(context),
+              child: ListView(
+                  padding: EdgeInsets.zero, children: drawerControls(context)))
+          : Container(),
       drawerEdgeDragWidth: 100,
     );
   }
-}
+
+  Widget noConnection() {
+    Color color = Theme.of(context).colorScheme.primary;
+    final connMessage = _everConnected
+        ? "Connection lost to Cedar server"
+        : "No connection to Cedar server";
+    return Material(
+      color: Colors.black54,
+      child: Center(
+        child: Container(
+          margin: const EdgeInsets.all(40),
+          padding: const EdgeInsets.fromLTRB(10, 5, 10, 10),
+          decoration: BoxDecoration(
+            border: Border(
+              top: BorderSide(color: color),
+              bottom: BorderSide(color: color),
+              left: BorderSide(color: color),
+              right: BorderSide(color: color),
+            ),
+            color: Colors.black,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Column(mainAxisSize: MainAxisSize.min, children: [
+            Text(
+                style: const TextStyle(fontSize: 18),
+                "$connMessage. Please ensure that Cedar "
+                "server is running, connect this device to the Cedar WiFi "
+                "hotspot, and navigate to http://cedar.local:8080."),
+          ]),
+        ),
+      ),
+    );
+  }
+}  // MyHomePageState
