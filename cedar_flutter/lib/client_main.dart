@@ -25,7 +25,6 @@ import 'package:sprintf/sprintf.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 import 'cedar.pbgrpc.dart' as cedar_rpc;
 import 'tetra3.pb.dart';
-import 'google/protobuf/duration.pb.dart' as proto_duration;
 import 'get_cedar_client_for_web.dart'
     if (dart.library.io) 'get_cedar_client.dart';
 
@@ -87,18 +86,6 @@ class MyHomePage extends StatefulWidget {
   final String title;
   @override
   State<MyHomePage> createState() => MyHomePageState();
-}
-
-double _durationToMs(proto_duration.Duration duration) {
-  return duration.seconds.toDouble() * 1000 +
-      (duration.nanos.toDouble()) / 1000000;
-}
-
-proto_duration.Duration _msToDuration(int ms) {
-  var duration = proto_duration.Duration();
-  duration.seconds = Int64(ms ~/ 1000);
-  duration.nanos = (ms * 1000000) % 1000000000;
-  return duration;
 }
 
 double _deg2rad(double deg) {
@@ -337,8 +324,8 @@ class MyHomePageState extends State<MyHomePage> {
   late Rect _fullResImageRegion;
   int _binFactor = 1;
 
-  cedar_rpc.ServerInformation? _serverInformation;
-  var _fixedSettings = cedar_rpc.FixedSettings();
+  cedar_rpc.ServerInformation? serverInformation;
+  var fixedSettings = cedar_rpc.FixedSettings();
   var operationSettings = cedar_rpc.OperationSettings();
   bool _setupMode = false;
   bool _focusAid = false;
@@ -361,7 +348,6 @@ class MyHomePageState extends State<MyHomePage> {
   Uint8List? _centerPeakImageBytes;
 
   int _boresightImageWidth = 0;
-  int _boresightImageHeight = 0;
   Uint8List? _boresightImageBytes;
 
   int _prevFrameId = -1;
@@ -370,7 +356,6 @@ class MyHomePageState extends State<MyHomePage> {
   var exposureTimeMs = 0.0;
   bool _hasSolution = false;
 
-  List<MatchedStar>? _solutionMatches;
   List<Offset>? _solutionCentroids;
   // Degrees.
   double _solutionRA = 0.0;
@@ -383,7 +368,7 @@ class MyHomePageState extends State<MyHomePage> {
 
   cedar_rpc.LocationBasedInfo? _locationBasedInfo;
 
-  cedar_rpc.CalibrationData? _calibrationData;
+  cedar_rpc.CalibrationData? calibrationData;
   cedar_rpc.ProcessingStats? processingStats;
   cedar_rpc.SlewRequest? _slewRequest;
   cedar_rpc.Preferences? preferences;
@@ -401,7 +386,6 @@ class MyHomePageState extends State<MyHomePage> {
   bool _transitionToSetup = false;
 
   // Values set from on-screen controls.
-  bool doRefreshes = true;
   int _expSettingMs = 0; // 0 is auto-exposure.
 
   cedar_rpc.CedarClient? _client;
@@ -443,14 +427,14 @@ class MyHomePageState extends State<MyHomePage> {
     } else {
       Provider.of<ThemeModel>(context, listen: false).setNormalTheme();
     }
-    _serverInformation = response.serverInformation;
+    serverInformation = response.serverInformation;
     _hasCedarSky =
-        _serverInformation!.featureLevel != cedar_rpc.FeatureLevel.DIY;
+        serverInformation!.featureLevel != cedar_rpc.FeatureLevel.DIY;
 
-    _fixedSettings = response.fixedSettings;
+    fixedSettings = response.fixedSettings;
     operationSettings = response.operationSettings;
     _accuracy = operationSettings.accuracy.value;
-    _expSettingMs = _durationToMs(operationSettings.exposureTime).toInt();
+    _expSettingMs = durationToMs(operationSettings.exposureTime).toInt();
     _setupMode =
         operationSettings.operatingMode == cedar_rpc.OperatingMode.SETUP;
     _daylightMode = operationSettings.daylightMode;
@@ -470,7 +454,7 @@ class MyHomePageState extends State<MyHomePage> {
     settingsModel.preferencesProto = preferences!.deepCopy();
     settingsModel.opSettingsProto = operationSettings.deepCopy();
     _advanced = preferences!.advanced;
-    _calibrationData =
+    calibrationData =
         response.hasCalibrationData() ? response.calibrationData : null;
     processingStats =
         response.hasProcessingStats() ? response.processingStats : null;
@@ -482,7 +466,6 @@ class MyHomePageState extends State<MyHomePage> {
       SolveResult plateSolution = response.plateSolution;
       if (plateSolution.status == SolveStatus.MATCH_FOUND) {
         _hasSolution = true;
-        _solutionMatches = plateSolution.matchedStars;
         _solutionCentroids = <Offset>[];
         for (var centroid in plateSolution.patternCentroids) {
           _solutionCentroids!.add(Offset(centroid.x, centroid.y));
@@ -529,7 +512,7 @@ class MyHomePageState extends State<MyHomePage> {
           cr.height.toDouble() / _binFactor);
     }
     if (response.hasExposureTime()) {
-      exposureTimeMs = _durationToMs(response.exposureTime);
+      exposureTimeMs = durationToMs(response.exposureTime).toDouble();
     }
     _centerPeakImageBytes = null;
     if (response.hasCenterPeakImage()) {
@@ -543,7 +526,6 @@ class MyHomePageState extends State<MyHomePage> {
       _boresightImageBytes =
           Uint8List.fromList(response.boresightImage.imageData);
       _boresightImageWidth = response.boresightImage.rectangle.width;
-      _boresightImageHeight = response.boresightImage.rectangle.height;
     }
     if (response.hasCenterPeakPosition()) {
       var cp = response.centerPeakPosition;
@@ -614,7 +596,7 @@ class MyHomePageState extends State<MyHomePage> {
 
     await Future.doWhile(() async {
       await Future.delayed(const Duration(milliseconds: 50));
-      if (doRefreshes && !_paintPending) {
+      if (!_paintPending) {
         await getFrameFromServer();
       }
       return true; // Forever!
@@ -631,45 +613,41 @@ class MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> setServerTime(DateTime now) async {
-    Timestamp ts = Timestamp();
-    ts.seconds = Int64(now.millisecondsSinceEpoch ~/ 1000.0);
-    ts.nanos = (now.millisecondsSinceEpoch % 1000) * 1000000;
+    final ts = Timestamp(
+        seconds: Int64(now.millisecondsSinceEpoch ~/ 1000.0),
+        nanos: (now.millisecondsSinceEpoch % 1000) * 1000000);
     var request = cedar_rpc.FixedSettings();
     request.currentTime = ts;
     await updateFixedSettings(request);
   }
 
   Future<void> setObserverLocation(LatLng pos) async {
-    cedar_rpc.LatLong posProto = cedar_rpc.LatLong();
-    posProto.latitude = pos.latitude;
-    posProto.longitude = pos.longitude;
+    final posProto =
+        cedar_rpc.LatLong(latitude: pos.latitude, longitude: pos.longitude);
     var request = cedar_rpc.FixedSettings();
     request.observerLocation = posProto;
     await updateFixedSettings(request);
   }
 
   Future<void> setExpTime() async {
-    var request = cedar_rpc.OperationSettings();
-    request.exposureTime = _msToDuration(_expSettingMs);
+    final request = cedar_rpc.OperationSettings(
+        exposureTime: durationFromMs(_expSettingMs));
     await updateOperationSettings(request);
   }
 
   Future<void> captureBoresight() async {
-    var request = cedar_rpc.ActionRequest();
-    request.captureBoresight = true;
+    final request = cedar_rpc.ActionRequest(captureBoresight: true);
     await initiateAction(request);
   }
 
   Future<void> designateBoresight(Offset pos) async {
     final coord = cedar_rpc.ImageCoord(x: pos.dx, y: pos.dy);
-    var request = cedar_rpc.ActionRequest();
-    request.designateBoresight = coord;
+    final request = cedar_rpc.ActionRequest(designateBoresight: coord);
     await initiateAction(request);
   }
 
   Future<void> stopSlew() async {
-    var request = cedar_rpc.ActionRequest();
-    request.stopSlew = true;
+    final request = cedar_rpc.ActionRequest(stopSlew: true);
     await initiateAction(request);
   }
 
@@ -681,22 +659,20 @@ class MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> setAccuracy(int value) async {
-    var request = cedar_rpc.OperationSettings();
-    request.accuracy = cedar_rpc.Accuracy.valueOf(value)!;
+    final request = cedar_rpc.OperationSettings(
+        accuracy: cedar_rpc.Accuracy.valueOf(value)!);
     await updateOperationSettings(request);
   }
 
   Future<void> setDaylightMode(bool value) async {
-    var request = cedar_rpc.OperationSettings();
-    request.daylightMode = value;
+    final request = cedar_rpc.OperationSettings(daylightMode: value);
     await updateOperationSettings(request);
   }
 
   Future<String> getServerLogs() async {
-    var request = cedar_rpc.ServerLogRequest();
-    request.logRequest = 20000;
+    final request = cedar_rpc.ServerLogRequest(logRequest: 20000);
     try {
-      var infoResult = await client().getServerLog(request,
+      final infoResult = await client().getServerLog(request,
           options: CallOptions(timeout: const Duration(seconds: 2)));
       return infoResult.logContent;
     } catch (e) {
@@ -734,14 +710,12 @@ class MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> shutdown() async {
-    var request = cedar_rpc.ActionRequest();
-    request.shutdownServer = true;
+    final request = cedar_rpc.ActionRequest(shutdownServer: true);
     await initiateAction(request);
   }
 
   Future<void> saveImage() async {
-    var request = cedar_rpc.ActionRequest();
-    request.saveImage = true;
+    final request = cedar_rpc.ActionRequest(saveImage: true);
     await initiateAction(request);
   }
 
@@ -770,11 +744,7 @@ class MyHomePageState extends State<MyHomePage> {
 
   List<Widget> drawerControls(BuildContext context) {
     return <Widget>[
-      CloseButton(
-          style: ButtonStyle(
-              alignment: Alignment.topLeft,
-              iconColor: WidgetStatePropertyAll(
-                  Theme.of(context).colorScheme.primary))),
+      const CloseButton(style: ButtonStyle(alignment: Alignment.topLeft)),
       const SizedBox(height: 15),
       Align(
           alignment: Alignment.topLeft,
@@ -988,7 +958,6 @@ class MyHomePageState extends State<MyHomePage> {
                 primaryText("Setup  Aim"),
                 Switch(
                     activeTrackColor: Theme.of(context).colorScheme.surface,
-                    activeColor: Theme.of(context).colorScheme.primary,
                     trackOutlineColor: WidgetStateProperty.all(
                         Theme.of(context).colorScheme.primary),
                     thumbColor: WidgetStateProperty.all(
@@ -1300,17 +1269,6 @@ class MyHomePageState extends State<MyHomePage> {
                           ],
                         )),
                   ),
-                  // const SizedBox(width: 15, height: 15),
-                  // TODO: move calibration data elsewhere, make more comprehensive
-                  // _calibrationData != null &&
-                  //         _calibrationData!.fovHorizontal > 0
-                  //     ? Column(children: <Widget>[
-                  //         primaryText(sprintf(
-                  //             "FOV %.1f°", [_calibrationData!.fovHorizontal])),
-                  //         primaryText(sprintf(
-                  //             "Lens %.1f mm", [_calibrationData!.lensFlMm])),
-                  //       ])
-                  //     : Container(),
                 ])),
       const SizedBox(width: 10, height: 10),
       RotatedBox(
@@ -1604,10 +1562,6 @@ class MyHomePageState extends State<MyHomePage> {
               ),
             ],
           )),
-      onDrawerChanged: (isOpened) {
-        // This helps prevent jank on the fast/accurate slider.
-        doRefreshes = !isOpened;
-      },
       drawer: Drawer(
           width: 210 * textScaleFactor(context),
           child: ListView(

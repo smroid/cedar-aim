@@ -116,7 +116,7 @@ class SettingsModel extends ChangeNotifier {
   }
 
   void updateUpdateInterval(int intervalMs) {
-    opSettingsProto.updateInterval = _durationFromMs(intervalMs);
+    opSettingsProto.updateInterval = durationFromMs(intervalMs);
     notifyListeners();
   }
 
@@ -126,7 +126,7 @@ class SettingsModel extends ChangeNotifier {
   }
 }
 
-proto_duration.Duration _durationFromMs(int intervalMs) {
+proto_duration.Duration durationFromMs(int intervalMs) {
   proto_duration.Duration duration = proto_duration.Duration();
   duration.seconds = Int64(intervalMs ~/ 1000);
   intervalMs -= (duration.seconds * 1000).toInt();
@@ -134,7 +134,7 @@ proto_duration.Duration _durationFromMs(int intervalMs) {
   return duration;
 }
 
-int _durationToMs(proto_duration.Duration duration) {
+int durationToMs(proto_duration.Duration duration) {
   return (duration.seconds * 1000 + duration.nanos ~/ 1000000).toInt();
 }
 
@@ -292,7 +292,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               min: 1,
                               max: 5,
                               divisions: 4,
-                              value: switch (_durationToMs(
+                              value: switch (durationToMs(
                                   opSettingsProto.updateInterval)) {
                                 1000 => 1,
                                 500 => 2,
@@ -318,7 +318,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             )),
                         title: scaledText(sprintf('Update frequency %s', [
                           switch (
-                              _durationToMs(opSettingsProto.updateInterval)) {
+                              durationToMs(opSettingsProto.updateInterval)) {
                             1000 => "1Hz",
                             500 => "2Hz",
                             200 => "5Hz",
