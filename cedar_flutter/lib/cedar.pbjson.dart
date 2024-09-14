@@ -103,9 +103,12 @@ const ServerInformation$json = {
     {'1': 'serial_number', '3': 12, '4': 1, '5': 9, '10': 'serialNumber'},
     {'1': 'cpu_temperature', '3': 7, '4': 1, '5': 2, '10': 'cpuTemperature'},
     {'1': 'server_time', '3': 8, '4': 1, '5': 11, '6': '.google.protobuf.Timestamp', '10': 'serverTime'},
-    {'1': 'camera_model', '3': 9, '4': 1, '5': 9, '10': 'cameraModel'},
-    {'1': 'camera_image_width', '3': 10, '4': 1, '5': 5, '10': 'cameraImageWidth'},
-    {'1': 'camera_image_height', '3': 11, '4': 1, '5': 5, '10': 'cameraImageHeight'},
+    {'1': 'camera', '3': 9, '4': 1, '5': 11, '6': '.cedar.CameraModel', '9': 0, '10': 'camera', '17': true},
+    {'1': 'wifi_access_point', '3': 10, '4': 1, '5': 11, '6': '.cedar.WiFiAccessPoint', '9': 1, '10': 'wifiAccessPoint', '17': true},
+  ],
+  '8': [
+    {'1': '_camera'},
+    {'1': '_wifi_access_point'},
   ],
 };
 
@@ -118,9 +121,46 @@ final $typed_data.Uint8List serverInformationDescriptor = $convert.base64Decode(
     'Y2Vzc29yTW9kZWwSHQoKb3NfdmVyc2lvbhgGIAEoCVIJb3NWZXJzaW9uEiMKDXNlcmlhbF9udW'
     '1iZXIYDCABKAlSDHNlcmlhbE51bWJlchInCg9jcHVfdGVtcGVyYXR1cmUYByABKAJSDmNwdVRl'
     'bXBlcmF0dXJlEjsKC3NlcnZlcl90aW1lGAggASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdG'
-    'FtcFIKc2VydmVyVGltZRIhCgxjYW1lcmFfbW9kZWwYCSABKAlSC2NhbWVyYU1vZGVsEiwKEmNh'
-    'bWVyYV9pbWFnZV93aWR0aBgKIAEoBVIQY2FtZXJhSW1hZ2VXaWR0aBIuChNjYW1lcmFfaW1hZ2'
-    'VfaGVpZ2h0GAsgASgFUhFjYW1lcmFJbWFnZUhlaWdodA==');
+    'FtcFIKc2VydmVyVGltZRIvCgZjYW1lcmEYCSABKAsyEi5jZWRhci5DYW1lcmFNb2RlbEgAUgZj'
+    'YW1lcmGIAQESRwoRd2lmaV9hY2Nlc3NfcG9pbnQYCiABKAsyFi5jZWRhci5XaUZpQWNjZXNzUG'
+    '9pbnRIAVIPd2lmaUFjY2Vzc1BvaW50iAEBQgkKB19jYW1lcmFCFAoSX3dpZmlfYWNjZXNzX3Bv'
+    'aW50');
+
+@$core.Deprecated('Use cameraModelDescriptor instead')
+const CameraModel$json = {
+  '1': 'CameraModel',
+  '2': [
+    {'1': 'model', '3': 1, '4': 1, '5': 9, '10': 'model'},
+    {'1': 'image_width', '3': 2, '4': 1, '5': 5, '10': 'imageWidth'},
+    {'1': 'image_height', '3': 3, '4': 1, '5': 5, '10': 'imageHeight'},
+  ],
+};
+
+/// Descriptor for `CameraModel`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List cameraModelDescriptor = $convert.base64Decode(
+    'CgtDYW1lcmFNb2RlbBIUCgVtb2RlbBgBIAEoCVIFbW9kZWwSHwoLaW1hZ2Vfd2lkdGgYAiABKA'
+    'VSCmltYWdlV2lkdGgSIQoMaW1hZ2VfaGVpZ2h0GAMgASgFUgtpbWFnZUhlaWdodA==');
+
+@$core.Deprecated('Use wiFiAccessPointDescriptor instead')
+const WiFiAccessPoint$json = {
+  '1': 'WiFiAccessPoint',
+  '2': [
+    {'1': 'ssid', '3': 1, '4': 1, '5': 9, '9': 0, '10': 'ssid', '17': true},
+    {'1': 'psk', '3': 2, '4': 1, '5': 9, '9': 1, '10': 'psk', '17': true},
+    {'1': 'channel', '3': 3, '4': 1, '5': 5, '9': 2, '10': 'channel', '17': true},
+  ],
+  '8': [
+    {'1': '_ssid'},
+    {'1': '_psk'},
+    {'1': '_channel'},
+  ],
+};
+
+/// Descriptor for `WiFiAccessPoint`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List wiFiAccessPointDescriptor = $convert.base64Decode(
+    'Cg9XaUZpQWNjZXNzUG9pbnQSFwoEc3NpZBgBIAEoCUgAUgRzc2lkiAEBEhUKA3BzaxgCIAEoCU'
+    'gBUgNwc2uIAQESHQoHY2hhbm5lbBgDIAEoBUgCUgdjaGFubmVsiAEBQgcKBV9zc2lkQgYKBF9w'
+    'c2tCCgoIX2NoYW5uZWw=');
 
 @$core.Deprecated('Use fixedSettingsDescriptor instead')
 const FixedSettings$json = {
@@ -663,6 +703,7 @@ const ActionRequest$json = {
     {'1': 'initiate_slew', '3': 6, '4': 1, '5': 11, '6': '.tetra3_server.CelestialCoord', '9': 3, '10': 'initiateSlew', '17': true},
     {'1': 'stop_slew', '3': 4, '4': 1, '5': 8, '9': 4, '10': 'stopSlew', '17': true},
     {'1': 'save_image', '3': 5, '4': 1, '5': 8, '9': 5, '10': 'saveImage', '17': true},
+    {'1': 'wifi_access_point', '3': 7, '4': 1, '5': 11, '6': '.cedar.WiFiAccessPoint', '9': 6, '10': 'wifiAccessPoint', '17': true},
   ],
   '8': [
     {'1': '_capture_boresight'},
@@ -671,6 +712,7 @@ const ActionRequest$json = {
     {'1': '_initiate_slew'},
     {'1': '_stop_slew'},
     {'1': '_save_image'},
+    {'1': '_wifi_access_point'},
   ],
 };
 
@@ -681,9 +723,11 @@ final $typed_data.Uint8List actionRequestDescriptor = $convert.base64Decode(
     'cmRIAVISZGVzaWduYXRlQm9yZXNpZ2h0iAEBEiwKD3NodXRkb3duX3NlcnZlchgDIAEoCEgCUg'
     '5zaHV0ZG93blNlcnZlcogBARJHCg1pbml0aWF0ZV9zbGV3GAYgASgLMh0udGV0cmEzX3NlcnZl'
     'ci5DZWxlc3RpYWxDb29yZEgDUgxpbml0aWF0ZVNsZXeIAQESIAoJc3RvcF9zbGV3GAQgASgISA'
-    'RSCHN0b3BTbGV3iAEBEiIKCnNhdmVfaW1hZ2UYBSABKAhIBVIJc2F2ZUltYWdliAEBQhQKEl9j'
-    'YXB0dXJlX2JvcmVzaWdodEIWChRfZGVzaWduYXRlX2JvcmVzaWdodEISChBfc2h1dGRvd25fc2'
-    'VydmVyQhAKDl9pbml0aWF0ZV9zbGV3QgwKCl9zdG9wX3NsZXdCDQoLX3NhdmVfaW1hZ2U=');
+    'RSCHN0b3BTbGV3iAEBEiIKCnNhdmVfaW1hZ2UYBSABKAhIBVIJc2F2ZUltYWdliAEBEkcKEXdp'
+    'ZmlfYWNjZXNzX3BvaW50GAcgASgLMhYuY2VkYXIuV2lGaUFjY2Vzc1BvaW50SAZSD3dpZmlBY2'
+    'Nlc3NQb2ludIgBAUIUChJfY2FwdHVyZV9ib3Jlc2lnaHRCFgoUX2Rlc2lnbmF0ZV9ib3Jlc2ln'
+    'aHRCEgoQX3NodXRkb3duX3NlcnZlckIQCg5faW5pdGlhdGVfc2xld0IMCgpfc3RvcF9zbGV3Qg'
+    '0KC19zYXZlX2ltYWdlQhQKEl93aWZpX2FjY2Vzc19wb2ludA==');
 
 @$core.Deprecated('Use serverLogRequestDescriptor instead')
 const ServerLogRequest$json = {

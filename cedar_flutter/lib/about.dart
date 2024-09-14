@@ -211,12 +211,17 @@ Widget calibrationInfo(MyHomePageState state) {
           const SizedBox(height: 15),
           Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
             _scaledText("Camera"),
-            _scaledText(serverInfo.cameraModel),
+            _scaledText(
+                serverInfo.hasCamera() ? serverInfo.camera.model : "no camera"),
           ]),
           Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
             _scaledText("Resolution"),
-            _scaledText(sprintf("%dx%d",
-                [serverInfo.cameraImageWidth, serverInfo.cameraImageHeight])),
+            _scaledText(serverInfo.hasCamera()
+                ? sprintf("%dx%d", [
+                    serverInfo.camera.imageWidth,
+                    serverInfo.camera.imageHeight
+                  ])
+                : "no camera"),
           ]),
           Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
             _scaledText("Lens focal length"),

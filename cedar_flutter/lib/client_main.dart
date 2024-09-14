@@ -315,6 +315,7 @@ class MyHomePageState extends State<MyHomePage> {
 
   Duration _tzOffset = const Duration();
   bool _serverConnected = false;
+  bool _hasCamera = false;
   bool _everConnected = false;
   bool _paintPending = false;
 
@@ -432,6 +433,7 @@ class MyHomePageState extends State<MyHomePage> {
     serverInformation = response.serverInformation;
     _hasCedarSky =
         serverInformation!.featureLevel != cedar_rpc.FeatureLevel.DIY;
+    _hasCamera = serverInformation!.hasCamera();
 
     fixedSettings = response.fixedSettings;
     operationSettings = response.operationSettings;
@@ -1549,7 +1551,7 @@ class MyHomePageState extends State<MyHomePage> {
           toolbarOpacity: hideAppBar ? 0.0 : 1.0,
           title: Text(widget.title),
           foregroundColor: Theme.of(context).colorScheme.primary),
-      body: _serverConnected
+      body: _serverConnected && _hasCamera
           ? Container(
               color: Theme.of(context).colorScheme.surface,
               child: Stack(
@@ -1570,8 +1572,8 @@ class MyHomePageState extends State<MyHomePage> {
                   ),
                 ],
               ))
-          : noConnection(),
-      drawer: _serverConnected
+          : badServerState(),
+      drawer: _serverConnected && _hasCamera
           ? Drawer(
               width: 210 * textScaleFactor(context),
               child: ListView(
@@ -1581,11 +1583,12 @@ class MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  Widget noConnection() {
+  Widget badServerState() {
     Color color = Theme.of(context).colorScheme.primary;
     final connMessage = _everConnected
         ? "Connection lost to Cedar server"
         : "No connection to Cedar server";
+    _paintPending = false;
     return Material(
       color: Colors.black54,
       child: Center(
@@ -1605,9 +1608,12 @@ class MyHomePageState extends State<MyHomePage> {
           child: Column(mainAxisSize: MainAxisSize.min, children: [
             Text(
                 style: const TextStyle(fontSize: 18),
-                "$connMessage. Please ensure that Cedar "
-                "server is running, connect this device to the Cedar WiFi "
-                "hotspot, and navigate to http://cedar.local:8080."),
+                _serverConnected
+                    ? "Cedar could not detect a camera. "
+                        "Please check the camera connection."
+                    : "$connMessage. Please ensure that Cedar "
+                        "server is running, connect this device to the Cedar WiFi "
+                        "hotspot, and navigate to http://cedar.local:8080."),
           ]),
         ),
       ),

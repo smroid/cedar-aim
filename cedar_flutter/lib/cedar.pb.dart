@@ -32,9 +32,8 @@ class ServerInformation extends $pb.GeneratedMessage {
     $core.String? osVersion,
     $core.double? cpuTemperature,
     $3.Timestamp? serverTime,
-    $core.String? cameraModel,
-    $core.int? cameraImageWidth,
-    $core.int? cameraImageHeight,
+    CameraModel? camera,
+    WiFiAccessPoint? wifiAccessPoint,
     $core.String? serialNumber,
   }) {
     final $result = create();
@@ -62,14 +61,11 @@ class ServerInformation extends $pb.GeneratedMessage {
     if (serverTime != null) {
       $result.serverTime = serverTime;
     }
-    if (cameraModel != null) {
-      $result.cameraModel = cameraModel;
+    if (camera != null) {
+      $result.camera = camera;
     }
-    if (cameraImageWidth != null) {
-      $result.cameraImageWidth = cameraImageWidth;
-    }
-    if (cameraImageHeight != null) {
-      $result.cameraImageHeight = cameraImageHeight;
+    if (wifiAccessPoint != null) {
+      $result.wifiAccessPoint = wifiAccessPoint;
     }
     if (serialNumber != null) {
       $result.serialNumber = serialNumber;
@@ -89,9 +85,8 @@ class ServerInformation extends $pb.GeneratedMessage {
     ..aOS(6, _omitFieldNames ? '' : 'osVersion')
     ..a<$core.double>(7, _omitFieldNames ? '' : 'cpuTemperature', $pb.PbFieldType.OF)
     ..aOM<$3.Timestamp>(8, _omitFieldNames ? '' : 'serverTime', subBuilder: $3.Timestamp.create)
-    ..aOS(9, _omitFieldNames ? '' : 'cameraModel')
-    ..a<$core.int>(10, _omitFieldNames ? '' : 'cameraImageWidth', $pb.PbFieldType.O3)
-    ..a<$core.int>(11, _omitFieldNames ? '' : 'cameraImageHeight', $pb.PbFieldType.O3)
+    ..aOM<CameraModel>(9, _omitFieldNames ? '' : 'camera', subBuilder: CameraModel.create)
+    ..aOM<WiFiAccessPoint>(10, _omitFieldNames ? '' : 'wifiAccessPoint', subBuilder: WiFiAccessPoint.create)
     ..aOS(12, _omitFieldNames ? '' : 'serialNumber')
     ..hasRequiredFields = false
   ;
@@ -191,41 +186,196 @@ class ServerInformation extends $pb.GeneratedMessage {
   @$pb.TagNumber(8)
   $3.Timestamp ensureServerTime() => $_ensure(7);
 
+  /// Omitted if no camera detected.
   @$pb.TagNumber(9)
-  $core.String get cameraModel => $_getSZ(8);
+  CameraModel get camera => $_getN(8);
   @$pb.TagNumber(9)
-  set cameraModel($core.String v) { $_setString(8, v); }
+  set camera(CameraModel v) { setField(9, v); }
   @$pb.TagNumber(9)
-  $core.bool hasCameraModel() => $_has(8);
+  $core.bool hasCamera() => $_has(8);
   @$pb.TagNumber(9)
-  void clearCameraModel() => clearField(9);
+  void clearCamera() => clearField(9);
+  @$pb.TagNumber(9)
+  CameraModel ensureCamera() => $_ensure(8);
 
+  /// Network info.
   @$pb.TagNumber(10)
-  $core.int get cameraImageWidth => $_getIZ(9);
+  WiFiAccessPoint get wifiAccessPoint => $_getN(9);
   @$pb.TagNumber(10)
-  set cameraImageWidth($core.int v) { $_setSignedInt32(9, v); }
+  set wifiAccessPoint(WiFiAccessPoint v) { setField(10, v); }
   @$pb.TagNumber(10)
-  $core.bool hasCameraImageWidth() => $_has(9);
+  $core.bool hasWifiAccessPoint() => $_has(9);
   @$pb.TagNumber(10)
-  void clearCameraImageWidth() => clearField(10);
-
-  @$pb.TagNumber(11)
-  $core.int get cameraImageHeight => $_getIZ(10);
-  @$pb.TagNumber(11)
-  set cameraImageHeight($core.int v) { $_setSignedInt32(10, v); }
-  @$pb.TagNumber(11)
-  $core.bool hasCameraImageHeight() => $_has(10);
-  @$pb.TagNumber(11)
-  void clearCameraImageHeight() => clearField(11);
+  void clearWifiAccessPoint() => clearField(10);
+  @$pb.TagNumber(10)
+  WiFiAccessPoint ensureWifiAccessPoint() => $_ensure(9);
 
   @$pb.TagNumber(12)
-  $core.String get serialNumber => $_getSZ(11);
+  $core.String get serialNumber => $_getSZ(10);
   @$pb.TagNumber(12)
-  set serialNumber($core.String v) { $_setString(11, v); }
+  set serialNumber($core.String v) { $_setString(10, v); }
   @$pb.TagNumber(12)
-  $core.bool hasSerialNumber() => $_has(11);
+  $core.bool hasSerialNumber() => $_has(10);
   @$pb.TagNumber(12)
   void clearSerialNumber() => clearField(12);
+}
+
+class CameraModel extends $pb.GeneratedMessage {
+  factory CameraModel({
+    $core.String? model,
+    $core.int? imageWidth,
+    $core.int? imageHeight,
+  }) {
+    final $result = create();
+    if (model != null) {
+      $result.model = model;
+    }
+    if (imageWidth != null) {
+      $result.imageWidth = imageWidth;
+    }
+    if (imageHeight != null) {
+      $result.imageHeight = imageHeight;
+    }
+    return $result;
+  }
+  CameraModel._() : super();
+  factory CameraModel.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory CameraModel.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'CameraModel', package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'), createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'model')
+    ..a<$core.int>(2, _omitFieldNames ? '' : 'imageWidth', $pb.PbFieldType.O3)
+    ..a<$core.int>(3, _omitFieldNames ? '' : 'imageHeight', $pb.PbFieldType.O3)
+    ..hasRequiredFields = false
+  ;
+
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  CameraModel clone() => CameraModel()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  CameraModel copyWith(void Function(CameraModel) updates) => super.copyWith((message) => updates(message as CameraModel)) as CameraModel;
+
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static CameraModel create() => CameraModel._();
+  CameraModel createEmptyInstance() => create();
+  static $pb.PbList<CameraModel> createRepeated() => $pb.PbList<CameraModel>();
+  @$core.pragma('dart2js:noInline')
+  static CameraModel getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<CameraModel>(create);
+  static CameraModel? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get model => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set model($core.String v) { $_setString(0, v); }
+  @$pb.TagNumber(1)
+  $core.bool hasModel() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearModel() => clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.int get imageWidth => $_getIZ(1);
+  @$pb.TagNumber(2)
+  set imageWidth($core.int v) { $_setSignedInt32(1, v); }
+  @$pb.TagNumber(2)
+  $core.bool hasImageWidth() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearImageWidth() => clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.int get imageHeight => $_getIZ(2);
+  @$pb.TagNumber(3)
+  set imageHeight($core.int v) { $_setSignedInt32(2, v); }
+  @$pb.TagNumber(3)
+  $core.bool hasImageHeight() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearImageHeight() => clearField(3);
+}
+
+/// Information about the WiFi access point that Cedar server puts
+/// up.
+class WiFiAccessPoint extends $pb.GeneratedMessage {
+  factory WiFiAccessPoint({
+    $core.String? ssid,
+    $core.String? psk,
+    $core.int? channel,
+  }) {
+    final $result = create();
+    if (ssid != null) {
+      $result.ssid = ssid;
+    }
+    if (psk != null) {
+      $result.psk = psk;
+    }
+    if (channel != null) {
+      $result.channel = channel;
+    }
+    return $result;
+  }
+  WiFiAccessPoint._() : super();
+  factory WiFiAccessPoint.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory WiFiAccessPoint.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'WiFiAccessPoint', package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'), createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'ssid')
+    ..aOS(2, _omitFieldNames ? '' : 'psk')
+    ..a<$core.int>(3, _omitFieldNames ? '' : 'channel', $pb.PbFieldType.O3)
+    ..hasRequiredFields = false
+  ;
+
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  WiFiAccessPoint clone() => WiFiAccessPoint()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  WiFiAccessPoint copyWith(void Function(WiFiAccessPoint) updates) => super.copyWith((message) => updates(message as WiFiAccessPoint)) as WiFiAccessPoint;
+
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static WiFiAccessPoint create() => WiFiAccessPoint._();
+  WiFiAccessPoint createEmptyInstance() => create();
+  static $pb.PbList<WiFiAccessPoint> createRepeated() => $pb.PbList<WiFiAccessPoint>();
+  @$core.pragma('dart2js:noInline')
+  static WiFiAccessPoint getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<WiFiAccessPoint>(create);
+  static WiFiAccessPoint? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get ssid => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set ssid($core.String v) { $_setString(0, v); }
+  @$pb.TagNumber(1)
+  $core.bool hasSsid() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearSsid() => clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get psk => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set psk($core.String v) { $_setString(1, v); }
+  @$pb.TagNumber(2)
+  $core.bool hasPsk() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearPsk() => clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.int get channel => $_getIZ(2);
+  @$pb.TagNumber(3)
+  set channel($core.int v) { $_setSignedInt32(2, v); }
+  @$pb.TagNumber(3)
+  $core.bool hasChannel() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearChannel() => clearField(3);
 }
 
 class FixedSettings extends $pb.GeneratedMessage {
@@ -1148,8 +1298,8 @@ class FrameResult extends $pb.GeneratedMessage {
 
   /// The image from which information in this FrameResult is derived. This image
   /// is from the entire sensor, typically with some amount of binning. However,
-  /// if OperationSettings.daylight_mode is in effect, the image is only of
-  /// `center_region` and is not binned. Note that this image has stretch/gamma
+  /// if OperationSettings.daylight_mode is in effect, the image is only of the
+  /// center region and is not binned. Note that this image has stretch/gamma
   /// applied for better visibility of dark features (unless
   /// OperationSettings.daylight_mode is in effect, in which case a more natural
   /// rendering is used).
@@ -2231,8 +2381,7 @@ class CalibrationData extends $pb.GeneratedMessage {
   /// Operation mode varies the exposure duration around this value based on
   /// the current detected star count.
   /// If no calibration has succeeded, this will have reasonable default value
-  /// based on setup mode's auto exposure (or manual exposure setting during
-  /// setup).
+  /// based on setup mode's auto exposure.
   @$pb.TagNumber(2)
   $4.Duration get targetExposureTime => $_getN(1);
   @$pb.TagNumber(2)
@@ -2839,6 +2988,7 @@ class ActionRequest extends $pb.GeneratedMessage {
     $core.bool? stopSlew,
     $core.bool? saveImage,
     $0.CelestialCoord? initiateSlew,
+    WiFiAccessPoint? wifiAccessPoint,
   }) {
     final $result = create();
     if (captureBoresight != null) {
@@ -2859,6 +3009,9 @@ class ActionRequest extends $pb.GeneratedMessage {
     if (initiateSlew != null) {
       $result.initiateSlew = initiateSlew;
     }
+    if (wifiAccessPoint != null) {
+      $result.wifiAccessPoint = wifiAccessPoint;
+    }
     return $result;
   }
   ActionRequest._() : super();
@@ -2872,6 +3025,7 @@ class ActionRequest extends $pb.GeneratedMessage {
     ..aOB(4, _omitFieldNames ? '' : 'stopSlew')
     ..aOB(5, _omitFieldNames ? '' : 'saveImage')
     ..aOM<$0.CelestialCoord>(6, _omitFieldNames ? '' : 'initiateSlew', subBuilder: $0.CelestialCoord.create)
+    ..aOM<WiFiAccessPoint>(7, _omitFieldNames ? '' : 'wifiAccessPoint', subBuilder: WiFiAccessPoint.create)
     ..hasRequiredFields = false
   ;
 
@@ -2982,6 +3136,20 @@ class ActionRequest extends $pb.GeneratedMessage {
   void clearInitiateSlew() => clearField(6);
   @$pb.TagNumber(6)
   $0.CelestialCoord ensureInitiateSlew() => $_ensure(5);
+
+  /// Update ssid, psk, and/or channel setting for Cedar server's
+  /// WiFi access point. TODO: Switches to access point mode if currently
+  /// in client mode.
+  @$pb.TagNumber(7)
+  WiFiAccessPoint get wifiAccessPoint => $_getN(6);
+  @$pb.TagNumber(7)
+  set wifiAccessPoint(WiFiAccessPoint v) { setField(7, v); }
+  @$pb.TagNumber(7)
+  $core.bool hasWifiAccessPoint() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearWifiAccessPoint() => clearField(7);
+  @$pb.TagNumber(7)
+  WiFiAccessPoint ensureWifiAccessPoint() => $_ensure(6);
 }
 
 class ServerLogRequest extends $pb.GeneratedMessage {
