@@ -4,6 +4,7 @@
 import 'dart:developer';
 import 'dart:math' as math;
 import 'package:cedar_flutter/about.dart';
+import 'package:cedar_flutter/cedar.pb.dart';
 import 'package:cedar_flutter/cedar_sky.pb.dart';
 import 'package:cedar_flutter/draw_slew_target.dart';
 import 'package:cedar_flutter/draw_util.dart';
@@ -39,17 +40,22 @@ typedef ShowCatalogBrowserFunction = void Function(
 typedef ObjectInfoDialogFunction = void Function(
     MyHomePageState, BuildContext, SelectedCatalogEntry);
 
+typedef WifiDialogFunction = void Function(MyHomePageState, BuildContext);
+
 DrawCatalogEntriesFunction? _drawCatalogEntries;
 ShowCatalogBrowserFunction? _showCatalogBrowser;
 ObjectInfoDialogFunction? _objectInfoDialog;
+WifiDialogFunction? _wifiDialog;
 
 void clientMain(
     DrawCatalogEntriesFunction? drawCatalogEntries,
     ShowCatalogBrowserFunction? showCatalogBrowser,
-    ObjectInfoDialogFunction? objectInfoDialog) {
+    ObjectInfoDialogFunction? objectInfoDialog,
+    WifiDialogFunction? wifiDialog) {
   _drawCatalogEntries = drawCatalogEntries;
   _showCatalogBrowser = showCatalogBrowser;
   _objectInfoDialog = objectInfoDialog;
+  _wifiDialog = wifiDialog;
 
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations(
@@ -336,6 +342,7 @@ class MyHomePageState extends State<MyHomePage> {
   bool _advanced = false;
   bool _canAlign = false;
   bool _hasCedarSky = false;
+  bool _hasWifiControl = false;
 
   int _accuracy = 2; // 1-3.
 
@@ -432,6 +439,8 @@ class MyHomePageState extends State<MyHomePage> {
     }
     serverInformation = response.serverInformation;
     _hasCedarSky =
+        serverInformation!.featureLevel != cedar_rpc.FeatureLevel.DIY;
+    _hasWifiControl =
         serverInformation!.featureLevel != cedar_rpc.FeatureLevel.DIY;
     _hasCamera = serverInformation!.hasCamera();
 
@@ -699,19 +708,23 @@ class MyHomePageState extends State<MyHomePage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          content: scaledText('Shutdown Raspberry Pi?'),
+          content: scaledText("Shutdown Raspberry Pi?"),
           actions: <Widget>[
-            TextButton(
-                child: scaledText('Cancel'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                }),
-            TextButton(
-                child: scaledText('Shutdown'),
-                onPressed: () {
-                  shutdown();
-                  Navigator.of(context).pop();
-                }),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.white10),
+              child: scaledText("Cancel"),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                shutdown();
+                Navigator.of(context).pop();
+              },
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.white10),
+              child: scaledText("Shutdown"),
+            ),
           ],
         );
       },
@@ -725,6 +738,12 @@ class MyHomePageState extends State<MyHomePage> {
 
   Future<void> saveImage() async {
     final request = cedar_rpc.ActionRequest(saveImage: true);
+    await initiateAction(request);
+  }
+
+  Future<void> updateWifi(String ssid, String psk, int channel) async {
+    final updateWifi = WiFiAccessPoint(ssid: ssid, psk: psk, channel: channel);
+    final request = cedar_rpc.ActionRequest(updateWifiAccessPoint: updateWifi);
     await initiateAction(request);
   }
 
@@ -852,6 +871,39 @@ class MyHomePageState extends State<MyHomePage> {
                 ],
               ))
           : Container(),
+      const SizedBox(height: 15),
+      Row(children: [
+        Container(width: 20),
+        Column(children: <Widget>[
+          SizedBox(
+              width: 140 * textScaleFactor(context),
+              child: OutlinedButton(
+                  style: OutlinedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(horizontal: 2)),
+                  child: Text(
+                    "About",
+                    textScaler: textScaler(context),
+                  ),
+                  onPressed: () {
+                    aboutScreen(this, context);
+                  })),
+        ]),
+      ]),
+      const SizedBox(height: 15),
+      Row(children: [
+        Container(width: 20),
+        Column(children: <Widget>[
+          SizedBox(
+              width: 140 * textScaleFactor(context),
+              child: OutlinedButton(
+                  style: OutlinedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(horizontal: 2)),
+                  child: scaledText("Shutdown"),
+                  onPressed: () {
+                    shutdownDialog();
+                  })),
+        ]),
+      ]),
       _advanced
           ? Row(children: [
               Container(width: 20),
@@ -891,39 +943,24 @@ class MyHomePageState extends State<MyHomePage> {
               ])
             ])
           : Container(),
+      _advanced && _hasWifiControl && _wifiDialog != null
+          ? Row(children: [
+              Container(width: 20),
+              Column(children: <Widget>[
+                const SizedBox(height: 15),
+                SizedBox(
+                    width: 140 * textScaleFactor(context),
+                    child: OutlinedButton(
+                        style: OutlinedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(horizontal: 2)),
+                        child: scaledText("WiFi"),
+                        onPressed: () {
+                          _wifiDialog!(this, context);
+                        })),
+              ]),
+            ])
+          : Container(),
       const SizedBox(height: 15),
-      Row(children: [
-        Container(width: 20),
-        Column(children: <Widget>[
-          SizedBox(
-              width: 140 * textScaleFactor(context),
-              child: OutlinedButton(
-                  style: OutlinedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(horizontal: 2)),
-                  child: Text(
-                    "About",
-                    textScaler: textScaler(context),
-                  ),
-                  onPressed: () {
-                    aboutScreen(this, context);
-                  })),
-        ]),
-      ]),
-      const SizedBox(height: 15),
-      Row(children: [
-        Container(width: 20),
-        Column(children: <Widget>[
-          SizedBox(
-              width: 140 * textScaleFactor(context),
-              child: OutlinedButton(
-                  style: OutlinedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(horizontal: 2)),
-                  child: scaledText("Shutdown"),
-                  onPressed: () {
-                    shutdownDialog();
-                  })),
-        ]),
-      ])
     ];
   }
 
@@ -1384,7 +1421,7 @@ class MyHomePageState extends State<MyHomePage> {
   }
 
   Widget loadImage() {
-    return Image.memory(_imageBytes, gaplessPlayback: true);
+    return dart_widgets.Image.memory(_imageBytes, gaplessPlayback: true);
   }
 
   Widget mainImage() {

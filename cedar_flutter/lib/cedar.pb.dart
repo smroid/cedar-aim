@@ -2988,7 +2988,7 @@ class ActionRequest extends $pb.GeneratedMessage {
     $core.bool? stopSlew,
     $core.bool? saveImage,
     $0.CelestialCoord? initiateSlew,
-    WiFiAccessPoint? wifiAccessPoint,
+    WiFiAccessPoint? updateWifiAccessPoint,
   }) {
     final $result = create();
     if (captureBoresight != null) {
@@ -3009,8 +3009,8 @@ class ActionRequest extends $pb.GeneratedMessage {
     if (initiateSlew != null) {
       $result.initiateSlew = initiateSlew;
     }
-    if (wifiAccessPoint != null) {
-      $result.wifiAccessPoint = wifiAccessPoint;
+    if (updateWifiAccessPoint != null) {
+      $result.updateWifiAccessPoint = updateWifiAccessPoint;
     }
     return $result;
   }
@@ -3025,7 +3025,7 @@ class ActionRequest extends $pb.GeneratedMessage {
     ..aOB(4, _omitFieldNames ? '' : 'stopSlew')
     ..aOB(5, _omitFieldNames ? '' : 'saveImage')
     ..aOM<$0.CelestialCoord>(6, _omitFieldNames ? '' : 'initiateSlew', subBuilder: $0.CelestialCoord.create)
-    ..aOM<WiFiAccessPoint>(7, _omitFieldNames ? '' : 'wifiAccessPoint', subBuilder: WiFiAccessPoint.create)
+    ..aOM<WiFiAccessPoint>(7, _omitFieldNames ? '' : 'updateWifiAccessPoint', subBuilder: WiFiAccessPoint.create)
     ..hasRequiredFields = false
   ;
 
@@ -3141,15 +3141,15 @@ class ActionRequest extends $pb.GeneratedMessage {
   /// WiFi access point. TODO: Switches to access point mode if currently
   /// in client mode.
   @$pb.TagNumber(7)
-  WiFiAccessPoint get wifiAccessPoint => $_getN(6);
+  WiFiAccessPoint get updateWifiAccessPoint => $_getN(6);
   @$pb.TagNumber(7)
-  set wifiAccessPoint(WiFiAccessPoint v) { setField(7, v); }
+  set updateWifiAccessPoint(WiFiAccessPoint v) { setField(7, v); }
   @$pb.TagNumber(7)
-  $core.bool hasWifiAccessPoint() => $_has(6);
+  $core.bool hasUpdateWifiAccessPoint() => $_has(6);
   @$pb.TagNumber(7)
-  void clearWifiAccessPoint() => clearField(7);
+  void clearUpdateWifiAccessPoint() => clearField(7);
   @$pb.TagNumber(7)
-  WiFiAccessPoint ensureWifiAccessPoint() => $_ensure(6);
+  WiFiAccessPoint ensureUpdateWifiAccessPoint() => $_ensure(6);
 }
 
 class ServerLogRequest extends $pb.GeneratedMessage {
