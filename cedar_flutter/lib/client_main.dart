@@ -339,6 +339,7 @@ class MyHomePageState extends State<MyHomePage> {
   bool _setupMode = false;
   bool _focusAid = false;
   bool _daylightMode = false;
+  bool _demoMode = false;
   bool _advanced = false;
   bool _canAlign = false;
   bool _hasCedarSky = false;
@@ -687,6 +688,19 @@ class MyHomePageState extends State<MyHomePage> {
     await updateOperationSettings(request);
   }
 
+  Future<List<String>> getDemoImages() async {
+    final request = cedar_rpc.EmptyMessage();
+    try {
+      final result = await client().getDemoImages(request,
+          options: CallOptions(timeout: const Duration(seconds: 2)));
+      log("result: $result");
+      return result.demoImageName;
+    } catch (e) {
+      log('getDemoImages error: $e');
+      return [];
+    }
+  }
+
   Future<String> getServerLogs() async {
     final request = cedar_rpc.ServerLogRequest(logRequest: 20000);
     try {
@@ -871,6 +885,61 @@ class MyHomePageState extends State<MyHomePage> {
                 ],
               ))
           : Container(),
+      const SizedBox(height: 15),
+      _advanced || _demoMode
+          ? Align(
+              alignment: Alignment.topLeft,
+              child: TextButton.icon(
+                  label: scaledText("Demo mode"),
+                  icon: _demoMode
+                      ? const Icon(Icons.check)
+                      : const Icon(Icons.check_box_outline_blank),
+                  onPressed: () async {
+                    _demoMode = !_demoMode;
+                    // var settingsModel =
+                    //     Provider.of<SettingsModel>(context, listen: false);
+                    // settingsModel.preferencesProto.demoImageFilename = TBD;
+                    // var prefs = cedar_rpc.Preferences();
+                    // prefs.demoImageFilename = TBD;
+                    // await updatePreferences(prefs);
+                  }))
+          : Container(),
+      _demoMode ? const SizedBox(height: 10) : Container(),
+      _demoMode
+          ? Row(children: [
+              Container(width: 20),
+              DropdownMenu<String>(
+                  // menuHeight: 200,
+                  // menuStyle: const MenuStyle(),
+                  inputDecorationTheme: InputDecorationTheme(
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 12),
+                    constraints:
+                        BoxConstraints.tight(const Size.fromHeight(40)),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                  ),
+                  width: 200 * textScaleFactor(context),
+                  // textStyle: TextStyle(fontSize: 14 * textScaleFactor(context)),
+                  requestFocusOnTap: false,
+                  initialSelection: "a",
+                  label: scaledText("Image file"),
+                  dropdownMenuEntries:
+                      ["a", "b"].map<DropdownMenuEntry<String>>((String s) {
+                    return DropdownMenuEntry<String>(
+                      value: s,
+                      label: s,
+                      labelWidget: scaledText(s),
+                      enabled: true,
+                    );
+                  }).toList(),
+                  onSelected: (String? newValue) async {
+                    // channel = newValue!;
+                    // dialogOverlayEntry?.markNeedsBuild();
+                  })
+            ])
+          : Container(),
+      _demoMode ? const SizedBox(height: 15) : Container(),
       const SizedBox(height: 15),
       Row(children: [
         Container(width: 20),
@@ -1612,7 +1681,7 @@ class MyHomePageState extends State<MyHomePage> {
           : badServerState(),
       drawer: _serverConnected && _hasCamera
           ? Drawer(
-              width: 210 * textScaleFactor(context),
+              width: 240 * textScaleFactor(context),
               child: ListView(
                   padding: EdgeInsets.zero, children: drawerControls(context)))
           : Container(),

@@ -215,6 +215,7 @@ const OperationSettings$json = {
     {'1': 'dwell_update_interval', '3': 8, '4': 1, '5': 11, '6': '.google.protobuf.Duration', '9': 5, '10': 'dwellUpdateInterval', '17': true},
     {'1': 'log_dwelled_positions', '3': 10, '4': 1, '5': 8, '9': 6, '10': 'logDwelledPositions', '17': true},
     {'1': 'catalog_entry_match', '3': 11, '4': 1, '5': 11, '6': '.cedar_sky.CatalogEntryMatch', '9': 7, '10': 'catalogEntryMatch', '17': true},
+    {'1': 'demo_image_filename', '3': 12, '4': 1, '5': 9, '9': 8, '10': 'demoImageFilename', '17': true},
   ],
   '8': [
     {'1': '_operating_mode'},
@@ -225,6 +226,7 @@ const OperationSettings$json = {
     {'1': '_dwell_update_interval'},
     {'1': '_log_dwelled_positions'},
     {'1': '_catalog_entry_match'},
+    {'1': '_demo_image_filename'},
   ],
 };
 
@@ -239,10 +241,12 @@ final $typed_data.Uint8List operationSettingsDescriptor = $convert.base64Decode(
     'dGVfaW50ZXJ2YWwYCCABKAsyGS5nb29nbGUucHJvdG9idWYuRHVyYXRpb25IBVITZHdlbGxVcG'
     'RhdGVJbnRlcnZhbIgBARI3ChVsb2dfZHdlbGxlZF9wb3NpdGlvbnMYCiABKAhIBlITbG9nRHdl'
     'bGxlZFBvc2l0aW9uc4gBARJRChNjYXRhbG9nX2VudHJ5X21hdGNoGAsgASgLMhwuY2VkYXJfc2'
-    't5LkNhdGFsb2dFbnRyeU1hdGNoSAdSEWNhdGFsb2dFbnRyeU1hdGNoiAEBQhEKD19vcGVyYXRp'
-    'bmdfbW9kZUIQCg5fZGF5bGlnaHRfbW9kZUIQCg5fZXhwb3N1cmVfdGltZUILCglfYWNjdXJhY3'
-    'lCEgoQX3VwZGF0ZV9pbnRlcnZhbEIYChZfZHdlbGxfdXBkYXRlX2ludGVydmFsQhgKFl9sb2df'
-    'ZHdlbGxlZF9wb3NpdGlvbnNCFgoUX2NhdGFsb2dfZW50cnlfbWF0Y2g=');
+    't5LkNhdGFsb2dFbnRyeU1hdGNoSAdSEWNhdGFsb2dFbnRyeU1hdGNoiAEBEjMKE2RlbW9faW1h'
+    'Z2VfZmlsZW5hbWUYDCABKAlICFIRZGVtb0ltYWdlRmlsZW5hbWWIAQFCEQoPX29wZXJhdGluZ1'
+    '9tb2RlQhAKDl9kYXlsaWdodF9tb2RlQhAKDl9leHBvc3VyZV90aW1lQgsKCV9hY2N1cmFjeUIS'
+    'ChBfdXBkYXRlX2ludGVydmFsQhgKFl9kd2VsbF91cGRhdGVfaW50ZXJ2YWxCGAoWX2xvZ19kd2'
+    'VsbGVkX3Bvc2l0aW9uc0IWChRfY2F0YWxvZ19lbnRyeV9tYXRjaEIWChRfZGVtb19pbWFnZV9m'
+    'aWxlbmFtZQ==');
 
 @$core.Deprecated('Use preferencesDescriptor instead')
 const Preferences$json = {
@@ -752,6 +756,19 @@ const ServerLogResult$json = {
 /// Descriptor for `ServerLogResult`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List serverLogResultDescriptor = $convert.base64Decode(
     'Cg9TZXJ2ZXJMb2dSZXN1bHQSHwoLbG9nX2NvbnRlbnQYASABKAlSCmxvZ0NvbnRlbnQ=');
+
+@$core.Deprecated('Use demoImagesResultDescriptor instead')
+const DemoImagesResult$json = {
+  '1': 'DemoImagesResult',
+  '2': [
+    {'1': 'demo_image_name', '3': 1, '4': 3, '5': 9, '10': 'demoImageName'},
+  ],
+};
+
+/// Descriptor for `DemoImagesResult`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List demoImagesResultDescriptor = $convert.base64Decode(
+    'ChBEZW1vSW1hZ2VzUmVzdWx0EiYKD2RlbW9faW1hZ2VfbmFtZRgBIAMoCVINZGVtb0ltYWdlTm'
+    'FtZQ==');
 
 @$core.Deprecated('Use emptyMessageDescriptor instead')
 const EmptyMessage$json = {

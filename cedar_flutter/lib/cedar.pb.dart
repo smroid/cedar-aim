@@ -559,6 +559,7 @@ class OperationSettings extends $pb.GeneratedMessage {
     $4.Duration? dwellUpdateInterval,
     $core.bool? logDwelledPositions,
     $2.CatalogEntryMatch? catalogEntryMatch,
+    $core.String? demoImageFilename,
   }) {
     final $result = create();
     if (daylightMode != null) {
@@ -585,6 +586,9 @@ class OperationSettings extends $pb.GeneratedMessage {
     if (catalogEntryMatch != null) {
       $result.catalogEntryMatch = catalogEntryMatch;
     }
+    if (demoImageFilename != null) {
+      $result.demoImageFilename = demoImageFilename;
+    }
     return $result;
   }
   OperationSettings._() : super();
@@ -600,6 +604,7 @@ class OperationSettings extends $pb.GeneratedMessage {
     ..aOM<$4.Duration>(8, _omitFieldNames ? '' : 'dwellUpdateInterval', subBuilder: $4.Duration.create)
     ..aOB(10, _omitFieldNames ? '' : 'logDwelledPositions')
     ..aOM<$2.CatalogEntryMatch>(11, _omitFieldNames ? '' : 'catalogEntryMatch', subBuilder: $2.CatalogEntryMatch.create)
+    ..aOS(12, _omitFieldNames ? '' : 'demoImageFilename')
     ..hasRequiredFields = false
   ;
 
@@ -737,6 +742,18 @@ class OperationSettings extends $pb.GeneratedMessage {
   void clearCatalogEntryMatch() => clearField(11);
   @$pb.TagNumber(11)
   $2.CatalogEntryMatch ensureCatalogEntryMatch() => $_ensure(7);
+
+  /// Controls whether an image file is substituted for the camera. When calling
+  /// UpdateOperationSettings(), set this field to empty string to cancel
+  /// demo mode.
+  @$pb.TagNumber(12)
+  $core.String get demoImageFilename => $_getSZ(8);
+  @$pb.TagNumber(12)
+  set demoImageFilename($core.String v) { $_setString(8, v); }
+  @$pb.TagNumber(12)
+  $core.bool hasDemoImageFilename() => $_has(8);
+  @$pb.TagNumber(12)
+  void clearDemoImageFilename() => clearField(12);
 }
 
 /// User interface preferences and operation settings that are stored durably on
@@ -3251,6 +3268,51 @@ class ServerLogResult extends $pb.GeneratedMessage {
   $core.bool hasLogContent() => $_has(0);
   @$pb.TagNumber(1)
   void clearLogContent() => clearField(1);
+}
+
+class DemoImagesResult extends $pb.GeneratedMessage {
+  factory DemoImagesResult({
+    $core.Iterable<$core.String>? demoImageName,
+  }) {
+    final $result = create();
+    if (demoImageName != null) {
+      $result.demoImageName.addAll(demoImageName);
+    }
+    return $result;
+  }
+  DemoImagesResult._() : super();
+  factory DemoImagesResult.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory DemoImagesResult.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'DemoImagesResult', package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'), createEmptyInstance: create)
+    ..pPS(1, _omitFieldNames ? '' : 'demoImageName')
+    ..hasRequiredFields = false
+  ;
+
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  DemoImagesResult clone() => DemoImagesResult()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  DemoImagesResult copyWith(void Function(DemoImagesResult) updates) => super.copyWith((message) => updates(message as DemoImagesResult)) as DemoImagesResult;
+
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static DemoImagesResult create() => DemoImagesResult._();
+  DemoImagesResult createEmptyInstance() => create();
+  static $pb.PbList<DemoImagesResult> createRepeated() => $pb.PbList<DemoImagesResult>();
+  @$core.pragma('dart2js:noInline')
+  static DemoImagesResult getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<DemoImagesResult>(create);
+  static DemoImagesResult? _defaultInstance;
+
+  /// Filenames of image(s) found in run/demo_images directory.
+  @$pb.TagNumber(1)
+  $core.List<$core.String> get demoImageName => $_getList(0);
 }
 
 class EmptyMessage extends $pb.GeneratedMessage {
