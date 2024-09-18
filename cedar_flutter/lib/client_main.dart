@@ -20,6 +20,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart' as dart_widgets;
 import 'package:grpc/service_api.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:path/path.dart' as path;
 import 'package:protobuf/protobuf.dart';
 import 'package:provider/provider.dart';
 import 'package:sprintf/sprintf.dart';
@@ -324,6 +325,7 @@ class MyHomePageState extends State<MyHomePage> {
   bool _hasCamera = false;
   bool _everConnected = false;
   bool _paintPending = false;
+  bool _inhibitRefresh = false;
 
   // Information from most recent FrameResult.
 
@@ -340,6 +342,8 @@ class MyHomePageState extends State<MyHomePage> {
   bool _focusAid = false;
   bool _daylightMode = false;
   bool _demoMode = false;
+  List<String> _demoFiles = [];
+  String _demoFile = "";
   bool _advanced = false;
   bool _canAlign = false;
   bool _hasCedarSky = false;
@@ -615,7 +619,7 @@ class MyHomePageState extends State<MyHomePage> {
 
     await Future.doWhile(() async {
       await Future.delayed(const Duration(milliseconds: 50));
-      if (!_paintPending) {
+      if (!_paintPending && !_inhibitRefresh) {
         await getFrameFromServer();
       }
       return true; // Forever!
@@ -688,17 +692,26 @@ class MyHomePageState extends State<MyHomePage> {
     await updateOperationSettings(request);
   }
 
-  Future<List<String>> getDemoImages() async {
+  Future<void> getDemoImages() async {
     final request = cedar_rpc.EmptyMessage();
     try {
       final result = await client().getDemoImages(request,
           options: CallOptions(timeout: const Duration(seconds: 2)));
-      log("result: $result");
-      return result.demoImageName;
+      _demoFiles = result.demoImageName;
+      if (_demoFiles.isEmpty) {
+        _demoFile = "";
+      } else if (_demoFile.isEmpty) {
+        _demoFile = _demoFiles[0];
+      }
     } catch (e) {
       log('getDemoImages error: $e');
-      return [];
     }
+  }
+
+  // Pass empty string to terminate demo mode.
+  Future<void> setDemoImage(String imageFile) async {
+    final request = cedar_rpc.OperationSettings(demoImageFilename: imageFile);
+    await updateOperationSettings(request);
   }
 
   Future<String> getServerLogs() async {
@@ -784,6 +797,10 @@ class MyHomePageState extends State<MyHomePage> {
     }
   }
 
+  String _removeExtension(String filename) {
+    return path.basenameWithoutExtension(filename);
+  }
+
   List<Widget> drawerControls(BuildContext context) {
     return <Widget>[
       const CloseButton(style: ButtonStyle(alignment: Alignment.topLeft)),
@@ -833,6 +850,7 @@ class MyHomePageState extends State<MyHomePage> {
                 var prefs = cedar_rpc.Preferences();
                 prefs.advanced = _advanced;
                 await updatePreferences(prefs);
+                await getDemoImages();
               })),
       _advanced
           ? Align(
@@ -885,79 +903,94 @@ class MyHomePageState extends State<MyHomePage> {
                 ],
               ))
           : Container(),
-      const SizedBox(height: 15),
-      _advanced || _demoMode
-          ? Align(
-              alignment: Alignment.topLeft,
-              child: TextButton.icon(
-                  label: scaledText("Demo mode"),
-                  icon: _demoMode
-                      ? const Icon(Icons.check)
-                      : const Icon(Icons.check_box_outline_blank),
-                  onPressed: () async {
-                    _demoMode = !_demoMode;
-                    // var settingsModel =
-                    //     Provider.of<SettingsModel>(context, listen: false);
-                    // settingsModel.preferencesProto.demoImageFilename = TBD;
-                    // var prefs = cedar_rpc.Preferences();
-                    // prefs.demoImageFilename = TBD;
-                    // await updatePreferences(prefs);
-                  }))
-          : Container(),
-      _demoMode ? const SizedBox(height: 10) : Container(),
-      _demoMode
-          ? Row(children: [
-              Container(width: 20),
-              DropdownMenu<String>(
-                  // menuHeight: 200,
-                  // menuStyle: const MenuStyle(),
-                  inputDecorationTheme: InputDecorationTheme(
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 12),
-                    constraints:
-                        BoxConstraints.tight(const Size.fromHeight(40)),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                  ),
-                  width: 200 * textScaleFactor(context),
-                  // textStyle: TextStyle(fontSize: 14 * textScaleFactor(context)),
-                  requestFocusOnTap: false,
-                  initialSelection: "a",
-                  label: scaledText("Image file"),
-                  dropdownMenuEntries:
-                      ["a", "b"].map<DropdownMenuEntry<String>>((String s) {
-                    return DropdownMenuEntry<String>(
-                      value: s,
-                      label: s,
-                      labelWidget: scaledText(s),
-                      enabled: true,
-                    );
-                  }).toList(),
-                  onSelected: (String? newValue) async {
-                    // channel = newValue!;
-                    // dialogOverlayEntry?.markNeedsBuild();
-                  })
+      (_advanced || _demoMode) && _demoFiles.isNotEmpty
+          ? Column(children: <Widget>[
+              const SizedBox(height: 5),
+              Align(
+                  alignment: Alignment.topLeft,
+                  child: TextButton.icon(
+                    label: scaledText("Demo mode"),
+                    icon: _demoMode
+                        ? const Icon(Icons.check)
+                        : const Icon(Icons.check_box_outline_blank),
+                    onPressed: () {
+                      setState(() {
+                        _demoMode = !_demoMode;
+                        if (_demoMode) {
+                          if (_demoFile.isNotEmpty) {
+                            setDemoImage(_demoFile);
+                          }
+                        } else {
+                          setDemoImage(""); // Turn off.
+                        }
+                      });
+                    },
+                  )),
+              const SizedBox(height: 10)
             ])
           : Container(),
-      _demoMode ? const SizedBox(height: 15) : Container(),
-      const SizedBox(height: 15),
-      Row(children: [
-        Container(width: 20),
-        Column(children: <Widget>[
-          SizedBox(
-              width: 140 * textScaleFactor(context),
-              child: OutlinedButton(
-                  style: OutlinedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(horizontal: 2)),
-                  child: Text(
-                    "About",
-                    textScaler: textScaler(context),
-                  ),
-                  onPressed: () {
-                    aboutScreen(this, context);
-                  })),
-        ]),
-      ]),
+      _demoMode && _demoFiles.isNotEmpty
+          ? Column(children: [
+              Row(children: [
+                Container(width: 20),
+                DropdownMenu<String>(
+                    menuHeight: 200,
+                    // menuStyle: const MenuStyle(),
+                    inputDecorationTheme: InputDecorationTheme(
+                      contentPadding:
+                          const EdgeInsets.symmetric(horizontal: 12),
+                      constraints:
+                          BoxConstraints.tight(const Size.fromHeight(40)),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                    ),
+                    width: 200 * textScaleFactor(context),
+                    requestFocusOnTap: false,
+                    initialSelection: _demoFile.isEmpty ? "" : _demoFile,
+                    label: scaledText("Image file"),
+                    dropdownMenuEntries:
+                        _demoFiles.map<DropdownMenuEntry<String>>((String s) {
+                      return DropdownMenuEntry<String>(
+                        value: s,
+                        label: _removeExtension(s),
+                        labelWidget: scaledText(_removeExtension(s)),
+                        enabled: true,
+                      );
+                    }).toList(),
+                    onSelected: (String? newValue) async {
+                      setState(() {
+                        _demoFile = newValue!;
+                        setDemoImage(_demoFile);
+                      });
+                    })
+              ]),
+              const SizedBox(height: 15),
+            ])
+          : Container(),
+      _advanced
+          ? Row(children: [
+              Container(width: 20),
+              Column(children: <Widget>[
+                const SizedBox(height: 15),
+                Column(children: <Widget>[
+                  SizedBox(
+                      width: 140 * textScaleFactor(context),
+                      child: OutlinedButton(
+                          style: OutlinedButton.styleFrom(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 2)),
+                          child: Text(
+                            "About",
+                            textScaler: textScaler(context),
+                          ),
+                          onPressed: () {
+                            aboutScreen(this, context);
+                          })),
+                ]),
+              ]),
+            ])
+          : Container(),
       const SizedBox(height: 15),
       Row(children: [
         Container(width: 20),
@@ -1679,6 +1712,10 @@ class MyHomePageState extends State<MyHomePage> {
                 ],
               ))
           : badServerState(),
+      onDrawerChanged: (isOpened) {
+        // Prevent jank in demo mode image file selector.
+        _inhibitRefresh = isOpened;
+      },
       drawer: _serverConnected && _hasCamera
           ? Drawer(
               width: 240 * textScaleFactor(context),
