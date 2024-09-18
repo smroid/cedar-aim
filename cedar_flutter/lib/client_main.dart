@@ -1690,7 +1690,7 @@ class MyHomePageState extends State<MyHomePage> {
           toolbarOpacity: hideAppBar ? 0.0 : 1.0,
           title: Text(widget.title),
           foregroundColor: Theme.of(context).colorScheme.primary),
-      body: _serverConnected && _hasCamera
+      body: _serverConnected && (_hasCamera || _demoFile.isNotEmpty)
           ? Container(
               color: Theme.of(context).colorScheme.surface,
               child: Stack(
@@ -1716,7 +1716,7 @@ class MyHomePageState extends State<MyHomePage> {
         // Prevent jank in demo mode image file selector.
         _inhibitRefresh = isOpened;
       },
-      drawer: _serverConnected && _hasCamera
+      drawer: _serverConnected && (_hasCamera || _demoFile.isNotEmpty)
           ? Drawer(
               width: 240 * textScaleFactor(context),
               child: ListView(
