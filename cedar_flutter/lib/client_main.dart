@@ -323,6 +323,9 @@ class MyHomePageState extends State<MyHomePage> {
   Duration _tzOffset = const Duration();
   bool _serverConnected = false;
   bool _hasCamera = false;
+  bool isDIY = false;
+  bool isBasic = false;
+  bool isPlus = false;
   bool _everConnected = false;
   bool _paintPending = false;
   bool _inhibitRefresh = false;
@@ -448,6 +451,9 @@ class MyHomePageState extends State<MyHomePage> {
     _hasWifiControl =
         serverInformation!.featureLevel != cedar_rpc.FeatureLevel.DIY;
     _hasCamera = serverInformation!.hasCamera();
+    isDIY = serverInformation!.featureLevel == cedar_rpc.FeatureLevel.DIY;
+    isBasic = serverInformation!.featureLevel == cedar_rpc.FeatureLevel.BASIC;
+    isPlus = serverInformation!.featureLevel == cedar_rpc.FeatureLevel.PLUS;
 
     fixedSettings = response.fixedSettings;
     operationSettings = response.operationSettings;
@@ -471,6 +477,9 @@ class MyHomePageState extends State<MyHomePage> {
     var settingsModel = Provider.of<SettingsModel>(context, listen: false);
     settingsModel.preferencesProto = preferences!.deepCopy();
     settingsModel.opSettingsProto = operationSettings.deepCopy();
+    settingsModel.isDIY = isDIY;
+    settingsModel.isBasic = isBasic;
+    settingsModel.isPlus = isPlus;
     _advanced = preferences!.advanced;
     calibrationData =
         response.hasCalibrationData() ? response.calibrationData : null;
@@ -586,8 +595,9 @@ class MyHomePageState extends State<MyHomePage> {
   Future<void> getFrameFromServer() async {
     final request = cedar_rpc.FrameRequest()..prevFrameId = _prevFrameId;
     try {
+      // Use long-ish timeout because solve could take much time.
       final response = await client().getFrame(request,
-          options: CallOptions(timeout: const Duration(seconds: 2)));
+          options: CallOptions(timeout: const Duration(seconds: 5)));
       _paintPending = true;
       setState(() {
         _serverConnected = true;

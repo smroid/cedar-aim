@@ -87,6 +87,9 @@ bool diffOperationSettings(OperationSettings prev, OperationSettings curr) {
 class SettingsModel extends ChangeNotifier {
   Preferences preferencesProto = Preferences();
   OperationSettings opSettingsProto = OperationSettings();
+  bool isDIY = false;
+  bool isBasic = false;
+  bool isPlus = false;
 
   SettingsModel() {
     preferencesProto.eyepieceFov = 1.0;
@@ -175,6 +178,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final prefsProto = provider.preferencesProto;
     final opSettingsProto = provider.opSettingsProto;
     final advanced = provider.preferencesProto.advanced;
+    final isBasic = provider.isBasic;
+    final isPlus = provider.isPlus;
+    int updateMax = 6; // Unlimited.
+    if (isBasic) {
+      updateMax = 4; // 5Hz.
+    } else if (isPlus) {
+      updateMax = 5; // 10Hz.
+    }
     // Need to inset the switches to match the slider.
     const switchInset = 16.0;
     return Scaffold(
@@ -289,27 +300,30 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             height: 40,
                             child: Slider(
                               // Slider positions represent:
-                              // 1000ms (1Hz), 500ms (2Hz), 200ms (5Hz), 100ms (10Hz),
-                              // and 0ms (fast as possible).
+                              // 1000ms (1Hz), 500ms (2Hz), 333ms (3Hz),
+                              // 200ms (5Hz), 100ms (10Hz), and 0ms (fast as
+                              // possible).
                               min: 1,
-                              max: 5,
-                              divisions: 4,
+                              max: updateMax.toDouble(),
+                              divisions: updateMax - 1,
                               value: switch (durationToMs(
                                   opSettingsProto.updateInterval)) {
                                 1000 => 1,
                                 500 => 2,
-                                200 => 3,
-                                100 => 4,
-                                0 => 5,
-                                _ => 5,
+                                333 => 3,
+                                200 => 4,
+                                100 => 5,
+                                0 => 6,
+                                _ => 6,
                               },
                               onChanged: (double value) {
                                 int intervalMs = switch (value.toInt()) {
                                   1 => 1000,
                                   2 => 500,
-                                  3 => 200,
-                                  4 => 100,
-                                  5 => 0,
+                                  3 => 333,
+                                  4 => 200,
+                                  5 => 100,
+                                  6 => 0,
                                   _ => 0,
                                 };
                                 setState(() {
@@ -323,6 +337,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               durationToMs(opSettingsProto.updateInterval)) {
                             1000 => "1Hz",
                             500 => "2Hz",
+                            333 => "3Hz",
                             200 => "5Hz",
                             100 => "10Hz",
                             0 => "unlimited",
@@ -361,7 +376,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       title: scaledText(sprintf(
                           'Eyepiece FOV  %.1f°', [prefsProto.eyepieceFov])),
                     ),
-                    if (advanced)
+                    if (advanced && isPlus)
                       SettingsTile(
                         leading: Row(children: <Widget>[
                           const SizedBox(width: switchInset, height: 10),
