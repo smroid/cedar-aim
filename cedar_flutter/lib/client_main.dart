@@ -979,97 +979,67 @@ class MyHomePageState extends State<MyHomePage> {
             ])
           : Container(),
       _advanced
-          ? Row(children: [
-              Container(width: 20),
-              Column(children: <Widget>[
-                const SizedBox(height: 15),
-                Column(children: <Widget>[
-                  SizedBox(
-                      width: 140 * textScaleFactor(context),
-                      child: OutlinedButton(
-                          style: OutlinedButton.styleFrom(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 2)),
-                          child: Text(
-                            "About",
-                            textScaler: textScaler(context),
-                          ),
-                          onPressed: () {
-                            aboutScreen(this, context);
-                          })),
-                ]),
-              ]),
-            ])
-          : Container(),
-      const SizedBox(height: 15),
-      Row(children: [
-        Container(width: 20),
-        Column(children: <Widget>[
-          SizedBox(
-              width: 140 * textScaleFactor(context),
-              child: OutlinedButton(
-                  style: OutlinedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(horizontal: 2)),
-                  child: scaledText("Shutdown"),
+          ? Align(
+              alignment: Alignment.topLeft,
+              child: TextButton.icon(
+                  label: scaledText("About"),
+                  icon: const Icon(Icons.info_outline),
                   onPressed: () {
-                    shutdownDialog();
-                  })),
-        ]),
-      ]),
+                    aboutScreen(this, context);
+                  }),
+            )
+          : Container(),
+      const SizedBox(height: 10),
+      Align(
+          alignment: Alignment.topLeft,
+          child: TextButton.icon(
+              label: scaledText("Shutdown"),
+              icon: const Icon(Icons.power_settings_new_outlined),
+              onPressed: () {
+                shutdownDialog();
+              })),
       _advanced
-          ? Row(children: [
-              Container(width: 20),
-              Column(children: <Widget>[
-                const SizedBox(height: 15),
-                SizedBox(
-                    width: 140 * textScaleFactor(context),
-                    child: OutlinedButton(
-                        style: OutlinedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(horizontal: 2)),
-                        child: scaledText("Save image"),
-                        onPressed: () {
-                          saveImage();
-                        })),
-              ]),
+          ? Column(children: [
+              const SizedBox(height: 10),
+              Align(
+                  alignment: Alignment.topLeft,
+                  child: TextButton.icon(
+                      label: scaledText("Save image"),
+                      icon: const Icon(Icons.add_a_photo_outlined),
+                      onPressed: () {
+                        saveImage();
+                      }))
             ])
           : Container(),
       _advanced
-          ? Row(children: [
-              Container(width: 20),
-              Column(children: <Widget>[
-                const SizedBox(height: 15),
-                SizedBox(
-                    width: 140 * textScaleFactor(context),
-                    child: OutlinedButton(
-                        style: OutlinedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(horizontal: 2)),
-                        child: scaledText("Show server log"),
-                        onPressed: () async {
-                          var logs = await getServerLogs();
-                          if (context.mounted) {
-                            showDialog(
-                                context: context,
-                                builder: (context) => ServerLogPopUp(logs));
-                          }
-                        })),
-              ])
+          ? Column(children: [
+              const SizedBox(height: 10),
+              Align(
+                  alignment: Alignment.topLeft,
+                  child: TextButton.icon(
+                      label: scaledText("Show server log"),
+                      icon: const Icon(Icons.text_snippet_outlined),
+                      onPressed: () async {
+                        var logs = await getServerLogs();
+                        if (context.mounted) {
+                          showDialog(
+                              context: context,
+                              builder: (context) => ServerLogPopUp(logs));
+                        }
+                      })),
             ])
           : Container(),
       _advanced && _hasWifiControl && _wifiDialog != null
-          ? Row(children: [
-              Container(width: 20),
-              Column(children: <Widget>[
-                const SizedBox(height: 15),
-                SizedBox(
-                    width: 140 * textScaleFactor(context),
-                    child: OutlinedButton(
-                        style: OutlinedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(horizontal: 2)),
-                        child: scaledText("WiFi"),
-                        onPressed: () {
-                          _wifiDialog!(this, context);
-                        })),
-              ]),
+          ? Column(children: [
+              const SizedBox(height: 10),
+              Align(
+                  alignment: Alignment.topLeft,
+                  child: TextButton.icon(
+                      label: scaledText("Wifi"),
+                      icon: const Icon(Icons.wifi),
+                      onPressed: () {
+                        _wifiDialog!(this, context);
+                      }))
             ])
           : Container(),
       const SizedBox(height: 15),
