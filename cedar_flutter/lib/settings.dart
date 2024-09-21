@@ -374,7 +374,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             },
                           )),
                       title: scaledText(sprintf(
-                          'Eyepiece FOV  %.1f°', [prefsProto.eyepieceFov])),
+                          'Eyepiece FOV %.1f°', [prefsProto.eyepieceFov])),
                     ),
                     if (advanced && isPlus)
                       SettingsTile(

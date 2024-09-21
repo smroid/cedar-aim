@@ -3006,6 +3006,7 @@ class ActionRequest extends $pb.GeneratedMessage {
     $core.bool? saveImage,
     $0.CelestialCoord? initiateSlew,
     WiFiAccessPoint? updateWifiAccessPoint,
+    $core.bool? restartServer,
   }) {
     final $result = create();
     if (captureBoresight != null) {
@@ -3029,6 +3030,9 @@ class ActionRequest extends $pb.GeneratedMessage {
     if (updateWifiAccessPoint != null) {
       $result.updateWifiAccessPoint = updateWifiAccessPoint;
     }
+    if (restartServer != null) {
+      $result.restartServer = restartServer;
+    }
     return $result;
   }
   ActionRequest._() : super();
@@ -3043,6 +3047,7 @@ class ActionRequest extends $pb.GeneratedMessage {
     ..aOB(5, _omitFieldNames ? '' : 'saveImage')
     ..aOM<$0.CelestialCoord>(6, _omitFieldNames ? '' : 'initiateSlew', subBuilder: $0.CelestialCoord.create)
     ..aOM<WiFiAccessPoint>(7, _omitFieldNames ? '' : 'updateWifiAccessPoint', subBuilder: WiFiAccessPoint.create)
+    ..aOB(8, _omitFieldNames ? '' : 'restartServer')
     ..hasRequiredFields = false
   ;
 
@@ -3167,6 +3172,16 @@ class ActionRequest extends $pb.GeneratedMessage {
   void clearUpdateWifiAccessPoint() => clearField(7);
   @$pb.TagNumber(7)
   WiFiAccessPoint ensureUpdateWifiAccessPoint() => $_ensure(6);
+
+  /// Reboot the computer on which the Cedar server is running.
+  @$pb.TagNumber(8)
+  $core.bool get restartServer => $_getBF(7);
+  @$pb.TagNumber(8)
+  set restartServer($core.bool v) { $_setBool(7, v); }
+  @$pb.TagNumber(8)
+  $core.bool hasRestartServer() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearRestartServer() => clearField(8);
 }
 
 class ServerLogRequest extends $pb.GeneratedMessage {

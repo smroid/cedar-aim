@@ -756,6 +756,14 @@ class MyHomePageState extends State<MyHomePage> {
             ),
             ElevatedButton(
               onPressed: () {
+                restart();
+                Navigator.of(context).pop();
+              },
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.white10),
+              child: scaledText("Restart"),
+            ),
+            ElevatedButton(
+              onPressed: () {
                 shutdown();
                 Navigator.of(context).pop();
               },
@@ -770,6 +778,11 @@ class MyHomePageState extends State<MyHomePage> {
 
   Future<void> shutdown() async {
     final request = cedar_rpc.ActionRequest(shutdownServer: true);
+    await initiateAction(request);
+  }
+
+  Future<void> restart() async {
+    final request = cedar_rpc.ActionRequest(restartServer: true);
     await initiateAction(request);
   }
 
@@ -1736,7 +1749,8 @@ class MyHomePageState extends State<MyHomePage> {
                         "Please check the camera connection."
                     : "$connMessage. Please ensure that Cedar "
                         "server is running, connect this device to the Cedar WiFi "
-                        "hotspot, and navigate to http://cedar.local:8080."),
+                        "hotspot, and navigate to http://cedar.local or "
+                        "http://192.168.4.1."),
           ]),
         ),
       ),
