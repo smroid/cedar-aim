@@ -1124,7 +1124,7 @@ class MyHomePageState extends State<MyHomePage> {
                         padding: const EdgeInsets.symmetric(horizontal: 0)),
                     child: Text(
                       style: const TextStyle(fontSize: 12),
-                      "Star align",
+                      _slewRequest != null ? "Re-align" : "Star align",
                       textScaler: textScaler(context),
                     ),
                     onPressed: () {
@@ -1481,9 +1481,8 @@ class MyHomePageState extends State<MyHomePage> {
       const SizedBox(width: 15, height: 15),
       RotatedBox(
           quarterTurns: portrait ? 3 : 0,
-          child: !hasPolarAdvice() || _setupMode
-              ? Container()
-              : SizedBox(
+          child: hasPolarAdvice() && !_setupMode
+              ? SizedBox(
                   width: 140,
                   height: 120,
                   child: Column(children: <Widget>[
@@ -1511,7 +1510,8 @@ class MyHomePageState extends State<MyHomePage> {
                           ]))
                         : Container(),
                   ]),
-                )),
+                )
+              : Container()),
     ];
   }
 
