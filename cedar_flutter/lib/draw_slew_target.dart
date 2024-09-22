@@ -27,8 +27,8 @@ void drawBullseye(Canvas canvas, Color color, Offset boresight, double radius,
         ..color = color
         ..strokeWidth = _thin
         ..style = PaintingStyle.stroke);
-  drawGapCross(canvas, color, boresight, radius, 11, rollAngleRad, _hairline,
-      _hairline + 1);
+  drawGapCross(canvas, color, boresight, radius, radius / 2, rollAngleRad,
+      _hairline, _hairline + 1);
 }
 
 void drawSlewTarget(

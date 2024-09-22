@@ -89,7 +89,7 @@ void drawGapCross(
 void drawText(BuildContext context, Canvas canvas, Color color, Offset pos,
     String text, bool portrait) {
   final textPainter = TextPainter(
-      text: TextSpan(text: text, style: TextStyle(color: color, fontSize: 14)),
+      text: TextSpan(text: text, style: TextStyle(color: color, fontSize: 18)),
       textDirection: TextDirection.ltr,
       textAlign: TextAlign.center,
       textScaler: textScaler(context));
@@ -175,6 +175,7 @@ String commonNameForEntry(CatalogEntry entry) {
 }
 
 void drawSlewDirections(
+  BuildContext context,
   MyHomePageState state,
   CelestialCoord target,
   CatalogEntry catalogEntry,
@@ -226,47 +227,42 @@ void drawSlewDirections(
   while (tiltFormatted.length < width) {
     tiltFormatted = " $tiltFormatted";
   }
-  const smallFont = 20.0;
-  const largeFont = 40.0;
+  var smallFont = 24.0 * textScaleFactor(context);
+  var largeFont = 48.0 * textScaleFactor(context);
   final textPainter = TextPainter(
       text: TextSpan(children: [
         TextSpan(
           text: "$objectLabel\n",
-          style:
-              const TextStyle(fontSize: smallFont, fontStyle: FontStyle.italic),
+          style: TextStyle(fontSize: smallFont, fontStyle: FontStyle.italic),
         ),
         TextSpan(
           text: sprintf("%s ", [rotationAxisName]),
-          style: const TextStyle(fontSize: smallFont),
+          style: TextStyle(fontSize: smallFont),
         ),
         TextSpan(
           text: rotationFormatted,
-          style:
-              const TextStyle(fontSize: largeFont, fontWeight: FontWeight.bold),
+          style: TextStyle(fontSize: largeFont, fontWeight: FontWeight.bold),
         ),
-        const TextSpan(text: "°", style: TextStyle(fontSize: largeFont)),
+        TextSpan(text: "°", style: TextStyle(fontSize: largeFont)),
         const TextSpan(text: "\n"),
         TextSpan(
           text: sprintf("%s", [rotationCue]),
-          style:
-              const TextStyle(fontSize: smallFont, fontStyle: FontStyle.italic),
+          style: TextStyle(fontSize: smallFont, fontStyle: FontStyle.italic),
         ),
         const TextSpan(text: "\n"),
         TextSpan(
           text: sprintf("%s ", [tiltAxisName]),
-          style: const TextStyle(fontSize: smallFont),
+          style: TextStyle(fontSize: smallFont),
         ),
         TextSpan(
           text: tiltFormatted,
-          style:
-              const TextStyle(fontSize: largeFont, fontWeight: FontWeight.bold),
+          style: TextStyle(fontSize: largeFont, fontWeight: FontWeight.bold),
         ),
-        const TextSpan(text: "°", style: TextStyle(fontSize: largeFont)),
+        TextSpan(text: "°", style: TextStyle(fontSize: largeFont)),
         const TextSpan(text: "\n"),
         TextSpan(
           text: sprintf("%s", [tiltCue]),
-          style:
-              const TextStyle(fontSize: smallFont, fontStyle: FontStyle.italic),
+          style: TextStyle(fontSize: smallFont, fontStyle: FontStyle.italic),
         ),
       ], style: TextStyle(fontFamily: "RobotoMono", color: color)),
       textDirection: TextDirection.ltr,

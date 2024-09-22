@@ -199,6 +199,7 @@ class _MainImagePainter extends CustomPainter {
           /*drawDistanceText=*/ true,
           portrait);
       drawSlewDirections(
+          _context,
           state,
           slew.target,
           slew.targetCatalogEntry,
@@ -597,7 +598,7 @@ class MyHomePageState extends State<MyHomePage> {
     try {
       // Use long-ish timeout because solve could take much time.
       final response = await client().getFrame(request,
-          options: CallOptions(timeout: const Duration(seconds: 5)));
+          options: CallOptions(timeout: const Duration(seconds: 10)));
       _paintPending = true;
       setState(() {
         _serverConnected = true;
@@ -1116,14 +1117,14 @@ class MyHomePageState extends State<MyHomePage> {
       RotatedBox(
           quarterTurns: portrait ? 3 : 0,
           child: SizedBox(
-            width: 70 * textScaleFactor(context),
-            height: 32,
+            width: 80 * textScaleFactor(context),
+            height: 36,
             child: _canAlign && !_daylightMode
                 ? OutlinedButton(
                     style: OutlinedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(horizontal: 0)),
                     child: Text(
-                      style: const TextStyle(fontSize: 12),
+                      style: const TextStyle(fontSize: 16),
                       _slewRequest != null ? "Re-align" : "Star align",
                       textScaler: textScaler(context),
                     ),
@@ -1138,7 +1139,7 @@ class MyHomePageState extends State<MyHomePage> {
                         style: OutlinedButton.styleFrom(
                             padding: const EdgeInsets.symmetric(horizontal: 0)),
                         child: Text(
-                          style: const TextStyle(fontSize: 12),
+                          style: const TextStyle(fontSize: 16),
                           "Catalog",
                           textScaler: textScaler(context),
                         ),
@@ -1151,14 +1152,14 @@ class MyHomePageState extends State<MyHomePage> {
       RotatedBox(
           quarterTurns: portrait ? 3 : 0,
           child: SizedBox(
-              width: 70 * textScaleFactor(context),
-              height: 32,
+              width: 80 * textScaleFactor(context),
+              height: 36,
               child: _slewRequest != null && !_setupMode
                   ? OutlinedButton(
                       style: OutlinedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(horizontal: 0)),
                       child: Text(
-                        style: const TextStyle(fontSize: 12),
+                        style: const TextStyle(fontSize: 16),
                         "End goto",
                         textScaler: textScaler(context),
                       ),
@@ -1261,12 +1262,12 @@ class MyHomePageState extends State<MyHomePage> {
     return Text(
       val,
       style:
-          TextStyle(color: Theme.of(context).colorScheme.primary, fontSize: 12),
+          TextStyle(color: Theme.of(context).colorScheme.primary, fontSize: 16),
       textScaler: textScaler(context),
     );
   }
 
-  Text solveText(String val, {double? size = 12}) {
+  Text solveText(String val, {double? size = 16}) {
     return Text(
       val,
       style: TextStyle(color: solveTextColor(), fontSize: size),
@@ -1286,7 +1287,7 @@ class MyHomePageState extends State<MyHomePage> {
     return [
       SizedBox(
           width: width * textScaleFactor(context),
-          height: 14 * textScaleFactor(context),
+          height: 20 * textScaleFactor(context),
           child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -1295,7 +1296,7 @@ class MyHomePageState extends State<MyHomePage> {
               ])),
       SizedBox(
           width: width * textScaleFactor(context),
-          height: 14 * textScaleFactor(context),
+          height: 20 * textScaleFactor(context),
           child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -1309,7 +1310,7 @@ class MyHomePageState extends State<MyHomePage> {
     return [
       SizedBox(
           width: width * textScaleFactor(context),
-          height: 14 * textScaleFactor(context),
+          height: 20 * textScaleFactor(context),
           child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -1318,7 +1319,7 @@ class MyHomePageState extends State<MyHomePage> {
               ])),
       SizedBox(
           width: width * textScaleFactor(context),
-          height: 14 * textScaleFactor(context),
+          height: 20 * textScaleFactor(context),
           child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -1327,7 +1328,7 @@ class MyHomePageState extends State<MyHomePage> {
               ])),
       SizedBox(
           width: width * textScaleFactor(context),
-          height: 14 * textScaleFactor(context),
+          height: 20 * textScaleFactor(context),
           child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -1381,12 +1382,13 @@ class MyHomePageState extends State<MyHomePage> {
                                 GaugeAnnotation(
                                   positionFactor: 0.3,
                                   angle: 270,
-                                  widget: solveText(sprintf("%d", [_numStars])),
+                                  widget: solveText(sprintf("%d", [_numStars]),
+                                      size: 18),
                                 ),
                                 GaugeAnnotation(
                                   positionFactor: 0.4,
                                   angle: 90,
-                                  widget: solveText("stars", size: 12),
+                                  widget: solveText("stars", size: 16),
                                 ),
                               ],
                               ranges: <GaugeRange>[
@@ -1436,7 +1438,7 @@ class MyHomePageState extends State<MyHomePage> {
                             activeColor: Theme.of(context).colorScheme.surface,
                             checkColor: Theme.of(context).colorScheme.primary,
                           ),
-                          scaledText("Focus"),
+                          primaryText("Focus"),
                         ])))
             : Container(),
       ),
@@ -1461,7 +1463,7 @@ class MyHomePageState extends State<MyHomePage> {
                             activeColor: Theme.of(context).colorScheme.surface,
                             checkColor: Theme.of(context).colorScheme.primary,
                           ),
-                          scaledText("Zoom"),
+                          primaryText("Zoom"),
                         ])))
             : Container(),
       ),
@@ -1470,12 +1472,12 @@ class MyHomePageState extends State<MyHomePage> {
           child: _setupMode
               ? Container()
               : SizedBox(
-                  width: 90 * textScaleFactor(context),
-                  height: 85 * textScaleFactor(context),
+                  width: 100 * textScaleFactor(context),
+                  height: 120 * textScaleFactor(context),
                   child: Column(
                     children: coordInfo(
                         preferences?.mountType == cedar_rpc.MountType.ALT_AZ,
-                        /*width=*/ 85),
+                        /*width=*/ 100),
                   ),
                 )),
       const SizedBox(width: 15, height: 15),
@@ -1483,7 +1485,7 @@ class MyHomePageState extends State<MyHomePage> {
           quarterTurns: portrait ? 3 : 0,
           child: hasPolarAdvice() && !_setupMode
               ? SizedBox(
-                  width: 140,
+                  width: 180,
                   height: 120,
                   child: Column(children: <Widget>[
                     primaryText("Polar Align"),
@@ -1683,7 +1685,7 @@ class MyHomePageState extends State<MyHomePage> {
           toolbarOpacity: hideAppBar ? 0.0 : 1.0,
           title: Text(widget.title),
           foregroundColor: Theme.of(context).colorScheme.primary),
-      body: _serverConnected && (_hasCamera || _demoFile.isNotEmpty)
+      body: _serverConnected && (_hasCamera || _demoMode)
           ? Container(
               color: Theme.of(context).colorScheme.surface,
               child: Stack(
@@ -1709,7 +1711,7 @@ class MyHomePageState extends State<MyHomePage> {
         // Prevent jank in demo mode image file selector.
         _inhibitRefresh = isOpened;
       },
-      drawer: _serverConnected && (_hasCamera || _demoFile.isNotEmpty)
+      drawer: _serverConnected && (_hasCamera || _demoMode)
           ? Drawer(
               width: 240 * textScaleFactor(context),
               child: ListView(
@@ -1743,7 +1745,7 @@ class MyHomePageState extends State<MyHomePage> {
           ),
           child: Column(mainAxisSize: MainAxisSize.min, children: [
             Text(
-                style: const TextStyle(fontSize: 18),
+                style: const TextStyle(fontSize: 20),
                 _serverConnected
                     ? "Cedar could not detect a camera. "
                         "Please check the camera connection."
