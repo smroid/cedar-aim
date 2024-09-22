@@ -216,6 +216,7 @@ const OperationSettings$json = {
     {'1': 'log_dwelled_positions', '3': 10, '4': 1, '5': 8, '9': 6, '10': 'logDwelledPositions', '17': true},
     {'1': 'catalog_entry_match', '3': 11, '4': 1, '5': 11, '6': '.cedar_sky.CatalogEntryMatch', '9': 7, '10': 'catalogEntryMatch', '17': true},
     {'1': 'demo_image_filename', '3': 12, '4': 1, '5': 9, '9': 8, '10': 'demoImageFilename', '17': true},
+    {'1': 'invert_camera', '3': 13, '4': 1, '5': 8, '9': 9, '10': 'invertCamera', '17': true},
   ],
   '8': [
     {'1': '_operating_mode'},
@@ -227,6 +228,7 @@ const OperationSettings$json = {
     {'1': '_log_dwelled_positions'},
     {'1': '_catalog_entry_match'},
     {'1': '_demo_image_filename'},
+    {'1': '_invert_camera'},
   ],
 };
 
@@ -242,11 +244,12 @@ final $typed_data.Uint8List operationSettingsDescriptor = $convert.base64Decode(
     'RhdGVJbnRlcnZhbIgBARI3ChVsb2dfZHdlbGxlZF9wb3NpdGlvbnMYCiABKAhIBlITbG9nRHdl'
     'bGxlZFBvc2l0aW9uc4gBARJRChNjYXRhbG9nX2VudHJ5X21hdGNoGAsgASgLMhwuY2VkYXJfc2'
     't5LkNhdGFsb2dFbnRyeU1hdGNoSAdSEWNhdGFsb2dFbnRyeU1hdGNoiAEBEjMKE2RlbW9faW1h'
-    'Z2VfZmlsZW5hbWUYDCABKAlICFIRZGVtb0ltYWdlRmlsZW5hbWWIAQFCEQoPX29wZXJhdGluZ1'
-    '9tb2RlQhAKDl9kYXlsaWdodF9tb2RlQhAKDl9leHBvc3VyZV90aW1lQgsKCV9hY2N1cmFjeUIS'
-    'ChBfdXBkYXRlX2ludGVydmFsQhgKFl9kd2VsbF91cGRhdGVfaW50ZXJ2YWxCGAoWX2xvZ19kd2'
-    'VsbGVkX3Bvc2l0aW9uc0IWChRfY2F0YWxvZ19lbnRyeV9tYXRjaEIWChRfZGVtb19pbWFnZV9m'
-    'aWxlbmFtZQ==');
+    'Z2VfZmlsZW5hbWUYDCABKAlICFIRZGVtb0ltYWdlRmlsZW5hbWWIAQESKAoNaW52ZXJ0X2NhbW'
+    'VyYRgNIAEoCEgJUgxpbnZlcnRDYW1lcmGIAQFCEQoPX29wZXJhdGluZ19tb2RlQhAKDl9kYXls'
+    'aWdodF9tb2RlQhAKDl9leHBvc3VyZV90aW1lQgsKCV9hY2N1cmFjeUISChBfdXBkYXRlX2ludG'
+    'VydmFsQhgKFl9kd2VsbF91cGRhdGVfaW50ZXJ2YWxCGAoWX2xvZ19kd2VsbGVkX3Bvc2l0aW9u'
+    'c0IWChRfY2F0YWxvZ19lbnRyeV9tYXRjaEIWChRfZGVtb19pbWFnZV9maWxlbmFtZUIQCg5faW'
+    '52ZXJ0X2NhbWVyYQ==');
 
 @$core.Deprecated('Use preferencesDescriptor instead')
 const Preferences$json = {
@@ -269,6 +272,7 @@ const Preferences$json = {
     {'1': 'advanced', '3': 17, '4': 1, '5': 8, '9': 14, '10': 'advanced', '17': true},
     {'1': 'text_size_index', '3': 18, '4': 1, '5': 5, '9': 15, '10': 'textSizeIndex', '17': true},
     {'1': 'boresight_pixel', '3': 19, '4': 1, '5': 11, '6': '.cedar.ImageCoord', '9': 16, '10': 'boresightPixel', '17': true},
+    {'1': 'invert_camera', '3': 20, '4': 1, '5': 8, '9': 17, '10': 'invertCamera', '17': true},
   ],
   '8': [
     {'1': '_celestial_coord_format'},
@@ -288,6 +292,7 @@ const Preferences$json = {
     {'1': '_advanced'},
     {'1': '_text_size_index'},
     {'1': '_boresight_pixel'},
+    {'1': '_invert_camera'},
   ],
   '9': [
     {'1': 4, '2': 5},
@@ -313,13 +318,14 @@ final $typed_data.Uint8List preferencesDescriptor = $convert.base64Decode(
     'Lk9yZGVyaW5nSA1SCG9yZGVyaW5niAEBEh8KCGFkdmFuY2VkGBEgASgISA5SCGFkdmFuY2VkiA'
     'EBEisKD3RleHRfc2l6ZV9pbmRleBgSIAEoBUgPUg10ZXh0U2l6ZUluZGV4iAEBEj8KD2JvcmVz'
     'aWdodF9waXhlbBgTIAEoCzIRLmNlZGFyLkltYWdlQ29vcmRIEFIOYm9yZXNpZ2h0UGl4ZWyIAQ'
-    'FCGQoXX2NlbGVzdGlhbF9jb29yZF9mb3JtYXRCDwoNX2V5ZXBpZWNlX2ZvdkIVChNfbmlnaHRf'
-    'dmlzaW9uX3RoZW1lQg8KDV9oaWRlX2FwcF9iYXJCDQoLX21vdW50X3R5cGVCFAoSX29ic2Vydm'
-    'VyX2xvY2F0aW9uQgsKCV9hY2N1cmFjeUISChBfdXBkYXRlX2ludGVydmFsQhYKFF9jYXRhbG9n'
-    'X2VudHJ5X21hdGNoQhYKFF9tYXhfZGlzdGFuY2VfYWN0aXZlQg8KDV9tYXhfZGlzdGFuY2VCFw'
-    'oVX21pbl9lbGV2YXRpb25fYWN0aXZlQhAKDl9taW5fZWxldmF0aW9uQgsKCV9vcmRlcmluZ0IL'
-    'CglfYWR2YW5jZWRCEgoQX3RleHRfc2l6ZV9pbmRleEISChBfYm9yZXNpZ2h0X3BpeGVsSgQIBB'
-    'AF');
+    'ESKAoNaW52ZXJ0X2NhbWVyYRgUIAEoCEgRUgxpbnZlcnRDYW1lcmGIAQFCGQoXX2NlbGVzdGlh'
+    'bF9jb29yZF9mb3JtYXRCDwoNX2V5ZXBpZWNlX2ZvdkIVChNfbmlnaHRfdmlzaW9uX3RoZW1lQg'
+    '8KDV9oaWRlX2FwcF9iYXJCDQoLX21vdW50X3R5cGVCFAoSX29ic2VydmVyX2xvY2F0aW9uQgsK'
+    'CV9hY2N1cmFjeUISChBfdXBkYXRlX2ludGVydmFsQhYKFF9jYXRhbG9nX2VudHJ5X21hdGNoQh'
+    'YKFF9tYXhfZGlzdGFuY2VfYWN0aXZlQg8KDV9tYXhfZGlzdGFuY2VCFwoVX21pbl9lbGV2YXRp'
+    'b25fYWN0aXZlQhAKDl9taW5fZWxldmF0aW9uQgsKCV9vcmRlcmluZ0ILCglfYWR2YW5jZWRCEg'
+    'oQX3RleHRfc2l6ZV9pbmRleEISChBfYm9yZXNpZ2h0X3BpeGVsQhAKDl9pbnZlcnRfY2FtZXJh'
+    'SgQIBBAF');
 
 @$core.Deprecated('Use frameRequestDescriptor instead')
 const FrameRequest$json = {

@@ -560,6 +560,7 @@ class OperationSettings extends $pb.GeneratedMessage {
     $core.bool? logDwelledPositions,
     $2.CatalogEntryMatch? catalogEntryMatch,
     $core.String? demoImageFilename,
+    $core.bool? invertCamera,
   }) {
     final $result = create();
     if (daylightMode != null) {
@@ -589,6 +590,9 @@ class OperationSettings extends $pb.GeneratedMessage {
     if (demoImageFilename != null) {
       $result.demoImageFilename = demoImageFilename;
     }
+    if (invertCamera != null) {
+      $result.invertCamera = invertCamera;
+    }
     return $result;
   }
   OperationSettings._() : super();
@@ -605,6 +609,7 @@ class OperationSettings extends $pb.GeneratedMessage {
     ..aOB(10, _omitFieldNames ? '' : 'logDwelledPositions')
     ..aOM<$2.CatalogEntryMatch>(11, _omitFieldNames ? '' : 'catalogEntryMatch', subBuilder: $2.CatalogEntryMatch.create)
     ..aOS(12, _omitFieldNames ? '' : 'demoImageFilename')
+    ..aOB(13, _omitFieldNames ? '' : 'invertCamera')
     ..hasRequiredFields = false
   ;
 
@@ -754,6 +759,16 @@ class OperationSettings extends $pb.GeneratedMessage {
   $core.bool hasDemoImageFilename() => $_has(8);
   @$pb.TagNumber(12)
   void clearDemoImageFilename() => clearField(12);
+
+  /// Determines whether camera image is inverted (rot180) during readout.
+  @$pb.TagNumber(13)
+  $core.bool get invertCamera => $_getBF(9);
+  @$pb.TagNumber(13)
+  set invertCamera($core.bool v) { $_setBool(9, v); }
+  @$pb.TagNumber(13)
+  $core.bool hasInvertCamera() => $_has(9);
+  @$pb.TagNumber(13)
+  void clearInvertCamera() => clearField(13);
 }
 
 /// User interface preferences and operation settings that are stored durably on
@@ -777,6 +792,7 @@ class Preferences extends $pb.GeneratedMessage {
     $core.bool? advanced,
     $core.int? textSizeIndex,
     ImageCoord? boresightPixel,
+    $core.bool? invertCamera,
   }) {
     final $result = create();
     if (celestialCoordFormat != null) {
@@ -830,6 +846,9 @@ class Preferences extends $pb.GeneratedMessage {
     if (boresightPixel != null) {
       $result.boresightPixel = boresightPixel;
     }
+    if (invertCamera != null) {
+      $result.invertCamera = invertCamera;
+    }
     return $result;
   }
   Preferences._() : super();
@@ -854,6 +873,7 @@ class Preferences extends $pb.GeneratedMessage {
     ..aOB(17, _omitFieldNames ? '' : 'advanced')
     ..a<$core.int>(18, _omitFieldNames ? '' : 'textSizeIndex', $pb.PbFieldType.O3)
     ..aOM<ImageCoord>(19, _omitFieldNames ? '' : 'boresightPixel', subBuilder: ImageCoord.create)
+    ..aOB(20, _omitFieldNames ? '' : 'invertCamera')
     ..hasRequiredFields = false
   ;
 
@@ -1063,6 +1083,17 @@ class Preferences extends $pb.GeneratedMessage {
   void clearBoresightPixel() => clearField(19);
   @$pb.TagNumber(19)
   ImageCoord ensureBoresightPixel() => $_ensure(16);
+
+  /// Determines whether camera image is inverted (rot180) during readout. Note:
+  /// do not update this via UpdatePreferences().
+  @$pb.TagNumber(20)
+  $core.bool get invertCamera => $_getBF(17);
+  @$pb.TagNumber(20)
+  set invertCamera($core.bool v) { $_setBool(17, v); }
+  @$pb.TagNumber(20)
+  $core.bool hasInvertCamera() => $_has(17);
+  @$pb.TagNumber(20)
+  void clearInvertCamera() => clearField(20);
 }
 
 class FrameRequest extends $pb.GeneratedMessage {

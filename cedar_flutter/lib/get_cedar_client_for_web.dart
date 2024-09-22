@@ -1,6 +1,7 @@
 // Copyright (c) 2024 Steven Rosenthal smr@dt3.org
 // See LICENSE file in root directory for license terms.
 
+import 'dart:developer';
 import 'dart:html';
 
 import 'package:cedar_flutter/cedar.pbgrpc.dart';
@@ -14,7 +15,7 @@ void goFullScreen() {
   try {
     document.documentElement?.requestFullscreen();
   } catch (e) {
-    print('Could not call requestFullscreen: $e');
+    log('Could not call requestFullscreen: $e');
   }
 }
 
@@ -22,6 +23,6 @@ void cancelFullScreen() {
   try {
     document.exitFullscreen();
   } catch (e) {
-    print('Could not call exitFullscreen: $e');
+    log('Could not call exitFullscreen: $e');
   }
 }
