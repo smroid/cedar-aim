@@ -1485,8 +1485,8 @@ class MyHomePageState extends State<MyHomePage> {
           quarterTurns: portrait ? 3 : 0,
           child: hasPolarAdvice() && !_setupMode
               ? SizedBox(
-                  width: 180,
-                  height: 120,
+                  width: 140 * textScaleFactor(context),
+                  height: 140,
                   child: Column(children: <Widget>[
                     primaryText("Polar Align"),
                     _polarAlignAdvice!.hasAltitudeCorrection()

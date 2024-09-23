@@ -7,7 +7,8 @@ import 'package:grpc/grpc.dart';
 // For non-web deployments.
 CedarClient getClient() {
   return CedarClient(ClientChannel(
-    'raspberrypi.local',
+//    'raspberrypi.local',
+    '192.168.1.133',
     port: 80,
     options: const ChannelOptions(
         credentials: ChannelCredentials.insecure(),
