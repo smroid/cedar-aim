@@ -139,6 +139,7 @@ class _MainImagePainter extends CustomPainter {
               ..strokeWidth = thin
               ..style = PaintingStyle.stroke);
       } else {
+        // TODO: drop this. No center box.
         canvas.drawRect(
             state._centerRegion as Rect,
             Paint()
@@ -146,12 +147,12 @@ class _MainImagePainter extends CustomPainter {
               ..strokeWidth = thin
               ..style = PaintingStyle.stroke);
         // Draw box around location of the brightest star in search box.
-        canvas.drawRect(
-            state._centerPeakRegion as Rect,
-            Paint()
-              ..color = color
-              ..strokeWidth = thin
-              ..style = PaintingStyle.stroke);
+        // canvas.drawRect(
+        //     state._centerPeakRegion as Rect,
+        //     Paint()
+        //       ..color = color
+        //       ..strokeWidth = thin
+        //       ..style = PaintingStyle.stroke);
         // Draw circles around the detected stars.
         if (state._focusAid && state._advanced) {
           for (var star in state._stars) {
@@ -235,10 +236,10 @@ class _MainImagePainter extends CustomPainter {
             rollAngleRad);
       }
     }
-    if (!state._setupMode &&
+    if ( //!state._setupMode &&
         state._labeledFovCatalogEntries.isNotEmpty &&
-        state._slewRequest == null &&
-        _drawCatalogEntries != null) {
+            state._slewRequest == null &&
+            _drawCatalogEntries != null) {
       _drawCatalogEntries!(
           _context,
           canvas,
@@ -474,6 +475,7 @@ class MyHomePageState extends State<MyHomePage> {
     preferences = response.preferences;
     _polarAlignAdvice = response.polarAlignAdvice;
     _labeledFovCatalogEntries = response.labeledCatalogEntries;
+    // log("$_labeledFovCatalogEntries");
     _unlabeledFovCatalogEntries = response.unlabeledCatalogEntries;
     var settingsModel = Provider.of<SettingsModel>(context, listen: false);
     settingsModel.preferencesProto = preferences!.deepCopy();
@@ -876,57 +878,57 @@ class MyHomePageState extends State<MyHomePage> {
                 await updatePreferences(prefs);
                 await getDemoImages();
               })),
-      _advanced
-          ? Align(
-              alignment: Alignment.topLeft,
-              child: Column(
-                children: <Widget>[
-                  const SizedBox(height: 15),
-                  SizedBox(
-                      width: 140 * textScaleFactor(context),
-                      child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    if (_accuracy > 1) {
-                                      --_accuracy;
-                                      setAccuracy(_accuracy);
-                                    }
-                                  });
-                                },
-                                child: scaledText("Fast")),
-                            GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    if (_accuracy < 3) {
-                                      ++_accuracy;
-                                      setAccuracy(_accuracy);
-                                    }
-                                  });
-                                },
-                                child: scaledText("Accurate"))
-                          ])),
-                  SizedBox(
-                      width: 180 * textScaleFactor(context),
-                      height: 25,
-                      child: Slider(
-                        min: 1,
-                        max: 3,
-                        value: _accuracy.toDouble(),
-                        onChanged: (double value) => {
-                          setState(() {
-                            _accuracy = value.toInt();
-                            setAccuracy(value.toInt());
-                          })
-                        },
-                      )),
-                  scaledText(sprintf("exposure: %.1f ms", [exposureTimeMs])),
-                  const SizedBox(height: 15),
-                ],
-              ))
-          : Container(),
+      // _advanced
+      //     ? Align(
+      //         alignment: Alignment.topLeft,
+      //         child: Column(
+      //           children: <Widget>[
+      //             const SizedBox(height: 15),
+      //             SizedBox(
+      //                 width: 140 * textScaleFactor(context),
+      //                 child: Row(
+      //                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      //                     children: [
+      //                       GestureDetector(
+      //                           onTap: () {
+      //                             setState(() {
+      //                               if (_accuracy > 1) {
+      //                                 --_accuracy;
+      //                                 setAccuracy(_accuracy);
+      //                               }
+      //                             });
+      //                           },
+      //                           child: scaledText("Fast")),
+      //                       GestureDetector(
+      //                           onTap: () {
+      //                             setState(() {
+      //                               if (_accuracy < 3) {
+      //                                 ++_accuracy;
+      //                                 setAccuracy(_accuracy);
+      //                               }
+      //                             });
+      //                           },
+      //                           child: scaledText("Accurate"))
+      //                     ])),
+      //             SizedBox(
+      //                 width: 180 * textScaleFactor(context),
+      //                 height: 25,
+      //                 child: Slider(
+      //                   min: 1,
+      //                   max: 3,
+      //                   value: _accuracy.toDouble(),
+      //                   onChanged: (double value) => {
+      //                     setState(() {
+      //                       _accuracy = value.toInt();
+      //                       setAccuracy(value.toInt());
+      //                     })
+      //                   },
+      //                 )),
+      //             scaledText(sprintf("exposure: %.1f ms", [exposureTimeMs])),
+      //             const SizedBox(height: 15),
+      //           ],
+      //         ))
+      //     : Container(),
       (_advanced || _demoMode) && _demoFiles.isNotEmpty
           ? Column(children: <Widget>[
               const SizedBox(height: 5),
@@ -1414,59 +1416,59 @@ class MyHomePageState extends State<MyHomePage> {
                   ),
                 ])),
       const SizedBox(width: 10, height: 10),
-      RotatedBox(
-        quarterTurns: portrait ? 3 : 0,
-        child: _setupMode
-            ? SizedBox(
-                width: 90 * textScaleFactor(context),
-                child: GestureDetector(
-                    onTap: () {
-                      if (!_daylightMode) {
-                        _focusAid = !_focusAid;
-                      }
-                    },
-                    child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Checkbox(
-                            value: _focusAid,
-                            onChanged: _daylightMode
-                                ? null
-                                : (bool? selected) {
-                                    _focusAid = selected!;
-                                  },
-                            activeColor: Theme.of(context).colorScheme.surface,
-                            checkColor: Theme.of(context).colorScheme.primary,
-                          ),
-                          primaryText("Focus"),
-                        ])))
-            : Container(),
-      ),
-      const SizedBox(width: 10, height: 10),
-      RotatedBox(
-        quarterTurns: portrait ? 3 : 0,
-        child: _setupMode
-            ? SizedBox(
-                width: 90 * textScaleFactor(context),
-                child: GestureDetector(
-                    onTap: () {
-                      setDaylightMode(!_daylightMode);
-                    },
-                    child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Checkbox(
-                            value: _daylightMode,
-                            onChanged: (bool? selected) {
-                              setDaylightMode(selected!);
-                            },
-                            activeColor: Theme.of(context).colorScheme.surface,
-                            checkColor: Theme.of(context).colorScheme.primary,
-                          ),
-                          primaryText("Zoom"),
-                        ])))
-            : Container(),
-      ),
+      // RotatedBox(
+      //   quarterTurns: portrait ? 3 : 0,
+      //   child: _setupMode
+      //       ? SizedBox(
+      //           width: 90 * textScaleFactor(context),
+      //           child: GestureDetector(
+      //               onTap: () {
+      //                 if (!_daylightMode) {
+      //                   _focusAid = !_focusAid;
+      //                 }
+      //               },
+      //               child: Row(
+      //                   mainAxisAlignment: MainAxisAlignment.start,
+      //                   children: [
+      //                     Checkbox(
+      //                       value: _focusAid,
+      //                       onChanged: _daylightMode
+      //                           ? null
+      //                           : (bool? selected) {
+      //                               _focusAid = selected!;
+      //                             },
+      //                       activeColor: Theme.of(context).colorScheme.surface,
+      //                       checkColor: Theme.of(context).colorScheme.primary,
+      //                     ),
+      //                     primaryText("Focus"),
+      //                   ])))
+      //       : Container(),
+      // ),
+      // const SizedBox(width: 10, height: 10),
+      // RotatedBox(
+      //   quarterTurns: portrait ? 3 : 0,
+      //   child: _setupMode
+      //       ? SizedBox(
+      //           width: 90 * textScaleFactor(context),
+      //           child: GestureDetector(
+      //               onTap: () {
+      //                 setDaylightMode(!_daylightMode);
+      //               },
+      //               child: Row(
+      //                   mainAxisAlignment: MainAxisAlignment.start,
+      //                   children: [
+      //                     Checkbox(
+      //                       value: _daylightMode,
+      //                       onChanged: (bool? selected) {
+      //                         setDaylightMode(selected!);
+      //                       },
+      //                       activeColor: Theme.of(context).colorScheme.surface,
+      //                       checkColor: Theme.of(context).colorScheme.primary,
+      //                     ),
+      //                     primaryText("Daytime"),
+      //                   ])))
+      //       : Container(),
+      // ),
       RotatedBox(
           quarterTurns: portrait ? 3 : 0,
           child: _setupMode
