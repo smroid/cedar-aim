@@ -316,16 +316,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               min: 1,
                               max: updateMax.toDouble(),
                               divisions: updateMax - 1,
-                              value: switch (durationToMs(
-                                  opSettingsProto.updateInterval)) {
-                                1000 => 1,
-                                500 => 2,
-                                333 => 3,
-                                200 => 4,
-                                100 => 5,
-                                0 => 6,
-                                _ => 6,
-                              },
+                              value: min(
+                                  updateMax.toDouble(),
+                                  switch (durationToMs(
+                                      opSettingsProto.updateInterval)) {
+                                    1000 => 1,
+                                    500 => 2,
+                                    333 => 3,
+                                    200 => 4,
+                                    100 => 5,
+                                    0 => 6,
+                                    _ => 6,
+                                  }),
                               onChanged: (double value) {
                                 int intervalMs = switch (value.toInt()) {
                                   1 => 1000,
