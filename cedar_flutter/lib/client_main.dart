@@ -120,41 +120,17 @@ class _MainImagePainter extends CustomPainter {
     const double hairline = 0.5;
     const double thin = 1;
     final Color color = Theme.of(_context).colorScheme.primary;
-    if (state._setupMode && state._centerRegion != null) {
-      // Draw search box within which we search for the brightest star for
-      // focusing.
-      if (state._daylightMode) {
-        // In zoom mode we're cropped in to the center by 2x.
-        final uncroppedWidth = state._imageRegion.width * 2;
-        final uncroppedHeight = state._imageRegion.height * 2;
-        final adjustedCenterRegion = Rect.fromLTWH(
-            state._centerRegion!.left - uncroppedWidth / 4,
-            state._centerRegion!.top - uncroppedHeight / 4,
-            state._centerRegion!.width,
-            state._centerRegion!.height);
-        canvas.drawRect(
-            adjustedCenterRegion,
-            Paint()
-              ..color = color
-              ..strokeWidth = thin
-              ..style = PaintingStyle.stroke);
-      } else {
-        // TODO: drop this. No center box.
-        canvas.drawRect(
-            state._centerRegion as Rect,
-            Paint()
-              ..color = color
-              ..strokeWidth = thin
-              ..style = PaintingStyle.stroke);
+    if (state._setupMode && state._centerPeakRegion != null) {
+      if (state._focusAid) {
         // Draw box around location of the brightest star in search box.
-        // canvas.drawRect(
-        //     state._centerPeakRegion as Rect,
-        //     Paint()
-        //       ..color = color
-        //       ..strokeWidth = thin
-        //       ..style = PaintingStyle.stroke);
+        canvas.drawRect(
+            state._centerPeakRegion as Rect,
+            Paint()
+              ..color = color
+              ..strokeWidth = thin
+              ..style = PaintingStyle.stroke);
         // Draw circles around the detected stars.
-        if (state._focusAid && state._advanced) {
+        if (state._advanced) {
           for (var star in state._stars) {
             var offset = Offset(star.centroidPosition.x / state._binFactor,
                 star.centroidPosition.y / state._binFactor);
@@ -175,7 +151,7 @@ class _MainImagePainter extends CustomPainter {
 
     // How many display pixels is the telescope FOV?
     var scopeFov = 0.0;
-    if (!state._setupMode && state._hasSolution) {
+    if (state._hasSolution) {
       scopeFov = state.preferences!.eyepieceFov *
           state._imageRegion.width /
           state._solutionFOV;
@@ -216,46 +192,31 @@ class _MainImagePainter extends CustomPainter {
           slew.offsetRotationAxis,
           slew.offsetTiltAxis,
           portrait);
-    } else {
-      // Make a cross at the boresight position (if any) or else the image
-      // center.
-      if (state._setupMode || !state._hasSolution) {
-        var bsPos = state._boresightPosition;
-        if (state._daylightMode) {
-          // Compute boresight position within the zoomed image.
-          bsPos = Offset(
-            state._fullResBoresightPosition.dx - state._fullResImageRegion.left,
-            state._fullResBoresightPosition.dy - state._fullResImageRegion.top,
-          );
-        }
-        drawGapCross(canvas, color, bsPos, /*radius=*/ 8, /*gapRadius=*/ 2,
-            /*rollAngleRad=*/ 0.0, thin, thin);
-      } else {
-        var rollAngleRad = _deg2rad(state.bullseyeDirectionIndicator());
-        drawBullseye(canvas, color, state._boresightPosition, scopeFov / 2,
-            rollAngleRad);
+    } else if (!state._focusAid) {
+      var rollAngleRad = _deg2rad(state.bullseyeDirectionIndicator());
+      drawBullseye(
+          canvas, color, state._boresightPosition, scopeFov / 2, rollAngleRad);
+      if ( //!state._setupMode &&
+          state._labeledFovCatalogEntries.isNotEmpty &&
+              state._slewRequest == null &&
+              _drawCatalogEntries != null) {
+        _drawCatalogEntries!(
+            _context,
+            canvas,
+            color,
+            state._labeledFovCatalogEntries,
+            /*drawLabel=*/ true,
+            state._binFactor,
+            portrait);
+        _drawCatalogEntries!(
+            _context,
+            canvas,
+            color,
+            state._unlabeledFovCatalogEntries,
+            /*drawLabel=*/ false,
+            state._binFactor,
+            portrait);
       }
-    }
-    if ( //!state._setupMode &&
-        state._labeledFovCatalogEntries.isNotEmpty &&
-            state._slewRequest == null &&
-            _drawCatalogEntries != null) {
-      _drawCatalogEntries!(
-          _context,
-          canvas,
-          color,
-          state._labeledFovCatalogEntries,
-          /*drawLabel=*/ true,
-          state._binFactor,
-          portrait);
-      _drawCatalogEntries!(
-          _context,
-          canvas,
-          color,
-          state._unlabeledFovCatalogEntries,
-          /*drawLabel=*/ false,
-          state._binFactor,
-          portrait);
     }
   }
 
@@ -463,15 +424,13 @@ class MyHomePageState extends State<MyHomePage> {
     _expSettingMs = durationToMs(operationSettings.exposureTime).toInt();
     _setupMode =
         operationSettings.operatingMode == cedar_rpc.OperatingMode.SETUP;
+    // TODO: _focusAid from operationSettings.
     _daylightMode = operationSettings.daylightMode;
     if (_setupMode) {
       _transitionToSetup = false;
     }
 
-    _canAlign = false;
-    if (_setupMode) {
-      _canAlign = true;
-    }
+    _canAlign = _setupMode;
     preferences = response.preferences;
     _polarAlignAdvice = response.polarAlignAdvice;
     _labeledFovCatalogEntries = response.labeledCatalogEntries;
@@ -489,7 +448,7 @@ class MyHomePageState extends State<MyHomePage> {
     processingStats =
         response.hasProcessingStats() ? response.processingStats : null;
     _slewRequest = response.hasSlewRequest() ? response.slewRequest : null;
-    if (_slewRequest != null && _slewRequest!.targetWithinCenterRegion) {
+    if (_slewRequest != null) {
       _canAlign = true;
     }
     if (response.hasPlateSolution()) {
@@ -1121,13 +1080,13 @@ class MyHomePageState extends State<MyHomePage> {
           child: SizedBox(
             width: 80 * textScaleFactor(context),
             height: 36,
-            child: _canAlign && !_daylightMode
+            child: _canAlign && !_daylightMode && !_focusAid
                 ? OutlinedButton(
                     style: OutlinedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(horizontal: 0)),
                     child: Text(
                       style: const TextStyle(fontSize: 16),
-                      _slewRequest != null ? "Re-align" : "Star align",
+                      _slewRequest != null ? "Re-align" : "Set align",
                       textScaler: textScaler(context),
                     ),
                     onPressed: () {
@@ -1416,35 +1375,36 @@ class MyHomePageState extends State<MyHomePage> {
                   ),
                 ])),
       const SizedBox(width: 10, height: 10),
-      // RotatedBox(
-      //   quarterTurns: portrait ? 3 : 0,
-      //   child: _setupMode
-      //       ? SizedBox(
-      //           width: 90 * textScaleFactor(context),
-      //           child: GestureDetector(
-      //               onTap: () {
-      //                 if (!_daylightMode) {
-      //                   _focusAid = !_focusAid;
-      //                 }
-      //               },
-      //               child: Row(
-      //                   mainAxisAlignment: MainAxisAlignment.start,
-      //                   children: [
-      //                     Checkbox(
-      //                       value: _focusAid,
-      //                       onChanged: _daylightMode
-      //                           ? null
-      //                           : (bool? selected) {
-      //                               _focusAid = selected!;
-      //                             },
-      //                       activeColor: Theme.of(context).colorScheme.surface,
-      //                       checkColor: Theme.of(context).colorScheme.primary,
-      //                     ),
-      //                     primaryText("Focus"),
-      //                   ])))
-      //       : Container(),
-      // ),
-      // const SizedBox(width: 10, height: 10),
+      RotatedBox(
+        quarterTurns: portrait ? 3 : 0,
+        child: _setupMode
+            ? SizedBox(
+                width: 90 * textScaleFactor(context),
+                child: GestureDetector(
+                    onTap: () {
+                      if (!_daylightMode) {
+                        _focusAid = !_focusAid;
+                      }
+                    },
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Checkbox(
+                            value: _focusAid,
+                            onChanged: _daylightMode
+                                ? null
+                                : (bool? selected) {
+                                    // TODO: set focus assist mode
+                                    _focusAid = selected!;
+                                  },
+                            activeColor: Theme.of(context).colorScheme.surface,
+                            checkColor: Theme.of(context).colorScheme.primary,
+                          ),
+                          primaryText("Focus"),
+                        ])))
+            : Container(),
+      ),
+      const SizedBox(width: 10, height: 10),
       // RotatedBox(
       //   quarterTurns: portrait ? 3 : 0,
       //   child: _setupMode
@@ -1535,7 +1495,7 @@ class MyHomePageState extends State<MyHomePage> {
                     details.localPosition.dy * _binFactor);
                 if (_daylightMode) {
                   designateBoresight(localPosition);
-                } else {
+                } else if (!_setupMode) {
                   var object = _findObjectHit(localPosition, 30);
                   if (object != null && _objectInfoDialog != null) {
                     var selEntry = SelectedCatalogEntry(entry: object.entry);
