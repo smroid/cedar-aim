@@ -209,18 +209,20 @@ const OperationSettings$json = {
   '2': [
     {'1': 'operating_mode', '3': 4, '4': 1, '5': 14, '6': '.cedar.OperatingMode', '9': 0, '10': 'operatingMode', '17': true},
     {'1': 'daylight_mode', '3': 1, '4': 1, '5': 8, '9': 1, '10': 'daylightMode', '17': true},
-    {'1': 'exposure_time', '3': 5, '4': 1, '5': 11, '6': '.google.protobuf.Duration', '9': 2, '10': 'exposureTime', '17': true},
-    {'1': 'accuracy', '3': 3, '4': 1, '5': 14, '6': '.cedar.Accuracy', '9': 3, '10': 'accuracy', '17': true},
-    {'1': 'update_interval', '3': 7, '4': 1, '5': 11, '6': '.google.protobuf.Duration', '9': 4, '10': 'updateInterval', '17': true},
-    {'1': 'dwell_update_interval', '3': 8, '4': 1, '5': 11, '6': '.google.protobuf.Duration', '9': 5, '10': 'dwellUpdateInterval', '17': true},
-    {'1': 'log_dwelled_positions', '3': 10, '4': 1, '5': 8, '9': 6, '10': 'logDwelledPositions', '17': true},
-    {'1': 'catalog_entry_match', '3': 11, '4': 1, '5': 11, '6': '.cedar_sky.CatalogEntryMatch', '9': 7, '10': 'catalogEntryMatch', '17': true},
-    {'1': 'demo_image_filename', '3': 12, '4': 1, '5': 9, '9': 8, '10': 'demoImageFilename', '17': true},
-    {'1': 'invert_camera', '3': 13, '4': 1, '5': 8, '9': 9, '10': 'invertCamera', '17': true},
+    {'1': 'focus_assist_mode', '3': 14, '4': 1, '5': 8, '9': 2, '10': 'focusAssistMode', '17': true},
+    {'1': 'exposure_time', '3': 5, '4': 1, '5': 11, '6': '.google.protobuf.Duration', '9': 3, '10': 'exposureTime', '17': true},
+    {'1': 'accuracy', '3': 3, '4': 1, '5': 14, '6': '.cedar.Accuracy', '9': 4, '10': 'accuracy', '17': true},
+    {'1': 'update_interval', '3': 7, '4': 1, '5': 11, '6': '.google.protobuf.Duration', '9': 5, '10': 'updateInterval', '17': true},
+    {'1': 'dwell_update_interval', '3': 8, '4': 1, '5': 11, '6': '.google.protobuf.Duration', '9': 6, '10': 'dwellUpdateInterval', '17': true},
+    {'1': 'log_dwelled_positions', '3': 10, '4': 1, '5': 8, '9': 7, '10': 'logDwelledPositions', '17': true},
+    {'1': 'catalog_entry_match', '3': 11, '4': 1, '5': 11, '6': '.cedar_sky.CatalogEntryMatch', '9': 8, '10': 'catalogEntryMatch', '17': true},
+    {'1': 'demo_image_filename', '3': 12, '4': 1, '5': 9, '9': 9, '10': 'demoImageFilename', '17': true},
+    {'1': 'invert_camera', '3': 13, '4': 1, '5': 8, '9': 10, '10': 'invertCamera', '17': true},
   ],
   '8': [
     {'1': '_operating_mode'},
     {'1': '_daylight_mode'},
+    {'1': '_focus_assist_mode'},
     {'1': '_exposure_time'},
     {'1': '_accuracy'},
     {'1': '_update_interval'},
@@ -236,20 +238,21 @@ const OperationSettings$json = {
 final $typed_data.Uint8List operationSettingsDescriptor = $convert.base64Decode(
     'ChFPcGVyYXRpb25TZXR0aW5ncxJACg5vcGVyYXRpbmdfbW9kZRgEIAEoDjIULmNlZGFyLk9wZX'
     'JhdGluZ01vZGVIAFINb3BlcmF0aW5nTW9kZYgBARIoCg1kYXlsaWdodF9tb2RlGAEgASgISAFS'
-    'DGRheWxpZ2h0TW9kZYgBARJDCg1leHBvc3VyZV90aW1lGAUgASgLMhkuZ29vZ2xlLnByb3RvYn'
-    'VmLkR1cmF0aW9uSAJSDGV4cG9zdXJlVGltZYgBARIwCghhY2N1cmFjeRgDIAEoDjIPLmNlZGFy'
-    'LkFjY3VyYWN5SANSCGFjY3VyYWN5iAEBEkcKD3VwZGF0ZV9pbnRlcnZhbBgHIAEoCzIZLmdvb2'
-    'dsZS5wcm90b2J1Zi5EdXJhdGlvbkgEUg51cGRhdGVJbnRlcnZhbIgBARJSChVkd2VsbF91cGRh'
-    'dGVfaW50ZXJ2YWwYCCABKAsyGS5nb29nbGUucHJvdG9idWYuRHVyYXRpb25IBVITZHdlbGxVcG'
-    'RhdGVJbnRlcnZhbIgBARI3ChVsb2dfZHdlbGxlZF9wb3NpdGlvbnMYCiABKAhIBlITbG9nRHdl'
-    'bGxlZFBvc2l0aW9uc4gBARJRChNjYXRhbG9nX2VudHJ5X21hdGNoGAsgASgLMhwuY2VkYXJfc2'
-    't5LkNhdGFsb2dFbnRyeU1hdGNoSAdSEWNhdGFsb2dFbnRyeU1hdGNoiAEBEjMKE2RlbW9faW1h'
-    'Z2VfZmlsZW5hbWUYDCABKAlICFIRZGVtb0ltYWdlRmlsZW5hbWWIAQESKAoNaW52ZXJ0X2NhbW'
-    'VyYRgNIAEoCEgJUgxpbnZlcnRDYW1lcmGIAQFCEQoPX29wZXJhdGluZ19tb2RlQhAKDl9kYXls'
-    'aWdodF9tb2RlQhAKDl9leHBvc3VyZV90aW1lQgsKCV9hY2N1cmFjeUISChBfdXBkYXRlX2ludG'
-    'VydmFsQhgKFl9kd2VsbF91cGRhdGVfaW50ZXJ2YWxCGAoWX2xvZ19kd2VsbGVkX3Bvc2l0aW9u'
-    'c0IWChRfY2F0YWxvZ19lbnRyeV9tYXRjaEIWChRfZGVtb19pbWFnZV9maWxlbmFtZUIQCg5faW'
-    '52ZXJ0X2NhbWVyYQ==');
+    'DGRheWxpZ2h0TW9kZYgBARIvChFmb2N1c19hc3Npc3RfbW9kZRgOIAEoCEgCUg9mb2N1c0Fzc2'
+    'lzdE1vZGWIAQESQwoNZXhwb3N1cmVfdGltZRgFIAEoCzIZLmdvb2dsZS5wcm90b2J1Zi5EdXJh'
+    'dGlvbkgDUgxleHBvc3VyZVRpbWWIAQESMAoIYWNjdXJhY3kYAyABKA4yDy5jZWRhci5BY2N1cm'
+    'FjeUgEUghhY2N1cmFjeYgBARJHCg91cGRhdGVfaW50ZXJ2YWwYByABKAsyGS5nb29nbGUucHJv'
+    'dG9idWYuRHVyYXRpb25IBVIOdXBkYXRlSW50ZXJ2YWyIAQESUgoVZHdlbGxfdXBkYXRlX2ludG'
+    'VydmFsGAggASgLMhkuZ29vZ2xlLnByb3RvYnVmLkR1cmF0aW9uSAZSE2R3ZWxsVXBkYXRlSW50'
+    'ZXJ2YWyIAQESNwoVbG9nX2R3ZWxsZWRfcG9zaXRpb25zGAogASgISAdSE2xvZ0R3ZWxsZWRQb3'
+    'NpdGlvbnOIAQESUQoTY2F0YWxvZ19lbnRyeV9tYXRjaBgLIAEoCzIcLmNlZGFyX3NreS5DYXRh'
+    'bG9nRW50cnlNYXRjaEgIUhFjYXRhbG9nRW50cnlNYXRjaIgBARIzChNkZW1vX2ltYWdlX2ZpbG'
+    'VuYW1lGAwgASgJSAlSEWRlbW9JbWFnZUZpbGVuYW1liAEBEigKDWludmVydF9jYW1lcmEYDSAB'
+    'KAhIClIMaW52ZXJ0Q2FtZXJhiAEBQhEKD19vcGVyYXRpbmdfbW9kZUIQCg5fZGF5bGlnaHRfbW'
+    '9kZUIUChJfZm9jdXNfYXNzaXN0X21vZGVCEAoOX2V4cG9zdXJlX3RpbWVCCwoJX2FjY3VyYWN5'
+    'QhIKEF91cGRhdGVfaW50ZXJ2YWxCGAoWX2R3ZWxsX3VwZGF0ZV9pbnRlcnZhbEIYChZfbG9nX2'
+    'R3ZWxsZWRfcG9zaXRpb25zQhYKFF9jYXRhbG9nX2VudHJ5X21hdGNoQhYKFF9kZW1vX2ltYWdl'
+    'X2ZpbGVuYW1lQhAKDl9pbnZlcnRfY2FtZXJh');
 
 @$core.Deprecated('Use preferencesDescriptor instead')
 const Preferences$json = {
@@ -358,16 +361,16 @@ const FrameResult$json = {
     {'1': 'capture_time', '3': 9, '4': 1, '5': 11, '6': '.google.protobuf.Timestamp', '10': 'captureTime'},
     {'1': 'camera_temperature_celsius', '3': 10, '4': 1, '5': 1, '10': 'cameraTemperatureCelsius'},
     {'1': 'star_candidates', '3': 4, '4': 3, '5': 11, '6': '.cedar.StarCentroid', '10': 'starCandidates'},
+    {'1': 'plate_solution', '3': 17, '4': 1, '5': 11, '6': '.tetra3_server.SolveResult', '9': 0, '10': 'plateSolution', '17': true},
     {'1': 'noise_estimate', '3': 26, '4': 1, '5': 1, '10': 'noiseEstimate'},
     {'1': 'processing_stats', '3': 8, '4': 1, '5': 11, '6': '.cedar.ProcessingStats', '10': 'processingStats'},
     {'1': 'boresight_position', '3': 21, '4': 1, '5': 11, '6': '.cedar.ImageCoord', '10': 'boresightPosition'},
     {'1': 'calibrating', '3': 22, '4': 1, '5': 8, '10': 'calibrating'},
-    {'1': 'calibration_progress', '3': 23, '4': 1, '5': 1, '9': 0, '10': 'calibrationProgress', '17': true},
-    {'1': 'center_region', '3': 11, '4': 1, '5': 11, '6': '.cedar.Rectangle', '9': 1, '10': 'centerRegion', '17': true},
-    {'1': 'center_peak_position', '3': 12, '4': 1, '5': 11, '6': '.cedar.ImageCoord', '9': 2, '10': 'centerPeakPosition', '17': true},
-    {'1': 'center_peak_value', '3': 6, '4': 1, '5': 5, '9': 3, '10': 'centerPeakValue', '17': true},
-    {'1': 'center_peak_image', '3': 13, '4': 1, '5': 11, '6': '.cedar.Image', '9': 4, '10': 'centerPeakImage', '17': true},
-    {'1': 'plate_solution', '3': 17, '4': 1, '5': 11, '6': '.tetra3_server.SolveResult', '9': 5, '10': 'plateSolution', '17': true},
+    {'1': 'calibration_progress', '3': 23, '4': 1, '5': 1, '9': 1, '10': 'calibrationProgress', '17': true},
+    {'1': 'center_region', '3': 11, '4': 1, '5': 11, '6': '.cedar.Rectangle', '9': 2, '10': 'centerRegion', '17': true},
+    {'1': 'center_peak_position', '3': 12, '4': 1, '5': 11, '6': '.cedar.ImageCoord', '9': 3, '10': 'centerPeakPosition', '17': true},
+    {'1': 'center_peak_value', '3': 6, '4': 1, '5': 5, '9': 4, '10': 'centerPeakValue', '17': true},
+    {'1': 'center_peak_image', '3': 13, '4': 1, '5': 11, '6': '.cedar.Image', '9': 5, '10': 'centerPeakImage', '17': true},
     {'1': 'location_based_info', '3': 29, '4': 1, '5': 11, '6': '.cedar.LocationBasedInfo', '9': 6, '10': 'locationBasedInfo', '17': true},
     {'1': 'slew_request', '3': 24, '4': 1, '5': 11, '6': '.cedar.SlewRequest', '9': 7, '10': 'slewRequest', '17': true},
     {'1': 'boresight_image', '3': 28, '4': 1, '5': 11, '6': '.cedar.Image', '9': 8, '10': 'boresightImage', '17': true},
@@ -376,12 +379,12 @@ const FrameResult$json = {
     {'1': 'unlabeled_catalog_entries', '3': 33, '4': 3, '5': 11, '6': '.cedar.FovCatalogEntry', '10': 'unlabeledCatalogEntries'},
   ],
   '8': [
+    {'1': '_plate_solution'},
     {'1': '_calibration_progress'},
     {'1': '_center_region'},
     {'1': '_center_peak_position'},
     {'1': '_center_peak_value'},
     {'1': '_center_peak_image'},
-    {'1': '_plate_solution'},
     {'1': '_location_based_info'},
     {'1': '_slew_request'},
     {'1': '_boresight_image'},
@@ -401,18 +404,18 @@ final $typed_data.Uint8List frameResultDescriptor = $convert.base64Decode(
     'Zi5EdXJhdGlvblIMZXhwb3N1cmVUaW1lEj0KDGNhcHR1cmVfdGltZRgJIAEoCzIaLmdvb2dsZS'
     '5wcm90b2J1Zi5UaW1lc3RhbXBSC2NhcHR1cmVUaW1lEjwKGmNhbWVyYV90ZW1wZXJhdHVyZV9j'
     'ZWxzaXVzGAogASgBUhhjYW1lcmFUZW1wZXJhdHVyZUNlbHNpdXMSPAoPc3Rhcl9jYW5kaWRhdG'
-    'VzGAQgAygLMhMuY2VkYXIuU3RhckNlbnRyb2lkUg5zdGFyQ2FuZGlkYXRlcxIlCg5ub2lzZV9l'
-    'c3RpbWF0ZRgaIAEoAVINbm9pc2VFc3RpbWF0ZRJBChBwcm9jZXNzaW5nX3N0YXRzGAggASgLMh'
-    'YuY2VkYXIuUHJvY2Vzc2luZ1N0YXRzUg9wcm9jZXNzaW5nU3RhdHMSQAoSYm9yZXNpZ2h0X3Bv'
-    'c2l0aW9uGBUgASgLMhEuY2VkYXIuSW1hZ2VDb29yZFIRYm9yZXNpZ2h0UG9zaXRpb24SIAoLY2'
-    'FsaWJyYXRpbmcYFiABKAhSC2NhbGlicmF0aW5nEjYKFGNhbGlicmF0aW9uX3Byb2dyZXNzGBcg'
-    'ASgBSABSE2NhbGlicmF0aW9uUHJvZ3Jlc3OIAQESOgoNY2VudGVyX3JlZ2lvbhgLIAEoCzIQLm'
-    'NlZGFyLlJlY3RhbmdsZUgBUgxjZW50ZXJSZWdpb26IAQESSAoUY2VudGVyX3BlYWtfcG9zaXRp'
-    'b24YDCABKAsyES5jZWRhci5JbWFnZUNvb3JkSAJSEmNlbnRlclBlYWtQb3NpdGlvbogBARIvCh'
-    'FjZW50ZXJfcGVha192YWx1ZRgGIAEoBUgDUg9jZW50ZXJQZWFrVmFsdWWIAQESPQoRY2VudGVy'
-    'X3BlYWtfaW1hZ2UYDSABKAsyDC5jZWRhci5JbWFnZUgEUg9jZW50ZXJQZWFrSW1hZ2WIAQESRg'
-    'oOcGxhdGVfc29sdXRpb24YESABKAsyGi50ZXRyYTNfc2VydmVyLlNvbHZlUmVzdWx0SAVSDXBs'
-    'YXRlU29sdXRpb26IAQESTQoTbG9jYXRpb25fYmFzZWRfaW5mbxgdIAEoCzIYLmNlZGFyLkxvY2'
+    'VzGAQgAygLMhMuY2VkYXIuU3RhckNlbnRyb2lkUg5zdGFyQ2FuZGlkYXRlcxJGCg5wbGF0ZV9z'
+    'b2x1dGlvbhgRIAEoCzIaLnRldHJhM19zZXJ2ZXIuU29sdmVSZXN1bHRIAFINcGxhdGVTb2x1dG'
+    'lvbogBARIlCg5ub2lzZV9lc3RpbWF0ZRgaIAEoAVINbm9pc2VFc3RpbWF0ZRJBChBwcm9jZXNz'
+    'aW5nX3N0YXRzGAggASgLMhYuY2VkYXIuUHJvY2Vzc2luZ1N0YXRzUg9wcm9jZXNzaW5nU3RhdH'
+    'MSQAoSYm9yZXNpZ2h0X3Bvc2l0aW9uGBUgASgLMhEuY2VkYXIuSW1hZ2VDb29yZFIRYm9yZXNp'
+    'Z2h0UG9zaXRpb24SIAoLY2FsaWJyYXRpbmcYFiABKAhSC2NhbGlicmF0aW5nEjYKFGNhbGlicm'
+    'F0aW9uX3Byb2dyZXNzGBcgASgBSAFSE2NhbGlicmF0aW9uUHJvZ3Jlc3OIAQESOgoNY2VudGVy'
+    'X3JlZ2lvbhgLIAEoCzIQLmNlZGFyLlJlY3RhbmdsZUgCUgxjZW50ZXJSZWdpb26IAQESSAoUY2'
+    'VudGVyX3BlYWtfcG9zaXRpb24YDCABKAsyES5jZWRhci5JbWFnZUNvb3JkSANSEmNlbnRlclBl'
+    'YWtQb3NpdGlvbogBARIvChFjZW50ZXJfcGVha192YWx1ZRgGIAEoBUgEUg9jZW50ZXJQZWFrVm'
+    'FsdWWIAQESPQoRY2VudGVyX3BlYWtfaW1hZ2UYDSABKAsyDC5jZWRhci5JbWFnZUgFUg9jZW50'
+    'ZXJQZWFrSW1hZ2WIAQESTQoTbG9jYXRpb25fYmFzZWRfaW5mbxgdIAEoCzIYLmNlZGFyLkxvY2'
     'F0aW9uQmFzZWRJbmZvSAZSEWxvY2F0aW9uQmFzZWRJbmZviAEBEjoKDHNsZXdfcmVxdWVzdBgY'
     'IAEoCzISLmNlZGFyLlNsZXdSZXF1ZXN0SAdSC3NsZXdSZXF1ZXN0iAEBEjoKD2JvcmVzaWdodF'
     '9pbWFnZRgcIAEoCzIMLmNlZGFyLkltYWdlSAhSDmJvcmVzaWdodEltYWdliAEBEkUKEnBvbGFy'
@@ -420,9 +423,9 @@ final $typed_data.Uint8List frameResultDescriptor = $convert.base64Decode(
     '5BZHZpY2USTgoXbGFiZWxlZF9jYXRhbG9nX2VudHJpZXMYHyADKAsyFi5jZWRhci5Gb3ZDYXRh'
     'bG9nRW50cnlSFWxhYmVsZWRDYXRhbG9nRW50cmllcxJSChl1bmxhYmVsZWRfY2F0YWxvZ19lbn'
     'RyaWVzGCEgAygLMhYuY2VkYXIuRm92Q2F0YWxvZ0VudHJ5Uhd1bmxhYmVsZWRDYXRhbG9nRW50'
-    'cmllc0IXChVfY2FsaWJyYXRpb25fcHJvZ3Jlc3NCEAoOX2NlbnRlcl9yZWdpb25CFwoVX2Nlbn'
-    'Rlcl9wZWFrX3Bvc2l0aW9uQhQKEl9jZW50ZXJfcGVha192YWx1ZUIUChJfY2VudGVyX3BlYWtf'
-    'aW1hZ2VCEQoPX3BsYXRlX3NvbHV0aW9uQhYKFF9sb2NhdGlvbl9iYXNlZF9pbmZvQg8KDV9zbG'
+    'cmllc0IRCg9fcGxhdGVfc29sdXRpb25CFwoVX2NhbGlicmF0aW9uX3Byb2dyZXNzQhAKDl9jZW'
+    '50ZXJfcmVnaW9uQhcKFV9jZW50ZXJfcGVha19wb3NpdGlvbkIUChJfY2VudGVyX3BlYWtfdmFs'
+    'dWVCFAoSX2NlbnRlcl9wZWFrX2ltYWdlQhYKFF9sb2NhdGlvbl9iYXNlZF9pbmZvQg8KDV9zbG'
     'V3X3JlcXVlc3RCEgoQX2JvcmVzaWdodF9pbWFnZQ==');
 
 @$core.Deprecated('Use imageDescriptor instead')

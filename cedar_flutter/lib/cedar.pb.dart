@@ -561,6 +561,7 @@ class OperationSettings extends $pb.GeneratedMessage {
     $2.CatalogEntryMatch? catalogEntryMatch,
     $core.String? demoImageFilename,
     $core.bool? invertCamera,
+    $core.bool? focusAssistMode,
   }) {
     final $result = create();
     if (daylightMode != null) {
@@ -593,6 +594,9 @@ class OperationSettings extends $pb.GeneratedMessage {
     if (invertCamera != null) {
       $result.invertCamera = invertCamera;
     }
+    if (focusAssistMode != null) {
+      $result.focusAssistMode = focusAssistMode;
+    }
     return $result;
   }
   OperationSettings._() : super();
@@ -610,6 +614,7 @@ class OperationSettings extends $pb.GeneratedMessage {
     ..aOM<$2.CatalogEntryMatch>(11, _omitFieldNames ? '' : 'catalogEntryMatch', subBuilder: $2.CatalogEntryMatch.create)
     ..aOS(12, _omitFieldNames ? '' : 'demoImageFilename')
     ..aOB(13, _omitFieldNames ? '' : 'invertCamera')
+    ..aOB(14, _omitFieldNames ? '' : 'focusAssistMode')
     ..hasRequiredFields = false
   ;
 
@@ -634,10 +639,10 @@ class OperationSettings extends $pb.GeneratedMessage {
   static OperationSettings getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<OperationSettings>(create);
   static OperationSettings? _defaultInstance;
 
-  /// Relevant only in SETUP mode. Instead of trying to detect a star in the
-  /// central region (for focusing and boresight aligning), Cedar server instead
-  /// exposes the image in a conventional photographic fashion and returns the
-  /// central third of the image for magnified display at the client.
+  /// Relevant only in SETUP mode. Instead of trying to detect and plate solve
+  /// stars (for boresight aligning), Cedar server instead exposes the image in a
+  /// conventional photographic fashion and returns the non-stretched image for
+  /// display at the client.
   /// ActionRequest.designate_boresight is then used to convey the user's
   /// identification of the image coordinate corresponding to the telescope's FOV
   /// center.
@@ -769,6 +774,18 @@ class OperationSettings extends $pb.GeneratedMessage {
   $core.bool hasInvertCamera() => $_has(9);
   @$pb.TagNumber(13)
   void clearInvertCamera() => clearField(13);
+
+  /// Relevant only in SETUP mode. Instead of trying to detect and plate solve
+  /// stars (for boresight aligning), Cedar server instead exposes the image for
+  /// the brightest point in the image.
+  @$pb.TagNumber(14)
+  $core.bool get focusAssistMode => $_getBF(10);
+  @$pb.TagNumber(14)
+  set focusAssistMode($core.bool v) { $_setBool(10, v); }
+  @$pb.TagNumber(14)
+  $core.bool hasFocusAssistMode() => $_has(10);
+  @$pb.TagNumber(14)
+  void clearFocusAssistMode() => clearField(14);
 }
 
 /// User interface preferences and operation settings that are stored durably on
@@ -1345,12 +1362,10 @@ class FrameResult extends $pb.GeneratedMessage {
   OperationSettings ensureOperationSettings() => $_ensure(1);
 
   /// The image from which information in this FrameResult is derived. This image
-  /// is from the entire sensor, typically with some amount of binning. However,
-  /// if OperationSettings.daylight_mode is in effect, the image is only of the
-  /// center region and is not binned. Note that this image has stretch/gamma
-  /// applied for better visibility of dark features (unless
-  /// OperationSettings.daylight_mode is in effect, in which case a more natural
-  /// rendering is used).
+  /// is from the entire sensor, typically with some amount of binning.
+  /// Note that this image has stretch/gamma applied for better visibility of
+  /// dark features (unless OperationSettings.daylight_mode is in effect, in
+  /// which case a more natural rendering is used).
   @$pb.TagNumber(3)
   Image get image => $_getN(2);
   @$pb.TagNumber(3)
@@ -1379,7 +1394,8 @@ class FrameResult extends $pb.GeneratedMessage {
   @$pb.TagNumber(5)
   CalibrationData ensureCalibrationData() => $_ensure(4);
 
-  /// The pixel value at the center_peak_position. Not used in `daylight_mode`.
+  /// The pixel value at the center_peak_position. Only present in
+  /// `focus_assist_mode`.
   @$pb.TagNumber(6)
   $core.int get centerPeakValue => $_getIZ(5);
   @$pb.TagNumber(6)
@@ -1437,6 +1453,7 @@ class FrameResult extends $pb.GeneratedMessage {
 
   /// Identifies the center region used for brightest-star detection for focusing
   /// support, and also in `daylight_mode`. In full resolution image coordinates.
+  /// TODO: drop this.
   @$pb.TagNumber(11)
   Rectangle get centerRegion => $_getN(10);
   @$pb.TagNumber(11)
@@ -1448,8 +1465,8 @@ class FrameResult extends $pb.GeneratedMessage {
   @$pb.TagNumber(11)
   Rectangle ensureCenterRegion() => $_ensure(10);
 
-  /// The estimated position of the brightest point in `center_region`. In full
-  /// resolution image coordinates. Not used in `daylight_mode`.
+  /// This is the estimated position of the brightest point. In full resolution
+  /// image coordinates. Only present in `focus_assist_mode`.
   @$pb.TagNumber(12)
   ImageCoord get centerPeakPosition => $_getN(11);
   @$pb.TagNumber(12)
@@ -1463,7 +1480,7 @@ class FrameResult extends $pb.GeneratedMessage {
 
   /// A small high resolution crop of `image` centered at `center_peak_position`.
   /// Note that this image has stretch/gamma applied for better visibility of
-  /// dark features. Not used in `daylight_mode`.
+  /// dark features. Only present in `focus_assist_mode`.
   @$pb.TagNumber(13)
   Image get centerPeakImage => $_getN(12);
   @$pb.TagNumber(13)
@@ -1476,7 +1493,8 @@ class FrameResult extends $pb.GeneratedMessage {
   Image ensureCenterPeakImage() => $_ensure(12);
 
   /// The current plate solution. Omitted if no plate solve was attempted for
-  /// this frame.
+  /// this frame. Relevant in OPERATE mode and in SETUP mode when neither
+  /// `focus_assist_mode` nor `daylight_mode` is present.
   @$pb.TagNumber(17)
   $0.SolveResult get plateSolution => $_getN(13);
   @$pb.TagNumber(17)
@@ -2780,6 +2798,7 @@ class SlewRequest extends $pb.GeneratedMessage {
 
   /// True if the target's image position is within the center_region defined
   /// in SETUP mode. False otherwise, or if there is no valid plate solution.
+  /// TODO: drop this.
   @$pb.TagNumber(7)
   $core.bool get targetWithinCenterRegion => $_getBF(6);
   @$pb.TagNumber(7)
@@ -3103,21 +3122,19 @@ class ActionRequest extends $pb.GeneratedMessage {
   static ActionRequest getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<ActionRequest>(create);
   static ActionRequest? _defaultInstance;
 
-  /// Capture boresight offset. In focus mode, this is based on current location
-  /// of brightest peak in central region. Context:
-  /// 1. Cedar is in focus mode.
-  /// 2. User focuses on bright star.
-  /// 3. User centers the same star in the telescope's field of view.
-  /// 4. User adjusts aim of the Cedar camera to have the bright star near the
-  ///    center of the image.
-  /// 5. User invokes the capture_boresight function.
+  /// Capture boresight offset. In SETUP mode, this is based on current location
+  /// of brightest detected star centroid. Context:
+  /// 1. Cedar is in SETUP alignment mode (neither focus_assist_mode nor
+  ///    daylight_mode is active).
+  /// 2. Cedar Aim identifies the brightest star (could be a planet).
+  /// 3. User centers the identified object in the telescope's field of view.
+  /// 4. User invokes the capture_boresight function.
   /// At this point, the captured boresight position will be returned in each
   /// FrameResult's `boresight_position` field, and will cause a single
   /// `target_coords` entry to be included with each FrameResult
   /// `plate_solution`.
   /// Note that `capture_boresight` can also be used during an active slew to
-  /// target, when SlewRequest's `target_within_center_region` field is true.
-  /// This lets the user update/refine the boresight offset when the user
+  /// target. This lets the user update/refine the boresight offset when the user
   /// has centered the target in the telescope's field of view.
   @$pb.TagNumber(1)
   $core.bool get captureBoresight => $_getBF(0);

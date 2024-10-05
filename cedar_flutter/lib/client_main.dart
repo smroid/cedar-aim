@@ -119,29 +119,30 @@ class _MainImagePainter extends CustomPainter {
   void _paint(Canvas canvas, Size size) {
     const double hairline = 0.5;
     const double thin = 1;
+    const double thick = 2;
     final Color color = Theme.of(_context).colorScheme.primary;
-    if (state._setupMode && state._centerPeakRegion != null) {
-      if (state._focusAid) {
-        // Draw box around location of the brightest star in search box.
-        canvas.drawRect(
-            state._centerPeakRegion as Rect,
-            Paint()
-              ..color = color
-              ..strokeWidth = thin
-              ..style = PaintingStyle.stroke);
+    if (state._setupMode &&
+        state._centerPeakRegion != null &&
+        state._focusAid) {
+      // Draw box around location of the brightest star.
+      canvas.drawRect(
+          state._centerPeakRegion as Rect,
+          Paint()
+            ..color = color
+            ..strokeWidth = thin
+            ..style = PaintingStyle.stroke);
+      if (state._advanced) {
         // Draw circles around the detected stars.
-        if (state._advanced) {
-          for (var star in state._stars) {
-            var offset = Offset(star.centroidPosition.x / state._binFactor,
-                star.centroidPosition.y / state._binFactor);
-            canvas.drawCircle(
-                offset,
-                3,
-                Paint()
-                  ..color = color
-                  ..strokeWidth = hairline
-                  ..style = PaintingStyle.stroke);
-          }
+        for (var star in state._stars) {
+          var offset = Offset(star.centroidPosition.x / state._binFactor,
+              star.centroidPosition.y / state._binFactor);
+          canvas.drawCircle(
+              offset,
+              3,
+              Paint()
+                ..color = color
+                ..strokeWidth = hairline
+                ..style = PaintingStyle.stroke);
         }
       }
     }
@@ -163,6 +164,21 @@ class _MainImagePainter extends CustomPainter {
         posInImage = Offset(slew.imagePos.x / state._binFactor,
             slew.imagePos.y / state._binFactor);
       }
+      drawSlewDirections(
+          _context,
+          state,
+          slew.target,
+          slew.targetCatalogEntry,
+          canvas,
+          color,
+          const Offset(5, 5),
+          state.preferences?.mountType == cedar_rpc.MountType.ALT_AZ,
+          state._northernHemisphere,
+          slew.offsetRotationAxis,
+          slew.offsetTiltAxis,
+          portrait);
+      // TODO: if slew target overlaps slew directions, make it partially
+      // transparent.
       drawSlewTarget(
           _context,
           canvas,
@@ -175,31 +191,13 @@ class _MainImagePainter extends CustomPainter {
           slew.targetAngle,
           /*drawDistanceText=*/ true,
           portrait);
-      drawSlewDirections(
-          _context,
-          state,
-          slew.target,
-          slew.targetCatalogEntry,
-          canvas,
-          color,
-          slew.targetAngle >= 0.0 &&
-                  slew.targetAngle <= 90.0 &&
-                  slew.targetDistance > 0.5
-              ? Offset(20, state._imageRegion.height - 220)
-              : const Offset(20, 20),
-          state.preferences?.mountType == cedar_rpc.MountType.ALT_AZ,
-          state._northernHemisphere,
-          slew.offsetRotationAxis,
-          slew.offsetTiltAxis,
-          portrait);
     } else if (!state._focusAid) {
       var rollAngleRad = _deg2rad(state.bullseyeDirectionIndicator());
       drawBullseye(
           canvas, color, state._boresightPosition, scopeFov / 2, rollAngleRad);
-      if ( //!state._setupMode &&
-          state._labeledFovCatalogEntries.isNotEmpty &&
-              state._slewRequest == null &&
-              _drawCatalogEntries != null) {
+      if (state._labeledFovCatalogEntries.isNotEmpty &&
+          state._slewRequest == null &&
+          _drawCatalogEntries != null) {
         _drawCatalogEntries!(
             _context,
             canvas,
@@ -217,6 +215,23 @@ class _MainImagePainter extends CustomPainter {
             state._binFactor,
             portrait);
       }
+    }
+    if (state._setupMode &&
+        !state._focusAid &&
+        !state._daylightMode &&
+        state._stars.isNotEmpty) {
+      final brightStar = state._stars[0];
+
+      drawGapCross(
+          canvas,
+          color,
+          Offset(brightStar.centroidPosition.x / state._binFactor,
+              brightStar.centroidPosition.y / state._binFactor),
+          40,
+          10,
+          0,
+          thick,
+          thick);
     }
   }
 
@@ -424,7 +439,7 @@ class MyHomePageState extends State<MyHomePage> {
     _expSettingMs = durationToMs(operationSettings.exposureTime).toInt();
     _setupMode =
         operationSettings.operatingMode == cedar_rpc.OperatingMode.SETUP;
-    // TODO: _focusAid from operationSettings.
+    _focusAid = operationSettings.focusAssistMode;
     _daylightMode = operationSettings.daylightMode;
     if (_setupMode) {
       _transitionToSetup = false;
@@ -661,6 +676,11 @@ class MyHomePageState extends State<MyHomePage> {
 
   Future<void> setDaylightMode(bool value) async {
     final request = cedar_rpc.OperationSettings(daylightMode: value);
+    await updateOperationSettings(request);
+  }
+
+  Future<void> setFocusAssistMode(bool value) async {
+    final request = cedar_rpc.OperationSettings(focusAssistMode: value);
     await updateOperationSettings(request);
   }
 
@@ -1076,6 +1096,22 @@ class MyHomePageState extends State<MyHomePage> {
               ]))),
       const SizedBox(width: 0, height: 15),
       RotatedBox(
+        quarterTurns: portrait ? 3 : 0,
+        child: _canAlign && !_daylightMode && !_focusAid
+            ? SizedBox(
+                width: 90 * textScaleFactor(context),
+                child: Text(
+                  "Center the indicated object in your scope and then\n⇓",
+                  maxLines: 8,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      color: Theme.of(context).colorScheme.primary,
+                      fontSize: 14),
+                  textScaler: textScaler(context),
+                ))
+            : Container(),
+      ),
+      RotatedBox(
           quarterTurns: portrait ? 3 : 0,
           child: SizedBox(
             width: 80 * textScaleFactor(context),
@@ -1394,8 +1430,8 @@ class MyHomePageState extends State<MyHomePage> {
                             onChanged: _daylightMode
                                 ? null
                                 : (bool? selected) {
-                                    // TODO: set focus assist mode
                                     _focusAid = selected!;
+                                    setFocusAssistMode(_focusAid);
                                   },
                             activeColor: Theme.of(context).colorScheme.surface,
                             checkColor: Theme.of(context).colorScheme.primary,
