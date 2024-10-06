@@ -220,16 +220,17 @@ class _MainImagePainter extends CustomPainter {
         !state._focusAid &&
         !state._daylightMode &&
         state._stars.isNotEmpty) {
+      // Draw big cross around brightest star. This is where the user should
+      // be pointing the telescope for alignment.
       final brightStar = state._stars[0];
-
       drawGapCross(
           canvas,
           color,
           Offset(brightStar.centroidPosition.x / state._binFactor,
               brightStar.centroidPosition.y / state._binFactor),
-          40,
+          45,
           10,
-          0,
+          math.pi / 4,
           thick,
           thick);
     }
@@ -330,13 +331,10 @@ class MyHomePageState extends State<MyHomePage> {
   bool _hasCedarSky = false;
   bool _hasWifiControl = false;
 
-  int _accuracy = 2; // 1-3.
-
   Offset _boresightPosition =
       const Offset(0, 0); // Scaled by main image's binning.
   Offset _fullResBoresightPosition = const Offset(0, 0);
 
-  Rect? _centerRegion; // Scaled by main image's binning.
   Rect? _centerPeakRegion; // Scaled by binning.
 
   int _centerPeakWidth = 0;
@@ -424,6 +422,7 @@ class MyHomePageState extends State<MyHomePage> {
       Provider.of<ThemeModel>(context, listen: false).setNormalTheme();
     }
     serverInformation = response.serverInformation;
+    // _hasCedarSky = true;
     _hasCedarSky =
         serverInformation!.featureLevel != cedar_rpc.FeatureLevel.DIY;
     _hasWifiControl =
@@ -435,7 +434,6 @@ class MyHomePageState extends State<MyHomePage> {
 
     fixedSettings = response.fixedSettings;
     operationSettings = response.operationSettings;
-    _accuracy = operationSettings.accuracy.value;
     _expSettingMs = durationToMs(operationSettings.exposureTime).toInt();
     _setupMode =
         operationSettings.operatingMode == cedar_rpc.OperatingMode.SETUP;
@@ -507,14 +505,6 @@ class MyHomePageState extends State<MyHomePage> {
         response.boresightPosition.y / _binFactor);
     _fullResBoresightPosition =
         Offset(response.boresightPosition.x, response.boresightPosition.y);
-    if (response.hasCenterRegion()) {
-      var cr = response.centerRegion;
-      _centerRegion = Rect.fromLTWH(
-          cr.originX.toDouble() / _binFactor,
-          cr.originY.toDouble() / _binFactor,
-          cr.width.toDouble() / _binFactor,
-          cr.height.toDouble() / _binFactor);
-    }
     if (response.hasExposureTime()) {
       exposureTimeMs = durationToMs(response.exposureTime).toDouble();
     }
@@ -665,12 +655,6 @@ class MyHomePageState extends State<MyHomePage> {
     var request = cedar_rpc.OperationSettings();
     request.operatingMode =
         setup ? cedar_rpc.OperatingMode.SETUP : cedar_rpc.OperatingMode.OPERATE;
-    await updateOperationSettings(request);
-  }
-
-  Future<void> setAccuracy(int value) async {
-    final request = cedar_rpc.OperationSettings(
-        accuracy: cedar_rpc.Accuracy.valueOf(value)!);
     await updateOperationSettings(request);
   }
 
@@ -857,57 +841,6 @@ class MyHomePageState extends State<MyHomePage> {
                 await updatePreferences(prefs);
                 await getDemoImages();
               })),
-      // _advanced
-      //     ? Align(
-      //         alignment: Alignment.topLeft,
-      //         child: Column(
-      //           children: <Widget>[
-      //             const SizedBox(height: 15),
-      //             SizedBox(
-      //                 width: 140 * textScaleFactor(context),
-      //                 child: Row(
-      //                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      //                     children: [
-      //                       GestureDetector(
-      //                           onTap: () {
-      //                             setState(() {
-      //                               if (_accuracy > 1) {
-      //                                 --_accuracy;
-      //                                 setAccuracy(_accuracy);
-      //                               }
-      //                             });
-      //                           },
-      //                           child: scaledText("Fast")),
-      //                       GestureDetector(
-      //                           onTap: () {
-      //                             setState(() {
-      //                               if (_accuracy < 3) {
-      //                                 ++_accuracy;
-      //                                 setAccuracy(_accuracy);
-      //                               }
-      //                             });
-      //                           },
-      //                           child: scaledText("Accurate"))
-      //                     ])),
-      //             SizedBox(
-      //                 width: 180 * textScaleFactor(context),
-      //                 height: 25,
-      //                 child: Slider(
-      //                   min: 1,
-      //                   max: 3,
-      //                   value: _accuracy.toDouble(),
-      //                   onChanged: (double value) => {
-      //                     setState(() {
-      //                       _accuracy = value.toInt();
-      //                       setAccuracy(value.toInt());
-      //                     })
-      //                   },
-      //                 )),
-      //             scaledText(sprintf("exposure: %.1f ms", [exposureTimeMs])),
-      //             const SizedBox(height: 15),
-      //           ],
-      //         ))
-      //     : Container(),
       (_advanced || _demoMode) && _demoFiles.isNotEmpty
           ? Column(children: <Widget>[
               const SizedBox(height: 5),
@@ -973,6 +906,7 @@ class MyHomePageState extends State<MyHomePage> {
               const SizedBox(height: 15),
             ])
           : Container(),
+      const SizedBox(height: 10),
       _advanced
           ? Align(
               alignment: Alignment.topLeft,
@@ -1041,6 +975,10 @@ class MyHomePageState extends State<MyHomePage> {
     ];
   }
 
+  Widget rowOrColumn(bool row, List<Widget> children) {
+    return row ? Row(children: children) : Column(children: children);
+  }
+
   List<Widget> controls() {
     final portrait = MediaQuery.of(context).orientation == Orientation.portrait;
     bool hideAppBar = Provider.of<SettingsModel>(context, listen: false)
@@ -1098,17 +1036,29 @@ class MyHomePageState extends State<MyHomePage> {
       RotatedBox(
         quarterTurns: portrait ? 3 : 0,
         child: _canAlign && !_daylightMode && !_focusAid
-            ? SizedBox(
-                width: 90 * textScaleFactor(context),
-                child: Text(
-                  "Center the indicated object in your scope and then\n⇓",
-                  maxLines: 8,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                      color: Theme.of(context).colorScheme.primary,
-                      fontSize: 14),
-                  textScaler: textScaler(context),
-                ))
+            ? rowOrColumn(portrait, [
+                Text("①",
+                    style: TextStyle(
+                        color: Theme.of(context).colorScheme.primary,
+                        fontSize: 20),
+                    textScaler: textScaler(context)),
+                SizedBox(
+                    width: 80 * textScaleFactor(context),
+                    child: Text(
+                      "Center indicated object in telescope",
+                      maxLines: 8,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          color: Theme.of(context).colorScheme.primary,
+                          fontSize: 14),
+                      textScaler: textScaler(context),
+                    )),
+                Text(portrait ? "② " : "②",
+                    style: TextStyle(
+                        color: Theme.of(context).colorScheme.primary,
+                        fontSize: 20),
+                    textScaler: textScaler(context)),
+              ])
             : Container(),
       ),
       RotatedBox(
@@ -1441,30 +1391,30 @@ class MyHomePageState extends State<MyHomePage> {
             : Container(),
       ),
       const SizedBox(width: 10, height: 10),
-      // RotatedBox(
-      //   quarterTurns: portrait ? 3 : 0,
-      //   child: _setupMode
-      //       ? SizedBox(
-      //           width: 90 * textScaleFactor(context),
-      //           child: GestureDetector(
-      //               onTap: () {
-      //                 setDaylightMode(!_daylightMode);
-      //               },
-      //               child: Row(
-      //                   mainAxisAlignment: MainAxisAlignment.start,
-      //                   children: [
-      //                     Checkbox(
-      //                       value: _daylightMode,
-      //                       onChanged: (bool? selected) {
-      //                         setDaylightMode(selected!);
-      //                       },
-      //                       activeColor: Theme.of(context).colorScheme.surface,
-      //                       checkColor: Theme.of(context).colorScheme.primary,
-      //                     ),
-      //                     primaryText("Daytime"),
-      //                   ])))
-      //       : Container(),
-      // ),
+      RotatedBox(
+        quarterTurns: portrait ? 3 : 0,
+        child: _setupMode
+            ? SizedBox(
+                width: 90 * textScaleFactor(context),
+                child: GestureDetector(
+                    onTap: () {
+                      setDaylightMode(!_daylightMode);
+                    },
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Checkbox(
+                            value: _daylightMode,
+                            onChanged: (bool? selected) {
+                              setDaylightMode(selected!);
+                            },
+                            activeColor: Theme.of(context).colorScheme.surface,
+                            checkColor: Theme.of(context).colorScheme.primary,
+                          ),
+                          primaryText("Daytime"),
+                        ])))
+            : Container(),
+      ),
       RotatedBox(
           quarterTurns: portrait ? 3 : 0,
           child: _setupMode

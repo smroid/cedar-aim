@@ -3147,9 +3147,7 @@ class ActionRequest extends $pb.GeneratedMessage {
 
   /// In SETUP mode with OperationSettings.daylight_mode in effect, this conveys
   /// which part of the image the user tapped to designate the telescope's FOV
-  /// center. The image coordinates are within FrameResult.image; Cedar server
-  /// logic reconstructs the full-image coordinates by taking
-  /// FrameResult.center_region into account.
+  /// center. The image coordinates are within FrameResult.image.
   @$pb.TagNumber(2)
   ImageCoord get designateBoresight => $_getN(1);
   @$pb.TagNumber(2)
