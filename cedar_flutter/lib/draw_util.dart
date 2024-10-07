@@ -230,51 +230,74 @@ void drawSlewDirections(
   var smallFont = 24.0 * textScaleFactor(context);
   var largeFont = 48.0 * textScaleFactor(context);
   final textPainter = TextPainter(
-      text: TextSpan(children: [
-        TextSpan(
-          text: "$objectLabel\n",
-          style: TextStyle(fontSize: smallFont, fontStyle: FontStyle.italic),
-        ),
-        TextSpan(
-          text: sprintf("%s ", [rotationAxisName]),
-          style: TextStyle(fontSize: smallFont),
-        ),
-        TextSpan(
-          text: rotationFormatted,
-          style: TextStyle(fontSize: largeFont, fontWeight: FontWeight.bold),
-        ),
-        TextSpan(text: "°", style: TextStyle(fontSize: largeFont)),
-        const TextSpan(text: "\n"),
-        TextSpan(
-          text: sprintf("%s", [rotationCue]),
-          style: TextStyle(fontSize: smallFont, fontStyle: FontStyle.italic),
-        ),
-        const TextSpan(text: "\n"),
-        TextSpan(
-          text: sprintf("%s ", [tiltAxisName]),
-          style: TextStyle(fontSize: smallFont),
-        ),
-        TextSpan(
-          text: tiltFormatted,
-          style: TextStyle(fontSize: largeFont, fontWeight: FontWeight.bold),
-        ),
-        TextSpan(text: "°", style: TextStyle(fontSize: largeFont)),
-        const TextSpan(text: "\n"),
-        TextSpan(
-          text: sprintf("%s", [tiltCue]),
-          style: TextStyle(fontSize: smallFont, fontStyle: FontStyle.italic),
-        ),
-      ], style: TextStyle(fontFamily: "RobotoMono", color: color)),
+      text: TextSpan(
+          children: [
+            TextSpan(
+              text: "$objectLabel\n",
+              style:
+                  TextStyle(fontSize: smallFont, fontStyle: FontStyle.italic),
+            ),
+            TextSpan(
+              text: sprintf("%s ", [rotationAxisName]),
+              style: TextStyle(fontSize: smallFont),
+            ),
+            TextSpan(
+              text: rotationFormatted,
+              style:
+                  TextStyle(fontSize: largeFont, fontWeight: FontWeight.bold),
+            ),
+            TextSpan(text: "°", style: TextStyle(fontSize: largeFont)),
+            const TextSpan(text: "\n"),
+            TextSpan(
+              text: sprintf("%s", [rotationCue]),
+              style:
+                  TextStyle(fontSize: smallFont, fontStyle: FontStyle.italic),
+            ),
+            const TextSpan(text: "\n"),
+            TextSpan(
+              text: sprintf("%s ", [tiltAxisName]),
+              style: TextStyle(fontSize: smallFont),
+            ),
+            TextSpan(
+              text: tiltFormatted,
+              style:
+                  TextStyle(fontSize: largeFont, fontWeight: FontWeight.bold),
+            ),
+            TextSpan(text: "°", style: TextStyle(fontSize: largeFont)),
+            const TextSpan(text: "\n"),
+            TextSpan(
+              text: sprintf("%s", [tiltCue]),
+              style:
+                  TextStyle(fontSize: smallFont, fontStyle: FontStyle.italic),
+            ),
+          ],
+          style: TextStyle(
+            fontFamily: "RobotoMono",
+            color: color,
+          )),
       textDirection: TextDirection.ltr,
       textAlign: TextAlign.left);
   textPainter.layout();
+
   final pivot = textPainter.size.center(pos);
   if (portrait) {
     canvas.save();
     canvas.translate(pivot.dx, pivot.dy);
     canvas.rotate(-pi / 2);
-    canvas.translate(-pivot.dx, -pivot.dy);
+    // The fudge factors are empirical...
+    canvas.translate(-pivot.dx + 10, -pivot.dy + 10);
   }
+
+  // Our slew directions might overlap with other stuff on the image,
+  // such as the slew target and/or the boresight bullseye (arrange for those
+  // to be drawn before the slew directions). Dim the background clutter.
+  Color opaqueColor = const Color.fromARGB(160, 0, 0, 0);
+  final backgroundPaint = Paint()..color = opaqueColor;
+  canvas.drawRect(
+      Rect.fromLTRB(pos.dx, pos.dy, pos.dx + textPainter.width,
+          pos.dy + textPainter.height),
+      backgroundPaint);
+
   textPainter.paint(canvas, pos);
   if (portrait) {
     canvas.restore();

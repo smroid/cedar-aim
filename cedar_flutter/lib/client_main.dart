@@ -158,6 +158,18 @@ class _MainImagePainter extends CustomPainter {
         posInImage = Offset(slew.imagePos.x / state._binFactor,
             slew.imagePos.y / state._binFactor);
       }
+      drawSlewTarget(
+          _context,
+          canvas,
+          color,
+          state._boresightPosition,
+          state._scopeFov,
+          /*rollAngleRad=*/ _deg2rad(state.bullseyeDirectionIndicator()),
+          posInImage,
+          slew.targetDistance,
+          slew.targetAngle,
+          /*drawDistanceText=*/ true,
+          portrait);
       drawSlewDirections(
           _context,
           state,
@@ -170,20 +182,6 @@ class _MainImagePainter extends CustomPainter {
           state._northernHemisphere,
           slew.offsetRotationAxis,
           slew.offsetTiltAxis,
-          portrait);
-      // TODO: if slew target overlaps slew directions, make it partially
-      // transparent.
-      drawSlewTarget(
-          _context,
-          canvas,
-          color,
-          state._boresightPosition,
-          state._scopeFov,
-          /*rollAngleRad=*/ _deg2rad(state.bullseyeDirectionIndicator()),
-          posInImage,
-          slew.targetDistance,
-          slew.targetAngle,
-          /*drawDistanceText=*/ true,
           portrait);
     } else if (!state._focusAid &&
         !state._calibrating &&
@@ -417,9 +415,7 @@ class MyHomePageState extends State<MyHomePage> {
       Provider.of<ThemeModel>(context, listen: false).setNormalTheme();
     }
     serverInformation = response.serverInformation;
-    // _hasCedarSky = true;
-    _hasCedarSky =
-        serverInformation!.featureLevel != cedar_rpc.FeatureLevel.DIY;
+    _hasCedarSky = _showCatalogBrowser != null;
     _hasWifiControl =
         serverInformation!.featureLevel != cedar_rpc.FeatureLevel.DIY;
     _hasCamera = serverInformation!.hasCamera();
@@ -1066,30 +1062,42 @@ class MyHomePageState extends State<MyHomePage> {
       const SizedBox(width: 0, height: 15),
       RotatedBox(
         quarterTurns: portrait ? 3 : 0,
-        child: _canAlign && !_daylightMode && !_focusAid && _slewRequest == null
-            ? rowOrColumn(portrait, [
-                Text("①",
-                    style: TextStyle(
-                        color: Theme.of(context).colorScheme.primary,
-                        fontSize: 20),
-                    textScaler: textScaler(context)),
-                SizedBox(
+        child: _canAlign && !_focusAid && _slewRequest == null
+            ? _daylightMode
+                ? SizedBox(
                     width: 80 * textScaleFactor(context),
                     child: Text(
-                      "Center indicated object in telescope",
+                      "Tap image where telescope is pointed",
                       maxLines: 8,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                           color: Theme.of(context).colorScheme.primary,
                           fontSize: 14),
                       textScaler: textScaler(context),
-                    )),
-                Text(portrait ? "② " : "②",
-                    style: TextStyle(
-                        color: Theme.of(context).colorScheme.primary,
-                        fontSize: 20),
-                    textScaler: textScaler(context)),
-              ])
+                    ))
+                : rowOrColumn(portrait, [
+                    Text("①",
+                        style: TextStyle(
+                            color: Theme.of(context).colorScheme.primary,
+                            fontSize: 20),
+                        textScaler: textScaler(context)),
+                    SizedBox(
+                        width: 80 * textScaleFactor(context),
+                        child: Text(
+                          "Center indicated object in telescope",
+                          maxLines: 8,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              color: Theme.of(context).colorScheme.primary,
+                              fontSize: 14),
+                          textScaler: textScaler(context),
+                        )),
+                    Text(portrait ? "② " : "②",
+                        style: TextStyle(
+                            color: Theme.of(context).colorScheme.primary,
+                            fontSize: 20),
+                        textScaler: textScaler(context)),
+                  ])
             : Container(),
       ),
       RotatedBox(
