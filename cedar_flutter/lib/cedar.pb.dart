@@ -1180,7 +1180,6 @@ class FrameResult extends $pb.GeneratedMessage {
     ProcessingStats? processingStats,
     $3.Timestamp? captureTime,
     $core.double? cameraTemperatureCelsius,
-    Rectangle? centerRegion,
     ImageCoord? centerPeakPosition,
     Image? centerPeakImage,
     $0.SolveResult? plateSolution,
@@ -1228,9 +1227,6 @@ class FrameResult extends $pb.GeneratedMessage {
     }
     if (cameraTemperatureCelsius != null) {
       $result.cameraTemperatureCelsius = cameraTemperatureCelsius;
-    }
-    if (centerRegion != null) {
-      $result.centerRegion = centerRegion;
     }
     if (centerPeakPosition != null) {
       $result.centerPeakPosition = centerPeakPosition;
@@ -1297,7 +1293,6 @@ class FrameResult extends $pb.GeneratedMessage {
     ..aOM<ProcessingStats>(8, _omitFieldNames ? '' : 'processingStats', subBuilder: ProcessingStats.create)
     ..aOM<$3.Timestamp>(9, _omitFieldNames ? '' : 'captureTime', subBuilder: $3.Timestamp.create)
     ..a<$core.double>(10, _omitFieldNames ? '' : 'cameraTemperatureCelsius', $pb.PbFieldType.OD)
-    ..aOM<Rectangle>(11, _omitFieldNames ? '' : 'centerRegion', subBuilder: Rectangle.create)
     ..aOM<ImageCoord>(12, _omitFieldNames ? '' : 'centerPeakPosition', subBuilder: ImageCoord.create)
     ..aOM<Image>(13, _omitFieldNames ? '' : 'centerPeakImage', subBuilder: Image.create)
     ..aOM<$0.SolveResult>(17, _omitFieldNames ? '' : 'plateSolution', subBuilder: $0.SolveResult.create)
@@ -1451,161 +1446,147 @@ class FrameResult extends $pb.GeneratedMessage {
   @$pb.TagNumber(10)
   void clearCameraTemperatureCelsius() => clearField(10);
 
-  /// Identifies the center region used for brightest-star detection for focusing
-  /// support, and also in `daylight_mode`. In full resolution image coordinates.
-  /// TODO: drop this.
-  @$pb.TagNumber(11)
-  Rectangle get centerRegion => $_getN(10);
-  @$pb.TagNumber(11)
-  set centerRegion(Rectangle v) { setField(11, v); }
-  @$pb.TagNumber(11)
-  $core.bool hasCenterRegion() => $_has(10);
-  @$pb.TagNumber(11)
-  void clearCenterRegion() => clearField(11);
-  @$pb.TagNumber(11)
-  Rectangle ensureCenterRegion() => $_ensure(10);
-
   /// This is the estimated position of the brightest point. In full resolution
   /// image coordinates. Only present in `focus_assist_mode`.
   @$pb.TagNumber(12)
-  ImageCoord get centerPeakPosition => $_getN(11);
+  ImageCoord get centerPeakPosition => $_getN(10);
   @$pb.TagNumber(12)
   set centerPeakPosition(ImageCoord v) { setField(12, v); }
   @$pb.TagNumber(12)
-  $core.bool hasCenterPeakPosition() => $_has(11);
+  $core.bool hasCenterPeakPosition() => $_has(10);
   @$pb.TagNumber(12)
   void clearCenterPeakPosition() => clearField(12);
   @$pb.TagNumber(12)
-  ImageCoord ensureCenterPeakPosition() => $_ensure(11);
+  ImageCoord ensureCenterPeakPosition() => $_ensure(10);
 
   /// A small high resolution crop of `image` centered at `center_peak_position`.
   /// Note that this image has stretch/gamma applied for better visibility of
   /// dark features. Only present in `focus_assist_mode`.
   @$pb.TagNumber(13)
-  Image get centerPeakImage => $_getN(12);
+  Image get centerPeakImage => $_getN(11);
   @$pb.TagNumber(13)
   set centerPeakImage(Image v) { setField(13, v); }
   @$pb.TagNumber(13)
-  $core.bool hasCenterPeakImage() => $_has(12);
+  $core.bool hasCenterPeakImage() => $_has(11);
   @$pb.TagNumber(13)
   void clearCenterPeakImage() => clearField(13);
   @$pb.TagNumber(13)
-  Image ensureCenterPeakImage() => $_ensure(12);
+  Image ensureCenterPeakImage() => $_ensure(11);
 
   /// The current plate solution. Omitted if no plate solve was attempted for
   /// this frame. Relevant in OPERATE mode and in SETUP mode when neither
   /// `focus_assist_mode` nor `daylight_mode` is present.
   @$pb.TagNumber(17)
-  $0.SolveResult get plateSolution => $_getN(13);
+  $0.SolveResult get plateSolution => $_getN(12);
   @$pb.TagNumber(17)
   set plateSolution($0.SolveResult v) { setField(17, v); }
   @$pb.TagNumber(17)
-  $core.bool hasPlateSolution() => $_has(13);
+  $core.bool hasPlateSolution() => $_has(12);
   @$pb.TagNumber(17)
   void clearPlateSolution() => clearField(17);
   @$pb.TagNumber(17)
-  $0.SolveResult ensurePlateSolution() => $_ensure(13);
+  $0.SolveResult ensurePlateSolution() => $_ensure(12);
 
   /// The position in full resolution image coordinates of the captured
   /// boresight. If no boresight has been captured, is the image center. See
   /// ActionRequest.capture_boresight and designate_boresight.
   @$pb.TagNumber(21)
-  ImageCoord get boresightPosition => $_getN(14);
+  ImageCoord get boresightPosition => $_getN(13);
   @$pb.TagNumber(21)
   set boresightPosition(ImageCoord v) { setField(21, v); }
   @$pb.TagNumber(21)
-  $core.bool hasBoresightPosition() => $_has(14);
+  $core.bool hasBoresightPosition() => $_has(13);
   @$pb.TagNumber(21)
   void clearBoresightPosition() => clearField(21);
   @$pb.TagNumber(21)
-  ImageCoord ensureBoresightPosition() => $_ensure(14);
+  ImageCoord ensureBoresightPosition() => $_ensure(13);
 
   /// When transitioning from SETUP mode to OPERATE mode, Cedar does a brief
   /// sky/camera calibration. During calibration most FrameResult fields are
   /// omitted. Fields present are: fixed_settings, preferences,
   /// operation_settings, image, calibrating, and calibration_progress.
   @$pb.TagNumber(22)
-  $core.bool get calibrating => $_getBF(15);
+  $core.bool get calibrating => $_getBF(14);
   @$pb.TagNumber(22)
-  set calibrating($core.bool v) { $_setBool(15, v); }
+  set calibrating($core.bool v) { $_setBool(14, v); }
   @$pb.TagNumber(22)
-  $core.bool hasCalibrating() => $_has(15);
+  $core.bool hasCalibrating() => $_has(14);
   @$pb.TagNumber(22)
   void clearCalibrating() => clearField(22);
 
   /// When `calibrating` is true, this field is an estimate of the progress of
   /// the calibration, which can take several seconds.
   @$pb.TagNumber(23)
-  $core.double get calibrationProgress => $_getN(16);
+  $core.double get calibrationProgress => $_getN(15);
   @$pb.TagNumber(23)
-  set calibrationProgress($core.double v) { $_setDouble(16, v); }
+  set calibrationProgress($core.double v) { $_setDouble(15, v); }
   @$pb.TagNumber(23)
-  $core.bool hasCalibrationProgress() => $_has(16);
+  $core.bool hasCalibrationProgress() => $_has(15);
   @$pb.TagNumber(23)
   void clearCalibrationProgress() => clearField(23);
 
   /// If present, SkySafari or Cedar Sky is requesting that the telescope's
   /// pointing should be changed.
   @$pb.TagNumber(24)
-  SlewRequest get slewRequest => $_getN(17);
+  SlewRequest get slewRequest => $_getN(16);
   @$pb.TagNumber(24)
   set slewRequest(SlewRequest v) { setField(24, v); }
   @$pb.TagNumber(24)
-  $core.bool hasSlewRequest() => $_has(17);
+  $core.bool hasSlewRequest() => $_has(16);
   @$pb.TagNumber(24)
   void clearSlewRequest() => clearField(24);
   @$pb.TagNumber(24)
-  SlewRequest ensureSlewRequest() => $_ensure(17);
+  SlewRequest ensureSlewRequest() => $_ensure(16);
 
   /// The current user interface preferences stored on the server.
   @$pb.TagNumber(25)
-  Preferences get preferences => $_getN(18);
+  Preferences get preferences => $_getN(17);
   @$pb.TagNumber(25)
   set preferences(Preferences v) { setField(25, v); }
   @$pb.TagNumber(25)
-  $core.bool hasPreferences() => $_has(18);
+  $core.bool hasPreferences() => $_has(17);
   @$pb.TagNumber(25)
   void clearPreferences() => clearField(25);
   @$pb.TagNumber(25)
-  Preferences ensurePreferences() => $_ensure(18);
+  Preferences ensurePreferences() => $_ensure(17);
 
   /// Estimate of the RMS noise of the full-resolution image. In 8 bit ADU
   /// units.
   @$pb.TagNumber(26)
-  $core.double get noiseEstimate => $_getN(19);
+  $core.double get noiseEstimate => $_getN(18);
   @$pb.TagNumber(26)
-  set noiseEstimate($core.double v) { $_setDouble(19, v); }
+  set noiseEstimate($core.double v) { $_setDouble(18, v); }
   @$pb.TagNumber(26)
-  $core.bool hasNoiseEstimate() => $_has(19);
+  $core.bool hasNoiseEstimate() => $_has(18);
   @$pb.TagNumber(26)
   void clearNoiseEstimate() => clearField(26);
 
   /// The current FixedSettings on the server.
   @$pb.TagNumber(27)
-  FixedSettings get fixedSettings => $_getN(20);
+  FixedSettings get fixedSettings => $_getN(19);
   @$pb.TagNumber(27)
   set fixedSettings(FixedSettings v) { setField(27, v); }
   @$pb.TagNumber(27)
-  $core.bool hasFixedSettings() => $_has(20);
+  $core.bool hasFixedSettings() => $_has(19);
   @$pb.TagNumber(27)
   void clearFixedSettings() => clearField(27);
   @$pb.TagNumber(27)
-  FixedSettings ensureFixedSettings() => $_ensure(20);
+  FixedSettings ensureFixedSettings() => $_ensure(19);
 
   /// If the boresight is close to the slew target, the server returns a full
   /// resolution crop of 'image' centered at the 'boresight_position'. Note that
   /// this image has stretch/gamma applied for better visibility of dark
   /// features.
   @$pb.TagNumber(28)
-  Image get boresightImage => $_getN(21);
+  Image get boresightImage => $_getN(20);
   @$pb.TagNumber(28)
   set boresightImage(Image v) { setField(28, v); }
   @$pb.TagNumber(28)
-  $core.bool hasBoresightImage() => $_has(21);
+  $core.bool hasBoresightImage() => $_has(20);
   @$pb.TagNumber(28)
   void clearBoresightImage() => clearField(28);
   @$pb.TagNumber(28)
-  Image ensureBoresightImage() => $_ensure(21);
+  Image ensureBoresightImage() => $_ensure(20);
 
   /// When the observer's geographic location is known, the `plate_solution`
   /// field is augmented with additional information.
@@ -1613,28 +1594,28 @@ class FrameResult extends $pb.GeneratedMessage {
   /// - no plate solution was obtained, or
   /// - FixedSettings.observer_location is absent.
   @$pb.TagNumber(29)
-  LocationBasedInfo get locationBasedInfo => $_getN(22);
+  LocationBasedInfo get locationBasedInfo => $_getN(21);
   @$pb.TagNumber(29)
   set locationBasedInfo(LocationBasedInfo v) { setField(29, v); }
   @$pb.TagNumber(29)
-  $core.bool hasLocationBasedInfo() => $_has(22);
+  $core.bool hasLocationBasedInfo() => $_has(21);
   @$pb.TagNumber(29)
   void clearLocationBasedInfo() => clearField(29);
   @$pb.TagNumber(29)
-  LocationBasedInfo ensureLocationBasedInfo() => $_ensure(22);
+  LocationBasedInfo ensureLocationBasedInfo() => $_ensure(21);
 
   /// Contains information, if available, about adjusting the equatorial mount's
   /// polar axis alignment.
   @$pb.TagNumber(30)
-  PolarAlignAdvice get polarAlignAdvice => $_getN(23);
+  PolarAlignAdvice get polarAlignAdvice => $_getN(22);
   @$pb.TagNumber(30)
   set polarAlignAdvice(PolarAlignAdvice v) { setField(30, v); }
   @$pb.TagNumber(30)
-  $core.bool hasPolarAlignAdvice() => $_has(23);
+  $core.bool hasPolarAlignAdvice() => $_has(22);
   @$pb.TagNumber(30)
   void clearPolarAlignAdvice() => clearField(30);
   @$pb.TagNumber(30)
-  PolarAlignAdvice ensurePolarAlignAdvice() => $_ensure(23);
+  PolarAlignAdvice ensurePolarAlignAdvice() => $_ensure(22);
 
   /// Lists the sky catalog entries that are present in the `plate_solution`
   /// field of view. The `catalog_entry_match` field in `operation_settings`
@@ -1643,24 +1624,24 @@ class FrameResult extends $pb.GeneratedMessage {
   /// present.
   /// The FOV catalog entries that dominate their crowd and should be labelled.
   @$pb.TagNumber(31)
-  $core.List<FovCatalogEntry> get labeledCatalogEntries => $_getList(24);
+  $core.List<FovCatalogEntry> get labeledCatalogEntries => $_getList(23);
 
   /// Information about Cedar-server.
   @$pb.TagNumber(32)
-  ServerInformation get serverInformation => $_getN(25);
+  ServerInformation get serverInformation => $_getN(24);
   @$pb.TagNumber(32)
   set serverInformation(ServerInformation v) { setField(32, v); }
   @$pb.TagNumber(32)
-  $core.bool hasServerInformation() => $_has(25);
+  $core.bool hasServerInformation() => $_has(24);
   @$pb.TagNumber(32)
   void clearServerInformation() => clearField(32);
   @$pb.TagNumber(32)
-  ServerInformation ensureServerInformation() => $_ensure(25);
+  ServerInformation ensureServerInformation() => $_ensure(24);
 
   /// The decrowded FOV catalog entries that the UI can display, but should
   /// not label to avoid clutter.
   @$pb.TagNumber(33)
-  $core.List<FovCatalogEntry> get unlabeledCatalogEntries => $_getList(26);
+  $core.List<FovCatalogEntry> get unlabeledCatalogEntries => $_getList(25);
 }
 
 class Image extends $pb.GeneratedMessage {
@@ -2641,7 +2622,6 @@ class SlewRequest extends $pb.GeneratedMessage {
     ImageCoord? imagePos,
     $core.double? offsetRotationAxis,
     $core.double? offsetTiltAxis,
-    $core.bool? targetWithinCenterRegion,
     $2.CatalogEntry? targetCatalogEntry,
     $core.double? targetCatalogEntryDistance,
   }) {
@@ -2664,9 +2644,6 @@ class SlewRequest extends $pb.GeneratedMessage {
     if (offsetTiltAxis != null) {
       $result.offsetTiltAxis = offsetTiltAxis;
     }
-    if (targetWithinCenterRegion != null) {
-      $result.targetWithinCenterRegion = targetWithinCenterRegion;
-    }
     if (targetCatalogEntry != null) {
       $result.targetCatalogEntry = targetCatalogEntry;
     }
@@ -2686,7 +2663,6 @@ class SlewRequest extends $pb.GeneratedMessage {
     ..aOM<ImageCoord>(4, _omitFieldNames ? '' : 'imagePos', subBuilder: ImageCoord.create)
     ..a<$core.double>(5, _omitFieldNames ? '' : 'offsetRotationAxis', $pb.PbFieldType.OD)
     ..a<$core.double>(6, _omitFieldNames ? '' : 'offsetTiltAxis', $pb.PbFieldType.OD)
-    ..aOB(7, _omitFieldNames ? '' : 'targetWithinCenterRegion')
     ..aOM<$2.CatalogEntry>(8, _omitFieldNames ? '' : 'targetCatalogEntry', subBuilder: $2.CatalogEntry.create)
     ..a<$core.double>(9, _omitFieldNames ? '' : 'targetCatalogEntryDistance', $pb.PbFieldType.OD)
     ..hasRequiredFields = false
@@ -2796,38 +2772,26 @@ class SlewRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(6)
   void clearOffsetTiltAxis() => clearField(6);
 
-  /// True if the target's image position is within the center_region defined
-  /// in SETUP mode. False otherwise, or if there is no valid plate solution.
-  /// TODO: drop this.
-  @$pb.TagNumber(7)
-  $core.bool get targetWithinCenterRegion => $_getBF(6);
-  @$pb.TagNumber(7)
-  set targetWithinCenterRegion($core.bool v) { $_setBool(6, v); }
-  @$pb.TagNumber(7)
-  $core.bool hasTargetWithinCenterRegion() => $_has(6);
-  @$pb.TagNumber(7)
-  void clearTargetWithinCenterRegion() => clearField(7);
-
   /// The Cedar Sky catalog entry, if any, for `target`.
   @$pb.TagNumber(8)
-  $2.CatalogEntry get targetCatalogEntry => $_getN(7);
+  $2.CatalogEntry get targetCatalogEntry => $_getN(6);
   @$pb.TagNumber(8)
   set targetCatalogEntry($2.CatalogEntry v) { setField(8, v); }
   @$pb.TagNumber(8)
-  $core.bool hasTargetCatalogEntry() => $_has(7);
+  $core.bool hasTargetCatalogEntry() => $_has(6);
   @$pb.TagNumber(8)
   void clearTargetCatalogEntry() => clearField(8);
   @$pb.TagNumber(8)
-  $2.CatalogEntry ensureTargetCatalogEntry() => $_ensure(7);
+  $2.CatalogEntry ensureTargetCatalogEntry() => $_ensure(6);
 
   /// If `target_catalog_entry` is given, this field is the distance, in
   /// degrees, between `target` and `target_catalog_entry.coord`.
   @$pb.TagNumber(9)
-  $core.double get targetCatalogEntryDistance => $_getN(8);
+  $core.double get targetCatalogEntryDistance => $_getN(7);
   @$pb.TagNumber(9)
-  set targetCatalogEntryDistance($core.double v) { $_setDouble(8, v); }
+  set targetCatalogEntryDistance($core.double v) { $_setDouble(7, v); }
   @$pb.TagNumber(9)
-  $core.bool hasTargetCatalogEntryDistance() => $_has(8);
+  $core.bool hasTargetCatalogEntryDistance() => $_has(7);
   @$pb.TagNumber(9)
   void clearTargetCatalogEntryDistance() => clearField(9);
 }
@@ -3147,7 +3111,7 @@ class ActionRequest extends $pb.GeneratedMessage {
 
   /// In SETUP mode with OperationSettings.daylight_mode in effect, this conveys
   /// which part of the image the user tapped to designate the telescope's FOV
-  /// center. The image coordinates are within FrameResult.image.
+  /// center. The image coordinates are full resolution within FrameResult.image.
   @$pb.TagNumber(2)
   ImageCoord get designateBoresight => $_getN(1);
   @$pb.TagNumber(2)

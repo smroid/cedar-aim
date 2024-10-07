@@ -151,12 +151,6 @@ class _MainImagePainter extends CustomPainter {
         MediaQuery.of(_context).orientation == Orientation.portrait;
 
     // How many display pixels is the telescope FOV?
-    var scopeFov = 0.0;
-    if (state._hasSolution) {
-      scopeFov = state.preferences!.eyepieceFov *
-          state._imageRegion.width /
-          state._solutionFOV;
-    }
     if (state._slewRequest != null && !state._setupMode && state._hasSolution) {
       final slew = state._slewRequest;
       Offset? posInImage;
@@ -184,17 +178,19 @@ class _MainImagePainter extends CustomPainter {
           canvas,
           color,
           state._boresightPosition,
-          scopeFov,
+          state._scopeFov,
           /*rollAngleRad=*/ _deg2rad(state.bullseyeDirectionIndicator()),
           posInImage,
           slew.targetDistance,
           slew.targetAngle,
           /*drawDistanceText=*/ true,
           portrait);
-    } else if (!state._focusAid) {
+    } else if (!state._focusAid &&
+        !state._calibrating &&
+        !state._transitionToSetup) {
       var rollAngleRad = _deg2rad(state.bullseyeDirectionIndicator());
-      drawBullseye(
-          canvas, color, state._boresightPosition, scopeFov / 2, rollAngleRad);
+      drawBullseye(canvas, color, state._boresightPosition, state._scopeFov / 2,
+          rollAngleRad);
       if (state._labeledFovCatalogEntries.isNotEmpty &&
           state._slewRequest == null &&
           _drawCatalogEntries != null) {
@@ -264,10 +260,7 @@ class _OverlayImagePainter extends CustomPainter {
               _scale * (slew.imagePos.y - _state._fullResBoresightPosition.dy));
     }
     // How many display pixels is the telescope FOV?
-    final scopeFov = _scale *
-        _state.preferences!.eyepieceFov *
-        _state._fullResImageRegion.width /
-        _state._solutionFOV;
+    final scopeFov = _scale * _state._scopeFov;
     final portrait =
         MediaQuery.of(_context).orientation == Orientation.portrait;
     drawSlewTarget(
@@ -330,6 +323,8 @@ class MyHomePageState extends State<MyHomePage> {
   bool _canAlign = false;
   bool _hasCedarSky = false;
   bool _hasWifiControl = false;
+
+  double _scopeFov = 0.0;
 
   Offset _boresightPosition =
       const Offset(0, 0); // Scaled by main image's binning.
@@ -447,7 +442,6 @@ class MyHomePageState extends State<MyHomePage> {
     preferences = response.preferences;
     _polarAlignAdvice = response.polarAlignAdvice;
     _labeledFovCatalogEntries = response.labeledCatalogEntries;
-    // log("$_labeledFovCatalogEntries");
     _unlabeledFovCatalogEntries = response.unlabeledCatalogEntries;
     var settingsModel = Provider.of<SettingsModel>(context, listen: false);
     settingsModel.preferencesProto = preferences!.deepCopy();
@@ -463,6 +457,20 @@ class MyHomePageState extends State<MyHomePage> {
     _slewRequest = response.hasSlewRequest() ? response.slewRequest : null;
     if (_slewRequest != null) {
       _canAlign = true;
+    }
+    if (response.hasImage()) {
+      _imageBytes = Uint8List.fromList(response.image.imageData);
+      _binFactor = response.image.binningFactor;
+      _imageRegion = Rect.fromLTWH(
+          response.image.rectangle.originX.toDouble() / _binFactor,
+          response.image.rectangle.originY.toDouble() / _binFactor,
+          response.image.rectangle.width.toDouble() / _binFactor,
+          response.image.rectangle.height.toDouble() / _binFactor);
+      _fullResImageRegion = Rect.fromLTWH(
+          response.image.rectangle.originX.toDouble(),
+          response.image.rectangle.originY.toDouble(),
+          response.image.rectangle.width.toDouble(),
+          response.image.rectangle.height.toDouble());
     }
     if (response.hasPlateSolution()) {
       SolveResult plateSolution = response.plateSolution;
@@ -485,21 +493,9 @@ class MyHomePageState extends State<MyHomePage> {
         if (response.hasLocationBasedInfo()) {
           _locationBasedInfo = response.locationBasedInfo;
         }
+        _scopeFov =
+            preferences!.eyepieceFov * _imageRegion.width / _solutionFOV;
       }
-    }
-    if (response.hasImage()) {
-      _imageBytes = Uint8List.fromList(response.image.imageData);
-      _binFactor = response.image.binningFactor;
-      _imageRegion = Rect.fromLTWH(
-          response.image.rectangle.originX.toDouble() / _binFactor,
-          response.image.rectangle.originY.toDouble() / _binFactor,
-          response.image.rectangle.width.toDouble() / _binFactor,
-          response.image.rectangle.height.toDouble() / _binFactor);
-      _fullResImageRegion = Rect.fromLTWH(
-          response.image.rectangle.originX.toDouble(),
-          response.image.rectangle.originY.toDouble(),
-          response.image.rectangle.width.toDouble(),
-          response.image.rectangle.height.toDouble());
     }
     _boresightPosition = Offset(response.boresightPosition.x / _binFactor,
         response.boresightPosition.y / _binFactor);
@@ -873,7 +869,6 @@ class MyHomePageState extends State<MyHomePage> {
                 Container(width: 20),
                 DropdownMenu<String>(
                     menuHeight: 200,
-                    // menuStyle: const MenuStyle(),
                     inputDecorationTheme: InputDecorationTheme(
                       contentPadding:
                           const EdgeInsets.symmetric(horizontal: 12),
@@ -886,16 +881,19 @@ class MyHomePageState extends State<MyHomePage> {
                     width: 200 * textScaleFactor(context),
                     requestFocusOnTap: false,
                     initialSelection: _demoFile.isEmpty ? "" : _demoFile,
-                    label: scaledText("Image file"),
+                    label: primaryText("Image file",
+                        size: 12 * textScaleFactor(context)),
                     dropdownMenuEntries:
                         _demoFiles.map<DropdownMenuEntry<String>>((String s) {
                       return DropdownMenuEntry<String>(
                         value: s,
                         label: _removeExtension(s),
-                        labelWidget: scaledText(_removeExtension(s)),
+                        labelWidget: primaryText(_removeExtension(s)),
                         enabled: true,
                       );
                     }).toList(),
+                    textStyle:
+                        TextStyle(color: Theme.of(context).colorScheme.primary),
                     onSelected: (String? newValue) async {
                       setState(() {
                         _demoFile = newValue!;
@@ -1006,36 +1004,69 @@ class MyHomePageState extends State<MyHomePage> {
           ? const SizedBox(width: 0, height: 40)
           : Container(),
       RotatedBox(
-          quarterTurns: portrait ? 3 : 0,
-          child: GestureDetector(
-              onTap: () {
-                _setupMode = !_setupMode;
+        quarterTurns: portrait ? 3 : 0,
+        child: DropdownButton<String>(
+          icon: Icon(Icons.arrow_drop_down,
+              color: Theme.of(context).colorScheme.primary),
+          underline: Container(),
+          value: _setupMode ? (_focusAid ? "Focus" : "Align") : "Aim",
+          items: ["Focus", "Align", "Aim"]
+              .map<DropdownMenuItem<String>>((String s) {
+            return DropdownMenuItem<String>(
+              value: s,
+              enabled: true,
+              child: Text(s),
+            );
+          }).toList(),
+          onChanged: (String? value) {
+            if (value == "Focus") {
+              setState(() {
                 if (!_setupMode) {
+                  _setupMode = true;
                   _transitionToSetup = true;
+                  setOperatingMode(_setupMode);
                 }
-                setOperatingMode(_setupMode);
-              },
-              child: Column(children: <Widget>[
-                primaryText("Setup  Aim"),
-                Switch(
-                    activeTrackColor: Theme.of(context).colorScheme.surface,
-                    trackOutlineColor: WidgetStateProperty.all(
-                        Theme.of(context).colorScheme.primary),
-                    thumbColor: WidgetStateProperty.all(
-                      Theme.of(context).colorScheme.primary.withOpacity(0.6),
-                    ),
-                    value: !_setupMode,
-                    onChanged: (bool value) {
-                      if (!value) {
-                        _transitionToSetup = true;
-                      }
-                      setOperatingMode(/*setup=*/ !value);
-                    }),
-              ]))),
+                if (!_focusAid) {
+                  _focusAid = true;
+                  setFocusAssistMode(_focusAid);
+                }
+              });
+            } else if (value == "Align") {
+              setState(() {
+                if (!_setupMode) {
+                  _setupMode = true;
+                  _transitionToSetup = true;
+                  setOperatingMode(_setupMode);
+                }
+                if (_focusAid) {
+                  _focusAid = false;
+                  setFocusAssistMode(_focusAid);
+                }
+              });
+            } else {
+              // Aim.
+              setState(() {
+                if (_setupMode) {
+                  _setupMode = false;
+                  setOperatingMode(_setupMode);
+                }
+                if (_focusAid) {
+                  _focusAid = false;
+                  setFocusAssistMode(_focusAid);
+                }
+              });
+            }
+          },
+          style: TextStyle(
+            color: Theme.of(context).colorScheme.primary,
+            fontSize: 16 * textScaleFactor(context),
+          ),
+        ),
+      ),
       const SizedBox(width: 0, height: 15),
       RotatedBox(
         quarterTurns: portrait ? 3 : 0,
-        child: _canAlign && !_daylightMode && !_focusAid
+        child: _canAlign && !_daylightMode && !_focusAid && _slewRequest == null
             ? rowOrColumn(portrait, [
                 Text("①",
                     style: TextStyle(
@@ -1095,25 +1126,28 @@ class MyHomePageState extends State<MyHomePage> {
                         })
                     : Container()),
           )),
-      const SizedBox(width: 0, height: 15),
-      RotatedBox(
-          quarterTurns: portrait ? 3 : 0,
-          child: SizedBox(
-              width: 80 * textScaleFactor(context),
-              height: 36,
-              child: _slewRequest != null && !_setupMode
-                  ? OutlinedButton(
-                      style: OutlinedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(horizontal: 0)),
-                      child: Text(
-                        style: const TextStyle(fontSize: 16),
-                        "End goto",
-                        textScaler: textScaler(context),
-                      ),
-                      onPressed: () {
-                        stopSlew();
-                      })
-                  : Container())),
+      const SizedBox(width: 0, height: 25),
+      _slewRequest != null
+          ? RotatedBox(
+              quarterTurns: portrait ? 3 : 0,
+              child: SizedBox(
+                  width: 80 * textScaleFactor(context),
+                  height: 36,
+                  child: _slewRequest != null && !_setupMode
+                      ? OutlinedButton(
+                          style: OutlinedButton.styleFrom(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 0)),
+                          child: Text(
+                            style: const TextStyle(fontSize: 16),
+                            "End goto",
+                            textScaler: textScaler(context),
+                          ),
+                          onPressed: () {
+                            stopSlew();
+                          })
+                      : Container()))
+          : Container(),
     ];
   }
 
@@ -1205,11 +1239,11 @@ class MyHomePageState extends State<MyHomePage> {
         : const Color(0xff606060);
   }
 
-  Text primaryText(String val) {
+  Text primaryText(String val, {double? size = 16}) {
     return Text(
       val,
-      style:
-          TextStyle(color: Theme.of(context).colorScheme.primary, fontSize: 16),
+      style: TextStyle(
+          color: Theme.of(context).colorScheme.primary, fontSize: size),
       textScaler: textScaler(context),
     );
   }
@@ -1361,41 +1395,19 @@ class MyHomePageState extends State<MyHomePage> {
                   ),
                 ])),
       const SizedBox(width: 10, height: 10),
+      // Define a spacer for situations where data items column is empty.
       RotatedBox(
-        quarterTurns: portrait ? 3 : 0,
-        child: _setupMode
-            ? SizedBox(
-                width: 90 * textScaleFactor(context),
-                child: GestureDetector(
-                    onTap: () {
-                      if (!_daylightMode) {
-                        _focusAid = !_focusAid;
-                      }
-                    },
-                    child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Checkbox(
-                            value: _focusAid,
-                            onChanged: _daylightMode
-                                ? null
-                                : (bool? selected) {
-                                    _focusAid = selected!;
-                                    setFocusAssistMode(_focusAid);
-                                  },
-                            activeColor: Theme.of(context).colorScheme.surface,
-                            checkColor: Theme.of(context).colorScheme.primary,
-                          ),
-                          primaryText("Focus"),
-                        ])))
-            : Container(),
-      ),
+          quarterTurns: portrait ? 3 : 0,
+          child: SizedBox(
+            width: 100 * textScaleFactor(context),
+            child: Container(),
+          )),
       const SizedBox(width: 10, height: 10),
       RotatedBox(
         quarterTurns: portrait ? 3 : 0,
-        child: _setupMode
+        child: _setupMode && !_focusAid
             ? SizedBox(
-                width: 90 * textScaleFactor(context),
+                width: 100 * textScaleFactor(context),
                 child: GestureDetector(
                     onTap: () {
                       setDaylightMode(!_daylightMode);
@@ -1596,16 +1608,19 @@ class MyHomePageState extends State<MyHomePage> {
 
   Widget orientationLayout(BuildContext context) {
     final portrait = MediaQuery.of(context).orientation == Orientation.portrait;
+    final controlsColumn = Column(
+        mainAxisAlignment:
+            portrait ? MainAxisAlignment.end : MainAxisAlignment.start,
+        children: portrait ? controls().reversed.toList() : controls());
     return RotatedBox(
       quarterTurns: portrait ? 1 : 0,
       child: Row(
         children: <Widget>[
           const SizedBox(width: 5, height: 0),
-          Column(
-              children: portrait ? controls().reversed.toList() : controls()),
+          SizedBox(height: _imageRegion.height, child: controlsColumn),
           const SizedBox(width: 5, height: 0),
           imageStack(context),
-          const SizedBox(width: 0, height: 0),
+          const SizedBox(width: 5, height: 0),
           Column(children: dataItems(context)),
           const SizedBox(width: 5, height: 0),
         ],

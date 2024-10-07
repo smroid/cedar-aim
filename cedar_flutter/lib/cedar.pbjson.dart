@@ -367,13 +367,12 @@ const FrameResult$json = {
     {'1': 'boresight_position', '3': 21, '4': 1, '5': 11, '6': '.cedar.ImageCoord', '10': 'boresightPosition'},
     {'1': 'calibrating', '3': 22, '4': 1, '5': 8, '10': 'calibrating'},
     {'1': 'calibration_progress', '3': 23, '4': 1, '5': 1, '9': 1, '10': 'calibrationProgress', '17': true},
-    {'1': 'center_region', '3': 11, '4': 1, '5': 11, '6': '.cedar.Rectangle', '9': 2, '10': 'centerRegion', '17': true},
-    {'1': 'center_peak_position', '3': 12, '4': 1, '5': 11, '6': '.cedar.ImageCoord', '9': 3, '10': 'centerPeakPosition', '17': true},
-    {'1': 'center_peak_value', '3': 6, '4': 1, '5': 5, '9': 4, '10': 'centerPeakValue', '17': true},
-    {'1': 'center_peak_image', '3': 13, '4': 1, '5': 11, '6': '.cedar.Image', '9': 5, '10': 'centerPeakImage', '17': true},
-    {'1': 'location_based_info', '3': 29, '4': 1, '5': 11, '6': '.cedar.LocationBasedInfo', '9': 6, '10': 'locationBasedInfo', '17': true},
-    {'1': 'slew_request', '3': 24, '4': 1, '5': 11, '6': '.cedar.SlewRequest', '9': 7, '10': 'slewRequest', '17': true},
-    {'1': 'boresight_image', '3': 28, '4': 1, '5': 11, '6': '.cedar.Image', '9': 8, '10': 'boresightImage', '17': true},
+    {'1': 'center_peak_position', '3': 12, '4': 1, '5': 11, '6': '.cedar.ImageCoord', '9': 2, '10': 'centerPeakPosition', '17': true},
+    {'1': 'center_peak_value', '3': 6, '4': 1, '5': 5, '9': 3, '10': 'centerPeakValue', '17': true},
+    {'1': 'center_peak_image', '3': 13, '4': 1, '5': 11, '6': '.cedar.Image', '9': 4, '10': 'centerPeakImage', '17': true},
+    {'1': 'location_based_info', '3': 29, '4': 1, '5': 11, '6': '.cedar.LocationBasedInfo', '9': 5, '10': 'locationBasedInfo', '17': true},
+    {'1': 'slew_request', '3': 24, '4': 1, '5': 11, '6': '.cedar.SlewRequest', '9': 6, '10': 'slewRequest', '17': true},
+    {'1': 'boresight_image', '3': 28, '4': 1, '5': 11, '6': '.cedar.Image', '9': 7, '10': 'boresightImage', '17': true},
     {'1': 'polar_align_advice', '3': 30, '4': 1, '5': 11, '6': '.cedar.PolarAlignAdvice', '10': 'polarAlignAdvice'},
     {'1': 'labeled_catalog_entries', '3': 31, '4': 3, '5': 11, '6': '.cedar.FovCatalogEntry', '10': 'labeledCatalogEntries'},
     {'1': 'unlabeled_catalog_entries', '3': 33, '4': 3, '5': 11, '6': '.cedar.FovCatalogEntry', '10': 'unlabeledCatalogEntries'},
@@ -381,13 +380,15 @@ const FrameResult$json = {
   '8': [
     {'1': '_plate_solution'},
     {'1': '_calibration_progress'},
-    {'1': '_center_region'},
     {'1': '_center_peak_position'},
     {'1': '_center_peak_value'},
     {'1': '_center_peak_image'},
     {'1': '_location_based_info'},
     {'1': '_slew_request'},
     {'1': '_boresight_image'},
+  ],
+  '9': [
+    {'1': 11, '2': 12},
   ],
 };
 
@@ -410,23 +411,22 @@ final $typed_data.Uint8List frameResultDescriptor = $convert.base64Decode(
     'aW5nX3N0YXRzGAggASgLMhYuY2VkYXIuUHJvY2Vzc2luZ1N0YXRzUg9wcm9jZXNzaW5nU3RhdH'
     'MSQAoSYm9yZXNpZ2h0X3Bvc2l0aW9uGBUgASgLMhEuY2VkYXIuSW1hZ2VDb29yZFIRYm9yZXNp'
     'Z2h0UG9zaXRpb24SIAoLY2FsaWJyYXRpbmcYFiABKAhSC2NhbGlicmF0aW5nEjYKFGNhbGlicm'
-    'F0aW9uX3Byb2dyZXNzGBcgASgBSAFSE2NhbGlicmF0aW9uUHJvZ3Jlc3OIAQESOgoNY2VudGVy'
-    'X3JlZ2lvbhgLIAEoCzIQLmNlZGFyLlJlY3RhbmdsZUgCUgxjZW50ZXJSZWdpb26IAQESSAoUY2'
-    'VudGVyX3BlYWtfcG9zaXRpb24YDCABKAsyES5jZWRhci5JbWFnZUNvb3JkSANSEmNlbnRlclBl'
-    'YWtQb3NpdGlvbogBARIvChFjZW50ZXJfcGVha192YWx1ZRgGIAEoBUgEUg9jZW50ZXJQZWFrVm'
-    'FsdWWIAQESPQoRY2VudGVyX3BlYWtfaW1hZ2UYDSABKAsyDC5jZWRhci5JbWFnZUgFUg9jZW50'
-    'ZXJQZWFrSW1hZ2WIAQESTQoTbG9jYXRpb25fYmFzZWRfaW5mbxgdIAEoCzIYLmNlZGFyLkxvY2'
-    'F0aW9uQmFzZWRJbmZvSAZSEWxvY2F0aW9uQmFzZWRJbmZviAEBEjoKDHNsZXdfcmVxdWVzdBgY'
-    'IAEoCzISLmNlZGFyLlNsZXdSZXF1ZXN0SAdSC3NsZXdSZXF1ZXN0iAEBEjoKD2JvcmVzaWdodF'
-    '9pbWFnZRgcIAEoCzIMLmNlZGFyLkltYWdlSAhSDmJvcmVzaWdodEltYWdliAEBEkUKEnBvbGFy'
-    'X2FsaWduX2FkdmljZRgeIAEoCzIXLmNlZGFyLlBvbGFyQWxpZ25BZHZpY2VSEHBvbGFyQWxpZ2'
-    '5BZHZpY2USTgoXbGFiZWxlZF9jYXRhbG9nX2VudHJpZXMYHyADKAsyFi5jZWRhci5Gb3ZDYXRh'
-    'bG9nRW50cnlSFWxhYmVsZWRDYXRhbG9nRW50cmllcxJSChl1bmxhYmVsZWRfY2F0YWxvZ19lbn'
-    'RyaWVzGCEgAygLMhYuY2VkYXIuRm92Q2F0YWxvZ0VudHJ5Uhd1bmxhYmVsZWRDYXRhbG9nRW50'
-    'cmllc0IRCg9fcGxhdGVfc29sdXRpb25CFwoVX2NhbGlicmF0aW9uX3Byb2dyZXNzQhAKDl9jZW'
-    '50ZXJfcmVnaW9uQhcKFV9jZW50ZXJfcGVha19wb3NpdGlvbkIUChJfY2VudGVyX3BlYWtfdmFs'
-    'dWVCFAoSX2NlbnRlcl9wZWFrX2ltYWdlQhYKFF9sb2NhdGlvbl9iYXNlZF9pbmZvQg8KDV9zbG'
-    'V3X3JlcXVlc3RCEgoQX2JvcmVzaWdodF9pbWFnZQ==');
+    'F0aW9uX3Byb2dyZXNzGBcgASgBSAFSE2NhbGlicmF0aW9uUHJvZ3Jlc3OIAQESSAoUY2VudGVy'
+    'X3BlYWtfcG9zaXRpb24YDCABKAsyES5jZWRhci5JbWFnZUNvb3JkSAJSEmNlbnRlclBlYWtQb3'
+    'NpdGlvbogBARIvChFjZW50ZXJfcGVha192YWx1ZRgGIAEoBUgDUg9jZW50ZXJQZWFrVmFsdWWI'
+    'AQESPQoRY2VudGVyX3BlYWtfaW1hZ2UYDSABKAsyDC5jZWRhci5JbWFnZUgEUg9jZW50ZXJQZW'
+    'FrSW1hZ2WIAQESTQoTbG9jYXRpb25fYmFzZWRfaW5mbxgdIAEoCzIYLmNlZGFyLkxvY2F0aW9u'
+    'QmFzZWRJbmZvSAVSEWxvY2F0aW9uQmFzZWRJbmZviAEBEjoKDHNsZXdfcmVxdWVzdBgYIAEoCz'
+    'ISLmNlZGFyLlNsZXdSZXF1ZXN0SAZSC3NsZXdSZXF1ZXN0iAEBEjoKD2JvcmVzaWdodF9pbWFn'
+    'ZRgcIAEoCzIMLmNlZGFyLkltYWdlSAdSDmJvcmVzaWdodEltYWdliAEBEkUKEnBvbGFyX2FsaW'
+    'duX2FkdmljZRgeIAEoCzIXLmNlZGFyLlBvbGFyQWxpZ25BZHZpY2VSEHBvbGFyQWxpZ25BZHZp'
+    'Y2USTgoXbGFiZWxlZF9jYXRhbG9nX2VudHJpZXMYHyADKAsyFi5jZWRhci5Gb3ZDYXRhbG9nRW'
+    '50cnlSFWxhYmVsZWRDYXRhbG9nRW50cmllcxJSChl1bmxhYmVsZWRfY2F0YWxvZ19lbnRyaWVz'
+    'GCEgAygLMhYuY2VkYXIuRm92Q2F0YWxvZ0VudHJ5Uhd1bmxhYmVsZWRDYXRhbG9nRW50cmllc0'
+    'IRCg9fcGxhdGVfc29sdXRpb25CFwoVX2NhbGlicmF0aW9uX3Byb2dyZXNzQhcKFV9jZW50ZXJf'
+    'cGVha19wb3NpdGlvbkIUChJfY2VudGVyX3BlYWtfdmFsdWVCFAoSX2NlbnRlcl9wZWFrX2ltYW'
+    'dlQhYKFF9sb2NhdGlvbl9iYXNlZF9pbmZvQg8KDV9zbGV3X3JlcXVlc3RCEgoQX2JvcmVzaWdo'
+    'dF9pbWFnZUoECAsQDA==');
 
 @$core.Deprecated('Use imageDescriptor instead')
 const Image$json = {
@@ -627,7 +627,6 @@ const SlewRequest$json = {
     {'1': 'offset_rotation_axis', '3': 5, '4': 1, '5': 1, '9': 4, '10': 'offsetRotationAxis', '17': true},
     {'1': 'offset_tilt_axis', '3': 6, '4': 1, '5': 1, '9': 5, '10': 'offsetTiltAxis', '17': true},
     {'1': 'image_pos', '3': 4, '4': 1, '5': 11, '6': '.cedar.ImageCoord', '9': 6, '10': 'imagePos', '17': true},
-    {'1': 'target_within_center_region', '3': 7, '4': 1, '5': 8, '10': 'targetWithinCenterRegion'},
   ],
   '8': [
     {'1': '_target_catalog_entry'},
@@ -637,6 +636,9 @@ const SlewRequest$json = {
     {'1': '_offset_rotation_axis'},
     {'1': '_offset_tilt_axis'},
     {'1': '_image_pos'},
+  ],
+  '9': [
+    {'1': 7, '2': 8},
   ],
 };
 
@@ -650,11 +652,10 @@ final $typed_data.Uint8List slewRequestDescriptor = $convert.base64Decode(
     'FuZ2xlGAMgASgBSANSC3RhcmdldEFuZ2xliAEBEjUKFG9mZnNldF9yb3RhdGlvbl9heGlzGAUg'
     'ASgBSARSEm9mZnNldFJvdGF0aW9uQXhpc4gBARItChBvZmZzZXRfdGlsdF9heGlzGAYgASgBSA'
     'VSDm9mZnNldFRpbHRBeGlziAEBEjMKCWltYWdlX3BvcxgEIAEoCzIRLmNlZGFyLkltYWdlQ29v'
-    'cmRIBlIIaW1hZ2VQb3OIAQESPQobdGFyZ2V0X3dpdGhpbl9jZW50ZXJfcmVnaW9uGAcgASgIUh'
-    'h0YXJnZXRXaXRoaW5DZW50ZXJSZWdpb25CFwoVX3RhcmdldF9jYXRhbG9nX2VudHJ5QiAKHl90'
-    'YXJnZXRfY2F0YWxvZ19lbnRyeV9kaXN0YW5jZUISChBfdGFyZ2V0X2Rpc3RhbmNlQg8KDV90YX'
-    'JnZXRfYW5nbGVCFwoVX29mZnNldF9yb3RhdGlvbl9heGlzQhMKEV9vZmZzZXRfdGlsdF9heGlz'
-    'QgwKCl9pbWFnZV9wb3M=');
+    'cmRIBlIIaW1hZ2VQb3OIAQFCFwoVX3RhcmdldF9jYXRhbG9nX2VudHJ5QiAKHl90YXJnZXRfY2'
+    'F0YWxvZ19lbnRyeV9kaXN0YW5jZUISChBfdGFyZ2V0X2Rpc3RhbmNlQg8KDV90YXJnZXRfYW5n'
+    'bGVCFwoVX29mZnNldF9yb3RhdGlvbl9heGlzQhMKEV9vZmZzZXRfdGlsdF9heGlzQgwKCl9pbW'
+    'FnZV9wb3NKBAgHEAg=');
 
 @$core.Deprecated('Use polarAlignAdviceDescriptor instead')
 const PolarAlignAdvice$json = {
