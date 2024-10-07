@@ -996,8 +996,8 @@ class MyHomePageState extends State<MyHomePage> {
           return Container();
         },
       ),
-      portrait && hideAppBar
-          ? const SizedBox(width: 0, height: 40)
+      hideAppBar
+          ? SizedBox(width: 0, height: (portrait ? 20 : 40))
           : Container(),
       RotatedBox(
         quarterTurns: portrait ? 3 : 0,
@@ -1055,7 +1055,7 @@ class MyHomePageState extends State<MyHomePage> {
           },
           style: TextStyle(
             color: Theme.of(context).colorScheme.primary,
-            fontSize: 16 * textScaleFactor(context),
+            fontSize: 14 * textScaleFactor(context),
           ),
         ),
       ),
