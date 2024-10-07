@@ -975,6 +975,7 @@ class MyHomePageState extends State<MyHomePage> {
 
   List<Widget> controls() {
     final portrait = MediaQuery.of(context).orientation == Orientation.portrait;
+    final color = Theme.of(context).colorScheme.primary;
     bool hideAppBar = Provider.of<SettingsModel>(context, listen: false)
         .preferencesProto
         .hideAppBar;
@@ -997,14 +998,16 @@ class MyHomePageState extends State<MyHomePage> {
         },
       ),
       hideAppBar
-          ? SizedBox(width: 0, height: (portrait ? 20 : 40))
+          ? SizedBox(width: 0, height: (portrait ? 30 : 50))
           : Container(),
       RotatedBox(
         quarterTurns: portrait ? 3 : 0,
         child: DropdownButton<String>(
-          icon: Icon(Icons.arrow_drop_down,
-              color: Theme.of(context).colorScheme.primary),
-          underline: Container(),
+          icon: Icon(Icons.arrow_drop_down, color: color, size: 15),
+          style: TextStyle(
+            color: color,
+            fontSize: 14 * textScaleFactor(context),
+          ),
           value: _setupMode ? (_focusAid ? "Focus" : "Align") : "Aim",
           items: ["Focus", "Align", "Aim"]
               .map<DropdownMenuItem<String>>((String s) {
@@ -1053,49 +1056,37 @@ class MyHomePageState extends State<MyHomePage> {
               });
             }
           },
-          style: TextStyle(
-            color: Theme.of(context).colorScheme.primary,
-            fontSize: 14 * textScaleFactor(context),
-          ),
         ),
       ),
-      const SizedBox(width: 0, height: 15),
+      SizedBox(width: 0, height: portrait ? 10 : 15),
       RotatedBox(
         quarterTurns: portrait ? 3 : 0,
         child: _canAlign && !_focusAid && _slewRequest == null
             ? _daylightMode
                 ? SizedBox(
-                    width: 80 * textScaleFactor(context),
+                    width: 60 * textScaleFactor(context),
                     child: Text(
                       "Tap image where telescope is pointed",
                       maxLines: 8,
                       textAlign: TextAlign.center,
-                      style: TextStyle(
-                          color: Theme.of(context).colorScheme.primary,
-                          fontSize: 14),
+                      style: TextStyle(color: color, fontSize: 12),
                       textScaler: textScaler(context),
                     ))
                 : rowOrColumn(portrait, [
                     Text("①",
-                        style: TextStyle(
-                            color: Theme.of(context).colorScheme.primary,
-                            fontSize: 20),
+                        style: TextStyle(color: color, fontSize: 16),
                         textScaler: textScaler(context)),
                     SizedBox(
-                        width: 80 * textScaleFactor(context),
+                        width: 60 * textScaleFactor(context),
                         child: Text(
                           "Center indicated object in telescope",
                           maxLines: 8,
                           textAlign: TextAlign.center,
-                          style: TextStyle(
-                              color: Theme.of(context).colorScheme.primary,
-                              fontSize: 14),
+                          style: TextStyle(color: color, fontSize: 12),
                           textScaler: textScaler(context),
                         )),
                     Text(portrait ? "② " : "②",
-                        style: TextStyle(
-                            color: Theme.of(context).colorScheme.primary,
-                            fontSize: 20),
+                        style: TextStyle(color: color, fontSize: 16),
                         textScaler: textScaler(context)),
                   ])
             : Container(),
@@ -1103,15 +1094,16 @@ class MyHomePageState extends State<MyHomePage> {
       RotatedBox(
           quarterTurns: portrait ? 3 : 0,
           child: SizedBox(
-            width: 80 * textScaleFactor(context),
-            height: 36,
+            width: (_setupMode ? 40 : 70) * textScaleFactor(context),
+            height: 30,
             child: _canAlign && !_daylightMode && !_focusAid
                 ? OutlinedButton(
                     style: OutlinedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(horizontal: 0)),
                     child: Text(
-                      style: const TextStyle(fontSize: 16),
-                      _slewRequest != null ? "Re-align" : "Set align",
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(fontSize: 14),
+                      _slewRequest != null ? "Re-align" : "Set",
                       textScaler: textScaler(context),
                     ),
                     onPressed: () {
@@ -1125,7 +1117,7 @@ class MyHomePageState extends State<MyHomePage> {
                         style: OutlinedButton.styleFrom(
                             padding: const EdgeInsets.symmetric(horizontal: 0)),
                         child: Text(
-                          style: const TextStyle(fontSize: 16),
+                          style: const TextStyle(fontSize: 14),
                           "Catalog",
                           textScaler: textScaler(context),
                         ),
@@ -1140,14 +1132,14 @@ class MyHomePageState extends State<MyHomePage> {
               quarterTurns: portrait ? 3 : 0,
               child: SizedBox(
                   width: 80 * textScaleFactor(context),
-                  height: 36,
+                  height: 30,
                   child: _slewRequest != null && !_setupMode
                       ? OutlinedButton(
                           style: OutlinedButton.styleFrom(
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 0)),
                           child: Text(
-                            style: const TextStyle(fontSize: 16),
+                            style: const TextStyle(fontSize: 14),
                             "End goto",
                             textScaler: textScaler(context),
                           ),
