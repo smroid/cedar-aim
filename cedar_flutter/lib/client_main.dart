@@ -119,11 +119,12 @@ class _MainImagePainter extends CustomPainter {
   void _paint(Canvas canvas, Size size) {
     const double hairline = 0.5;
     const double thin = 1;
-    const double thick = 2;
+    const double thick = 1.5;
     final Color color = Theme.of(_context).colorScheme.primary;
     if (state._setupMode &&
         state._centerPeakRegion != null &&
-        state._focusAid) {
+        state._focusAid &&
+        !state._daylightMode) {
       // Draw box around location of the brightest star.
       canvas.drawRect(
           state._centerPeakRegion as Rect,
@@ -214,19 +215,24 @@ class _MainImagePainter extends CustomPainter {
         !state._focusAid &&
         !state._daylightMode &&
         state._stars.isNotEmpty) {
-      // Draw big cross around brightest star. This is where the user should
-      // be pointing the telescope for alignment.
-      final brightStar = state._stars[0];
-      drawGapCross(
-          canvas,
-          color,
-          Offset(brightStar.centroidPosition.x / state._binFactor,
-              brightStar.centroidPosition.y / state._binFactor),
-          45,
-          10,
-          math.pi / 4,
-          thick,
-          thick);
+      // Draw alignment targets: the N brightest stars (or planets).
+      Paint paint = Paint()
+        ..color = color
+        ..strokeWidth = thick
+        ..style = PaintingStyle.stroke;
+      int numTargets = 0;
+      for (var star in state._stars) {
+        if (++numTargets > state._numTargets) {
+          break;
+        }
+        canvas.drawRect(
+            Rect.fromCenter(
+                center: Offset(star.centroidPosition.x / state._binFactor,
+                    star.centroidPosition.y / state._binFactor),
+                width: 16,
+                height: 16),
+            paint);
+      }
     }
   }
 
@@ -299,6 +305,10 @@ class MyHomePageState extends State<MyHomePage> {
   bool _everConnected = false;
   bool _paintPending = false;
   bool _inhibitRefresh = false;
+
+  // State for align mode.
+  final _numTargets = 3;
+  bool _alignTargetTapped = false;
 
   // Information from most recent FrameResult.
 
@@ -788,6 +798,81 @@ class MyHomePageState extends State<MyHomePage> {
       const SizedBox(height: 15),
       Align(
           alignment: Alignment.topLeft,
+          child: Row(
+            children: [
+              Container(width: 15),
+              DropdownMenu<String>(
+                  inputDecorationTheme: InputDecorationTheme(
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 12),
+                    constraints:
+                        BoxConstraints.tight(const Size.fromHeight(40)),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                  ),
+                  width: 100 * textScaleFactor(context),
+                  requestFocusOnTap: false,
+                  initialSelection:
+                      _setupMode ? (_focusAid ? "Focus" : "Align") : "Aim",
+                  label: primaryText("Mode", size: 12),
+                  dropdownMenuEntries: ["Focus", "Align", "Aim"]
+                      .map<DropdownMenuEntry<String>>((String s) {
+                    return DropdownMenuEntry<String>(
+                      value: s,
+                      label: s,
+                      labelWidget: primaryText(s),
+                      enabled: true,
+                    );
+                  }).toList(),
+                  textStyle: TextStyle(
+                      fontSize: 14 * textScaleFactor(context),
+                      color: Theme.of(context).colorScheme.primary),
+                  onSelected: (String? newValue) async {
+                    if (newValue == "Focus") {
+                      setState(() {
+                        if (!_setupMode) {
+                          _setupMode = true;
+                          _transitionToSetup = true;
+                          setOperatingMode(_setupMode);
+                        }
+                        if (!_focusAid) {
+                          _focusAid = true;
+                          setFocusAssistMode(_focusAid);
+                        }
+                      });
+                    } else if (newValue == "Align") {
+                      setState(() {
+                        _alignTargetTapped = false;
+                        if (!_setupMode) {
+                          _setupMode = true;
+                          _transitionToSetup = true;
+                          setOperatingMode(_setupMode);
+                        }
+                        if (_focusAid) {
+                          _focusAid = false;
+                          setFocusAssistMode(_focusAid);
+                        }
+                      });
+                    } else {
+                      // Aim.
+                      setState(() {
+                        if (_setupMode) {
+                          _setupMode = false;
+                          setOperatingMode(_setupMode);
+                        }
+                        if (_focusAid) {
+                          _focusAid = false;
+                          setFocusAssistMode(_focusAid);
+                        }
+                      });
+                    }
+                    Navigator.of(context).pop();
+                  })
+            ],
+          )),
+      const SizedBox(height: 15),
+      Align(
+          alignment: Alignment.topLeft,
           child: TextButton.icon(
               label: scaledText("Preferences"),
               icon: const Icon(Icons.settings),
@@ -835,7 +920,7 @@ class MyHomePageState extends State<MyHomePage> {
               })),
       (_advanced || _demoMode) && _demoFiles.isNotEmpty
           ? Column(children: <Widget>[
-              const SizedBox(height: 5),
+              const SizedBox(height: 15),
               Align(
                   alignment: Alignment.topLeft,
                   child: TextButton.icon(
@@ -862,7 +947,7 @@ class MyHomePageState extends State<MyHomePage> {
       _demoMode && _demoFiles.isNotEmpty
           ? Column(children: [
               Row(children: [
-                Container(width: 20),
+                Container(width: 15),
                 DropdownMenu<String>(
                     menuHeight: 200,
                     inputDecorationTheme: InputDecorationTheme(
@@ -877,8 +962,7 @@ class MyHomePageState extends State<MyHomePage> {
                     width: 200 * textScaleFactor(context),
                     requestFocusOnTap: false,
                     initialSelection: _demoFile.isEmpty ? "" : _demoFile,
-                    label: primaryText("Image file",
-                        size: 12 * textScaleFactor(context)),
+                    label: primaryText("Image file", size: 12),
                     dropdownMenuEntries:
                         _demoFiles.map<DropdownMenuEntry<String>>((String s) {
                       return DropdownMenuEntry<String>(
@@ -888,8 +972,9 @@ class MyHomePageState extends State<MyHomePage> {
                         enabled: true,
                       );
                     }).toList(),
-                    textStyle:
-                        TextStyle(color: Theme.of(context).colorScheme.primary),
+                    textStyle: TextStyle(
+                        fontSize: 12 * textScaleFactor(context),
+                        color: Theme.of(context).colorScheme.primary),
                     onSelected: (String? newValue) async {
                       setState(() {
                         _demoFile = newValue!;
@@ -900,7 +985,7 @@ class MyHomePageState extends State<MyHomePage> {
               const SizedBox(height: 15),
             ])
           : Container(),
-      const SizedBox(height: 10),
+      const SizedBox(height: 5),
       _advanced
           ? Align(
               alignment: Alignment.topLeft,
@@ -997,142 +1082,126 @@ class MyHomePageState extends State<MyHomePage> {
           return Container();
         },
       ),
-      hideAppBar
-          ? SizedBox(width: 0, height: (portrait ? 30 : 50))
-          : Container(),
+      // hideAppBar
+      //     ? SizedBox(width: 0, height: (portrait ? 30 : 50))
+      //     : Container(),
       RotatedBox(
         quarterTurns: portrait ? 3 : 0,
-        child: DropdownButton<String>(
-          icon: Icon(Icons.arrow_drop_down, color: color, size: 15),
-          style: TextStyle(
-            color: color,
-            fontSize: 14 * textScaleFactor(context),
-          ),
-          value: _setupMode ? (_focusAid ? "Focus" : "Align") : "Aim",
-          items: ["Focus", "Align", "Aim"]
-              .map<DropdownMenuItem<String>>((String s) {
-            return DropdownMenuItem<String>(
-              value: s,
-              enabled: true,
-              child: Text(s),
-            );
-          }).toList(),
-          onChanged: (String? value) {
-            if (value == "Focus") {
-              setState(() {
-                if (!_setupMode) {
-                  _setupMode = true;
-                  _transitionToSetup = true;
-                  setOperatingMode(_setupMode);
-                }
-                if (!_focusAid) {
-                  _focusAid = true;
-                  setFocusAssistMode(_focusAid);
-                }
-              });
-            } else if (value == "Align") {
-              setState(() {
-                if (!_setupMode) {
-                  _setupMode = true;
-                  _transitionToSetup = true;
-                  setOperatingMode(_setupMode);
-                }
-                if (_focusAid) {
-                  _focusAid = false;
-                  setFocusAssistMode(_focusAid);
-                }
-              });
-            } else {
-              // Aim.
-              setState(() {
-                if (_setupMode) {
-                  _setupMode = false;
-                  setOperatingMode(_setupMode);
-                }
-                if (_focusAid) {
-                  _focusAid = false;
-                  setFocusAssistMode(_focusAid);
-                }
-              });
-            }
-          },
-        ),
-      ),
-      SizedBox(width: 0, height: portrait ? 10 : 15),
-      RotatedBox(
-        quarterTurns: portrait ? 3 : 0,
-        child: _canAlign && !_focusAid && _slewRequest == null
-            ? _daylightMode
-                ? SizedBox(
-                    width: 60 * textScaleFactor(context),
-                    child: Text(
-                      "Tap image where telescope is pointed",
-                      maxLines: 8,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(color: color, fontSize: 12),
-                      textScaler: textScaler(context),
-                    ))
-                : rowOrColumn(portrait, [
-                    Text("①",
-                        style: TextStyle(color: color, fontSize: 16),
-                        textScaler: textScaler(context)),
-                    SizedBox(
-                        width: 60 * textScaleFactor(context),
+        child: _focusAid
+            ? SizedBox(
+                width: (portrait ? 120 : 80) * textScaleFactor(context),
+                child: Text(
+                  _daylightMode
+                      ? "Aim at distant object and adjust focus"
+                      : "Adjust focus",
+                  maxLines: 8,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: color, fontSize: 12),
+                  textScaler: textScaler(context),
+                ))
+            : (_canAlign && _slewRequest == null
+                ? _daylightMode
+                    ? SizedBox(
+                        width: (portrait ? 120 : 80) * textScaleFactor(context),
                         child: Text(
-                          "Center indicated object in telescope",
+                          "Tap image where telescope is pointed",
                           maxLines: 8,
                           textAlign: TextAlign.center,
                           style: TextStyle(color: color, fontSize: 12),
                           textScaler: textScaler(context),
-                        )),
-                    Text(portrait ? "② " : "②",
-                        style: TextStyle(color: color, fontSize: 16),
-                        textScaler: textScaler(context)),
-                  ])
-            : Container(),
+                        ))
+                    : rowOrColumn(portrait, [
+                        SizedBox(
+                            width: (portrait ? 120 : 80) *
+                                textScaleFactor(context),
+                            child: Text(
+                              "Center a highlighted object in telescope, then tap the object",
+                              maxLines: 8,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(color: color, fontSize: 12),
+                              textScaler: textScaler(context),
+                            )),
+                        // const SizedBox(width: 5, height: 0),
+                        // const SizedBox(width: 5, height: 15),
+                      ])
+                : Container()),
       ),
+      const SizedBox(height: 15),
       RotatedBox(
           quarterTurns: portrait ? 3 : 0,
           child: SizedBox(
-            width: (_setupMode ? 40 : 70) * textScaleFactor(context),
-            height: 30,
-            child: _canAlign && !_daylightMode && !_focusAid
+            width: 70 * textScaleFactor(context),
+            height: 25 * textScaleFactor(context),
+            child: _focusAid
                 ? OutlinedButton(
                     style: OutlinedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(horizontal: 0)),
                     child: Text(
                       textAlign: TextAlign.center,
                       style: const TextStyle(fontSize: 14),
-                      _slewRequest != null ? "Re-align" : "Set",
+                      "Done",
                       textScaler: textScaler(context),
                     ),
                     onPressed: () {
-                      captureBoresight();
+                      setState(() {
+                        // Transition to align mode.
+                        _alignTargetTapped = false;
+                        if (!_setupMode) {
+                          _setupMode = true;
+                          _transitionToSetup = true;
+                          setOperatingMode(_setupMode);
+                        }
+                        _focusAid = false;
+                        setFocusAssistMode(_focusAid);
+                      });
                     })
-                : (_slewRequest == null &&
-                        !_setupMode &&
-                        _hasCedarSky &&
-                        _showCatalogBrowser != null
+                : (_canAlign
                     ? OutlinedButton(
                         style: OutlinedButton.styleFrom(
                             padding: const EdgeInsets.symmetric(horizontal: 0)),
                         child: Text(
+                          textAlign: TextAlign.center,
                           style: const TextStyle(fontSize: 14),
-                          "Catalog",
+                          _slewRequest == null
+                              ? (_alignTargetTapped ? "Done" : "Skip")
+                              : "Re-align",
                           textScaler: textScaler(context),
                         ),
                         onPressed: () {
-                          _showCatalogBrowser!(context, this);
+                          // Transition to aim mode.
+                          if (_slewRequest == null) {
+                            setState(() {
+                              _setupMode = false;
+                              setOperatingMode(_setupMode);
+                            });
+                          } else {
+                            captureBoresight();
+                          }
                         })
-                    : Container()),
+                    : (_slewRequest == null &&
+                            !_setupMode &&
+                            _showCatalogBrowser != null
+                        ? OutlinedButton(
+                            style: OutlinedButton.styleFrom(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 0)),
+                            child: Text(
+                              style: const TextStyle(fontSize: 14),
+                              "Catalog",
+                              textScaler: textScaler(context),
+                            ),
+                            onPressed: () {
+                              _showCatalogBrowser!(context, this);
+                            })
+                        : Container())),
           )),
       const SizedBox(width: 0, height: 25),
       _slewRequest != null
           ? RotatedBox(
               quarterTurns: portrait ? 3 : 0,
               child: SizedBox(
-                  width: 80 * textScaleFactor(context),
-                  height: 30,
+                  width: 70 * textScaleFactor(context),
+                  height: 25 * textScaleFactor(context),
                   child: _slewRequest != null && !_setupMode
                       ? OutlinedButton(
                           style: OutlinedButton.styleFrom(
@@ -1399,13 +1468,13 @@ class MyHomePageState extends State<MyHomePage> {
       RotatedBox(
           quarterTurns: portrait ? 3 : 0,
           child: SizedBox(
-            width: 100 * textScaleFactor(context),
+            width: 90 * textScaleFactor(context),
             child: Container(),
           )),
       const SizedBox(width: 10, height: 10),
       RotatedBox(
         quarterTurns: portrait ? 3 : 0,
-        child: _setupMode && !_focusAid
+        child: _setupMode
             ? SizedBox(
                 width: 100 * textScaleFactor(context),
                 child: GestureDetector(
@@ -1432,12 +1501,12 @@ class MyHomePageState extends State<MyHomePage> {
           child: _setupMode
               ? Container()
               : SizedBox(
-                  width: 100 * textScaleFactor(context),
+                  width: 110 * textScaleFactor(context),
                   height: 120 * textScaleFactor(context),
                   child: Column(
                     children: coordInfo(
                         preferences?.mountType == cedar_rpc.MountType.ALT_AZ,
-                        /*width=*/ 100),
+                        /*width=*/ 110),
                   ),
                 )),
       const SizedBox(width: 15, height: 15),
@@ -1491,9 +1560,23 @@ class MyHomePageState extends State<MyHomePage> {
                 Offset localPosition = Offset(
                     details.localPosition.dx * _binFactor,
                     details.localPosition.dy * _binFactor);
-                if (_daylightMode) {
-                  designateBoresight(localPosition);
-                } else if (!_setupMode) {
+                if (_setupMode) {
+                  if (!_focusAid) {
+                    // Align mode.
+                    if (_daylightMode) {
+                      designateBoresight(localPosition);
+                      _alignTargetTapped = true;
+                    } else {
+                      var star = _findStarHit(localPosition, 30);
+                      if (star != null) {
+                        designateBoresight(Offset(
+                            star.centroidPosition.x, star.centroidPosition.y));
+                        _alignTargetTapped = true;
+                      }
+                    }
+                  }
+                } else {
+                  // Aim mode.
                   var object = _findObjectHit(localPosition, 30);
                   if (object != null && _objectInfoDialog != null) {
                     var selEntry = SelectedCatalogEntry(entry: object.entry);
@@ -1502,6 +1585,30 @@ class MyHomePageState extends State<MyHomePage> {
                 }
               },
             )));
+  }
+
+  StarCentroid? _findStarHit(Offset tapPosition, int tolerance) {
+    StarCentroid? closest;
+    double closestDistance = 0;
+
+    int numTargets = 0;
+    for (var star in _stars) {
+      if (++numTargets > _numTargets) {
+        break;
+      }
+      Offset imagePos =
+          Offset(star.centroidPosition.x, star.centroidPosition.y);
+      var distance = (imagePos - tapPosition).distance;
+      if (closest == null || distance < closestDistance) {
+        closest = star;
+        closestDistance = distance;
+      }
+    }
+
+    if (closest != null && closestDistance < tolerance) {
+      return closest;
+    }
+    return null;
   }
 
   cedar_rpc.FovCatalogEntry? _findObjectHit(Offset tapPosition, int tolerance) {
@@ -1609,8 +1716,7 @@ class MyHomePageState extends State<MyHomePage> {
   Widget orientationLayout(BuildContext context) {
     final portrait = MediaQuery.of(context).orientation == Orientation.portrait;
     final controlsColumn = Column(
-        mainAxisAlignment:
-            portrait ? MainAxisAlignment.end : MainAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: portrait ? controls().reversed.toList() : controls());
     return RotatedBox(
       quarterTurns: portrait ? 1 : 0,

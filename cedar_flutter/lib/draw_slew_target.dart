@@ -52,7 +52,7 @@ void drawSlewTarget(
       distanceText = sprintf("%.1f'", [distanceMinutes]);
     } else {
       final distanceSeconds = distanceMinutes * 60;
-      distanceText = sprintf("%.1f'';", [distanceSeconds]);
+      distanceText = sprintf("%.1f''", [distanceSeconds]);
     }
   }
   if (slewTarget == null) {
