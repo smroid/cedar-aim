@@ -315,7 +315,6 @@ class MyHomePageState extends State<MyHomePage> {
   // Image data, binned by server.
   Uint8List _imageBytes = Uint8List(1);
   late Rect _imageRegion; // Scaled by _binFactor.
-  late Rect _fullResImageRegion;
   int _binFactor = 1;
 
   cedar_rpc.ServerInformation? serverInformation;
@@ -329,7 +328,6 @@ class MyHomePageState extends State<MyHomePage> {
   String _demoFile = "";
   bool _advanced = false;
   bool _canAlign = false;
-  bool _hasCedarSky = false;
   bool _hasWifiControl = false;
 
   double _scopeFov = 0.0;
@@ -425,7 +423,6 @@ class MyHomePageState extends State<MyHomePage> {
       Provider.of<ThemeModel>(context, listen: false).setNormalTheme();
     }
     serverInformation = response.serverInformation;
-    _hasCedarSky = _showCatalogBrowser != null;
     _hasWifiControl =
         serverInformation!.featureLevel != cedar_rpc.FeatureLevel.DIY;
     _hasCamera = serverInformation!.hasCamera();
@@ -472,11 +469,6 @@ class MyHomePageState extends State<MyHomePage> {
           response.image.rectangle.originY.toDouble() / _binFactor,
           response.image.rectangle.width.toDouble() / _binFactor,
           response.image.rectangle.height.toDouble() / _binFactor);
-      _fullResImageRegion = Rect.fromLTWH(
-          response.image.rectangle.originX.toDouble(),
-          response.image.rectangle.originY.toDouble(),
-          response.image.rectangle.width.toDouble(),
-          response.image.rectangle.height.toDouble());
     }
     if (response.hasPlateSolution()) {
       SolveResult plateSolution = response.plateSolution;
@@ -653,20 +645,17 @@ class MyHomePageState extends State<MyHomePage> {
     await initiateAction(request);
   }
 
-  Future<void> setOperatingMode(bool setup) async {
+  Future<void> _setOperatingMode() async {
     var request = cedar_rpc.OperationSettings();
-    request.operatingMode =
-        setup ? cedar_rpc.OperatingMode.SETUP : cedar_rpc.OperatingMode.OPERATE;
+    request.operatingMode = _setupMode
+        ? cedar_rpc.OperatingMode.SETUP
+        : cedar_rpc.OperatingMode.OPERATE;
+    request.focusAssistMode = _focusAid;
     await updateOperationSettings(request);
   }
 
-  Future<void> setDaylightMode(bool value) async {
+  Future<void> _setDaylightMode(bool value) async {
     final request = cedar_rpc.OperationSettings(daylightMode: value);
-    await updateOperationSettings(request);
-  }
-
-  Future<void> setFocusAssistMode(bool value) async {
-    final request = cedar_rpc.OperationSettings(focusAssistMode: value);
     await updateOperationSettings(request);
   }
 
@@ -766,7 +755,8 @@ class MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> cancelCalibration() async {
-    await setOperatingMode(/*setup=*/ true);
+    _setupMode = true;
+    await _setOperatingMode();
   }
 
   Future<void> updatePreferences(cedar_rpc.Preferences changedPrefs) async {
@@ -830,40 +820,29 @@ class MyHomePageState extends State<MyHomePage> {
                   onSelected: (String? newValue) async {
                     if (newValue == "Focus") {
                       setState(() {
+                        _focusAid = true;
                         if (!_setupMode) {
                           _setupMode = true;
                           _transitionToSetup = true;
-                          setOperatingMode(_setupMode);
                         }
-                        if (!_focusAid) {
-                          _focusAid = true;
-                          setFocusAssistMode(_focusAid);
-                        }
+                        _setOperatingMode();
                       });
                     } else if (newValue == "Align") {
                       setState(() {
                         _alignTargetTapped = false;
+                        _focusAid = false;
                         if (!_setupMode) {
                           _setupMode = true;
                           _transitionToSetup = true;
-                          setOperatingMode(_setupMode);
                         }
-                        if (_focusAid) {
-                          _focusAid = false;
-                          setFocusAssistMode(_focusAid);
-                        }
+                        _setOperatingMode();
                       });
                     } else {
                       // Aim.
                       setState(() {
-                        if (_setupMode) {
-                          _setupMode = false;
-                          setOperatingMode(_setupMode);
-                        }
-                        if (_focusAid) {
-                          _focusAid = false;
-                          setFocusAssistMode(_focusAid);
-                        }
+                        _focusAid = false;
+                        _setupMode = false;
+                        _setOperatingMode();
                       });
                     }
                     Navigator.of(context).pop();
@@ -1061,9 +1040,9 @@ class MyHomePageState extends State<MyHomePage> {
   List<Widget> controls() {
     final portrait = MediaQuery.of(context).orientation == Orientation.portrait;
     final color = Theme.of(context).colorScheme.primary;
-    bool hideAppBar = Provider.of<SettingsModel>(context, listen: false)
-        .preferencesProto
-        .hideAppBar;
+    // bool hideAppBar = Provider.of<SettingsModel>(context, listen: false)
+    //     .preferencesProto
+    //     .hideAppBar;
     return <Widget>[
       // Fake widget to consume changes to preferences and issue RPC to the
       // server.
@@ -1146,13 +1125,12 @@ class MyHomePageState extends State<MyHomePage> {
                       setState(() {
                         // Transition to align mode.
                         _alignTargetTapped = false;
+                        _focusAid = false;
                         if (!_setupMode) {
                           _setupMode = true;
                           _transitionToSetup = true;
-                          setOperatingMode(_setupMode);
                         }
-                        _focusAid = false;
-                        setFocusAssistMode(_focusAid);
+                        _setOperatingMode();
                       });
                     })
                 : (_canAlign
@@ -1172,7 +1150,7 @@ class MyHomePageState extends State<MyHomePage> {
                           if (_slewRequest == null) {
                             setState(() {
                               _setupMode = false;
-                              setOperatingMode(_setupMode);
+                              _setOperatingMode();
                             });
                           } else {
                             captureBoresight();
@@ -1479,7 +1457,7 @@ class MyHomePageState extends State<MyHomePage> {
                 width: 100 * textScaleFactor(context),
                 child: GestureDetector(
                     onTap: () {
-                      setDaylightMode(!_daylightMode);
+                      _setDaylightMode(!_daylightMode);
                     },
                     child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
@@ -1487,7 +1465,7 @@ class MyHomePageState extends State<MyHomePage> {
                           Checkbox(
                             value: _daylightMode,
                             onChanged: (bool? selected) {
-                              setDaylightMode(selected!);
+                              _setDaylightMode(selected!);
                             },
                             activeColor: Theme.of(context).colorScheme.surface,
                             checkColor: Theme.of(context).colorScheme.primary,
@@ -1827,4 +1805,4 @@ class MyHomePageState extends State<MyHomePage> {
       ),
     );
   }
-}  // MyHomePageState
+} // MyHomePageState
