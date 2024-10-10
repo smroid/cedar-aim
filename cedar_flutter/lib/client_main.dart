@@ -1731,6 +1731,9 @@ class MyHomePageState extends State<MyHomePage> {
           child: Stack(
             fit: StackFit.expand,
             children: [
+              healthy
+                  ? FittedBox(child: orientationLayout(context))
+                  : badServerState(),
               Positioned(
                   left: 0,
                   top: 0,
@@ -1741,9 +1744,6 @@ class MyHomePageState extends State<MyHomePage> {
                             _scaffoldKey.currentState!.openDrawer();
                           })
                       : Container()),
-              FittedBox(
-                child: healthy ? orientationLayout(context) : badServerState(),
-              ),
             ],
           )),
       onDrawerChanged: (isOpened) {
@@ -1784,6 +1784,7 @@ class MyHomePageState extends State<MyHomePage> {
           ),
           child: Column(mainAxisSize: MainAxisSize.min, children: [
             Text(
+                maxLines: 5,
                 style: const TextStyle(fontSize: 20),
                 _serverConnected
                     ? "Cedar could not detect a camera. "
