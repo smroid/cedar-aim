@@ -552,9 +552,7 @@ class LatLong extends $pb.GeneratedMessage {
 class OperationSettings extends $pb.GeneratedMessage {
   factory OperationSettings({
     $core.bool? daylightMode,
-    Accuracy? accuracy,
     OperatingMode? operatingMode,
-    $4.Duration? exposureTime,
     $4.Duration? updateInterval,
     $4.Duration? dwellUpdateInterval,
     $core.bool? logDwelledPositions,
@@ -567,14 +565,8 @@ class OperationSettings extends $pb.GeneratedMessage {
     if (daylightMode != null) {
       $result.daylightMode = daylightMode;
     }
-    if (accuracy != null) {
-      $result.accuracy = accuracy;
-    }
     if (operatingMode != null) {
       $result.operatingMode = operatingMode;
-    }
-    if (exposureTime != null) {
-      $result.exposureTime = exposureTime;
     }
     if (updateInterval != null) {
       $result.updateInterval = updateInterval;
@@ -605,9 +597,7 @@ class OperationSettings extends $pb.GeneratedMessage {
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'OperationSettings', package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'), createEmptyInstance: create)
     ..aOB(1, _omitFieldNames ? '' : 'daylightMode')
-    ..e<Accuracy>(3, _omitFieldNames ? '' : 'accuracy', $pb.PbFieldType.OE, defaultOrMaker: Accuracy.ACCURACY_UNSPECIFIED, valueOf: Accuracy.valueOf, enumValues: Accuracy.values)
     ..e<OperatingMode>(4, _omitFieldNames ? '' : 'operatingMode', $pb.PbFieldType.OE, defaultOrMaker: OperatingMode.MODE_UNSPECIFIED, valueOf: OperatingMode.valueOf, enumValues: OperatingMode.values)
-    ..aOM<$4.Duration>(5, _omitFieldNames ? '' : 'exposureTime', subBuilder: $4.Duration.create)
     ..aOM<$4.Duration>(7, _omitFieldNames ? '' : 'updateInterval', subBuilder: $4.Duration.create)
     ..aOM<$4.Duration>(8, _omitFieldNames ? '' : 'dwellUpdateInterval', subBuilder: $4.Duration.create)
     ..aOB(10, _omitFieldNames ? '' : 'logDwelledPositions')
@@ -655,76 +645,44 @@ class OperationSettings extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   void clearDaylightMode() => clearField(1);
 
-  /// Controls the speed vs accuracy. Default is BALANCED. Only relevant in
-  /// OPERATE mode.
-  /// ACCURATE: uses longer exposures to obtain more detected stars. Also
-  ///   uses higher detection sigma threshold to reduce false star detections.
-  ///   Benefit: more robust plate solves, smaller RMS errors. Drawback: slower
-  ///   cycle time.
-  /// FASTER: shorter exposures to obtain fewer detected stars. Also uses
-  ///   lower detection sigma threshold to find more stars despite shorter
-  ///   exposures. Benefit: faster cycle time. Drawback: risk of failed plate
-  ///   solves from too few stars and more spurious detections.
-  @$pb.TagNumber(3)
-  Accuracy get accuracy => $_getN(1);
-  @$pb.TagNumber(3)
-  set accuracy(Accuracy v) { setField(3, v); }
-  @$pb.TagNumber(3)
-  $core.bool hasAccuracy() => $_has(1);
-  @$pb.TagNumber(3)
-  void clearAccuracy() => clearField(3);
-
   /// Defaults to SETUP mode.
   @$pb.TagNumber(4)
-  OperatingMode get operatingMode => $_getN(2);
+  OperatingMode get operatingMode => $_getN(1);
   @$pb.TagNumber(4)
   set operatingMode(OperatingMode v) { setField(4, v); }
   @$pb.TagNumber(4)
-  $core.bool hasOperatingMode() => $_has(2);
+  $core.bool hasOperatingMode() => $_has(1);
   @$pb.TagNumber(4)
   void clearOperatingMode() => clearField(4);
-
-  /// The camera exposure integration time. Zero selects automatic exposure.
-  /// Default is zero (auto). TODO: remove this?
-  @$pb.TagNumber(5)
-  $4.Duration get exposureTime => $_getN(3);
-  @$pb.TagNumber(5)
-  set exposureTime($4.Duration v) { setField(5, v); }
-  @$pb.TagNumber(5)
-  $core.bool hasExposureTime() => $_has(3);
-  @$pb.TagNumber(5)
-  void clearExposureTime() => clearField(5);
-  @$pb.TagNumber(5)
-  $4.Duration ensureExposureTime() => $_ensure(3);
 
   /// The desired time interval at which Cedar should replace its current frame
   /// result. Default is zero, meaning go as fast as possible. Ignored in SETUP
   /// mode.
   @$pb.TagNumber(7)
-  $4.Duration get updateInterval => $_getN(4);
+  $4.Duration get updateInterval => $_getN(2);
   @$pb.TagNumber(7)
   set updateInterval($4.Duration v) { setField(7, v); }
   @$pb.TagNumber(7)
-  $core.bool hasUpdateInterval() => $_has(4);
+  $core.bool hasUpdateInterval() => $_has(2);
   @$pb.TagNumber(7)
   void clearUpdateInterval() => clearField(7);
   @$pb.TagNumber(7)
-  $4.Duration ensureUpdateInterval() => $_ensure(4);
+  $4.Duration ensureUpdateInterval() => $_ensure(2);
 
   /// In OPERATE mode, when Cedar detects that the camera is dwelling
   /// (motionless) for more than some number of seconds, `dwell_update_interval`
   /// is used instead of `update_interval`. Default is 1sec. Ignored in SETUP
   /// mode.
   @$pb.TagNumber(8)
-  $4.Duration get dwellUpdateInterval => $_getN(5);
+  $4.Duration get dwellUpdateInterval => $_getN(3);
   @$pb.TagNumber(8)
   set dwellUpdateInterval($4.Duration v) { setField(8, v); }
   @$pb.TagNumber(8)
-  $core.bool hasDwellUpdateInterval() => $_has(5);
+  $core.bool hasDwellUpdateInterval() => $_has(3);
   @$pb.TagNumber(8)
   void clearDwellUpdateInterval() => clearField(8);
   @$pb.TagNumber(8)
-  $4.Duration ensureDwellUpdateInterval() => $_ensure(5);
+  $4.Duration ensureDwellUpdateInterval() => $_ensure(3);
 
   /// If true, when Cedar detects that the camera is dwelling (motionless) for
   /// more than some number of seconds, the RA/DEC is logged. Note that if the
@@ -732,46 +690,46 @@ class OperationSettings extends $pb.GeneratedMessage {
   /// mount) or polar misalighment (tracked equatorial mount), only the RA/DEC
   /// at the onset of dwelling is logged.
   @$pb.TagNumber(10)
-  $core.bool get logDwelledPositions => $_getBF(6);
+  $core.bool get logDwelledPositions => $_getBF(4);
   @$pb.TagNumber(10)
-  set logDwelledPositions($core.bool v) { $_setBool(6, v); }
+  set logDwelledPositions($core.bool v) { $_setBool(4, v); }
   @$pb.TagNumber(10)
-  $core.bool hasLogDwelledPositions() => $_has(6);
+  $core.bool hasLogDwelledPositions() => $_has(4);
   @$pb.TagNumber(10)
   void clearLogDwelledPositions() => clearField(10);
 
   /// In OPERATE mode, if `catalog_entry_match` is present, this is used to
   /// determine the `catalog_entries` returned in each FrameResult.
   @$pb.TagNumber(11)
-  $2.CatalogEntryMatch get catalogEntryMatch => $_getN(7);
+  $2.CatalogEntryMatch get catalogEntryMatch => $_getN(5);
   @$pb.TagNumber(11)
   set catalogEntryMatch($2.CatalogEntryMatch v) { setField(11, v); }
   @$pb.TagNumber(11)
-  $core.bool hasCatalogEntryMatch() => $_has(7);
+  $core.bool hasCatalogEntryMatch() => $_has(5);
   @$pb.TagNumber(11)
   void clearCatalogEntryMatch() => clearField(11);
   @$pb.TagNumber(11)
-  $2.CatalogEntryMatch ensureCatalogEntryMatch() => $_ensure(7);
+  $2.CatalogEntryMatch ensureCatalogEntryMatch() => $_ensure(5);
 
   /// Controls whether an image file is substituted for the camera. When calling
   /// UpdateOperationSettings(), set this field to empty string to cancel
   /// demo mode.
   @$pb.TagNumber(12)
-  $core.String get demoImageFilename => $_getSZ(8);
+  $core.String get demoImageFilename => $_getSZ(6);
   @$pb.TagNumber(12)
-  set demoImageFilename($core.String v) { $_setString(8, v); }
+  set demoImageFilename($core.String v) { $_setString(6, v); }
   @$pb.TagNumber(12)
-  $core.bool hasDemoImageFilename() => $_has(8);
+  $core.bool hasDemoImageFilename() => $_has(6);
   @$pb.TagNumber(12)
   void clearDemoImageFilename() => clearField(12);
 
   /// Determines whether camera image is inverted (rot180) during readout.
   @$pb.TagNumber(13)
-  $core.bool get invertCamera => $_getBF(9);
+  $core.bool get invertCamera => $_getBF(7);
   @$pb.TagNumber(13)
-  set invertCamera($core.bool v) { $_setBool(9, v); }
+  set invertCamera($core.bool v) { $_setBool(7, v); }
   @$pb.TagNumber(13)
-  $core.bool hasInvertCamera() => $_has(9);
+  $core.bool hasInvertCamera() => $_has(7);
   @$pb.TagNumber(13)
   void clearInvertCamera() => clearField(13);
 
@@ -779,11 +737,11 @@ class OperationSettings extends $pb.GeneratedMessage {
   /// stars (for boresight aligning), Cedar server instead exposes the image for
   /// the brightest point in the image.
   @$pb.TagNumber(14)
-  $core.bool get focusAssistMode => $_getBF(10);
+  $core.bool get focusAssistMode => $_getBF(8);
   @$pb.TagNumber(14)
-  set focusAssistMode($core.bool v) { $_setBool(10, v); }
+  set focusAssistMode($core.bool v) { $_setBool(8, v); }
   @$pb.TagNumber(14)
-  $core.bool hasFocusAssistMode() => $_has(10);
+  $core.bool hasFocusAssistMode() => $_has(8);
   @$pb.TagNumber(14)
   void clearFocusAssistMode() => clearField(14);
 }
@@ -798,7 +756,6 @@ class Preferences extends $pb.GeneratedMessage {
     $core.bool? hideAppBar,
     MountType? mountType,
     LatLong? observerLocation,
-    Accuracy? accuracy,
     $4.Duration? updateInterval,
     $2.CatalogEntryMatch? catalogEntryMatch,
     $core.double? maxDistance,
@@ -829,9 +786,6 @@ class Preferences extends $pb.GeneratedMessage {
     }
     if (observerLocation != null) {
       $result.observerLocation = observerLocation;
-    }
-    if (accuracy != null) {
-      $result.accuracy = accuracy;
     }
     if (updateInterval != null) {
       $result.updateInterval = updateInterval;
@@ -879,7 +833,6 @@ class Preferences extends $pb.GeneratedMessage {
     ..aOB(5, _omitFieldNames ? '' : 'hideAppBar')
     ..e<MountType>(6, _omitFieldNames ? '' : 'mountType', $pb.PbFieldType.OE, defaultOrMaker: MountType.MOUNT_UNSPECIFIED, valueOf: MountType.valueOf, enumValues: MountType.values)
     ..aOM<LatLong>(7, _omitFieldNames ? '' : 'observerLocation', subBuilder: LatLong.create)
-    ..e<Accuracy>(8, _omitFieldNames ? '' : 'accuracy', $pb.PbFieldType.OE, defaultOrMaker: Accuracy.ACCURACY_UNSPECIFIED, valueOf: Accuracy.valueOf, enumValues: Accuracy.values)
     ..aOM<$4.Duration>(9, _omitFieldNames ? '' : 'updateInterval', subBuilder: $4.Duration.create)
     ..aOM<$2.CatalogEntryMatch>(11, _omitFieldNames ? '' : 'catalogEntryMatch', subBuilder: $2.CatalogEntryMatch.create)
     ..a<$core.double>(12, _omitFieldNames ? '' : 'maxDistance', $pb.PbFieldType.OD)
@@ -982,108 +935,96 @@ class Preferences extends $pb.GeneratedMessage {
   @$pb.TagNumber(7)
   LatLong ensureObserverLocation() => $_ensure(5);
 
-  /// Saved accuracy setting. On server startup we use this to initialize the
-  /// corresponding OperationSettings field. Note: do not update this via
-  /// UpdatePreferences().
-  @$pb.TagNumber(8)
-  Accuracy get accuracy => $_getN(6);
-  @$pb.TagNumber(8)
-  set accuracy(Accuracy v) { setField(8, v); }
-  @$pb.TagNumber(8)
-  $core.bool hasAccuracy() => $_has(6);
-  @$pb.TagNumber(8)
-  void clearAccuracy() => clearField(8);
-
   /// Saved dwell interval. On server startup we use this to initialize the
   /// corresponding OperationSettings field. Note: do not update this via
   /// UpdatePreferences().
   @$pb.TagNumber(9)
-  $4.Duration get updateInterval => $_getN(7);
+  $4.Duration get updateInterval => $_getN(6);
   @$pb.TagNumber(9)
   set updateInterval($4.Duration v) { setField(9, v); }
   @$pb.TagNumber(9)
-  $core.bool hasUpdateInterval() => $_has(7);
+  $core.bool hasUpdateInterval() => $_has(6);
   @$pb.TagNumber(9)
   void clearUpdateInterval() => clearField(9);
   @$pb.TagNumber(9)
-  $4.Duration ensureUpdateInterval() => $_ensure(7);
+  $4.Duration ensureUpdateInterval() => $_ensure(6);
 
   /// Saved catalog object selection criteria for FOV image decoration. On server
   /// startup we use this to initialize the corresponding OperationSettings
   /// field. Note: do not update this via UpdatePreferences().
   @$pb.TagNumber(11)
-  $2.CatalogEntryMatch get catalogEntryMatch => $_getN(8);
+  $2.CatalogEntryMatch get catalogEntryMatch => $_getN(7);
   @$pb.TagNumber(11)
   set catalogEntryMatch($2.CatalogEntryMatch v) { setField(11, v); }
   @$pb.TagNumber(11)
-  $core.bool hasCatalogEntryMatch() => $_has(8);
+  $core.bool hasCatalogEntryMatch() => $_has(7);
   @$pb.TagNumber(11)
   void clearCatalogEntryMatch() => clearField(11);
   @$pb.TagNumber(11)
-  $2.CatalogEntryMatch ensureCatalogEntryMatch() => $_ensure(8);
+  $2.CatalogEntryMatch ensureCatalogEntryMatch() => $_ensure(7);
 
   @$pb.TagNumber(12)
-  $core.double get maxDistance => $_getN(9);
+  $core.double get maxDistance => $_getN(8);
   @$pb.TagNumber(12)
-  set maxDistance($core.double v) { $_setDouble(9, v); }
+  set maxDistance($core.double v) { $_setDouble(8, v); }
   @$pb.TagNumber(12)
-  $core.bool hasMaxDistance() => $_has(9);
+  $core.bool hasMaxDistance() => $_has(8);
   @$pb.TagNumber(12)
   void clearMaxDistance() => clearField(12);
 
   @$pb.TagNumber(13)
-  $core.double get minElevation => $_getN(10);
+  $core.double get minElevation => $_getN(9);
   @$pb.TagNumber(13)
-  set minElevation($core.double v) { $_setDouble(10, v); }
+  set minElevation($core.double v) { $_setDouble(9, v); }
   @$pb.TagNumber(13)
-  $core.bool hasMinElevation() => $_has(10);
+  $core.bool hasMinElevation() => $_has(9);
   @$pb.TagNumber(13)
   void clearMinElevation() => clearField(13);
 
   @$pb.TagNumber(14)
-  $2.Ordering get ordering => $_getN(11);
+  $2.Ordering get ordering => $_getN(10);
   @$pb.TagNumber(14)
   set ordering($2.Ordering v) { setField(14, v); }
   @$pb.TagNumber(14)
-  $core.bool hasOrdering() => $_has(11);
+  $core.bool hasOrdering() => $_has(10);
   @$pb.TagNumber(14)
   void clearOrdering() => clearField(14);
 
   @$pb.TagNumber(15)
-  $core.bool get maxDistanceActive => $_getBF(12);
+  $core.bool get maxDistanceActive => $_getBF(11);
   @$pb.TagNumber(15)
-  set maxDistanceActive($core.bool v) { $_setBool(12, v); }
+  set maxDistanceActive($core.bool v) { $_setBool(11, v); }
   @$pb.TagNumber(15)
-  $core.bool hasMaxDistanceActive() => $_has(12);
+  $core.bool hasMaxDistanceActive() => $_has(11);
   @$pb.TagNumber(15)
   void clearMaxDistanceActive() => clearField(15);
 
   @$pb.TagNumber(16)
-  $core.bool get minElevationActive => $_getBF(13);
+  $core.bool get minElevationActive => $_getBF(12);
   @$pb.TagNumber(16)
-  set minElevationActive($core.bool v) { $_setBool(13, v); }
+  set minElevationActive($core.bool v) { $_setBool(12, v); }
   @$pb.TagNumber(16)
-  $core.bool hasMinElevationActive() => $_has(13);
+  $core.bool hasMinElevationActive() => $_has(12);
   @$pb.TagNumber(16)
   void clearMinElevationActive() => clearField(16);
 
   /// Advanced mode vs. basic mode.
   @$pb.TagNumber(17)
-  $core.bool get advanced => $_getBF(14);
+  $core.bool get advanced => $_getBF(13);
   @$pb.TagNumber(17)
-  set advanced($core.bool v) { $_setBool(14, v); }
+  set advanced($core.bool v) { $_setBool(13, v); }
   @$pb.TagNumber(17)
-  $core.bool hasAdvanced() => $_has(14);
+  $core.bool hasAdvanced() => $_has(13);
   @$pb.TagNumber(17)
   void clearAdvanced() => clearField(17);
 
   /// 0: normal; -1: smaller; +1: bigger.
   @$pb.TagNumber(18)
-  $core.int get textSizeIndex => $_getIZ(15);
+  $core.int get textSizeIndex => $_getIZ(14);
   @$pb.TagNumber(18)
-  set textSizeIndex($core.int v) { $_setSignedInt32(15, v); }
+  set textSizeIndex($core.int v) { $_setSignedInt32(14, v); }
   @$pb.TagNumber(18)
-  $core.bool hasTextSizeIndex() => $_has(15);
+  $core.bool hasTextSizeIndex() => $_has(14);
   @$pb.TagNumber(18)
   void clearTextSizeIndex() => clearField(18);
 
@@ -1091,24 +1032,24 @@ class Preferences extends $pb.GeneratedMessage {
   /// internal state which appears at FrameResult.boresight_position. Note: do
   /// not update this via UpdatePreferences().
   @$pb.TagNumber(19)
-  ImageCoord get boresightPixel => $_getN(16);
+  ImageCoord get boresightPixel => $_getN(15);
   @$pb.TagNumber(19)
   set boresightPixel(ImageCoord v) { setField(19, v); }
   @$pb.TagNumber(19)
-  $core.bool hasBoresightPixel() => $_has(16);
+  $core.bool hasBoresightPixel() => $_has(15);
   @$pb.TagNumber(19)
   void clearBoresightPixel() => clearField(19);
   @$pb.TagNumber(19)
-  ImageCoord ensureBoresightPixel() => $_ensure(16);
+  ImageCoord ensureBoresightPixel() => $_ensure(15);
 
   /// Determines whether camera image is inverted (rot180) during readout. Note:
   /// do not update this via UpdatePreferences().
   @$pb.TagNumber(20)
-  $core.bool get invertCamera => $_getBF(17);
+  $core.bool get invertCamera => $_getBF(16);
   @$pb.TagNumber(20)
-  set invertCamera($core.bool v) { $_setBool(17, v); }
+  set invertCamera($core.bool v) { $_setBool(16, v); }
   @$pb.TagNumber(20)
-  $core.bool hasInvertCamera() => $_has(17);
+  $core.bool hasInvertCamera() => $_has(16);
   @$pb.TagNumber(20)
   void clearInvertCamera() => clearField(20);
 }
@@ -3086,20 +3027,9 @@ class ActionRequest extends $pb.GeneratedMessage {
   static ActionRequest getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<ActionRequest>(create);
   static ActionRequest? _defaultInstance;
 
-  /// Capture boresight offset. In SETUP mode, this is based on current location
-  /// of brightest detected star centroid. Context:
-  /// 1. Cedar is in SETUP alignment mode (neither focus_assist_mode nor
-  ///    daylight_mode is active).
-  /// 2. Cedar Aim identifies the brightest star (could be a planet).
-  /// 3. User centers the identified object in the telescope's field of view.
-  /// 4. User invokes the capture_boresight function.
-  /// At this point, the captured boresight position will be returned in each
-  /// FrameResult's `boresight_position` field, and will cause a single
-  /// `target_coords` entry to be included with each FrameResult
-  /// `plate_solution`.
-  /// Note that `capture_boresight` can also be used during an active slew to
-  /// target. This lets the user update/refine the boresight offset when the user
-  /// has centered the target in the telescope's field of view.
+  /// The `capture_boresight` function is used during an active slew to target.
+  /// This lets the user update/refine the boresight offset when the user has
+  /// centered the target in the telescope's field of view.
   @$pb.TagNumber(1)
   $core.bool get captureBoresight => $_getBF(0);
   @$pb.TagNumber(1)
@@ -3109,9 +3039,9 @@ class ActionRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   void clearCaptureBoresight() => clearField(1);
 
-  /// In SETUP mode with OperationSettings.daylight_mode in effect, this conveys
-  /// which part of the image the user tapped to designate the telescope's FOV
-  /// center. The image coordinates are full resolution within FrameResult.image.
+  /// In SETUP alignment mode, this conveys which part of the image the user
+  /// tapped to designate the telescope's FOV center. The image coordinates are
+  /// full resolution within FrameResult.image.
   @$pb.TagNumber(2)
   ImageCoord get designateBoresight => $_getN(1);
   @$pb.TagNumber(2)
@@ -3144,8 +3074,9 @@ class ActionRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   void clearStopSlew() => clearField(4);
 
-  /// Save the current image for debugging. The image is saved in TBD directory
-  /// on the server with the current date/time incorporated into the filename.
+  /// Save the current image for debugging. The image is saved in the run
+  /// directory on the server with the current date/time incorporated into the
+  /// filename.
   /// TODO: return filename? Provide rename action?
   @$pb.TagNumber(5)
   $core.bool get saveImage => $_getBF(4);

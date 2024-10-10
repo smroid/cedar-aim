@@ -381,7 +381,6 @@ class MyHomePageState extends State<MyHomePage> {
   bool _transitionToSetup = false;
 
   // Values set from on-screen controls.
-  int _expSettingMs = 0; // 0 is auto-exposure.
 
   cedar_rpc.CedarClient? _client;
   cedar_rpc.CedarClient client() {
@@ -432,7 +431,6 @@ class MyHomePageState extends State<MyHomePage> {
 
     fixedSettings = response.fixedSettings;
     operationSettings = response.operationSettings;
-    _expSettingMs = durationToMs(operationSettings.exposureTime).toInt();
     _setupMode =
         operationSettings.operatingMode == cedar_rpc.OperatingMode.SETUP;
     _focusAid = operationSettings.focusAssistMode;
@@ -621,12 +619,6 @@ class MyHomePageState extends State<MyHomePage> {
     var request = cedar_rpc.FixedSettings();
     request.observerLocation = posProto;
     await updateFixedSettings(request);
-  }
-
-  Future<void> setExpTime() async {
-    final request = cedar_rpc.OperationSettings(
-        exposureTime: durationFromMs(_expSettingMs));
-    await updateOperationSettings(request);
   }
 
   Future<void> captureBoresight() async {
@@ -1716,6 +1708,8 @@ class MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final bool healthy = _serverConnected && (_hasCamera || _demoMode);
+
     // This method is rerun every time setState() is called.
     bool hideAppBar = Provider.of<SettingsModel>(context, listen: false)
         .preferencesProto
@@ -1732,33 +1726,31 @@ class MyHomePageState extends State<MyHomePage> {
           toolbarOpacity: hideAppBar ? 0.0 : 1.0,
           title: Text(widget.title),
           foregroundColor: Theme.of(context).colorScheme.primary),
-      body: _serverConnected && (_hasCamera || _demoMode)
-          ? Container(
-              color: Theme.of(context).colorScheme.surface,
-              child: Stack(
-                fit: StackFit.expand,
-                children: [
-                  Positioned(
-                      left: 0,
-                      top: 0,
-                      child: hideAppBar
-                          ? IconButton(
-                              icon: const Icon(Icons.menu),
-                              onPressed: () {
-                                _scaffoldKey.currentState!.openDrawer();
-                              })
-                          : Container()),
-                  FittedBox(
-                    child: orientationLayout(context),
-                  ),
-                ],
-              ))
-          : badServerState(),
+      body: Container(
+          color: Theme.of(context).colorScheme.surface,
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              Positioned(
+                  left: 0,
+                  top: 0,
+                  child: hideAppBar
+                      ? IconButton(
+                          icon: const Icon(Icons.menu),
+                          onPressed: () {
+                            _scaffoldKey.currentState!.openDrawer();
+                          })
+                      : Container()),
+              FittedBox(
+                child: healthy ? orientationLayout(context) : badServerState(),
+              ),
+            ],
+          )),
       onDrawerChanged: (isOpened) {
         // Prevent jank in demo mode image file selector.
         _inhibitRefresh = isOpened;
       },
-      drawer: _serverConnected && (_hasCamera || _demoMode)
+      drawer: _serverConnected
           ? Drawer(
               width: 240 * textScaleFactor(context),
               child: ListView(

@@ -49,26 +49,6 @@ class OperatingMode extends $pb.ProtobufEnum {
   const OperatingMode._($core.int v, $core.String n) : super(v, n);
 }
 
-/// Reflects speed vs accuracy tradeoff in OPERATE mode.
-class Accuracy extends $pb.ProtobufEnum {
-  static const Accuracy ACCURACY_UNSPECIFIED = Accuracy._(0, _omitEnumNames ? '' : 'ACCURACY_UNSPECIFIED');
-  static const Accuracy FASTER = Accuracy._(1, _omitEnumNames ? '' : 'FASTER');
-  static const Accuracy BALANCED = Accuracy._(2, _omitEnumNames ? '' : 'BALANCED');
-  static const Accuracy ACCURATE = Accuracy._(3, _omitEnumNames ? '' : 'ACCURATE');
-
-  static const $core.List<Accuracy> values = <Accuracy> [
-    ACCURACY_UNSPECIFIED,
-    FASTER,
-    BALANCED,
-    ACCURATE,
-  ];
-
-  static final $core.Map<$core.int, Accuracy> _byValue = $pb.ProtobufEnum.initByValue(values);
-  static Accuracy? valueOf($core.int value) => _byValue[value];
-
-  const Accuracy._($core.int v, $core.String n) : super(v, n);
-}
-
 class CelestialCoordFormat extends $pb.ProtobufEnum {
   static const CelestialCoordFormat FORMAT_UNSPECIFIED = CelestialCoordFormat._(0, _omitEnumNames ? '' : 'FORMAT_UNSPECIFIED');
   static const CelestialCoordFormat DECIMAL = CelestialCoordFormat._(1, _omitEnumNames ? '' : 'DECIMAL');

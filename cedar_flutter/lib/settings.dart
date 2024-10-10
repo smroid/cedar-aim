@@ -61,8 +61,6 @@ bool diffOperationSettings(OperationSettings prev, OperationSettings curr) {
   // We don't consider these fields.
   curr.clearOperatingMode();
   curr.clearDaylightMode();
-  curr.clearExposureTime();
-  curr.clearAccuracy();
   curr.clearCatalogEntryMatch();
 
   bool hasDiff = false;
