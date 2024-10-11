@@ -89,6 +89,7 @@ const ServerInformation$json = {
     {'1': 'server_time', '3': 8, '4': 1, '5': 11, '6': '.google.protobuf.Timestamp', '10': 'serverTime'},
     {'1': 'camera', '3': 9, '4': 1, '5': 11, '6': '.cedar.CameraModel', '9': 0, '10': 'camera', '17': true},
     {'1': 'wifi_access_point', '3': 10, '4': 1, '5': 11, '6': '.cedar.WiFiAccessPoint', '9': 1, '10': 'wifiAccessPoint', '17': true},
+    {'1': 'demo_image_names', '3': 11, '4': 3, '5': 9, '10': 'demoImageNames'},
   ],
   '8': [
     {'1': '_camera'},
@@ -107,8 +108,8 @@ final $typed_data.Uint8List serverInformationDescriptor = $convert.base64Decode(
     'bXBlcmF0dXJlEjsKC3NlcnZlcl90aW1lGAggASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdG'
     'FtcFIKc2VydmVyVGltZRIvCgZjYW1lcmEYCSABKAsyEi5jZWRhci5DYW1lcmFNb2RlbEgAUgZj'
     'YW1lcmGIAQESRwoRd2lmaV9hY2Nlc3NfcG9pbnQYCiABKAsyFi5jZWRhci5XaUZpQWNjZXNzUG'
-    '9pbnRIAVIPd2lmaUFjY2Vzc1BvaW50iAEBQgkKB19jYW1lcmFCFAoSX3dpZmlfYWNjZXNzX3Bv'
-    'aW50');
+    '9pbnRIAVIPd2lmaUFjY2Vzc1BvaW50iAEBEigKEGRlbW9faW1hZ2VfbmFtZXMYCyADKAlSDmRl'
+    'bW9JbWFnZU5hbWVzQgkKB19jYW1lcmFCFAoSX3dpZmlfYWNjZXNzX3BvaW50');
 
 @$core.Deprecated('Use cameraModelDescriptor instead')
 const CameraModel$json = {
@@ -749,19 +750,6 @@ const ServerLogResult$json = {
 /// Descriptor for `ServerLogResult`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List serverLogResultDescriptor = $convert.base64Decode(
     'Cg9TZXJ2ZXJMb2dSZXN1bHQSHwoLbG9nX2NvbnRlbnQYASABKAlSCmxvZ0NvbnRlbnQ=');
-
-@$core.Deprecated('Use demoImagesResultDescriptor instead')
-const DemoImagesResult$json = {
-  '1': 'DemoImagesResult',
-  '2': [
-    {'1': 'demo_image_name', '3': 1, '4': 3, '5': 9, '10': 'demoImageName'},
-  ],
-};
-
-/// Descriptor for `DemoImagesResult`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List demoImagesResultDescriptor = $convert.base64Decode(
-    'ChBEZW1vSW1hZ2VzUmVzdWx0EiYKD2RlbW9faW1hZ2VfbmFtZRgBIAMoCVINZGVtb0ltYWdlTm'
-    'FtZQ==');
 
 @$core.Deprecated('Use emptyMessageDescriptor instead')
 const EmptyMessage$json = {

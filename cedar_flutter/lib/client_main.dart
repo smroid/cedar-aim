@@ -428,6 +428,12 @@ class MyHomePageState extends State<MyHomePage> {
     isDIY = serverInformation!.featureLevel == cedar_rpc.FeatureLevel.DIY;
     isBasic = serverInformation!.featureLevel == cedar_rpc.FeatureLevel.BASIC;
     isPlus = serverInformation!.featureLevel == cedar_rpc.FeatureLevel.PLUS;
+    _demoFiles = serverInformation!.demoImageNames;
+    if (_demoFiles.isEmpty) {
+      _demoFile = "";
+    } else if (_demoFile.isEmpty) {
+      _demoFile = _demoFiles[0];
+    }
 
     fixedSettings = response.fixedSettings;
     operationSettings = response.operationSettings;
@@ -557,6 +563,9 @@ class MyHomePageState extends State<MyHomePage> {
       // Use long-ish timeout because solve could take much time.
       final response = await client().getFrame(request,
           options: CallOptions(timeout: const Duration(seconds: 10)));
+      if (_inhibitRefresh) {
+        return;
+      }
       _paintPending = true;
       setState(() {
         _serverConnected = true;
@@ -588,7 +597,7 @@ class MyHomePageState extends State<MyHomePage> {
 
     await Future.doWhile(() async {
       await Future.delayed(const Duration(milliseconds: 50));
-      if (!_paintPending && !_inhibitRefresh) {
+      if (!_paintPending) {
         await getFrameFromServer();
       }
       return true; // Forever!
@@ -637,34 +646,18 @@ class MyHomePageState extends State<MyHomePage> {
     await initiateAction(request);
   }
 
-  Future<void> _setOperatingMode() async {
+  Future<void> _setOperatingMode(bool setupMode, bool focusAid) async {
     var request = cedar_rpc.OperationSettings();
-    request.operatingMode = _setupMode
+    request.operatingMode = setupMode
         ? cedar_rpc.OperatingMode.SETUP
         : cedar_rpc.OperatingMode.OPERATE;
-    request.focusAssistMode = _focusAid;
+    request.focusAssistMode = focusAid;
     await updateOperationSettings(request);
   }
 
   Future<void> _setDaylightMode(bool value) async {
     final request = cedar_rpc.OperationSettings(daylightMode: value);
     await updateOperationSettings(request);
-  }
-
-  Future<void> getDemoImages() async {
-    final request = cedar_rpc.EmptyMessage();
-    try {
-      final result = await client().getDemoImages(request,
-          options: CallOptions(timeout: const Duration(seconds: 2)));
-      _demoFiles = result.demoImageName;
-      if (_demoFiles.isEmpty) {
-        _demoFile = "";
-      } else if (_demoFile.isEmpty) {
-        _demoFile = _demoFiles[0];
-      }
-    } catch (e) {
-      log('getDemoImages error: $e');
-    }
   }
 
   // Pass empty string to terminate demo mode.
@@ -747,8 +740,7 @@ class MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> cancelCalibration() async {
-    _setupMode = true;
-    await _setOperatingMode();
+    await _setOperatingMode(/*setupMode=*/ true, _daylightMode);
   }
 
   Future<void> updatePreferences(cedar_rpc.Preferences changedPrefs) async {
@@ -812,29 +804,26 @@ class MyHomePageState extends State<MyHomePage> {
                   onSelected: (String? newValue) async {
                     if (newValue == "Focus") {
                       setState(() {
-                        _focusAid = true;
                         if (!_setupMode) {
-                          _setupMode = true;
                           _transitionToSetup = true;
                         }
-                        _setOperatingMode();
+                        _setOperatingMode(
+                            /*setupMode=*/ true, /*focusAid=*/ true);
                       });
                     } else if (newValue == "Align") {
                       setState(() {
                         _alignTargetTapped = false;
-                        _focusAid = false;
                         if (!_setupMode) {
-                          _setupMode = true;
                           _transitionToSetup = true;
                         }
-                        _setOperatingMode();
+                        _setOperatingMode(
+                            /*setupMode=*/ true, /*focusAid=*/ false);
                       });
                     } else {
                       // Aim.
                       setState(() {
-                        _focusAid = false;
-                        _setupMode = false;
-                        _setOperatingMode();
+                        _setOperatingMode(
+                            /*setupMode=*/ false, /*focusAid*/ false);
                       });
                     }
                     Navigator.of(context).pop();
@@ -887,7 +876,6 @@ class MyHomePageState extends State<MyHomePage> {
                 var prefs = cedar_rpc.Preferences();
                 prefs.advanced = _advanced;
                 await updatePreferences(prefs);
-                await getDemoImages();
               })),
       (_advanced || _demoMode) && _demoFiles.isNotEmpty
           ? Column(children: <Widget>[
@@ -1117,12 +1105,11 @@ class MyHomePageState extends State<MyHomePage> {
                       setState(() {
                         // Transition to align mode.
                         _alignTargetTapped = false;
-                        _focusAid = false;
                         if (!_setupMode) {
-                          _setupMode = true;
                           _transitionToSetup = true;
                         }
-                        _setOperatingMode();
+                        _setOperatingMode(
+                            /*setupMode=*/ true, /*focusAid=*/ false);
                       });
                     })
                 : (_canAlign
@@ -1141,8 +1128,8 @@ class MyHomePageState extends State<MyHomePage> {
                           // Transition to aim mode.
                           if (_slewRequest == null) {
                             setState(() {
-                              _setupMode = false;
-                              _setOperatingMode();
+                              _setOperatingMode(
+                                  /*setupMode=*/ false, _focusAid);
                             });
                           } else {
                             captureBoresight();

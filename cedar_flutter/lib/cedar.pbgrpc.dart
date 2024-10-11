@@ -26,10 +26,6 @@ class CedarClient extends $grpc.Client {
       '/cedar.Cedar/GetServerLog',
       ($1.ServerLogRequest value) => value.writeToBuffer(),
       ($core.List<$core.int> value) => $1.ServerLogResult.fromBuffer(value));
-  static final _$getDemoImages = $grpc.ClientMethod<$1.EmptyMessage, $1.DemoImagesResult>(
-      '/cedar.Cedar/GetDemoImages',
-      ($1.EmptyMessage value) => value.writeToBuffer(),
-      ($core.List<$core.int> value) => $1.DemoImagesResult.fromBuffer(value));
   static final _$updateFixedSettings = $grpc.ClientMethod<$1.FixedSettings, $1.FixedSettings>(
       '/cedar.Cedar/UpdateFixedSettings',
       ($1.FixedSettings value) => value.writeToBuffer(),
@@ -79,10 +75,6 @@ class CedarClient extends $grpc.Client {
 
   $grpc.ResponseFuture<$1.ServerLogResult> getServerLog($1.ServerLogRequest request, {$grpc.CallOptions? options}) {
     return $createUnaryCall(_$getServerLog, request, options: options);
-  }
-
-  $grpc.ResponseFuture<$1.DemoImagesResult> getDemoImages($1.EmptyMessage request, {$grpc.CallOptions? options}) {
-    return $createUnaryCall(_$getDemoImages, request, options: options);
   }
 
   $grpc.ResponseFuture<$1.FixedSettings> updateFixedSettings($1.FixedSettings request, {$grpc.CallOptions? options}) {
@@ -138,13 +130,6 @@ abstract class CedarServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $1.ServerLogRequest.fromBuffer(value),
         ($1.ServerLogResult value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$1.EmptyMessage, $1.DemoImagesResult>(
-        'GetDemoImages',
-        getDemoImages_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) => $1.EmptyMessage.fromBuffer(value),
-        ($1.DemoImagesResult value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$1.FixedSettings, $1.FixedSettings>(
         'UpdateFixedSettings',
         updateFixedSettings_Pre,
@@ -221,10 +206,6 @@ abstract class CedarServiceBase extends $grpc.Service {
     return getServerLog(call, await request);
   }
 
-  $async.Future<$1.DemoImagesResult> getDemoImages_Pre($grpc.ServiceCall call, $async.Future<$1.EmptyMessage> request) async {
-    return getDemoImages(call, await request);
-  }
-
   $async.Future<$1.FixedSettings> updateFixedSettings_Pre($grpc.ServiceCall call, $async.Future<$1.FixedSettings> request) async {
     return updateFixedSettings(call, await request);
   }
@@ -266,7 +247,6 @@ abstract class CedarServiceBase extends $grpc.Service {
   }
 
   $async.Future<$1.ServerLogResult> getServerLog($grpc.ServiceCall call, $1.ServerLogRequest request);
-  $async.Future<$1.DemoImagesResult> getDemoImages($grpc.ServiceCall call, $1.EmptyMessage request);
   $async.Future<$1.FixedSettings> updateFixedSettings($grpc.ServiceCall call, $1.FixedSettings request);
   $async.Future<$1.OperationSettings> updateOperationSettings($grpc.ServiceCall call, $1.OperationSettings request);
   $async.Future<$1.Preferences> updatePreferences($grpc.ServiceCall call, $1.Preferences request);
