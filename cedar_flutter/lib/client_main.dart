@@ -329,6 +329,7 @@ class MyHomePageState extends State<MyHomePage> {
   bool _advanced = false;
   bool _canAlign = false;
   bool _hasWifiControl = false;
+  int _gain = 0;
 
   double _scopeFov = 0.0;
 
@@ -444,6 +445,7 @@ class MyHomePageState extends State<MyHomePage> {
     if (_setupMode) {
       _transitionToSetup = false;
     }
+    _gain = operationSettings.gain;
 
     _canAlign = _setupMode;
     preferences = response.preferences;
@@ -663,6 +665,11 @@ class MyHomePageState extends State<MyHomePage> {
   // Pass empty string to terminate demo mode.
   Future<void> setDemoImage(String imageFile) async {
     final request = cedar_rpc.OperationSettings(demoImageFilename: imageFile);
+    await updateOperationSettings(request);
+  }
+
+  Future<void> _setGain(int value) async {
+    final request = cedar_rpc.OperationSettings(gain: value);
     await updateOperationSettings(request);
   }
 
@@ -1452,6 +1459,17 @@ class MyHomePageState extends State<MyHomePage> {
                           primaryText("Daytime"),
                         ])))
             : Container(),
+      ),
+      Slider(
+        label: "gain",
+        min: 0,
+        max: 100,
+        value: _gain.toDouble(),
+        onChanged: (double value) {
+          // setState(() {
+          _setGain(value.toInt());
+          // });
+        },
       ),
       RotatedBox(
           quarterTurns: portrait ? 3 : 0,
