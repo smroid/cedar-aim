@@ -201,7 +201,6 @@ const OperationSettings$json = {
     {'1': 'catalog_entry_match', '3': 11, '4': 1, '5': 11, '6': '.cedar_sky.CatalogEntryMatch', '9': 6, '10': 'catalogEntryMatch', '17': true},
     {'1': 'demo_image_filename', '3': 12, '4': 1, '5': 9, '9': 7, '10': 'demoImageFilename', '17': true},
     {'1': 'invert_camera', '3': 13, '4': 1, '5': 8, '9': 8, '10': 'invertCamera', '17': true},
-    {'1': 'gain', '3': 15, '4': 1, '5': 5, '9': 9, '10': 'gain', '17': true},
   ],
   '8': [
     {'1': '_operating_mode'},
@@ -213,7 +212,6 @@ const OperationSettings$json = {
     {'1': '_catalog_entry_match'},
     {'1': '_demo_image_filename'},
     {'1': '_invert_camera'},
-    {'1': '_gain'},
   ],
   '9': [
     {'1': 3, '2': 4},
@@ -233,11 +231,10 @@ final $typed_data.Uint8List operationSettingsDescriptor = $convert.base64Decode(
     'EBElEKE2NhdGFsb2dfZW50cnlfbWF0Y2gYCyABKAsyHC5jZWRhcl9za3kuQ2F0YWxvZ0VudHJ5'
     'TWF0Y2hIBlIRY2F0YWxvZ0VudHJ5TWF0Y2iIAQESMwoTZGVtb19pbWFnZV9maWxlbmFtZRgMIA'
     'EoCUgHUhFkZW1vSW1hZ2VGaWxlbmFtZYgBARIoCg1pbnZlcnRfY2FtZXJhGA0gASgISAhSDGlu'
-    'dmVydENhbWVyYYgBARIXCgRnYWluGA8gASgFSAlSBGdhaW6IAQFCEQoPX29wZXJhdGluZ19tb2'
-    'RlQhAKDl9kYXlsaWdodF9tb2RlQhQKEl9mb2N1c19hc3Npc3RfbW9kZUISChBfdXBkYXRlX2lu'
-    'dGVydmFsQhgKFl9kd2VsbF91cGRhdGVfaW50ZXJ2YWxCGAoWX2xvZ19kd2VsbGVkX3Bvc2l0aW'
-    '9uc0IWChRfY2F0YWxvZ19lbnRyeV9tYXRjaEIWChRfZGVtb19pbWFnZV9maWxlbmFtZUIQCg5f'
-    'aW52ZXJ0X2NhbWVyYUIHCgVfZ2FpbkoECAMQBEoECAUQBg==');
+    'dmVydENhbWVyYYgBAUIRCg9fb3BlcmF0aW5nX21vZGVCEAoOX2RheWxpZ2h0X21vZGVCFAoSX2'
+    'ZvY3VzX2Fzc2lzdF9tb2RlQhIKEF91cGRhdGVfaW50ZXJ2YWxCGAoWX2R3ZWxsX3VwZGF0ZV9p'
+    'bnRlcnZhbEIYChZfbG9nX2R3ZWxsZWRfcG9zaXRpb25zQhYKFF9jYXRhbG9nX2VudHJ5X21hdG'
+    'NoQhYKFF9kZW1vX2ltYWdlX2ZpbGVuYW1lQhAKDl9pbnZlcnRfY2FtZXJhSgQIAxAESgQIBRAG');
 
 @$core.Deprecated('Use preferencesDescriptor instead')
 const Preferences$json = {

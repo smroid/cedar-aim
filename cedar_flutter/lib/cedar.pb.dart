@@ -569,7 +569,6 @@ class OperationSettings extends $pb.GeneratedMessage {
     $core.String? demoImageFilename,
     $core.bool? invertCamera,
     $core.bool? focusAssistMode,
-    $core.int? gain,
   }) {
     final $result = create();
     if (daylightMode != null) {
@@ -599,9 +598,6 @@ class OperationSettings extends $pb.GeneratedMessage {
     if (focusAssistMode != null) {
       $result.focusAssistMode = focusAssistMode;
     }
-    if (gain != null) {
-      $result.gain = gain;
-    }
     return $result;
   }
   OperationSettings._() : super();
@@ -618,7 +614,6 @@ class OperationSettings extends $pb.GeneratedMessage {
     ..aOS(12, _omitFieldNames ? '' : 'demoImageFilename')
     ..aOB(13, _omitFieldNames ? '' : 'invertCamera')
     ..aOB(14, _omitFieldNames ? '' : 'focusAssistMode')
-    ..a<$core.int>(15, _omitFieldNames ? '' : 'gain', $pb.PbFieldType.O3)
     ..hasRequiredFields = false
   ;
 
@@ -758,16 +753,6 @@ class OperationSettings extends $pb.GeneratedMessage {
   $core.bool hasFocusAssistMode() => $_has(8);
   @$pb.TagNumber(14)
   void clearFocusAssistMode() => clearField(14);
-
-  /// Camera gain setting, 0..100 inclusive.
-  @$pb.TagNumber(15)
-  $core.int get gain => $_getIZ(9);
-  @$pb.TagNumber(15)
-  set gain($core.int v) { $_setSignedInt32(9, v); }
-  @$pb.TagNumber(15)
-  $core.bool hasGain() => $_has(9);
-  @$pb.TagNumber(15)
-  void clearGain() => clearField(15);
 }
 
 /// User interface preferences and operation settings that are stored durably on
