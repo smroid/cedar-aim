@@ -1033,6 +1033,13 @@ class MyHomePageState extends State<MyHomePage> {
           var prefsDiff = newPrefs.deepCopy();
           if (preferences != null && diffPreferences(preferences!, prefsDiff)) {
             updatePreferences(prefsDiff);
+            if (prefsDiff.hasHideAppBar()) {
+              if (prefsDiff.hideAppBar) {
+                goFullScreen();
+              } else {
+                cancelFullScreen();
+              }
+            }
           }
           final newOpSettings = settings.opSettingsProto;
           var opSettingsDiff = newOpSettings.deepCopy();
@@ -1702,11 +1709,6 @@ class MyHomePageState extends State<MyHomePage> {
     bool hideAppBar = Provider.of<SettingsModel>(context, listen: false)
         .preferencesProto
         .hideAppBar;
-    if (hideAppBar) {
-      goFullScreen();
-    } else {
-      cancelFullScreen();
-    }
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(

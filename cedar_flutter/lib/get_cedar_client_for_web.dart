@@ -13,7 +13,11 @@ CedarClient getClient() {
 
 void goFullScreen() {
   try {
-    document.documentElement?.requestFullscreen();
+    if (document.fullscreenEnabled!) {
+      document.documentElement?.requestFullscreen();
+    } else {
+      log("Fullscreen not enabled.");
+    }
   } catch (e) {
     log('Could not call requestFullscreen: $e');
   }
@@ -21,7 +25,11 @@ void goFullScreen() {
 
 void cancelFullScreen() {
   try {
-    document.exitFullscreen();
+    if (document.fullscreenEnabled!) {
+      document.exitFullscreen();
+    } else {
+      log("Fullscreen not enabled.");
+    }
   } catch (e) {
     log('Could not call exitFullscreen: $e');
   }
