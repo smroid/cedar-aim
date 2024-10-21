@@ -1033,13 +1033,6 @@ class MyHomePageState extends State<MyHomePage> {
           var prefsDiff = newPrefs.deepCopy();
           if (preferences != null && diffPreferences(preferences!, prefsDiff)) {
             updatePreferences(prefsDiff);
-            if (prefsDiff.hasHideAppBar()) {
-              if (prefsDiff.hideAppBar) {
-                goFullScreen();
-              } else {
-                cancelFullScreen();
-              }
-            }
           }
           final newOpSettings = settings.opSettingsProto;
           var opSettingsDiff = newOpSettings.deepCopy();

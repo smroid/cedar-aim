@@ -10,6 +10,8 @@ import 'package:provider/provider.dart';
 import 'package:settings_ui/settings_ui.dart';
 import 'package:sprintf/sprintf.dart';
 import 'google/protobuf/duration.pb.dart' as proto_duration;
+import 'get_cedar_client_for_web.dart'
+    if (dart.library.io) 'get_cedar_client.dart';
 
 // Determines if 'prev' and 'curr' have any different fields. Fields that
 // are the same are cleared from 'curr'.
@@ -250,6 +252,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             onChanged: (bool value) {
                               setState(() {
                                 provider.updateHideAppBar(value);
+                                if (value) {
+                                  goFullScreen();
+                                } else {
+                                  cancelFullScreen();
+                                }
                               });
                             })
                       ]),
