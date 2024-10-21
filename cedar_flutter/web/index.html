@@ -35,6 +35,13 @@
 </head>
 
 <body>
+    <!-- Needed for offline operation. -->
+    <script>
+        window.flutterConfiguration = {
+            canvasKitBaseUrl: "/canvaskit/"
+        };
+    </script>
+
     <script src="flutter_bootstrap.js" async></script>
 </body>
 
