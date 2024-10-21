@@ -297,14 +297,16 @@ class MyHomePageState extends State<MyHomePage> {
   bool _northernHemisphere = true;
 
   Duration _tzOffset = const Duration();
-  bool _serverConnected = false;
   bool _hasCamera = false;
   bool isDIY = false;
   bool isBasic = false;
   bool isPlus = false;
-  bool _everConnected = false;
   bool _paintPending = false;
   bool _inhibitRefresh = false;
+
+  bool _serverConnected = false;
+  bool _everConnected = false;
+  DateTime _lastServerResponseTime = DateTime.now();
 
   // State for align mode.
   final _numTargets = 3;
@@ -560,22 +562,26 @@ class MyHomePageState extends State<MyHomePage> {
   Future<void> getFrameFromServer() async {
     final request = cedar_rpc.FrameRequest()..prevFrameId = _prevFrameId;
     try {
-      // Use long-ish timeout because solve could take much time.
       final response = await client().getFrame(request,
-          options: CallOptions(timeout: const Duration(seconds: 10)));
+          options: CallOptions(timeout: const Duration(seconds: 2)));
+      _serverConnected = true;
+      _everConnected = true;
+      _lastServerResponseTime = DateTime.now();
       if (_inhibitRefresh) {
         return;
       }
       _paintPending = true;
       setState(() {
-        _serverConnected = true;
-        _everConnected = true;
         setStateFromFrameResult(response);
       });
     } catch (e) {
       log('getFrameFromServer error: $e');
       setState(() {
-        _serverConnected = false;
+        // Has it been too long since we last succeeded?
+        Duration elapsed = DateTime.now().difference(_lastServerResponseTime);
+        if (elapsed.inSeconds > 10) {
+          _serverConnected = false;
+        }
       });
     }
   }
