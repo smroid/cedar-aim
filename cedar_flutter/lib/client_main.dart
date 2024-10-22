@@ -20,6 +20,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart' as dart_widgets;
 import 'package:grpc/service_api.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:logger/logger.dart';
 import 'package:path/path.dart' as path;
 import 'package:protobuf/protobuf.dart';
 import 'package:provider/provider.dart';
@@ -291,6 +292,10 @@ class MyHomePageState extends State<MyHomePage> {
   MyHomePageState() {
     refreshStateFromServer();
   }
+
+  Logger logger = Logger(
+    printer: PrettyPrinter(methodCount: 0),
+  );
 
   // Geolocation from map.
   LatLng? _mapPosition;
@@ -576,6 +581,7 @@ class MyHomePageState extends State<MyHomePage> {
       });
     } catch (e) {
       log('getFrameFromServer error: $e');
+      logger.w('getFrameFromServer error: $e');
       setState(() {
         // Has it been too long since we last succeeded?
         Duration elapsed = DateTime.now().difference(_lastServerResponseTime);
