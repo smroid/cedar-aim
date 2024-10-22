@@ -29,7 +29,8 @@ import 'tetra3.pb.dart';
 import 'get_cedar_client_for_web.dart'
     if (dart.library.io) 'get_cedar_client.dart';
 
-// To generate release build: flutter build web
+// To generate release build:
+// flutter build web --web-renderer canvaskit --no-web-resources-cdn
 
 typedef DrawCatalogEntriesFunction = void Function(BuildContext, Canvas, Color,
     List<cedar_rpc.FovCatalogEntry>, bool, int, bool);
