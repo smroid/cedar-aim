@@ -1,10 +1,10 @@
 // Copyright (c) 2024 Steven Rosenthal smr@dt3.org
 // See LICENSE file in root directory for license terms.
 
-import 'dart:developer';
 import 'dart:html';
 
 import 'package:cedar_flutter/cedar.pbgrpc.dart';
+import 'package:flutter/foundation.dart';
 import 'package:grpc/grpc_web.dart';
 
 CedarClient getClient() {
@@ -16,10 +16,10 @@ void goFullScreen() {
     if (document.fullscreenEnabled!) {
       document.documentElement?.requestFullscreen();
     } else {
-      log("Fullscreen not enabled.");
+      debugPrint("Fullscreen not enabled.");
     }
   } catch (e) {
-    log('Could not call requestFullscreen: $e');
+    debugPrint('Could not call requestFullscreen: $e');
   }
 }
 
@@ -28,9 +28,9 @@ void cancelFullScreen() {
     if (document.fullscreenEnabled!) {
       document.exitFullscreen();
     } else {
-      log("Fullscreen not enabled.");
+      debugPrint("Fullscreen not enabled.");
     }
   } catch (e) {
-    log('Could not call exitFullscreen: $e');
+    debugPrint('Could not call exitFullscreen: $e');
   }
 }

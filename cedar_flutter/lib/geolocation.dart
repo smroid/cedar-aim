@@ -1,8 +1,6 @@
 // Copyright (c) 2024 Steven Rosenthal smr@dt3.org
 // See LICENSE file in root directory for license terms.
 
-import 'dart:developer';
-
 import 'package:cedar_flutter/client_main.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -12,19 +10,19 @@ import 'package:latlong2/latlong.dart';
 Future<Position?> getLocation() async {
   bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
   if (!serviceEnabled) {
-    log("Location services not enabled");
+    debugPrint("Location services not enabled");
     return null;
   }
   LocationPermission permission = await Geolocator.checkPermission();
   if (permission == LocationPermission.denied) {
     permission = await Geolocator.requestPermission();
     if (permission == LocationPermission.denied) {
-      log("Location permissions are denied");
+      debugPrint("Location permissions are denied");
       return null;
     }
   }
   if (permission == LocationPermission.deniedForever) {
-    log("Location permissions are denied forever");
+    debugPrint("Location permissions are denied forever");
     return null;
   }
   var position = await Geolocator.getCurrentPosition(
@@ -34,7 +32,7 @@ Future<Position?> getLocation() async {
 
 class MapScreen extends StatefulWidget {
   final MyHomePageState _homePageState;
-  const MapScreen(this._homePageState, {Key? key}) : super(key: key);
+  const MapScreen(this._homePageState, {super.key});
 
   @override
   // ignore: library_private_types_in_public_api
@@ -133,7 +131,7 @@ class _MapScreenState extends State<MapScreen> {
           left: 20.0,
           child: Text(
             "© MapTiler © OpenStreetMap contributors",
-            textScaleFactor: 0.5,
+            textScaler: TextScaler.linear(0.5),
             style: TextStyle(color: Colors.blueGrey),
           ),
         ),

@@ -1,7 +1,6 @@
 // Copyright (c) 2024 Steven Rosenthal smr@dt3.org
 // See LICENSE file in root directory for license terms.
 
-import 'dart:developer';
 import 'dart:math' as math;
 import 'package:cedar_flutter/about.dart';
 import 'package:cedar_flutter/cedar.pb.dart';
@@ -20,7 +19,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart' as dart_widgets;
 import 'package:grpc/service_api.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:logger/logger.dart';
 import 'package:path/path.dart' as path;
 import 'package:protobuf/protobuf.dart';
 import 'package:provider/provider.dart';
@@ -293,10 +291,6 @@ class MyHomePageState extends State<MyHomePage> {
     refreshStateFromServer();
   }
 
-  Logger logger = Logger(
-    printer: PrettyPrinter(methodCount: 0),
-  );
-
   // Geolocation from map.
   LatLng? _mapPosition;
   bool _northernHemisphere = true;
@@ -549,7 +543,7 @@ class MyHomePageState extends State<MyHomePage> {
       await client().updateFixedSettings(request,
           options: CallOptions(timeout: const Duration(seconds: 2)));
     } catch (e) {
-      log('updateFixedSettings error: $e');
+      debugPrint('updateFixedSettings error: $e');
     }
   }
 
@@ -559,7 +553,7 @@ class MyHomePageState extends State<MyHomePage> {
       await client().updateOperationSettings(request,
           options: CallOptions(timeout: const Duration(seconds: 2)));
     } catch (e) {
-      log('updateOperationSettings error: $e');
+      debugPrint('updateOperationSettings error: $e');
     }
   }
 
@@ -580,8 +574,7 @@ class MyHomePageState extends State<MyHomePage> {
         setStateFromFrameResult(response);
       });
     } catch (e) {
-      log('getFrameFromServer error: $e');
-      logger.w('getFrameFromServer error: $e');
+      debugPrint('getFrameFromServer error: $e');
       setState(() {
         // Has it been too long since we last succeeded?
         Duration elapsed = DateTime.now().difference(_lastServerResponseTime);
@@ -621,7 +614,7 @@ class MyHomePageState extends State<MyHomePage> {
       await client().initiateAction(request,
           options: CallOptions(timeout: const Duration(seconds: 2)));
     } catch (e) {
-      log('initiateAction error: $e');
+      debugPrint('initiateAction error: $e');
     }
   }
 
@@ -685,7 +678,7 @@ class MyHomePageState extends State<MyHomePage> {
           options: CallOptions(timeout: const Duration(seconds: 2)));
       return infoResult.logContent;
     } catch (e) {
-      log('getServerLogs error: $e');
+      debugPrint('getServerLogs error: $e');
       return "";
     }
   }
@@ -771,7 +764,7 @@ class MyHomePageState extends State<MyHomePage> {
         settingsModel.preferencesProto = preferences!.deepCopy();
       });
     } catch (e) {
-      log('updatePreferences error: $e');
+      debugPrint('updatePreferences error: $e');
     }
   }
 
