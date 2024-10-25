@@ -572,6 +572,7 @@ class MyHomePageState extends State<MyHomePage> {
       _everConnected = true;
       _lastServerResponseTime = DateTime.now();
       if (_inhibitRefresh) {
+        _prevFrameId = response.frameId;
         return;
       }
       _paintPending = true;
