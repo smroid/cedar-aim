@@ -563,12 +563,7 @@ class MyHomePageState extends State<MyHomePage> {
     final request = cedar_rpc.FrameRequest()..prevFrameId = _prevFrameId;
     try {
       final response = await client().getFrame(request,
-          options: CallOptions(
-            timeout: const Duration(seconds: 2),
-            metadata: {
-              'grpc-timeout': '2s',
-            },
-          ));
+          options: CallOptions(timeout: const Duration(seconds: 2)));
       if (!_serverConnected) {
         // Connecting for first time, or reconnecting.
         setServerTime(DateTime.now()); // Send our time to server.
