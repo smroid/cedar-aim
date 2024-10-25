@@ -190,6 +190,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final advanced = provider.preferencesProto.advanced;
     final isBasic = provider.isBasic;
     final isPlus = provider.isPlus;
+    final updateIntervalMs = durationToMs(opSettingsProto.updateInterval);
+
     int updateMax = 6; // Unlimited.
     if (isBasic) {
       updateMax = 4; // 5Hz.
@@ -323,8 +325,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               divisions: updateMax - 1,
                               value: min(
                                   updateMax.toDouble(),
-                                  switch (durationToMs(
-                                      opSettingsProto.updateInterval)) {
+                                  switch (updateIntervalMs) {
                                     1000 => 1,
                                     500 => 2,
                                     333 => 3,
@@ -350,15 +351,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               },
                             )),
                         title: scaledText(sprintf('Update frequency %s', [
-                          switch (
-                              durationToMs(opSettingsProto.updateInterval)) {
+                          switch (updateIntervalMs) {
                             1000 => "1Hz",
                             500 => "2Hz",
                             333 => "3Hz",
                             200 => "5Hz",
                             100 => "10Hz",
                             0 => "unlimited",
-                            _ => "unknown",
+                            _ => "unknown $updateIntervalMs",
                           },
                         ])),
                       ),

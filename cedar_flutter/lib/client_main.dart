@@ -566,7 +566,7 @@ class MyHomePageState extends State<MyHomePage> {
           options: CallOptions(timeout: const Duration(seconds: 2)));
       if (!_serverConnected) {
         // Connecting for first time, or reconnecting.
-        setServerTime(DateTime.now());  // Send our time to server.
+        setServerTime(DateTime.now()); // Send our time to server.
       }
       _serverConnected = true;
       _everConnected = true;
@@ -599,7 +599,7 @@ class MyHomePageState extends State<MyHomePage> {
       _mapPosition =
           LatLng(platformPosition.latitude, platformPosition.longitude);
     }
-    _tzOffset = DateTime.now().timeZoneOffset;  // Get platform timezone.
+    _tzOffset = DateTime.now().timeZoneOffset; // Get platform timezone.
 
     await Future.doWhile(() async {
       await Future.delayed(const Duration(milliseconds: 50));
