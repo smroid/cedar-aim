@@ -144,7 +144,7 @@ class SettingsModel extends ChangeNotifier {
 proto_duration.Duration durationFromMs(int intervalMs) {
   proto_duration.Duration duration = proto_duration.Duration();
   duration.seconds = Int64(intervalMs ~/ 1000);
-  intervalMs -= (duration.seconds * 1000).toInt();
+  intervalMs -= duration.seconds.toInt() * 1000;
   duration.nanos = intervalMs * 1000000;
   return duration;
 }
@@ -345,8 +345,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                   _ => 0,
                                 };
                                 setState(() {
-                                  provider
-                                      .updateUpdateInterval(intervalMs.round());
+                                  provider.updateUpdateInterval(intervalMs);
                                 });
                               },
                             )),
