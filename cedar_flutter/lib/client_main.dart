@@ -378,7 +378,7 @@ class MyHomePageState extends State<MyHomePage> {
   double _calibrationProgress = 0.0;
 
   // Transition from Operate mode back to Setup mode can take a second or
-  // so if the update rate setting is e.g.1 Hz. We put up a pacifier for this;
+  // so if the update rate setting is e.g. 1 Hz. We put up a pacifier for this;
   // define a flag so we can know when it is done.
   bool _transitionToSetup = false;
 
@@ -564,6 +564,10 @@ class MyHomePageState extends State<MyHomePage> {
     try {
       final response = await client().getFrame(request,
           options: CallOptions(timeout: const Duration(seconds: 2)));
+      if (!_serverConnected) {
+        // Connecting for first time, or reconnecting.
+        setServerTime(DateTime.now());  // Send our time to server.
+      }
       _serverConnected = true;
       _everConnected = true;
       _lastServerResponseTime = DateTime.now();
@@ -595,11 +599,7 @@ class MyHomePageState extends State<MyHomePage> {
       _mapPosition =
           LatLng(platformPosition.latitude, platformPosition.longitude);
     }
-
-    // Get platform time.
-    final now = DateTime.now();
-    _tzOffset = now.timeZoneOffset;
-    setServerTime(now);
+    _tzOffset = DateTime.now().timeZoneOffset;  // Get platform timezone.
 
     await Future.doWhile(() async {
       await Future.delayed(const Duration(milliseconds: 50));
