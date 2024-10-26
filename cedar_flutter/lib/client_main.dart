@@ -24,6 +24,7 @@ import 'package:protobuf/protobuf.dart';
 import 'package:provider/provider.dart';
 import 'package:sprintf/sprintf.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
 import 'cedar.pbgrpc.dart' as cedar_rpc;
 import 'tetra3.pb.dart';
 import 'get_cedar_client_for_web.dart'
@@ -1703,6 +1704,7 @@ class MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    WakelockPlus.enable();
     final bool healthy = _serverConnected && (_hasCamera || _demoMode);
 
     // This method is rerun every time setState() is called.
