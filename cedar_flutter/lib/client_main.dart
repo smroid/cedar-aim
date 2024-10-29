@@ -27,8 +27,8 @@ import 'package:syncfusion_flutter_gauges/gauges.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 import 'cedar.pbgrpc.dart' as cedar_rpc;
 import 'tetra3.pb.dart';
-import 'get_cedar_client_for_web.dart'
-    if (dart.library.io) 'get_cedar_client.dart';
+import 'get_cedar_client.dart'
+    if (dart.library.js_interop) 'get_cedar_client_for_web.dart';
 
 // To generate release build:
 // flutter build web --web-renderer canvaskit --no-web-resources-cdn
@@ -60,19 +60,13 @@ void clientMain(
   _wifiDialog = wifiDialog;
 
   WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setPreferredOrientations(
-    // Note that this has no effect when running as web app; it only works for
-    // Android app. Not sure if it works for IOS app.
-    [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight],
-  ).then(
-    (_) => runApp(MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (context) => SettingsModel()),
-        ChangeNotifierProvider(create: (context) => ThemeModel()),
-      ],
-      child: const MyApp(),
-    )),
-  );
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider(create: (context) => SettingsModel()),
+      ChangeNotifierProvider(create: (context) => ThemeModel()),
+    ],
+    child: const MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
@@ -385,10 +379,8 @@ class MyHomePageState extends State<MyHomePage> {
 
   // Values set from on-screen controls.
 
-  cedar_rpc.CedarClient? _client;
   cedar_rpc.CedarClient client() {
-    _client ??= getClient(); // Initialize if null.
-    return _client!;
+    return getClient();
   }
 
   LatLng? get mapPosition => _mapPosition;
@@ -411,8 +403,6 @@ class MyHomePageState extends State<MyHomePage> {
       _mapPosition = LatLng(response.fixedSettings.observerLocation.latitude,
           response.fixedSettings.observerLocation.longitude);
       _northernHemisphere = _mapPosition!.latitude > 0.0;
-    } else if (_mapPosition != null) {
-      setObserverLocation(_mapPosition!);
     }
     _hasSolution = false;
     _calibrating = response.calibrating;
@@ -565,9 +555,14 @@ class MyHomePageState extends State<MyHomePage> {
     try {
       final response = await client().getFrame(request,
           options: CallOptions(timeout: const Duration(seconds: 2)));
+      rpcSucceeded();
       if (!_serverConnected) {
-        // Connecting for first time, or reconnecting.
-        setServerTime(DateTime.now()); // Send our time to server.
+        // Connecting for first time, or reconnecting. Send our time and
+        // location.
+        setServerTime(DateTime.now());
+        if (_mapPosition != null) {
+          setObserverLocation(_mapPosition!);
+        }
       }
       _serverConnected = true;
       _everConnected = true;
@@ -1776,7 +1771,7 @@ class MyHomePageState extends State<MyHomePage> {
           ),
           child: Column(mainAxisSize: MainAxisSize.min, children: [
             Text(
-                maxLines: 5,
+                maxLines: 10,
                 style: const TextStyle(fontSize: 20),
                 _serverConnected
                     ? "Cedar could not detect a camera. "

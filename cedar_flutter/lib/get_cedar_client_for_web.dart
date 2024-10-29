@@ -7,6 +7,8 @@ import 'package:cedar_flutter/cedar.pbgrpc.dart';
 import 'package:flutter/foundation.dart';
 import 'package:grpc/grpc_web.dart';
 
+void rpcSucceeded() {}
+
 CedarClient getClient() {
   return CedarClient(GrpcWebClientChannel.xhr(Uri.base));
 }
