@@ -1735,7 +1735,7 @@ class MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    WakelockPlus.enable();
+    // WakelockPlus.enable();
     final bool healthy = _serverConnected && (_hasCamera || _demoMode);
 
     // This method is rerun every time setState() is called.
