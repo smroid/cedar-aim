@@ -42,6 +42,10 @@ class CedarClient extends $grpc.Client {
       '/cedar.Cedar/GetFrame',
       ($1.FrameRequest value) => value.writeToBuffer(),
       ($core.List<$core.int> value) => $1.FrameResult.fromBuffer(value));
+  static final _$getFrames = $grpc.ClientMethod<$1.EmptyMessage, $1.FrameResult>(
+      '/cedar.Cedar/GetFrames',
+      ($1.EmptyMessage value) => value.writeToBuffer(),
+      ($core.List<$core.int> value) => $1.FrameResult.fromBuffer(value));
   static final _$initiateAction = $grpc.ClientMethod<$1.ActionRequest, $1.EmptyMessage>(
       '/cedar.Cedar/InitiateAction',
       ($1.ActionRequest value) => value.writeToBuffer(),
@@ -91,6 +95,10 @@ class CedarClient extends $grpc.Client {
 
   $grpc.ResponseFuture<$1.FrameResult> getFrame($1.FrameRequest request, {$grpc.CallOptions? options}) {
     return $createUnaryCall(_$getFrame, request, options: options);
+  }
+
+  $grpc.ResponseStream<$1.FrameResult> getFrames($1.EmptyMessage request, {$grpc.CallOptions? options}) {
+    return $createStreamingCall(_$getFrames, $async.Stream.fromIterable([request]), options: options);
   }
 
   $grpc.ResponseFuture<$1.EmptyMessage> initiateAction($1.ActionRequest request, {$grpc.CallOptions? options}) {
@@ -158,6 +166,13 @@ abstract class CedarServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $1.FrameRequest.fromBuffer(value),
         ($1.FrameResult value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$1.EmptyMessage, $1.FrameResult>(
+        'GetFrames',
+        getFrames_Pre,
+        false,
+        true,
+        ($core.List<$core.int> value) => $1.EmptyMessage.fromBuffer(value),
+        ($1.FrameResult value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$1.ActionRequest, $1.EmptyMessage>(
         'InitiateAction',
         initiateAction_Pre,
@@ -222,6 +237,10 @@ abstract class CedarServiceBase extends $grpc.Service {
     return getFrame(call, await request);
   }
 
+  $async.Stream<$1.FrameResult> getFrames_Pre($grpc.ServiceCall call, $async.Future<$1.EmptyMessage> request) async* {
+    yield* getFrames(call, await request);
+  }
+
   $async.Future<$1.EmptyMessage> initiateAction_Pre($grpc.ServiceCall call, $async.Future<$1.ActionRequest> request) async {
     return initiateAction(call, await request);
   }
@@ -251,6 +270,7 @@ abstract class CedarServiceBase extends $grpc.Service {
   $async.Future<$1.OperationSettings> updateOperationSettings($grpc.ServiceCall call, $1.OperationSettings request);
   $async.Future<$1.Preferences> updatePreferences($grpc.ServiceCall call, $1.Preferences request);
   $async.Future<$1.FrameResult> getFrame($grpc.ServiceCall call, $1.FrameRequest request);
+  $async.Stream<$1.FrameResult> getFrames($grpc.ServiceCall call, $1.EmptyMessage request);
   $async.Future<$1.EmptyMessage> initiateAction($grpc.ServiceCall call, $1.ActionRequest request);
   $async.Future<$2.QueryCatalogResponse> queryCatalogEntries($grpc.ServiceCall call, $2.QueryCatalogRequest request);
   $async.Future<$2.CatalogEntry> getCatalogEntry($grpc.ServiceCall call, $2.CatalogEntryKey request);

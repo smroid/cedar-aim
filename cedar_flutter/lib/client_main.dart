@@ -284,7 +284,21 @@ class _OverlayImagePainter extends CustomPainter {
 
 class MyHomePageState extends State<MyHomePage> {
   MyHomePageState() {
-    refreshStateFromServer();
+    _initLocation();
+
+    // refreshStateFromServer();
+    streamStateFromServer();
+  }
+
+  Future<void> _initLocation() async {
+    // See if we can get location from the platform. If we are a web app, served
+    // over http (not https), we won't be able to get location here.
+    final platformPosition = await getLocation();
+    if (platformPosition != null) {
+      _mapPosition =
+          LatLng(platformPosition.latitude, platformPosition.longitude);
+    }
+    _tzOffset = DateTime.now().timeZoneOffset; // Get platform timezone.
   }
 
   // Geolocation from map.
@@ -549,60 +563,82 @@ class MyHomePageState extends State<MyHomePage> {
     }
   }
 
+  void _gotFrameResult(FrameResult response) {
+    rpcSucceeded();
+    if (!_serverConnected) {
+      // Connecting for first time, or reconnecting. Send our time and
+      // location.
+      setServerTime(DateTime.now());
+      if (_mapPosition != null) {
+        setObserverLocation(_mapPosition!);
+      }
+    }
+    _serverConnected = true;
+    _everConnected = true;
+    _lastServerResponseTime = DateTime.now();
+    if (_inhibitRefresh) {
+      _prevFrameId = response.frameId;
+      return;
+    }
+    _paintPending = true; // TODO: can we drop this?
+    setState(() {
+      setStateFromFrameResult(response);
+    });
+  }
+
+  void _frameRpcError() {
+    setState(() {
+      // Has it been too long since we last succeeded?
+      Duration elapsed = DateTime.now().difference(_lastServerResponseTime);
+      if (elapsed.inSeconds > 10) {
+        _serverConnected = false;
+      }
+    });
+  }
+
   // Use request/response style of RPC.
-  Future<void> getFrameFromServer() async {
+  Future<void> _getFrameFromServer() async {
     final request = cedar_rpc.FrameRequest()..prevFrameId = _prevFrameId;
     try {
       final response = await client().getFrame(request,
           options: CallOptions(timeout: const Duration(seconds: 2)));
-      rpcSucceeded();
-      if (!_serverConnected) {
-        // Connecting for first time, or reconnecting. Send our time and
-        // location.
-        setServerTime(DateTime.now());
-        if (_mapPosition != null) {
-          setObserverLocation(_mapPosition!);
-        }
-      }
-      _serverConnected = true;
-      _everConnected = true;
-      _lastServerResponseTime = DateTime.now();
-      if (_inhibitRefresh) {
-        _prevFrameId = response.frameId;
-        return;
-      }
-      _paintPending = true;
-      setState(() {
-        setStateFromFrameResult(response);
-      });
+      _gotFrameResult(response);
     } catch (e) {
-      debugPrint('getFrameFromServer error: $e');
-      setState(() {
-        // Has it been too long since we last succeeded?
-        Duration elapsed = DateTime.now().difference(_lastServerResponseTime);
-        if (elapsed.inSeconds > 10) {
-          _serverConnected = false;
-        }
-      });
+      debugPrint('getFrame RPC error: $e');
+      _frameRpcError();
+    }
+  }
+
+  // Use streaming RPC.
+  Future<void> _streamFramesFromServer() async {
+    final request = cedar_rpc.EmptyMessage();
+    try {
+      await for (final response in client().getFrames(request)) {
+        _gotFrameResult(response);
+      }
+      debugPrint('getFrames stream ended.');
+    } catch (e) {
+      debugPrint('getFrames streaming RPC error: $e');
+      _frameRpcError();
     }
   }
 
   // Issue repeated request/response RPCs.
   Future<void> refreshStateFromServer() async {
-    // See if we can get location from the platform. If we are a web app, served
-    // over http (not https), we won't be able to get location here.
-    var platformPosition = await getLocation();
-    if (platformPosition != null) {
-      _mapPosition =
-          LatLng(platformPosition.latitude, platformPosition.longitude);
-    }
-    _tzOffset = DateTime.now().timeZoneOffset; // Get platform timezone.
-
     await Future.doWhile(() async {
       await Future.delayed(const Duration(milliseconds: 50));
       if (!_paintPending) {
-        await getFrameFromServer();
+        await _getFrameFromServer();
       }
+      return true; // Forever!
+    });
+  }
+
+  // Issue streaming RPC; re-issue as needed.
+  Future<void> streamStateFromServer() async {
+    await Future.doWhile(() async {
+      await Future.delayed(const Duration(milliseconds: 50));
+      await _streamFramesFromServer();
       return true; // Forever!
     });
   }

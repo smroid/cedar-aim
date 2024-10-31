@@ -1451,9 +1451,9 @@ class FrameResult extends $pb.GeneratedMessage {
   @$pb.TagNumber(21)
   ImageCoord ensureBoresightPosition() => $_ensure(13);
 
-  /// When transitioning from SETUP mode to OPERATE mode, Cedar does a brief
-  /// sky/camera calibration. During calibration most FrameResult fields are
-  /// omitted. Fields present are: fixed_settings, preferences,
+  /// When transitioning from SETUP focus mode to another mode, Cedar does a
+  /// brief sky/camera calibration. During calibration most FrameResult fields
+  /// are omitted. Fields present are: fixed_settings, preferences,
   /// operation_settings, image, calibrating, and calibration_progress.
   @$pb.TagNumber(22)
   $core.bool get calibrating => $_getBF(14);
@@ -1672,7 +1672,7 @@ class Image extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   Rectangle ensureRectangle() => $_ensure(1);
 
-  /// Must be a recognized file format, e.g. BMP grayscale 8 bits per pixel.
+  /// Must be a recognized file format, e.g. BMP or JPEG grayscale 8 bits per pixel.
   @$pb.TagNumber(3)
   $core.List<$core.int> get imageData => $_getN(2);
   @$pb.TagNumber(3)
@@ -1931,7 +1931,6 @@ class ImageCoord extends $pb.GeneratedMessage {
 /// Diagnostic information summarizing Cedar's performance.
 class ProcessingStats extends $pb.GeneratedMessage {
   factory ProcessingStats({
-    ValueStats? solveInterval,
     ValueStats? overallLatency,
     ValueStats? detectLatency,
     ValueStats? solveLatency,
@@ -1940,9 +1939,6 @@ class ProcessingStats extends $pb.GeneratedMessage {
     ValueStats? serveLatency,
   }) {
     final $result = create();
-    if (solveInterval != null) {
-      $result.solveInterval = solveInterval;
-    }
     if (overallLatency != null) {
       $result.overallLatency = overallLatency;
     }
@@ -1968,7 +1964,6 @@ class ProcessingStats extends $pb.GeneratedMessage {
   factory ProcessingStats.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'ProcessingStats', package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'), createEmptyInstance: create)
-    ..aOM<ValueStats>(1, _omitFieldNames ? '' : 'solveInterval', subBuilder: ValueStats.create)
     ..aOM<ValueStats>(2, _omitFieldNames ? '' : 'overallLatency', subBuilder: ValueStats.create)
     ..aOM<ValueStats>(3, _omitFieldNames ? '' : 'detectLatency', subBuilder: ValueStats.create)
     ..aOM<ValueStats>(4, _omitFieldNames ? '' : 'solveLatency', subBuilder: ValueStats.create)
@@ -1999,96 +1994,83 @@ class ProcessingStats extends $pb.GeneratedMessage {
   static ProcessingStats getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<ProcessingStats>(create);
   static ProcessingStats? _defaultInstance;
 
-  /// The interval at which new plate solutions (or lack thereof) are
-  /// available. Seconds per solution cycle.
-  @$pb.TagNumber(1)
-  ValueStats get solveInterval => $_getN(0);
-  @$pb.TagNumber(1)
-  set solveInterval(ValueStats v) { setField(1, v); }
-  @$pb.TagNumber(1)
-  $core.bool hasSolveInterval() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearSolveInterval() => clearField(1);
-  @$pb.TagNumber(1)
-  ValueStats ensureSolveInterval() => $_ensure(0);
-
   /// Elapsed time (in seconds) between acquisition of an image (end of exposure)
   /// and completion of a plate solution for it. Skipped images (i.e. solution
   /// not attempted) do not contribute to this.
   @$pb.TagNumber(2)
-  ValueStats get overallLatency => $_getN(1);
+  ValueStats get overallLatency => $_getN(0);
   @$pb.TagNumber(2)
   set overallLatency(ValueStats v) { setField(2, v); }
   @$pb.TagNumber(2)
-  $core.bool hasOverallLatency() => $_has(1);
+  $core.bool hasOverallLatency() => $_has(0);
   @$pb.TagNumber(2)
   void clearOverallLatency() => clearField(2);
   @$pb.TagNumber(2)
-  ValueStats ensureOverallLatency() => $_ensure(1);
+  ValueStats ensureOverallLatency() => $_ensure(0);
 
   /// How much time (in seconds) is spent detecting/centroiding stars.
   @$pb.TagNumber(3)
-  ValueStats get detectLatency => $_getN(2);
+  ValueStats get detectLatency => $_getN(1);
   @$pb.TagNumber(3)
   set detectLatency(ValueStats v) { setField(3, v); }
   @$pb.TagNumber(3)
-  $core.bool hasDetectLatency() => $_has(2);
+  $core.bool hasDetectLatency() => $_has(1);
   @$pb.TagNumber(3)
   void clearDetectLatency() => clearField(3);
   @$pb.TagNumber(3)
-  ValueStats ensureDetectLatency() => $_ensure(2);
+  ValueStats ensureDetectLatency() => $_ensure(1);
 
   /// How much time (in seconds) is spent plate solving (when attempted).
   @$pb.TagNumber(4)
-  ValueStats get solveLatency => $_getN(3);
+  ValueStats get solveLatency => $_getN(2);
   @$pb.TagNumber(4)
   set solveLatency(ValueStats v) { setField(4, v); }
   @$pb.TagNumber(4)
-  $core.bool hasSolveLatency() => $_has(3);
+  $core.bool hasSolveLatency() => $_has(2);
   @$pb.TagNumber(4)
   void clearSolveLatency() => clearField(4);
   @$pb.TagNumber(4)
-  ValueStats ensureSolveLatency() => $_ensure(3);
+  ValueStats ensureSolveLatency() => $_ensure(2);
 
   /// The fraction of images on which a plate solution is attempted. If too few
   /// stars are detected we skip solving. Only the 'mean' is meaningful.
   @$pb.TagNumber(5)
-  ValueStats get solveAttemptFraction => $_getN(4);
+  ValueStats get solveAttemptFraction => $_getN(3);
   @$pb.TagNumber(5)
   set solveAttemptFraction(ValueStats v) { setField(5, v); }
   @$pb.TagNumber(5)
-  $core.bool hasSolveAttemptFraction() => $_has(4);
+  $core.bool hasSolveAttemptFraction() => $_has(3);
   @$pb.TagNumber(5)
   void clearSolveAttemptFraction() => clearField(5);
   @$pb.TagNumber(5)
-  ValueStats ensureSolveAttemptFraction() => $_ensure(4);
+  ValueStats ensureSolveAttemptFraction() => $_ensure(3);
 
   /// The fraction of plate solve attempts that succeed. Only the 'mean' is
   /// meaningful.
   @$pb.TagNumber(6)
-  ValueStats get solveSuccessFraction => $_getN(5);
+  ValueStats get solveSuccessFraction => $_getN(4);
   @$pb.TagNumber(6)
   set solveSuccessFraction(ValueStats v) { setField(6, v); }
   @$pb.TagNumber(6)
-  $core.bool hasSolveSuccessFraction() => $_has(5);
+  $core.bool hasSolveSuccessFraction() => $_has(4);
   @$pb.TagNumber(6)
   void clearSolveSuccessFraction() => clearField(6);
   @$pb.TagNumber(6)
-  ValueStats ensureSolveSuccessFraction() => $_ensure(5);
+  ValueStats ensureSolveSuccessFraction() => $_ensure(4);
 
   /// How much time (in seconds) is spent preparing the FrameResult to be
   /// returned. This includes time spent e.g. applying gamma to the display
   /// image.
   @$pb.TagNumber(7)
-  ValueStats get serveLatency => $_getN(6);
+  ValueStats get serveLatency => $_getN(5);
   @$pb.TagNumber(7)
   set serveLatency(ValueStats v) { setField(7, v); }
   @$pb.TagNumber(7)
-  $core.bool hasServeLatency() => $_has(6);
+  $core.bool hasServeLatency() => $_has(5);
   @$pb.TagNumber(7)
   void clearServeLatency() => clearField(7);
   @$pb.TagNumber(7)
-  ValueStats ensureServeLatency() => $_ensure(6);
+  ValueStats ensureServeLatency() => $_ensure(5);
 }
 
 class ValueStats extends $pb.GeneratedMessage {

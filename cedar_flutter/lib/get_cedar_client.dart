@@ -14,14 +14,17 @@ String? _goodAddress;
 cedar_rpc.CedarClient? _client;
 
 void rpcSucceeded() {
-  _goodAddress = _tryAddress;
-  debugPrint("Connected to $_goodAddress");
+  if (_goodAddress == null) {
+    _goodAddress = _tryAddress;
+    debugPrint("Connected to $_goodAddress");
+  }
 }
 
 CedarClient getClient() {
   const options = ChannelOptions(
     credentials: ChannelCredentials.insecure(),
     connectTimeout: Duration(seconds: 5),
+    // TODO: try removing the keepalive
     keepAlive:
         ClientKeepAliveOptions(pingInterval: Duration(milliseconds: 100)),
   );
