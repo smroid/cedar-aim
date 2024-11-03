@@ -17,7 +17,7 @@ import 'package:fixnum/fixnum.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart' as dart_widgets;
-import 'package:grpc/service_api.dart';
+import 'package:grpc/grpc.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:path/path.dart' as path;
 import 'package:protobuf/protobuf.dart';
@@ -285,9 +285,7 @@ class _OverlayImagePainter extends CustomPainter {
 class MyHomePageState extends State<MyHomePage> {
   MyHomePageState() {
     _initLocation();
-
-    // refreshStateFromServer();
-    streamStateFromServer();
+    refreshStateFromServer();
   }
 
   Future<void> _initLocation() async {
@@ -599,27 +597,30 @@ class MyHomePageState extends State<MyHomePage> {
   // Use request/response style of RPC.
   Future<void> _getFrameFromServer() async {
     final request = cedar_rpc.FrameRequest()..prevFrameId = _prevFrameId;
-    try {
-      final response = await client().getFrame(request,
-          options: CallOptions(timeout: const Duration(seconds: 2)));
-      _gotFrameResult(response);
-    } catch (e) {
-      debugPrint('getFrame RPC error: $e');
-      _frameRpcError();
-    }
-  }
-
-  // Use streaming RPC.
-  Future<void> _streamFramesFromServer() async {
-    final request = cedar_rpc.EmptyMessage();
-    try {
-      await for (final response in client().getFrames(request)) {
+    int retryCount = 0;
+    const initialDelay = Duration(milliseconds: 100);
+    const maxDelay = Duration(seconds: 2);
+    while (true) {
+      try {
+        final response = await client().getFrame(
+          request,
+          options: CallOptions(timeout: const Duration(seconds: 2)),
+        );
         _gotFrameResult(response);
+      } on GrpcError catch (e) {
+        debugPrint('getFrame RPC error: $e');
+        _frameRpcError();
+        if (e.code == StatusCode.deadlineExceeded) {
+          var delay = initialDelay * (1 << retryCount);
+          if (delay > maxDelay) {
+            delay = maxDelay;
+          }
+          await Future.delayed(delay);
+          retryCount++;
+          continue;
+        }
       }
-      debugPrint('getFrames stream ended.');
-    } catch (e) {
-      debugPrint('getFrames streaming RPC error: $e');
-      _frameRpcError();
+      break;
     }
   }
 
@@ -630,15 +631,6 @@ class MyHomePageState extends State<MyHomePage> {
       if (!_paintPending) {
         await _getFrameFromServer();
       }
-      return true; // Forever!
-    });
-  }
-
-  // Issue streaming RPC; re-issue as needed.
-  Future<void> streamStateFromServer() async {
-    await Future.doWhile(() async {
-      await Future.delayed(const Duration(milliseconds: 50));
-      await _streamFramesFromServer();
       return true; // Forever!
     });
   }
