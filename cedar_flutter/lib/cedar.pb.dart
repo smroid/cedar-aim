@@ -1066,10 +1066,14 @@ class Preferences extends $pb.GeneratedMessage {
 class FrameRequest extends $pb.GeneratedMessage {
   factory FrameRequest({
     $core.int? prevFrameId,
+    $core.bool? nonBlocking,
   }) {
     final $result = create();
     if (prevFrameId != null) {
       $result.prevFrameId = prevFrameId;
+    }
+    if (nonBlocking != null) {
+      $result.nonBlocking = nonBlocking;
     }
     return $result;
   }
@@ -1079,6 +1083,7 @@ class FrameRequest extends $pb.GeneratedMessage {
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'FrameRequest', package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'), createEmptyInstance: create)
     ..a<$core.int>(1, _omitFieldNames ? '' : 'prevFrameId', $pb.PbFieldType.O3)
+    ..aOB(2, _omitFieldNames ? '' : 'nonBlocking')
     ..hasRequiredFields = false
   ;
 
@@ -1115,9 +1120,22 @@ class FrameRequest extends $pb.GeneratedMessage {
   $core.bool hasPrevFrameId() => $_has(0);
   @$pb.TagNumber(1)
   void clearPrevFrameId() => clearField(1);
+
+  /// If true, GetFrame() returns immediately. If the requested frame (a new frame
+  /// different from 'prev_frame_id' or the current frame if 'prev_frame_id' is
+  /// omitted) is available, the returned FrameResult.has_result field will be
+  /// true.
+  @$pb.TagNumber(2)
+  $core.bool get nonBlocking => $_getBF(1);
+  @$pb.TagNumber(2)
+  set nonBlocking($core.bool v) { $_setBool(1, v); }
+  @$pb.TagNumber(2)
+  $core.bool hasNonBlocking() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearNonBlocking() => clearField(2);
 }
 
-/// Next tag: 34.
+/// Next tag: 35.
 class FrameResult extends $pb.GeneratedMessage {
   factory FrameResult({
     $core.int? frameId,
@@ -1146,6 +1164,7 @@ class FrameResult extends $pb.GeneratedMessage {
     $core.Iterable<FovCatalogEntry>? labeledCatalogEntries,
     ServerInformation? serverInformation,
     $core.Iterable<FovCatalogEntry>? unlabeledCatalogEntries,
+    $core.bool? hasResult,
   }) {
     final $result = create();
     if (frameId != null) {
@@ -1226,6 +1245,9 @@ class FrameResult extends $pb.GeneratedMessage {
     if (unlabeledCatalogEntries != null) {
       $result.unlabeledCatalogEntries.addAll(unlabeledCatalogEntries);
     }
+    if (hasResult != null) {
+      $result.hasResult = hasResult;
+    }
     return $result;
   }
   FrameResult._() : super();
@@ -1259,6 +1281,7 @@ class FrameResult extends $pb.GeneratedMessage {
     ..pc<FovCatalogEntry>(31, _omitFieldNames ? '' : 'labeledCatalogEntries', $pb.PbFieldType.PM, subBuilder: FovCatalogEntry.create)
     ..aOM<ServerInformation>(32, _omitFieldNames ? '' : 'serverInformation', subBuilder: ServerInformation.create)
     ..pc<FovCatalogEntry>(33, _omitFieldNames ? '' : 'unlabeledCatalogEntries', $pb.PbFieldType.PM, subBuilder: FovCatalogEntry.create)
+    ..aOB(34, _omitFieldNames ? '' : 'hasResult')
     ..hasRequiredFields = false
   ;
 
@@ -1453,8 +1476,9 @@ class FrameResult extends $pb.GeneratedMessage {
 
   /// When transitioning from SETUP focus mode to another mode, Cedar does a
   /// brief sky/camera calibration. During calibration most FrameResult fields
-  /// are omitted. Fields present are: fixed_settings, preferences,
-  /// operation_settings, image, calibrating, and calibration_progress.
+  /// are omitted. Fields present are: server_information, fixed_settings,
+  /// preferences, operation_settings, image, calibrating, and
+  /// calibration_progress.
   @$pb.TagNumber(22)
   $core.bool get calibrating => $_getBF(14);
   @$pb.TagNumber(22)
@@ -1592,6 +1616,20 @@ class FrameResult extends $pb.GeneratedMessage {
   /// not label to avoid clutter.
   @$pb.TagNumber(33)
   $core.List<FovCatalogEntry> get unlabeledCatalogEntries => $_getList(25);
+
+  /// If FrameRequest.non_blocking is omitted or false, this field will be
+  /// absent. If FrameRequest.non_blocking is true, this field will be true
+  /// if a suitable result is ready, otherwise this field will be false in
+  /// which case all other FrameResult fields should be ignored (aside from
+  /// 'server_information', which is always populated).
+  @$pb.TagNumber(34)
+  $core.bool get hasResult => $_getBF(26);
+  @$pb.TagNumber(34)
+  set hasResult($core.bool v) { $_setBool(26, v); }
+  @$pb.TagNumber(34)
+  $core.bool hasHasResult() => $_has(26);
+  @$pb.TagNumber(34)
+  void clearHasResult() => clearField(34);
 }
 
 class Image extends $pb.GeneratedMessage {
