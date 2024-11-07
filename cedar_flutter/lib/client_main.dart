@@ -566,59 +566,44 @@ class MyHomePageState extends State<MyHomePage> {
     final request = cedar_rpc.FrameRequest()
       ..prevFrameId = _prevFrameId
       ..nonBlocking = true;
-    int retryCount = 0;
-    const initialDelay = Duration(milliseconds: 100);
-    const maxDelay = Duration(seconds: 1);
-    while (true) {
-      try {
-        final response = await client().getFrame(
-          request,
-          // TODO: lower timeout to 100ms?
-          options: CallOptions(timeout: const Duration(seconds: 1)),
-        );
-        rpcSucceeded();
-        if (!_serverConnected) {
-          // Connecting for first time, or reconnecting. Send our time and
-          // location.
-          setServerTime(DateTime.now());
-          if (_mapPosition != null) {
-            setObserverLocation(_mapPosition!);
-          }
+    try {
+      final response = await client().getFrame(
+        request,
+        options: CallOptions(timeout: const Duration(seconds: 1)),
+      );
+      rpcSucceeded();
+      if (!_serverConnected) {
+        // Connecting for first time, or reconnecting. Send our time and
+        // location.
+        setServerTime(DateTime.now());
+        if (_mapPosition != null) {
+          setObserverLocation(_mapPosition!);
         }
-        _serverConnected = true;
-        _everConnected = true;
-        _lastServerResponseTime = DateTime.now();
-        if (response.hasResult) {
-          if (_inhibitRefresh) {
-            _prevFrameId = response.frameId;
-            return;
-          }
+      }
+      _serverConnected = true;
+      _everConnected = true;
+      _lastServerResponseTime = DateTime.now();
+      if (response.hasResult) {
+        if (_inhibitRefresh) {
+          _prevFrameId = response.frameId;
+        } else {
           _paintPending = true; // TODO: can we drop this?
           setState(() {
             setStateFromFrameResult(response);
           });
         }
-      } on GrpcError catch (e) {
-        debugPrint('getFrame RPC error: $e');
-        setState(() {
-          // Has it been too long since we last succeeded?
-          Duration elapsed = DateTime.now().difference(_lastServerResponseTime);
-          if (elapsed.inSeconds > 10) {
-            _serverConnected = false;
-          }
-        });
-        if (e.code == StatusCode.deadlineExceeded) {
-          var delay = initialDelay * (1 << retryCount);
-          if (delay > maxDelay) {
-            delay = maxDelay;
-          }
-          await Future.delayed(delay);
-          retryCount++;
-          continue;
-        }
       }
-      return;
-    } // while (true)
+    } catch (e) {
+      debugPrint('getFrame RPC error: $e');
+      rpcFailed(); // Make a new channel.
+      setState(() {
+        // Has it been too long since we last succeeded?
+        Duration elapsed = DateTime.now().difference(_lastServerResponseTime);
+        if (elapsed.inSeconds > 10) {
+          _serverConnected = false;
+        }
+      });
+    }
   }
 
   // Issue repeated request/response RPCs.

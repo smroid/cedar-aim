@@ -7,10 +7,19 @@ import 'package:cedar_flutter/cedar.pbgrpc.dart';
 import 'package:flutter/foundation.dart';
 import 'package:grpc/grpc_web.dart';
 
+GrpcWebClientChannel? _channel;
+
 void rpcSucceeded() {}
+void rpcFailed() {
+  if (_channel != null) {
+    _channel!.shutdown();
+    _channel = null;
+  }
+}
 
 CedarClient getClient() {
-  return CedarClient(GrpcWebClientChannel.xhr(Uri.base));
+  _channel ??= GrpcWebClientChannel.xhr(Uri.base);
+  return CedarClient(_channel!);
 }
 
 void goFullScreen() {

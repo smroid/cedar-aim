@@ -11,7 +11,13 @@ import 'package:grpc/grpc.dart';
 
 String _tryAddress = "raspberrypi.local";
 String? _goodAddress;
+ClientChannel? _channel;
 cedar_rpc.CedarClient? _client;
+
+const _options = ChannelOptions(
+  credentials: ChannelCredentials.insecure(),
+  connectTimeout: Duration(seconds: 5),
+);
 
 void rpcSucceeded() {
   if (_goodAddress == null) {
@@ -20,14 +26,15 @@ void rpcSucceeded() {
   }
 }
 
+void rpcFailed() {
+  if (_goodAddress != null) {
+    _channel?.shutdown();
+    _channel = ClientChannel(_tryAddress, port: 80, options: _options);
+    _client = CedarClient(_channel!);
+  }
+}
+
 CedarClient getClient() {
-  const options = ChannelOptions(
-    credentials: ChannelCredentials.insecure(),
-    connectTimeout: Duration(seconds: 5),
-    // TODO: try removing the keepalive
-    keepAlive:
-        ClientKeepAliveOptions(pingInterval: Duration(milliseconds: 100)),
-  );
   if (_goodAddress != null) {
     return _client!;
   }
@@ -42,7 +49,9 @@ CedarClient getClient() {
       _tryAddress = "raspberrypi.local";
       break;
   }
-  _client = CedarClient(ClientChannel(_tryAddress, port: 80, options: options));
+  _channel?.shutdown();
+  _channel = ClientChannel(_tryAddress, port: 80, options: _options);
+  _client = CedarClient(_channel!);
   return _client!;
 }
 
