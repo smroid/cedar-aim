@@ -791,7 +791,7 @@ class MyHomePageState extends State<MyHomePage> {
               Container(width: 15),
               DropdownMenu<String>(
                   inputDecorationTheme: InputDecorationTheme(
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 12),
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 10),
                     constraints:
                         BoxConstraints.tight(const Size.fromHeight(40)),
                     border: OutlineInputBorder(
@@ -841,7 +841,21 @@ class MyHomePageState extends State<MyHomePage> {
                       });
                     }
                     Navigator.of(context).pop();
-                  })
+                  }),
+              const SizedBox(width: 5),
+              _setupMode
+                  ? TextButton.icon(
+                      label: scaledText("Daytime"),
+                      icon: _daylightMode
+                          ? const Icon(Icons.check)
+                          : const Icon(Icons.check_box_outline_blank),
+                      onPressed: () async {
+                        setState(() {
+                          _daylightMode = !_daylightMode;
+                          _setDaylightMode(_daylightMode);
+                        });
+                      })
+                  : Container()
             ],
           )),
       const SizedBox(height: 15),
@@ -1377,7 +1391,7 @@ class MyHomePageState extends State<MyHomePage> {
       RotatedBox(
           quarterTurns: portrait ? 3 : 0,
           child: _setupMode && !(_focusAid && _advanced && !_daylightMode)
-              ? const SizedBox(height: 75)
+              ? const SizedBox(width: 75, height: 75)
               : Column(children: <Widget>[
                   SizedBox(
                     width: 75,
@@ -1434,39 +1448,7 @@ class MyHomePageState extends State<MyHomePage> {
                         )),
                   ),
                 ])),
-      const SizedBox(width: 10, height: 10),
-      // Define a spacer for situations where data items column is empty.
-      RotatedBox(
-          quarterTurns: portrait ? 3 : 0,
-          child: SizedBox(
-            width: 90 * textScaleFactor(context),
-            child: Container(),
-          )),
-      const SizedBox(width: 10, height: 10),
-      RotatedBox(
-        quarterTurns: portrait ? 3 : 0,
-        child: _setupMode
-            ? SizedBox(
-                width: 100 * textScaleFactor(context),
-                child: GestureDetector(
-                    onTap: () {
-                      _setDaylightMode(!_daylightMode);
-                    },
-                    child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Checkbox(
-                            value: _daylightMode,
-                            onChanged: (bool? selected) {
-                              _setDaylightMode(selected!);
-                            },
-                            activeColor: Theme.of(context).colorScheme.surface,
-                            checkColor: Theme.of(context).colorScheme.primary,
-                          ),
-                          primaryText("Daytime"),
-                        ])))
-            : Container(),
-      ),
+      const SizedBox(width: 20, height: 20),
       RotatedBox(
           quarterTurns: portrait ? 3 : 0,
           child: _setupMode
@@ -1475,6 +1457,7 @@ class MyHomePageState extends State<MyHomePage> {
                   width: 110 * textScaleFactor(context),
                   height: 120 * textScaleFactor(context),
                   child: Column(
+                    // RA/Dec, Alt/Az, etc.
                     children: coordInfo(
                         preferences?.mountType == cedar_rpc.MountType.ALT_AZ,
                         /*width=*/ 110),
