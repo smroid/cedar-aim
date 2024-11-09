@@ -782,8 +782,7 @@ class MyHomePageState extends State<MyHomePage> {
 
   List<Widget> drawerControls(BuildContext context) {
     return <Widget>[
-      const CloseButton(style: ButtonStyle(alignment: Alignment.topLeft)),
-      const SizedBox(height: 15),
+      const SizedBox(height: 30),
       Align(
           alignment: Alignment.topLeft,
           child: Row(
