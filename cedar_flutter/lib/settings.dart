@@ -63,7 +63,9 @@ bool diffOperationSettings(OperationSettings prev, OperationSettings curr) {
   // We don't consider these fields.
   curr.clearOperatingMode();
   curr.clearDaylightMode();
+  curr.clearFocusAssistMode();
   curr.clearCatalogEntryMatch();
+  curr.clearDemoImageFilename();
 
   bool hasDiff = false;
   if (curr.updateInterval != prev.updateInterval) {
