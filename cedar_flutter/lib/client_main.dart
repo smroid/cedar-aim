@@ -1673,20 +1673,33 @@ class MyHomePageState extends State<MyHomePage> {
     final controlsColumn = Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: portrait ? controls().reversed.toList() : controls());
-    return RotatedBox(
-      quarterTurns: portrait ? 1 : 0,
-      child: Row(
-        children: <Widget>[
-          const SizedBox(width: 5, height: 0),
-          SizedBox(height: _imageRegion.height, child: controlsColumn),
-          const SizedBox(width: 5, height: 0),
-          imageStack(context),
-          const SizedBox(width: 5, height: 0),
-          Column(children: dataItems(context)),
-          const SizedBox(width: 5, height: 0),
-        ],
-      ),
-    );
+    return GestureDetector(
+        // On Android, sometimes the system and navigation bars become visible.
+        // Kludge long-press to re-assert our desired screen mode.
+        onLongPress: () {
+          bool hideAppBar = Provider.of<SettingsModel>(context, listen: false)
+              .preferencesProto
+              .hideAppBar;
+          if (hideAppBar) {
+            goFullScreen();
+          } else {
+            cancelFullScreen();
+          }
+        },
+        child: RotatedBox(
+          quarterTurns: portrait ? 1 : 0,
+          child: Row(
+            children: <Widget>[
+              const SizedBox(width: 5, height: 0),
+              SizedBox(height: _imageRegion.height, child: controlsColumn),
+              const SizedBox(width: 5, height: 0),
+              imageStack(context),
+              const SizedBox(width: 5, height: 0),
+              Column(children: dataItems(context)),
+              const SizedBox(width: 5, height: 0),
+            ],
+          ),
+        ));
   }
 
   final _scaffoldKey = GlobalKey<ScaffoldState>();
