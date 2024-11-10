@@ -782,7 +782,9 @@ class MyHomePageState extends State<MyHomePage> {
 
   List<Widget> drawerControls(BuildContext context) {
     return <Widget>[
-      const SizedBox(height: 30),
+      const SizedBox(height: 15),
+      const CloseButton(style: ButtonStyle(alignment: Alignment.topLeft)),
+      const SizedBox(height: 15),
       Align(
           alignment: Alignment.topLeft,
           child: Row(
@@ -1705,35 +1707,38 @@ class MyHomePageState extends State<MyHomePage> {
           toolbarOpacity: hideAppBar ? 0.0 : 1.0,
           title: Text(widget.title),
           foregroundColor: Theme.of(context).colorScheme.primary),
-      body: Container(
-          color: Theme.of(context).colorScheme.surface,
-          child: Stack(
-            fit: StackFit.expand,
-            children: [
-              healthy
-                  ? FittedBox(child: orientationLayout(context))
-                  : badServerState(),
-              Positioned(
-                  left: 0,
-                  top: 0,
-                  child: hideAppBar
-                      ? IconButton(
-                          icon: const Icon(Icons.menu),
-                          onPressed: () {
-                            _scaffoldKey.currentState!.openDrawer();
-                          })
-                      : Container()),
-            ],
-          )),
+      body: SafeArea(
+          child: Container(
+              color: Theme.of(context).colorScheme.surface,
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  healthy
+                      ? FittedBox(child: orientationLayout(context))
+                      : badServerState(),
+                  Positioned(
+                      left: 0,
+                      top: 0,
+                      child: hideAppBar
+                          ? IconButton(
+                              icon: const Icon(Icons.menu),
+                              onPressed: () {
+                                _scaffoldKey.currentState!.openDrawer();
+                              })
+                          : Container()),
+                ],
+              ))),
       onDrawerChanged: (isOpened) {
         // Prevent jank in demo mode image file selector.
         _inhibitRefresh = isOpened;
       },
       drawer: _serverConnected
-          ? Drawer(
-              width: 240 * textScaleFactor(context),
-              child: ListView(
-                  padding: EdgeInsets.zero, children: drawerControls(context)))
+          ? SafeArea(
+              child: Drawer(
+                  width: 240 * textScaleFactor(context),
+                  child: ListView(
+                      padding: EdgeInsets.zero,
+                      children: drawerControls(context))))
           : Container(),
       drawerEdgeDragWidth: 100,
     );
