@@ -1531,7 +1531,9 @@ class MyHomePageState extends State<MyHomePage> {
                       var star = _findStarHit(localPosition, 30);
                       if (star != null) {
                         designateBoresight(Offset(
-                            star.centroidPosition.x, star.centroidPosition.y));
+                          star.centroidPosition.x,
+                          star.centroidPosition.y,
+                        ));
                         _alignTargetTapped = true;
                       }
                     }
@@ -1549,11 +1551,20 @@ class MyHomePageState extends State<MyHomePage> {
   }
 
   StarCentroid? _findStarHit(Offset tapPosition, int tolerance) {
+    if (_stars.isEmpty) {
+      return null;
+    }
     StarCentroid? closest;
     double closestDistance = 0;
+    double brightest = _stars[0].brightness;
+    // We only include stars up to one magnitude fainter.
+    double faintLimit = brightest / 2.5;
 
     int numTargets = 0;
     for (var star in _stars) {
+      if (star.brightness < faintLimit) {
+        break;
+      }
       if (++numTargets > _numTargets) {
         break;
       }
