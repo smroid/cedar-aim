@@ -210,13 +210,19 @@ class _MainImagePainter extends CustomPainter {
         !state._focusAid &&
         !state._daylightMode &&
         state._stars.isNotEmpty) {
-      // Draw alignment targets: the N brightest stars (or planets).
+      // Draw alignment targets: up to N brightest stars (or planets).
       Paint paint = Paint()
         ..color = color
         ..strokeWidth = thick
         ..style = PaintingStyle.stroke;
       int numTargets = 0;
+      double brightest = state._stars[0].brightness;
+      // We only include stars up to one magnitude fainter.
+      double faintLimit = brightest / 2.5;
       for (var star in state._stars) {
+        if (star.brightness < faintLimit) {
+          break;
+        }
         if (++numTargets > state._numTargets) {
           break;
         }
