@@ -805,7 +805,7 @@ class MyHomePageState extends State<MyHomePage> {
                       borderRadius: BorderRadius.circular(6),
                     ),
                   ),
-                  width: 100 * textScaleFactor(context),
+                  width: 120 * textScaleFactor(context),
                   requestFocusOnTap: false,
                   initialSelection:
                       _setupMode ? (_focusAid ? "Focus" : "Align") : "Aim",
@@ -849,20 +849,6 @@ class MyHomePageState extends State<MyHomePage> {
                     }
                     Navigator.of(context).pop();
                   }),
-              const SizedBox(width: 5),
-              _setupMode
-                  ? TextButton.icon(
-                      label: scaledText("Daytime"),
-                      icon: _daylightMode
-                          ? const Icon(Icons.check)
-                          : const Icon(Icons.check_box_outline_blank),
-                      onPressed: () async {
-                        setState(() {
-                          _daylightMode = !_daylightMode;
-                          _setDaylightMode(_daylightMode);
-                        });
-                      })
-                  : Container()
             ],
           )),
       const SizedBox(height: 15),
@@ -1187,7 +1173,21 @@ class MyHomePageState extends State<MyHomePage> {
                             })
                         : Container())),
           )),
-      const SizedBox(width: 0, height: 25),
+      const SizedBox(width: 0, height: 15),
+      _setupMode
+          ? TextButton.icon(
+              label: scaledText("Daytime"),
+              icon: _daylightMode
+                  ? const Icon(Icons.check)
+                  : const Icon(Icons.check_box_outline_blank),
+              onPressed: () async {
+                setState(() {
+                  _daylightMode = !_daylightMode;
+                  _setDaylightMode(_daylightMode);
+                });
+              })
+          : Container(),
+      const SizedBox(width: 0, height: 10),
       _slewRequest != null
           ? RotatedBox(
               quarterTurns: portrait ? 3 : 0,
