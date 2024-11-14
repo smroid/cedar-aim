@@ -1175,17 +1175,19 @@ class MyHomePageState extends State<MyHomePage> {
           )),
       const SizedBox(width: 0, height: 15),
       _setupMode
-          ? TextButton.icon(
-              label: scaledText("Daytime"),
-              icon: _daylightMode
-                  ? const Icon(Icons.check)
-                  : const Icon(Icons.check_box_outline_blank),
-              onPressed: () async {
-                setState(() {
-                  _daylightMode = !_daylightMode;
-                  _setDaylightMode(_daylightMode);
-                });
-              })
+          ? RotatedBox(
+              quarterTurns: portrait ? 3 : 0,
+              child: TextButton.icon(
+                  label: scaledText("Day"),
+                  icon: _daylightMode
+                      ? const Icon(Icons.check)
+                      : const Icon(Icons.check_box_outline_blank),
+                  onPressed: () async {
+                    setState(() {
+                      _daylightMode = !_daylightMode;
+                      _setDaylightMode(_daylightMode);
+                    });
+                  }))
           : Container(),
       const SizedBox(width: 0, height: 10),
       _slewRequest != null
