@@ -160,7 +160,7 @@ class _MainImagePainter extends CustomPainter {
           color,
           state._boresightPosition,
           state._scopeFov,
-          /*rollAngleRad=*/ _deg2rad(state.bullseyeDirectionIndicator()),
+          /*rollAngleRad=*/ _deg2rad(state._bullseyeDirectionIndicator()),
           posInImage,
           slew.targetDistance,
           slew.targetAngle,
@@ -182,7 +182,7 @@ class _MainImagePainter extends CustomPainter {
     } else if (!state._focusAid &&
         !state._calibrating &&
         !state._transitionToSetup) {
-      var rollAngleRad = _deg2rad(state.bullseyeDirectionIndicator());
+      var rollAngleRad = _deg2rad(state._bullseyeDirectionIndicator());
       drawBullseye(canvas, color, state._boresightPosition, state._scopeFov / 2,
           rollAngleRad);
       if (state._labeledFovCatalogEntries.isNotEmpty &&
@@ -274,7 +274,7 @@ class _OverlayImagePainter extends CustomPainter {
         color,
         overlayCenter,
         scopeFov,
-        /*rollAngleRad=*/ _deg2rad(_state.bullseyeDirectionIndicator()),
+        /*rollAngleRad=*/ _deg2rad(_state._bullseyeDirectionIndicator()),
         posInImage,
         slew.targetDistance,
         slew.targetAngle,
@@ -291,7 +291,7 @@ class _OverlayImagePainter extends CustomPainter {
 class MyHomePageState extends State<MyHomePage> {
   MyHomePageState() {
     _initLocation();
-    refreshStateFromServer();
+    _refreshStateFromServer();
   }
 
   Future<void> _initLocation() async {
@@ -406,7 +406,7 @@ class MyHomePageState extends State<MyHomePage> {
     setState(() {
       _mapPosition = newPos;
       if (newPos != null) {
-        setObserverLocation(newPos);
+        _setObserverLocation(newPos);
       }
     });
   }
@@ -539,7 +539,7 @@ class MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  double bullseyeDirectionIndicator() {
+  double _bullseyeDirectionIndicator() {
     if (preferences?.mountType == cedar_rpc.MountType.ALT_AZ &&
         _locationBasedInfo != null) {
       return _locationBasedInfo!.zenithRollAngle;
@@ -548,7 +548,7 @@ class MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  Future<void> updateFixedSettings(cedar_rpc.FixedSettings request) async {
+  Future<void> _updateFixedSettings(cedar_rpc.FixedSettings request) async {
     try {
       await client().updateFixedSettings(request,
           options: CallOptions(timeout: const Duration(seconds: 2)));
@@ -581,9 +581,9 @@ class MyHomePageState extends State<MyHomePage> {
       if (!_serverConnected) {
         // Connecting for first time, or reconnecting. Send our time and
         // location.
-        setServerTime(DateTime.now());
+        _setServerTime(DateTime.now());
         if (_mapPosition != null) {
-          setObserverLocation(_mapPosition!);
+          _setObserverLocation(_mapPosition!);
         }
       }
       _serverConnected = true;
@@ -613,7 +613,7 @@ class MyHomePageState extends State<MyHomePage> {
   }
 
   // Issue repeated request/response RPCs.
-  Future<void> refreshStateFromServer() async {
+  Future<void> _refreshStateFromServer() async {
     await Future.doWhile(() async {
       await Future.delayed(const Duration(milliseconds: 50));
       if (!_paintPending) {
@@ -632,35 +632,35 @@ class MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  Future<void> setServerTime(DateTime now) async {
+  Future<void> _setServerTime(DateTime now) async {
     final ts = Timestamp(
         seconds: Int64(now.millisecondsSinceEpoch ~/ 1000.0),
         nanos: (now.millisecondsSinceEpoch % 1000) * 1000000);
     var request = cedar_rpc.FixedSettings();
     request.currentTime = ts;
-    await updateFixedSettings(request);
+    await _updateFixedSettings(request);
   }
 
-  Future<void> setObserverLocation(LatLng pos) async {
+  Future<void> _setObserverLocation(LatLng pos) async {
     final posProto =
         cedar_rpc.LatLong(latitude: pos.latitude, longitude: pos.longitude);
     var request = cedar_rpc.FixedSettings();
     request.observerLocation = posProto;
-    await updateFixedSettings(request);
+    await _updateFixedSettings(request);
   }
 
-  Future<void> captureBoresight() async {
+  Future<void> _captureBoresight() async {
     final request = cedar_rpc.ActionRequest(captureBoresight: true);
     await initiateAction(request);
   }
 
-  Future<void> designateBoresight(Offset pos) async {
+  Future<void> _designateBoresight(Offset pos) async {
     final coord = cedar_rpc.ImageCoord(x: pos.dx, y: pos.dy);
     final request = cedar_rpc.ActionRequest(designateBoresight: coord);
     await initiateAction(request);
   }
 
-  Future<void> stopSlew() async {
+  Future<void> _stopSlew() async {
     final request = cedar_rpc.ActionRequest(stopSlew: true);
     await initiateAction(request);
   }
@@ -680,12 +680,12 @@ class MyHomePageState extends State<MyHomePage> {
   }
 
   // Pass empty string to terminate demo mode.
-  Future<void> setDemoImage(String imageFile) async {
+  Future<void> _setDemoImage(String imageFile) async {
     final request = cedar_rpc.OperationSettings(demoImageFilename: imageFile);
     await updateOperationSettings(request);
   }
 
-  Future<String> getServerLogs() async {
+  Future<String> _getServerLogs() async {
     final request = cedar_rpc.ServerLogRequest(logRequest: 20000);
     try {
       final infoResult = await client().getServerLog(request,
@@ -697,16 +697,16 @@ class MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  Text scaledText(String str) {
+  Text _scaledText(String str) {
     return Text(str, textScaler: textScaler(context));
   }
 
-  void shutdownDialog() {
+  void _shutdownDialog() {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          content: scaledText("Shutdown Raspberry Pi?"),
+          content: _scaledText("Shutdown Raspberry Pi?"),
           actionsOverflowButtonSpacing: 5,
           actions: <Widget>[
             ElevatedButton(
@@ -714,23 +714,23 @@ class MyHomePageState extends State<MyHomePage> {
                 Navigator.of(context).pop();
               },
               style: ElevatedButton.styleFrom(backgroundColor: Colors.white10),
-              child: scaledText("Cancel"),
+              child: _scaledText("Cancel"),
             ),
             ElevatedButton(
               onPressed: () {
-                restart();
+                _restart();
                 Navigator.of(context).pop();
               },
               style: ElevatedButton.styleFrom(backgroundColor: Colors.white10),
-              child: scaledText("Restart"),
+              child: _scaledText("Restart"),
             ),
             ElevatedButton(
               onPressed: () {
-                shutdown();
+                _shutdown();
                 Navigator.of(context).pop();
               },
               style: ElevatedButton.styleFrom(backgroundColor: Colors.white10),
-              child: scaledText("Shutdown"),
+              child: _scaledText("Shutdown"),
             ),
           ],
         );
@@ -738,17 +738,17 @@ class MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  Future<void> shutdown() async {
+  Future<void> _shutdown() async {
     final request = cedar_rpc.ActionRequest(shutdownServer: true);
     await initiateAction(request);
   }
 
-  Future<void> restart() async {
+  Future<void> _restart() async {
     final request = cedar_rpc.ActionRequest(restartServer: true);
     await initiateAction(request);
   }
 
-  Future<void> saveImage() async {
+  Future<void> _saveImage() async {
     final request = cedar_rpc.ActionRequest(saveImage: true);
     await initiateAction(request);
   }
@@ -759,7 +759,7 @@ class MyHomePageState extends State<MyHomePage> {
     await initiateAction(request);
   }
 
-  Future<void> cancelCalibration() async {
+  Future<void> _cancelCalibration() async {
     await _setOperatingMode(/*setupMode=*/ true, _daylightMode);
   }
 
@@ -786,7 +786,7 @@ class MyHomePageState extends State<MyHomePage> {
     return path.basenameWithoutExtension(filename);
   }
 
-  List<Widget> drawerControls(BuildContext context) {
+  List<Widget> _drawerControls(BuildContext context) {
     return <Widget>[
       const SizedBox(height: 15),
       const CloseButton(style: ButtonStyle(alignment: Alignment.topLeft)),
@@ -809,13 +809,13 @@ class MyHomePageState extends State<MyHomePage> {
                   requestFocusOnTap: false,
                   initialSelection:
                       _setupMode ? (_focusAid ? "Focus" : "Align") : "Aim",
-                  label: primaryText("Mode", size: 12),
+                  label: _primaryText("Mode", size: 12),
                   dropdownMenuEntries: ["Focus", "Align", "Aim"]
                       .map<DropdownMenuEntry<String>>((String s) {
                     return DropdownMenuEntry<String>(
                       value: s,
                       label: s,
-                      labelWidget: primaryText(s),
+                      labelWidget: _primaryText(s),
                       enabled: true,
                     );
                   }).toList(),
@@ -855,7 +855,7 @@ class MyHomePageState extends State<MyHomePage> {
       Align(
           alignment: Alignment.topLeft,
           child: TextButton.icon(
-              label: scaledText("Preferences"),
+              label: _scaledText("Preferences"),
               icon: const Icon(Icons.settings),
               onPressed: () {
                 Navigator.push(
@@ -871,8 +871,8 @@ class MyHomePageState extends State<MyHomePage> {
           alignment: Alignment.topLeft,
           child: TextButton.icon(
               label: _mapPosition == null
-                  ? scaledText("Location unknown")
-                  : scaledText(sprintf("Location %.1f %.1f",
+                  ? _scaledText("Location unknown")
+                  : _scaledText(sprintf("Location %.1f %.1f",
                       [_mapPosition!.latitude, _mapPosition!.longitude])),
               icon: Icon(_mapPosition == null
                   ? Icons.not_listed_location
@@ -885,7 +885,7 @@ class MyHomePageState extends State<MyHomePage> {
       Align(
           alignment: Alignment.topLeft,
           child: TextButton.icon(
-              label: scaledText("Advanced"),
+              label: _scaledText("Advanced"),
               icon: _advanced
                   ? const Icon(Icons.check)
                   : const Icon(Icons.check_box_outline_blank),
@@ -904,7 +904,7 @@ class MyHomePageState extends State<MyHomePage> {
               Align(
                   alignment: Alignment.topLeft,
                   child: TextButton.icon(
-                    label: scaledText("Demo mode"),
+                    label: _scaledText("Demo mode"),
                     icon: _demoMode
                         ? const Icon(Icons.check)
                         : const Icon(Icons.check_box_outline_blank),
@@ -913,10 +913,10 @@ class MyHomePageState extends State<MyHomePage> {
                         _demoMode = !_demoMode;
                         if (_demoMode) {
                           if (_demoFile.isNotEmpty) {
-                            setDemoImage(_demoFile);
+                            _setDemoImage(_demoFile);
                           }
                         } else {
-                          setDemoImage(""); // Turn off.
+                          _setDemoImage(""); // Turn off.
                         }
                       });
                     },
@@ -942,13 +942,13 @@ class MyHomePageState extends State<MyHomePage> {
                     width: 200 * textScaleFactor(context),
                     requestFocusOnTap: false,
                     initialSelection: _demoFile.isEmpty ? "" : _demoFile,
-                    label: primaryText("Image file", size: 12),
+                    label: _primaryText("Image file", size: 12),
                     dropdownMenuEntries:
                         _demoFiles.map<DropdownMenuEntry<String>>((String s) {
                       return DropdownMenuEntry<String>(
                         value: s,
                         label: _removeExtension(s),
-                        labelWidget: primaryText(_removeExtension(s)),
+                        labelWidget: _primaryText(_removeExtension(s)),
                         enabled: true,
                       );
                     }).toList(),
@@ -958,7 +958,7 @@ class MyHomePageState extends State<MyHomePage> {
                     onSelected: (String? newValue) async {
                       setState(() {
                         _demoFile = newValue!;
-                        setDemoImage(_demoFile);
+                        _setDemoImage(_demoFile);
                       });
                     })
               ]),
@@ -970,7 +970,7 @@ class MyHomePageState extends State<MyHomePage> {
           ? Align(
               alignment: Alignment.topLeft,
               child: TextButton.icon(
-                  label: scaledText("About"),
+                  label: _scaledText("About"),
                   icon: const Icon(Icons.info_outline),
                   onPressed: () {
                     aboutScreen(this, context);
@@ -981,10 +981,10 @@ class MyHomePageState extends State<MyHomePage> {
       Align(
           alignment: Alignment.topLeft,
           child: TextButton.icon(
-              label: scaledText("Shutdown"),
+              label: _scaledText("Shutdown"),
               icon: const Icon(Icons.power_settings_new_outlined),
               onPressed: () {
-                shutdownDialog();
+                _shutdownDialog();
               })),
       _advanced
           ? Column(children: [
@@ -992,10 +992,10 @@ class MyHomePageState extends State<MyHomePage> {
               Align(
                   alignment: Alignment.topLeft,
                   child: TextButton.icon(
-                      label: scaledText("Save image"),
+                      label: _scaledText("Save image"),
                       icon: const Icon(Icons.add_a_photo_outlined),
                       onPressed: () {
-                        saveImage();
+                        _saveImage();
                       }))
             ])
           : Container(),
@@ -1005,10 +1005,10 @@ class MyHomePageState extends State<MyHomePage> {
               Align(
                   alignment: Alignment.topLeft,
                   child: TextButton.icon(
-                      label: scaledText("Show server log"),
+                      label: _scaledText("Show server log"),
                       icon: const Icon(Icons.text_snippet_outlined),
                       onPressed: () async {
-                        var logs = await getServerLogs();
+                        var logs = await _getServerLogs();
                         if (context.mounted) {
                           showDialog(
                               context: context,
@@ -1023,7 +1023,7 @@ class MyHomePageState extends State<MyHomePage> {
               Align(
                   alignment: Alignment.topLeft,
                   child: TextButton.icon(
-                      label: scaledText("Wifi"),
+                      label: _scaledText("Wifi"),
                       icon: const Icon(Icons.wifi),
                       onPressed: () {
                         _wifiDialog!(this, context);
@@ -1034,11 +1034,11 @@ class MyHomePageState extends State<MyHomePage> {
     ];
   }
 
-  Widget rowOrColumn(bool row, List<Widget> children) {
+  Widget _rowOrColumn(bool row, List<Widget> children) {
     return row ? Row(children: children) : Column(children: children);
   }
 
-  List<Widget> controls() {
+  List<Widget> _controls() {
     final portrait = MediaQuery.of(context).orientation == Orientation.portrait;
     final color = Theme.of(context).colorScheme.primary;
     // bool hideAppBar = Provider.of<SettingsModel>(context, listen: false)
@@ -1090,7 +1090,7 @@ class MyHomePageState extends State<MyHomePage> {
                           style: TextStyle(color: color, fontSize: 12),
                           textScaler: textScaler(context),
                         ))
-                    : rowOrColumn(portrait, [
+                    : _rowOrColumn(portrait, [
                         SizedBox(
                             width: (portrait ? 120 : 80) *
                                 textScaleFactor(context),
@@ -1153,7 +1153,7 @@ class MyHomePageState extends State<MyHomePage> {
                                   /*setupMode=*/ false, _focusAid);
                             });
                           } else {
-                            captureBoresight();
+                            _captureBoresight(); // Re-align
                           }
                         })
                     : (_slewRequest == null &&
@@ -1178,7 +1178,7 @@ class MyHomePageState extends State<MyHomePage> {
           ? RotatedBox(
               quarterTurns: portrait ? 3 : 0,
               child: TextButton.icon(
-                  label: scaledText("Day"),
+                  label: _scaledText("Day"),
                   icon: _daylightMode
                       ? const Icon(Icons.check)
                       : const Icon(Icons.check_box_outline_blank),
@@ -1207,7 +1207,7 @@ class MyHomePageState extends State<MyHomePage> {
                             textScaler: textScaler(context),
                           ),
                           onPressed: () {
-                            stopSlew();
+                            _stopSlew();
                           })
                       : Container()))
           : Container(),
@@ -1286,23 +1286,23 @@ class MyHomePageState extends State<MyHomePage> {
         : sprintf("%s %.2f°", [dir, az]);
   }
 
-  String formatAdvice(cedar_rpc.ErrorBoundedValue? ebv) {
+  String _formatAdvice(cedar_rpc.ErrorBoundedValue? ebv) {
     return sprintf("%.2f±%.2f", [ebv!.value, ebv.error]);
   }
 
-  Color starsSliderColor() {
+  Color _starsSliderColor() {
     return _hasSolution
         ? Theme.of(context).colorScheme.primary
         : const Color(0xff606060);
   }
 
-  Color solveTextColor() {
+  Color _solveTextColor() {
     return _hasSolution
         ? Theme.of(context).colorScheme.primary
         : const Color(0xff606060);
   }
 
-  Text primaryText(String val, {double? size = 16}) {
+  Text _primaryText(String val, {double? size = 16}) {
     return Text(
       val,
       style: TextStyle(
@@ -1311,15 +1311,15 @@ class MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  Text solveText(String val, {double? size = 16}) {
+  Text _solveText(String val, {double? size = 16}) {
     return Text(
       val,
-      style: TextStyle(color: solveTextColor(), fontSize: size),
+      style: TextStyle(color: _solveTextColor(), fontSize: size),
       textScaler: textScaler(context),
     );
   }
 
-  bool hasPolarAdvice() {
+  bool _hasPolarAdvice() {
     if (_polarAlignAdvice == null) {
       return false;
     }
@@ -1327,7 +1327,7 @@ class MyHomePageState extends State<MyHomePage> {
         _polarAlignAdvice!.hasAzimuthCorrection();
   }
 
-  List<Widget> raDec(int width) {
+  List<Widget> _raDec(int width) {
     return [
       SizedBox(
           width: width * textScaleFactor(context),
@@ -1335,8 +1335,8 @@ class MyHomePageState extends State<MyHomePage> {
           child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                solveText("RA"),
-                solveText(formatRightAscension(_solutionRA))
+                _solveText("RA"),
+                _solveText(formatRightAscension(_solutionRA))
               ])),
       SizedBox(
           width: width * textScaleFactor(context),
@@ -1344,13 +1344,13 @@ class MyHomePageState extends State<MyHomePage> {
           child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                solveText("Dec"),
-                solveText(formatDeclination(_solutionDec))
+                _solveText("Dec"),
+                _solveText(formatDeclination(_solutionDec))
               ]))
     ];
   }
 
-  List<Widget> azAlt(int width) {
+  List<Widget> _azAlt(int width) {
     return [
       SizedBox(
           width: width * textScaleFactor(context),
@@ -1358,8 +1358,8 @@ class MyHomePageState extends State<MyHomePage> {
           child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                solveText("Az"),
-                solveText(formatAzimuth(_locationBasedInfo!.azimuth))
+                _solveText("Az"),
+                _solveText(formatAzimuth(_locationBasedInfo!.azimuth))
               ])),
       SizedBox(
           width: width * textScaleFactor(context),
@@ -1367,8 +1367,8 @@ class MyHomePageState extends State<MyHomePage> {
           child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                solveText("Alt"),
-                solveText(formatAltitude(_locationBasedInfo!.altitude))
+                _solveText("Alt"),
+                _solveText(formatAltitude(_locationBasedInfo!.altitude))
               ])),
       SizedBox(
           width: width * textScaleFactor(context),
@@ -1376,25 +1376,25 @@ class MyHomePageState extends State<MyHomePage> {
           child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                solveText("HA"),
-                solveText(formatHourAngle(_locationBasedInfo!.hourAngle))
+                _solveText("HA"),
+                _solveText(formatHourAngle(_locationBasedInfo!.hourAngle))
               ])),
     ];
   }
 
-  List<Widget> coordInfo(bool mountAltAz, int width) {
+  List<Widget> _coordInfo(bool mountAltAz, int width) {
     if (mountAltAz && _locationBasedInfo != null) {
-      return azAlt(width) + [const SizedBox(height: 10)] + raDec(width);
+      return _azAlt(width) + [const SizedBox(height: 10)] + _raDec(width);
     } else {
       if (_locationBasedInfo == null) {
-        return raDec(width);
+        return _raDec(width);
       } else {
-        return raDec(width) + [const SizedBox(height: 10)] + azAlt(width);
+        return _raDec(width) + [const SizedBox(height: 10)] + _azAlt(width);
       }
     }
   }
 
-  List<Widget> dataItems(BuildContext context) {
+  List<Widget> _dataItems(BuildContext context) {
     final portrait = MediaQuery.of(context).orientation == Orientation.portrait;
     return <Widget>[
       RotatedBox(
@@ -1426,13 +1426,13 @@ class MyHomePageState extends State<MyHomePage> {
                                 GaugeAnnotation(
                                   positionFactor: 0.3,
                                   angle: 270,
-                                  widget: solveText(sprintf("%d", [_numStars]),
+                                  widget: _solveText(sprintf("%d", [_numStars]),
                                       size: 18),
                                 ),
                                 GaugeAnnotation(
                                   positionFactor: 0.4,
                                   angle: 90,
-                                  widget: solveText("stars", size: 16),
+                                  widget: _solveText("stars", size: 16),
                                 ),
                               ],
                               ranges: <GaugeRange>[
@@ -1450,7 +1450,7 @@ class MyHomePageState extends State<MyHomePage> {
                                     startValue: 0,
                                     endValue:
                                         math.min(10, math.sqrt(_numStars)),
-                                    color: starsSliderColor()),
+                                    color: _starsSliderColor()),
                               ],
                             )
                           ],
@@ -1467,7 +1467,7 @@ class MyHomePageState extends State<MyHomePage> {
                   height: 120 * textScaleFactor(context),
                   child: Column(
                     // RA/Dec, Alt/Az, etc.
-                    children: coordInfo(
+                    children: _coordInfo(
                         preferences?.mountType == cedar_rpc.MountType.ALT_AZ,
                         /*width=*/ 110),
                   ),
@@ -1475,16 +1475,16 @@ class MyHomePageState extends State<MyHomePage> {
       const SizedBox(width: 15, height: 15),
       RotatedBox(
           quarterTurns: portrait ? 3 : 0,
-          child: hasPolarAdvice() && !_setupMode
+          child: _hasPolarAdvice() && !_setupMode
               ? SizedBox(
                   width: 140 * textScaleFactor(context),
                   height: 140,
                   child: Column(children: <Widget>[
-                    primaryText("Polar Align"),
+                    _primaryText("Polar Align"),
                     _polarAlignAdvice!.hasAltitudeCorrection()
-                        ? solveText(sprintf("alt %s", [
+                        ? _solveText(sprintf("alt %s", [
                             sprintf("%s\npolar axis->%s", [
-                              formatAdvice(
+                              _formatAdvice(
                                   _polarAlignAdvice!.altitudeCorrection),
                               _polarAlignAdvice!.altitudeCorrection.value > 0
                                   ? "up"
@@ -1493,9 +1493,9 @@ class MyHomePageState extends State<MyHomePage> {
                           ]))
                         : Container(),
                     _polarAlignAdvice!.hasAzimuthCorrection()
-                        ? solveText(sprintf("az %s", [
+                        ? _solveText(sprintf("az %s", [
                             sprintf("%s\npolar axis->%s", [
-                              formatAdvice(
+                              _formatAdvice(
                                   _polarAlignAdvice!.azimuthCorrection),
                               _polarAlignAdvice!.azimuthCorrection.value > 0
                                   ? "right"
@@ -1509,16 +1509,16 @@ class MyHomePageState extends State<MyHomePage> {
     ];
   }
 
-  Widget loadImage() {
+  Widget _loadImage() {
     return dart_widgets.Image.memory(_imageBytes, gaplessPlayback: true);
   }
 
-  Widget mainImage() {
+  Widget _mainImage() {
     return ClipRect(
         child: CustomPaint(
             foregroundPainter: _MainImagePainter(this, context),
             child: GestureDetector(
-              child: loadImage(),
+              child: _loadImage(),
               onTapDown: (TapDownDetails details) async {
                 Offset localPosition = Offset(
                     details.localPosition.dx * _binFactor,
@@ -1527,12 +1527,12 @@ class MyHomePageState extends State<MyHomePage> {
                   if (!_focusAid) {
                     // Align mode.
                     if (_daylightMode) {
-                      designateBoresight(localPosition);
+                      _designateBoresight(localPosition);
                       _alignTargetTapped = true;
                     } else {
                       var star = _findStarHit(localPosition, 30);
                       if (star != null) {
-                        designateBoresight(Offset(
+                        _designateBoresight(Offset(
                           star.centroidPosition.x,
                           star.centroidPosition.y,
                         ));
@@ -1611,7 +1611,7 @@ class MyHomePageState extends State<MyHomePage> {
     return null;
   }
 
-  Widget pacifier(BuildContext context, bool calibrating) {
+  Widget _pacifier(BuildContext context, bool calibrating) {
     final portrait = MediaQuery.of(context).orientation == Orientation.portrait;
     return RotatedBox(
         quarterTurns: portrait ? 3 : 0,
@@ -1634,19 +1634,19 @@ class MyHomePageState extends State<MyHomePage> {
               calibrating
                   ? TextButton(
                       onPressed: () {
-                        cancelCalibration();
+                        _cancelCalibration();
                       },
                       style: TextButton.styleFrom(
                           backgroundColor: Colors.black,
                           foregroundColor:
                               Theme.of(context).colorScheme.primary),
-                      child: scaledText('Cancel'),
+                      child: _scaledText('Cancel'),
                     )
                   : Container(),
             ]));
   }
 
-  Widget imageStack(BuildContext context) {
+  Widget _imageStack(BuildContext context) {
     Widget? overlayWidget;
     if (_setupMode && _focusAid && _centerPeakImageBytes != null) {
       overlayWidget = dart_widgets.Image.memory(_centerPeakImageBytes!,
@@ -1668,7 +1668,7 @@ class MyHomePageState extends State<MyHomePage> {
     }
     return Stack(alignment: Alignment.topRight, children: <Widget>[
       _prevFrameId != -1
-          ? mainImage()
+          ? _mainImage()
           : const SizedBox(width: 500, height: 500),
       _prevFrameId != -1 && overlayWidget != null
           ? Container(
@@ -1682,16 +1682,16 @@ class MyHomePageState extends State<MyHomePage> {
           ? Positioned.fill(
               child: Align(
                   alignment: Alignment.center,
-                  child: pacifier(context, _calibrating)))
+                  child: _pacifier(context, _calibrating)))
           : Container(),
     ]);
   }
 
-  Widget orientationLayout(BuildContext context) {
+  Widget _orientationLayout(BuildContext context) {
     final portrait = MediaQuery.of(context).orientation == Orientation.portrait;
     final controlsColumn = Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: portrait ? controls().reversed.toList() : controls());
+        children: portrait ? _controls().reversed.toList() : _controls());
     return GestureDetector(
         // On Android, sometimes the system and navigation bars become visible.
         // Kludge long-press to re-assert our desired screen mode.
@@ -1712,9 +1712,9 @@ class MyHomePageState extends State<MyHomePage> {
               const SizedBox(width: 5, height: 0),
               SizedBox(height: _imageRegion.height, child: controlsColumn),
               const SizedBox(width: 5, height: 0),
-              imageStack(context),
+              _imageStack(context),
               const SizedBox(width: 5, height: 0),
-              Column(children: dataItems(context)),
+              Column(children: _dataItems(context)),
               const SizedBox(width: 5, height: 0),
             ],
           ),
@@ -1746,8 +1746,8 @@ class MyHomePageState extends State<MyHomePage> {
                 fit: StackFit.expand,
                 children: [
                   healthy
-                      ? FittedBox(child: orientationLayout(context))
-                      : badServerState(),
+                      ? FittedBox(child: _orientationLayout(context))
+                      : _badServerState(),
                   Positioned(
                       left: 0,
                       top: 0,
@@ -1770,13 +1770,13 @@ class MyHomePageState extends State<MyHomePage> {
                   width: 240 * textScaleFactor(context),
                   child: ListView(
                       padding: EdgeInsets.zero,
-                      children: drawerControls(context))))
+                      children: _drawerControls(context))))
           : Container(),
       drawerEdgeDragWidth: 100,
     );
   }
 
-  Widget badServerState() {
+  Widget _badServerState() {
     Color color = Theme.of(context).colorScheme.primary;
     final connMessage = _everConnected
         ? "Connection lost to Cedar server"
