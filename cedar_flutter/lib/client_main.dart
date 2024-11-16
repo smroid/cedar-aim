@@ -24,7 +24,7 @@ import 'package:protobuf/protobuf.dart';
 import 'package:provider/provider.dart';
 import 'package:sprintf/sprintf.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
-import 'package:wakelock_plus/wakelock_plus.dart';
+// import 'package:wakelock_plus/wakelock_plus.dart';
 import 'cedar.pbgrpc.dart' as cedar_rpc;
 import 'tetra3.pb.dart';
 import 'get_cedar_client.dart'
