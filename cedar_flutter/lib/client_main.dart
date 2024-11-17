@@ -345,6 +345,7 @@ class MyHomePageState extends State<MyHomePage> {
   bool _canAlign = false;
   bool _hasWifiControl = false;
 
+  // Telescope eyepiece field of view (diameter), in image pixels.
   double _scopeFov = 0.0;
 
   Offset _boresightPosition =
@@ -509,6 +510,10 @@ class MyHomePageState extends State<MyHomePage> {
         _scopeFov =
             preferences!.eyepieceFov * _imageRegion.width / _solutionFOV;
       }
+    } else if (_scopeFov == 0) {
+      // No plate solution yet, so we don't know the image scale. For now,
+      // assume the eyepiece FOV is 1/10 the image width.
+      _scopeFov = _imageRegion.width / 10;
     }
     _boresightPosition = Offset(response.boresightPosition.x / _binFactor,
         response.boresightPosition.y / _binFactor);
