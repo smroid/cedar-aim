@@ -247,8 +247,10 @@ class _OverlayImagePainter extends CustomPainter {
   final MyHomePageState _state;
   final BuildContext _context;
   final double _scale;
+  final int _binFactor;
 
-  _OverlayImagePainter(this._state, this._context, this._scale);
+  _OverlayImagePainter(
+      this._state, this._context, this._scale, this._binFactor);
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -256,6 +258,7 @@ class _OverlayImagePainter extends CustomPainter {
     Offset overlayCenter = Offset(size.width / 2, size.height / 2);
 
     var slew = _state._slewRequest;
+    // Note that slew.imagePos is in full resolution units.
     Offset? posInImage;
     if (slew!.hasImagePos()) {
       posInImage = Offset(
@@ -265,7 +268,7 @@ class _OverlayImagePainter extends CustomPainter {
               _scale * (slew.imagePos.y - _state._fullResBoresightPosition.dy));
     }
     // How many display pixels is the telescope FOV?
-    final scopeFov = _scale * _state._scopeFov;
+    final scopeFov = _scale * _binFactor * _state._scopeFov;
     final portrait =
         MediaQuery.of(_context).orientation == Orientation.portrait;
     drawSlewTarget(
@@ -345,7 +348,7 @@ class MyHomePageState extends State<MyHomePage> {
   bool _canAlign = false;
   bool _hasWifiControl = false;
 
-  // Telescope eyepiece field of view (diameter), in image pixels.
+  // Telescope eyepiece field of view (diameter), in scaled image pixels.
   double _scopeFov = 0.0;
 
   Offset _boresightPosition =
@@ -358,8 +361,9 @@ class MyHomePageState extends State<MyHomePage> {
   int _centerPeakHeight = 0;
   Uint8List? _centerPeakImageBytes;
 
-  int _boresightImageWidth = 0;
+  int _boresightImageWidth = 0; // Full resolution units.
   Uint8List? _boresightImageBytes;
+  int _boresightImageBinFactor = 1;
 
   int _prevFrameId = -1;
   late List<cedar_rpc.StarCentroid> _stars;
@@ -534,6 +538,7 @@ class MyHomePageState extends State<MyHomePage> {
       _boresightImageBytes =
           Uint8List.fromList(response.boresightImage.imageData);
       _boresightImageWidth = response.boresightImage.rectangle.width;
+      _boresightImageBinFactor = response.boresightImage.binningFactor;
     }
     if (response.hasCenterPeakPosition()) {
       var cp = response.centerPeakPosition;
@@ -1194,7 +1199,8 @@ class MyHomePageState extends State<MyHomePage> {
                     });
                   }))
           : Container(),
-      const SizedBox(width: 0, height: 10),
+      SizedBox(
+          width: 0, height: (_slewRequest != null && !_setupMode) ? 40 : 10),
       _slewRequest != null
           ? RotatedBox(
               quarterTurns: portrait ? 3 : 0,
@@ -1661,14 +1667,17 @@ class MyHomePageState extends State<MyHomePage> {
           gaplessPlayback: true);
     } else if (!_setupMode && _boresightImageBytes != null) {
       var overlayImage = dart_widgets.Image.memory(_boresightImageBytes!,
-          height: _imageRegion.width / 4,
           width: _imageRegion.width / 4,
+          height: _imageRegion.width / 4,
           fit: BoxFit.fill,
           gaplessPlayback: true);
       overlayWidget = ClipRect(
           child: CustomPaint(
-              foregroundPainter: _OverlayImagePainter(this, context,
-                  (_imageRegion.width / 4) / _boresightImageWidth),
+              foregroundPainter: _OverlayImagePainter(
+                  this,
+                  context,
+                  (_imageRegion.width / 4) / _boresightImageWidth,
+                  _binFactor ~/ _boresightImageBinFactor),
               child: overlayImage));
     }
     return Stack(alignment: Alignment.topRight, children: <Widget>[
