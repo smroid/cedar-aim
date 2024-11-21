@@ -52,6 +52,11 @@ bool diffPreferences(Preferences prev, Preferences curr) {
   } else {
     curr.clearTextSizeIndex();
   }
+  if (curr.rightHanded != prev.rightHanded) {
+    hasDiff = true;
+  } else {
+    curr.clearRightHanded();
+  }
   return hasDiff;
 }
 
@@ -141,6 +146,11 @@ class SettingsModel extends ChangeNotifier {
     opSettingsProto.invertCamera = ic;
     notifyListeners();
   }
+
+  void updateRightHanded(bool rh) {
+    preferencesProto.rightHanded = rh;
+    notifyListeners();
+  }
 }
 
 proto_duration.Duration durationFromMs(int intervalMs) {
@@ -193,8 +203,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final isBasic = provider.isBasic;
     final isPlus = provider.isPlus;
     final updateIntervalMs = durationToMs(opSettingsProto.updateInterval);
+    final rightHanded = prefsProto.rightHanded;
 
-    int updateMax = 6; // Unlimited.
+    int updateMax = 6; // DIY: Unlimited.
     if (isBasic) {
       updateMax = 4; // 5Hz.
     } else if (isPlus) {
@@ -202,11 +213,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
     }
     // Need to inset the switches to match the slider.
     const switchInset = 16.0;
+
+    const backButton =
+        BackButton(style: ButtonStyle(iconSize: WidgetStatePropertyAll(30)));
+
     return Scaffold(
         appBar: AppBar(
-            title: const Text(
-          'Preferences',
-        )),
+          automaticallyImplyLeading: false,
+          leading: rightHanded ? null : backButton,
+          title: const Text(
+            'Preferences',
+          ),
+          actions: [rightHanded ? backButton : Container()],
+        ),
         body: SettingsList(
             darkTheme: prefsProto.nightVisionTheme
                 ? const SettingsThemeData(
@@ -298,6 +317,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             })
                       ]),
                       title: scaledText('Night vision'),
+                    ),
+                    SettingsTile(
+                      leading: Row(children: <Widget>[
+                        const SizedBox(width: switchInset, height: 10),
+                        Switch(
+                            value: prefsProto.rightHanded,
+                            onChanged: (bool value) {
+                              setState(() {
+                                provider.updateRightHanded(value);
+                              });
+                            })
+                      ]),
+                      title: scaledText(
+                          rightHanded ? 'Right handed' : 'Left handed'),
                     ),
                   ]),
               if (advanced)

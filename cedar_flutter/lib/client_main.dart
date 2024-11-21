@@ -345,6 +345,7 @@ class MyHomePageState extends State<MyHomePage> {
   List<String> _demoFiles = [];
   String _demoFile = "";
   bool _advanced = false;
+  bool _rightHanded = true;
   bool _canAlign = false;
   bool _hasWifiControl = false;
 
@@ -473,6 +474,7 @@ class MyHomePageState extends State<MyHomePage> {
     settingsModel.isBasic = isBasic;
     settingsModel.isPlus = isPlus;
     _advanced = preferences!.advanced;
+    _rightHanded = preferences!.rightHanded;
     calibrationData =
         response.hasCalibrationData() ? response.calibrationData : null;
     processingStats =
@@ -799,7 +801,10 @@ class MyHomePageState extends State<MyHomePage> {
   List<Widget> _drawerControls(BuildContext context) {
     return <Widget>[
       const SizedBox(height: 15),
-      const CloseButton(style: ButtonStyle(alignment: Alignment.topLeft)),
+      const CloseButton(
+          style: ButtonStyle(
+              backgroundColor: WidgetStatePropertyAll<Color>(Colors.white10),
+              alignment: Alignment.center)),
       const SizedBox(height: 15),
       Align(
           alignment: Alignment.topLeft,
@@ -1051,9 +1056,6 @@ class MyHomePageState extends State<MyHomePage> {
   List<Widget> _controls() {
     final portrait = MediaQuery.of(context).orientation == Orientation.portrait;
     final color = Theme.of(context).colorScheme.primary;
-    // bool hideAppBar = Provider.of<SettingsModel>(context, listen: false)
-    //     .preferencesProto
-    //     .hideAppBar;
     return <Widget>[
       // Fake widget to consume changes to preferences and issue RPC to the
       // server.
@@ -1072,49 +1074,57 @@ class MyHomePageState extends State<MyHomePage> {
           return Container();
         },
       ),
-      // hideAppBar
-      //     ? SizedBox(width: 0, height: (portrait ? 30 : 50))
-      //     : Container(),
       RotatedBox(
         quarterTurns: portrait ? 3 : 0,
         child: _focusAid
             ? SizedBox(
                 width: (portrait ? 120 : 80) * textScaleFactor(context),
-                child: Text(
-                  _daylightMode
-                      ? "Aim at distant object and adjust focus"
-                      : "Adjust focus",
-                  maxLines: 8,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: color, fontSize: 12),
-                  textScaler: textScaler(context),
-                ))
+                height: 60 * textScaleFactor(context),
+                child: Align(
+                    alignment: Alignment.center,
+                    child: Text(
+                      _daylightMode
+                          ? "Aim at distant object and adjust focus"
+                          : "Adjust focus",
+                      maxLines: 8,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: color, fontSize: 12),
+                      textScaler: textScaler(context),
+                    )))
             : (_canAlign && _slewRequest == null
                 ? _daylightMode
                     ? SizedBox(
                         width: (portrait ? 120 : 80) * textScaleFactor(context),
-                        child: Text(
-                          "Tap image where telescope is pointed",
-                          maxLines: 8,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(color: color, fontSize: 12),
-                          textScaler: textScaler(context),
-                        ))
-                    : _rowOrColumn(portrait, [
-                        SizedBox(
-                            width: (portrait ? 120 : 80) *
-                                textScaleFactor(context),
+                        height:
+                            (portrait ? 60 : 100) * textScaleFactor(context),
+                        child: Align(
+                            alignment: Alignment.center,
                             child: Text(
-                              "Center a highlighted object in telescope, then tap the object",
+                              "Tap image where telescope is pointed",
                               maxLines: 8,
                               textAlign: TextAlign.center,
                               style: TextStyle(color: color, fontSize: 12),
                               textScaler: textScaler(context),
-                            )),
-                        // const SizedBox(width: 5, height: 0),
-                        // const SizedBox(width: 5, height: 15),
+                            )))
+                    : _rowOrColumn(portrait, [
+                        SizedBox(
+                            width: (portrait ? 120 : 80) *
+                                textScaleFactor(context),
+                            height: (portrait ? 60 : 120) *
+                                textScaleFactor(context),
+                            child: Align(
+                                alignment: Alignment.center,
+                                child: Text(
+                                  "Center a highlighted object in telescope, then tap the object",
+                                  maxLines: 8,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(color: color, fontSize: 12),
+                                  textScaler: textScaler(context),
+                                ))),
                       ])
-                : Container()),
+                : SizedBox(
+                    width: 0,
+                    height: (portrait ? 60 : 0) * textScaleFactor(context))),
       ),
       const SizedBox(height: 15),
       RotatedBox(
@@ -1706,6 +1716,10 @@ class MyHomePageState extends State<MyHomePage> {
     final controlsColumn = Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: portrait ? _controls().reversed.toList() : _controls());
+
+    final controls = controlsColumn;
+    final data = Column(children: _dataItems(context));
+
     return GestureDetector(
         // On Android, sometimes the system and navigation bars become visible.
         // Kludge long-press to re-assert our desired screen mode.
@@ -1724,11 +1738,11 @@ class MyHomePageState extends State<MyHomePage> {
           child: Row(
             children: <Widget>[
               const SizedBox(width: 5, height: 0),
-              SizedBox(height: _imageRegion.height, child: controlsColumn),
+              (portrait || _rightHanded) ? data : controls,
               const SizedBox(width: 5, height: 0),
               _imageStack(context),
               const SizedBox(width: 5, height: 0),
-              Column(children: _dataItems(context)),
+              (portrait || _rightHanded) ? controls : data,
               const SizedBox(width: 5, height: 0),
             ],
           ),
@@ -1736,6 +1750,17 @@ class MyHomePageState extends State<MyHomePage> {
   }
 
   final _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  Widget _drawer() {
+    return _serverConnected
+        ? SafeArea(
+            child: Drawer(
+                width: 240 * textScaleFactor(context),
+                child: ListView(
+                    padding: EdgeInsets.zero,
+                    children: _drawerControls(context))))
+        : Container();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -1763,13 +1788,18 @@ class MyHomePageState extends State<MyHomePage> {
                       ? FittedBox(child: _orientationLayout(context))
                       : _badServerState(),
                   Positioned(
-                      left: 0,
+                      left: _rightHanded ? null : 0,
+                      right: _rightHanded ? 0 : null,
                       top: 0,
                       child: hideAppBar
                           ? IconButton(
                               icon: const Icon(Icons.menu),
                               onPressed: () {
-                                _scaffoldKey.currentState!.openDrawer();
+                                if (_rightHanded) {
+                                  _scaffoldKey.currentState!.openEndDrawer();
+                                } else {
+                                  _scaffoldKey.currentState!.openDrawer();
+                                }
                               })
                           : Container()),
                 ],
@@ -1778,14 +1808,8 @@ class MyHomePageState extends State<MyHomePage> {
         // Prevent jank in demo mode image file selector.
         _inhibitRefresh = isOpened;
       },
-      drawer: _serverConnected
-          ? SafeArea(
-              child: Drawer(
-                  width: 240 * textScaleFactor(context),
-                  child: ListView(
-                      padding: EdgeInsets.zero,
-                      children: _drawerControls(context))))
-          : Container(),
+      drawer: _drawer(),
+      endDrawer: _drawer(),
       drawerEdgeDragWidth: 100,
     );
   }

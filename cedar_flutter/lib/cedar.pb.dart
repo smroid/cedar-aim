@@ -776,6 +776,7 @@ class Preferences extends $pb.GeneratedMessage {
     $core.int? textSizeIndex,
     ImageCoord? boresightPixel,
     $core.bool? invertCamera,
+    $core.bool? rightHanded,
   }) {
     final $result = create();
     if (celestialCoordFormat != null) {
@@ -829,6 +830,9 @@ class Preferences extends $pb.GeneratedMessage {
     if (invertCamera != null) {
       $result.invertCamera = invertCamera;
     }
+    if (rightHanded != null) {
+      $result.rightHanded = rightHanded;
+    }
     return $result;
   }
   Preferences._() : super();
@@ -853,6 +857,7 @@ class Preferences extends $pb.GeneratedMessage {
     ..a<$core.int>(18, _omitFieldNames ? '' : 'textSizeIndex', $pb.PbFieldType.O3)
     ..aOM<ImageCoord>(19, _omitFieldNames ? '' : 'boresightPixel', subBuilder: ImageCoord.create)
     ..aOB(20, _omitFieldNames ? '' : 'invertCamera')
+    ..aOB(21, _omitFieldNames ? '' : 'rightHanded')
     ..hasRequiredFields = false
   ;
 
@@ -1061,6 +1066,16 @@ class Preferences extends $pb.GeneratedMessage {
   $core.bool hasInvertCamera() => $_has(16);
   @$pb.TagNumber(20)
   void clearInvertCamera() => clearField(20);
+
+  /// Whether UI buttons and such are positioned on right side of screen.
+  @$pb.TagNumber(21)
+  $core.bool get rightHanded => $_getBF(17);
+  @$pb.TagNumber(21)
+  set rightHanded($core.bool v) { $_setBool(17, v); }
+  @$pb.TagNumber(21)
+  $core.bool hasRightHanded() => $_has(17);
+  @$pb.TagNumber(21)
+  void clearRightHanded() => clearField(21);
 }
 
 class FrameRequest extends $pb.GeneratedMessage {
@@ -1432,9 +1447,10 @@ class FrameResult extends $pb.GeneratedMessage {
   @$pb.TagNumber(12)
   ImageCoord ensureCenterPeakPosition() => $_ensure(10);
 
-  /// A small high resolution crop of `image` centered at `center_peak_position`.
-  /// Note that this image has stretch/gamma applied for better visibility of
-  /// dark features. Only present in `focus_assist_mode`.
+  /// A small full resolution (usually; 2x binned for color cameras) crop of
+  /// `image` centered at `center_peak_position`. Note that this image has
+  /// stretch/gamma applied for better visibility of dark features. Only present
+  /// in `focus_assist_mode`.
   @$pb.TagNumber(13)
   Image get centerPeakImage => $_getN(11);
   @$pb.TagNumber(13)
@@ -1548,9 +1564,9 @@ class FrameResult extends $pb.GeneratedMessage {
   FixedSettings ensureFixedSettings() => $_ensure(19);
 
   /// If the boresight is close to the slew target, the server returns a full
-  /// resolution crop of 'image' centered at the 'boresight_position'. Note that
-  /// this image has stretch/gamma applied for better visibility of dark
-  /// features.
+  /// resolution (usually; 2x binned for color cameras) crop of 'image' centered
+  /// at the 'boresight_position'. Note that this image has stretch/gamma applied
+  /// for better visibility of dark features.
   @$pb.TagNumber(28)
   Image get boresightImage => $_getN(20);
   @$pb.TagNumber(28)
@@ -1593,7 +1609,8 @@ class FrameResult extends $pb.GeneratedMessage {
 
   /// Lists the sky catalog entries that are present in the `plate_solution`
   /// field of view. The `catalog_entry_match` field in `operation_settings`
-  /// determines what entries are included.
+  /// determines what entries are included, except in SETUP alignment mode where
+  /// fixed criteria are used (bright named stars and planets).
   /// Empty if `plate_solution` is absent or failed or if Cedar Sky is not
   /// present.
   /// The FOV catalog entries that dominate their crowd and should be labelled.
@@ -3069,8 +3086,10 @@ class ActionRequest extends $pb.GeneratedMessage {
   void clearCaptureBoresight() => clearField(1);
 
   /// In SETUP alignment mode, this conveys which part of the image the user
-  /// tapped to designate the telescope's FOV center. The image coordinates are
-  /// full resolution within FrameResult.image.
+  /// tapped to designate the telescope's FOV center (in daylight mode) or the
+  /// x/y image position of the highlighted star/planet the user selected (not in
+  /// daylight mode). The image coordinates are full resolution within
+  /// FrameResult.image.
   @$pb.TagNumber(2)
   ImageCoord get designateBoresight => $_getN(1);
   @$pb.TagNumber(2)
