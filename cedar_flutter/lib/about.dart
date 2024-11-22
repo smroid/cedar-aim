@@ -35,11 +35,14 @@ String formatTime(Timestamp timestamp) {
 }
 
 Future<void> aboutScreen(MyHomePageState state, BuildContext context) async {
+  final rightHanded =
+      state.preferences != null ? state.preferences!.rightHanded : true;
   _context = context;
   _aboutOverlayEntry = OverlayEntry(
       builder: (BuildContext context) => Material(
           color: Colors.black,
           child: Stack(
+            alignment: rightHanded ? Alignment.topRight : Alignment.topLeft,
             children: [
               RotatedBox(
                   quarterTurns:
