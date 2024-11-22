@@ -1711,6 +1711,26 @@ class MyHomePageState extends State<MyHomePage> {
     ]);
   }
 
+  int _getCurrentTextSizeIndex() {
+    if (preferences == null) {
+      return 0;
+    }
+    return preferences!.textSizeIndex;
+  }
+
+  Future<void> _setTextSizeIndex(int textSizeIndex) async {
+    textSizeIndex = math.min(textSizeIndex, 1);
+    textSizeIndex = math.max(textSizeIndex, -1);
+    if (preferences == null || preferences!.textSizeIndex == textSizeIndex) {
+      return;
+    }
+    var prefs = cedar_rpc.Preferences();
+    prefs.textSizeIndex = textSizeIndex;
+    await updatePreferences(prefs);
+  }
+
+  int _initialTextSizeIndex = 0;
+
   Widget _orientationLayout(BuildContext context) {
     final portrait = MediaQuery.of(context).orientation == Orientation.portrait;
     final controlsColumn = Column(
@@ -1732,6 +1752,29 @@ class MyHomePageState extends State<MyHomePage> {
           } else {
             cancelFullScreen();
           }
+        },
+        onScaleStart: (details) {
+          _initialTextSizeIndex = _getCurrentTextSizeIndex();
+        },
+        onScaleUpdate: (details) {
+          final scale = details.scale;
+          if (scale > 1.5) {
+            _setTextSizeIndex(_initialTextSizeIndex + 2);
+            return;
+          }
+          if (scale > 1.2) {
+            _setTextSizeIndex(_initialTextSizeIndex + 1);
+            return;
+          }
+          if (scale < 0.66) {
+            _setTextSizeIndex(_initialTextSizeIndex - 2);
+            return;
+          }
+          if (scale < 0.83) {
+            _setTextSizeIndex(_initialTextSizeIndex - 1);
+            return;
+          }
+          _setTextSizeIndex(_initialTextSizeIndex);
         },
         child: RotatedBox(
           quarterTurns: portrait ? 1 : 0,
