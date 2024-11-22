@@ -446,11 +446,6 @@ class MyHomePageState extends State<MyHomePage> {
     isBasic = serverInformation!.featureLevel == cedar_rpc.FeatureLevel.BASIC;
     isPlus = serverInformation!.featureLevel == cedar_rpc.FeatureLevel.PLUS;
     _demoFiles = serverInformation!.demoImageNames;
-    if (_demoFiles.isEmpty) {
-      _demoFile = "";
-    } else if (_demoFile.isEmpty) {
-      _demoFile = _demoFiles[0];
-    }
 
     fixedSettings = response.fixedSettings;
     operationSettings = response.operationSettings;
@@ -460,6 +455,11 @@ class MyHomePageState extends State<MyHomePage> {
     _daylightMode = operationSettings.daylightMode;
     if (_setupMode) {
       _transitionToSetup = false;
+    }
+    _demoFile = operationSettings.demoImageFilename;
+    _demoMode = _demoFile.isNotEmpty;
+    if (_demoFile.isEmpty) {
+      _demoFile = _demoFiles[0];
     }
 
     _canAlign = _setupMode;
@@ -1847,8 +1847,11 @@ class MyHomePageState extends State<MyHomePage> {
                           : Container()),
                 ],
               ))),
+      // Prevent jank in demo mode image file selector.
+      onEndDrawerChanged: (isOpened) {
+        _inhibitRefresh = isOpened;
+      },
       onDrawerChanged: (isOpened) {
-        // Prevent jank in demo mode image file selector.
         _inhibitRefresh = isOpened;
       },
       drawer: _drawer(),
