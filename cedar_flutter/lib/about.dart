@@ -70,7 +70,7 @@ Future<void> aboutScreen(MyHomePageState state, BuildContext context) async {
                     )),
                   ])),
               IconButton(
-                icon: const Icon(Icons.close),
+                icon: const Icon(Icons.close, size: 30),
                 onPressed: () {
                   _aboutOverlayEntry?.remove();
                   _aboutOverlayEntry = null;
