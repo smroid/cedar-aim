@@ -1493,15 +1493,15 @@ class MyHomePageState extends State<MyHomePage> {
                         /*width=*/ 80),
                   ),
                 )),
-      const SizedBox(width: 15, height: 15),
+      const SizedBox(width: 10, height: 10),
       RotatedBox(
           quarterTurns: portrait ? 3 : 0,
           child: _hasPolarAdvice() && !_setupMode
               ? SizedBox(
-                  width: 140 * textScaleFactor(context),
-                  height: 140,
+                  width: 100 * textScaleFactor(context),
+                  height: 60 * textScaleFactor(context),
                   child: Column(children: <Widget>[
-                    _primaryText("Polar Align"),
+                    _primaryText("Polar Align", size: 12),
                     _polarAlignAdvice!.hasAltitudeCorrection()
                         ? _solveText(sprintf("alt %s", [
                             sprintf("%s\npolar axis->%s", [
