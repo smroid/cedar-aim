@@ -12,6 +12,7 @@ import 'package:cedar_flutter/google/protobuf/timestamp.pb.dart';
 import 'package:cedar_flutter/perf_stats_dialog.dart';
 import 'package:cedar_flutter/server_log.dart';
 import 'package:cedar_flutter/settings.dart';
+import 'package:cedar_flutter/sky_coords_dialog.dart';
 import 'package:cedar_flutter/themes.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:flutter/material.dart';
@@ -374,15 +375,15 @@ class MyHomePageState extends State<MyHomePage> {
 
   List<Offset>? _solutionCentroids;
   // Degrees.
-  double _solutionRA = 0.0;
-  double _solutionDec = 0.0;
+  double solutionRA = 0.0;
+  double solutionDec = 0.0;
   double _solutionRollAngle = 0.0; // Degrees.
   double _solutionFOV = 0.0; // Degrees.
 
   // Arcsec.
   double solutionRMSE = 0.0;
 
-  cedar_rpc.LocationBasedInfo? _locationBasedInfo;
+  cedar_rpc.LocationBasedInfo? locationBasedInfo;
 
   cedar_rpc.CalibrationData? calibrationData;
   cedar_rpc.ProcessingStats? processingStats;
@@ -501,17 +502,17 @@ class MyHomePageState extends State<MyHomePage> {
           _solutionCentroids!.add(Offset(centroid.x, centroid.y));
         }
         if (plateSolution.targetCoords.isNotEmpty) {
-          _solutionRA = plateSolution.targetCoords.first.ra;
-          _solutionDec = plateSolution.targetCoords.first.dec;
+          solutionRA = plateSolution.targetCoords.first.ra;
+          solutionDec = plateSolution.targetCoords.first.dec;
         } else {
-          _solutionRA = plateSolution.imageCenterCoords.ra;
-          _solutionDec = plateSolution.imageCenterCoords.dec;
+          solutionRA = plateSolution.imageCenterCoords.ra;
+          solutionDec = plateSolution.imageCenterCoords.dec;
         }
         _solutionRollAngle = plateSolution.roll;
         solutionRMSE = plateSolution.rmse;
         _solutionFOV = plateSolution.fov;
         if (response.hasLocationBasedInfo()) {
-          _locationBasedInfo = response.locationBasedInfo;
+          locationBasedInfo = response.locationBasedInfo;
         }
         _scopeFov =
             preferences!.eyepieceFov * _imageRegion.width / _solutionFOV;
@@ -553,8 +554,8 @@ class MyHomePageState extends State<MyHomePage> {
 
   double _bullseyeDirectionIndicator() {
     if (preferences?.mountType == cedar_rpc.MountType.ALT_AZ &&
-        _locationBasedInfo != null) {
-      return _locationBasedInfo!.zenithRollAngle;
+        locationBasedInfo != null) {
+      return locationBasedInfo!.zenithRollAngle;
     } else {
       return _solutionRollAngle; // Direction towards north.
     }
@@ -1238,7 +1239,7 @@ class MyHomePageState extends State<MyHomePage> {
   String formatRightAscension(double ra, {bool short = false}) {
     if (preferences?.celestialCoordFormat ==
         cedar_rpc.CelestialCoordFormat.DECIMAL) {
-      return sprintf("%.4f°", [ra]);
+      return sprintf("%.3f°", [ra]);
     }
     int hours = (ra / 15.0).floor();
     double fracHours = ra / 15.0 - hours;
@@ -1246,14 +1247,14 @@ class MyHomePageState extends State<MyHomePage> {
     double fracMinutes = fracHours * 60.0 - minutes;
     int seconds = (fracMinutes * 60).round();
     return short
-        ? sprintf("%02d:%02d", [hours, minutes])
-        : sprintf("%02d:%02d:%02d", [hours, minutes, seconds]);
+        ? sprintf("%02dh%02dm", [hours, minutes])
+        : sprintf("%02dh%02dm%02ds", [hours, minutes, seconds]);
   }
 
-  String formatHourAngle(double ha) {
+  String formatHourAngle(double ha, {bool short = false}) {
     if (preferences?.celestialCoordFormat ==
         cedar_rpc.CelestialCoordFormat.DECIMAL) {
-      return sprintf("%.4f°", [ha]);
+      return sprintf("%.3f°", [ha]);
     }
     String sign = ha < 0 ? "-" : "+";
     if (ha < 0) {
@@ -1264,13 +1265,15 @@ class MyHomePageState extends State<MyHomePage> {
     int minutes = (fracHours * 60.0).floor();
     double fracMinutes = fracHours * 60.0 - minutes;
     int seconds = (fracMinutes * 60).round();
-    return sprintf("%s%02d:%02d:%02d", [sign, hours, minutes, seconds]);
+    return short
+        ? sprintf("%s%02dh%02dm", [sign, hours, minutes])
+        : sprintf("%s%02dh%02dm%02ds", [sign, hours, minutes, seconds]);
   }
 
   String formatDeclination(double dec, {bool short = false}) {
     if (preferences?.celestialCoordFormat ==
         cedar_rpc.CelestialCoordFormat.DECIMAL) {
-      return sprintf("%.4f°", [dec]);
+      return sprintf("%.3f°", [dec]);
     }
     String sign = dec < 0 ? "-" : "+";
     if (dec < 0) {
@@ -1282,8 +1285,8 @@ class MyHomePageState extends State<MyHomePage> {
     double fracMinutes = fracDegrees * 60.0 - minutes;
     int seconds = (fracMinutes * 60).round();
     return short
-        ? sprintf("%s%02d:%02d", [sign, degrees, minutes])
-        : sprintf("%s%02d:%02d:%02d", [sign, degrees, minutes, seconds]);
+        ? sprintf("%s%02d°%02d'", [sign, degrees, minutes])
+        : sprintf("%s%02d°%02d'%02d''", [sign, degrees, minutes, seconds]);
   }
 
   String formatAltitude(double alt, {bool short = false}) {
@@ -1308,7 +1311,7 @@ class MyHomePageState extends State<MyHomePage> {
   }
 
   String _formatAdvice(cedar_rpc.ErrorBoundedValue? ebv) {
-    return sprintf("%.2f±%.2f", [ebv!.value, ebv.error]);
+    return sprintf("%.2f°±%.2f", [ebv!.value, ebv.error]);
   }
 
   Color _starsSliderColor() {
@@ -1332,7 +1335,7 @@ class MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  Text _solveText(String val, {double? size = 10}) {
+  Text solveText(String val, {double? size = 14}) {
     return Text(
       val,
       style: TextStyle(color: _solveTextColor(), fontSize: size),
@@ -1352,21 +1355,21 @@ class MyHomePageState extends State<MyHomePage> {
     return [
       SizedBox(
           width: width * textScaleFactor(context),
-          height: 14 * textScaleFactor(context),
+          height: 18 * textScaleFactor(context),
           child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _solveText("RA"),
-                _solveText(formatRightAscension(_solutionRA))
+                solveText("RA"),
+                solveText(formatRightAscension(solutionRA, short: true))
               ])),
       SizedBox(
           width: width * textScaleFactor(context),
-          height: 14 * textScaleFactor(context),
+          height: 18 * textScaleFactor(context),
           child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _solveText("Dec"),
-                _solveText(formatDeclination(_solutionDec))
+                solveText("Dec"),
+                solveText(formatDeclination(solutionDec, short: true))
               ]))
     ];
   }
@@ -1375,39 +1378,39 @@ class MyHomePageState extends State<MyHomePage> {
     return [
       SizedBox(
           width: width * textScaleFactor(context),
-          height: 14 * textScaleFactor(context),
+          height: 18 * textScaleFactor(context),
           child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _solveText("Az"),
-                _solveText(formatAzimuth(_locationBasedInfo!.azimuth))
+                solveText("Az"),
+                solveText(formatAzimuth(locationBasedInfo!.azimuth))
               ])),
       SizedBox(
           width: width * textScaleFactor(context),
-          height: 14 * textScaleFactor(context),
+          height: 18 * textScaleFactor(context),
           child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _solveText("Alt"),
-                _solveText(formatAltitude(_locationBasedInfo!.altitude))
+                solveText("Alt"),
+                solveText(formatAltitude(locationBasedInfo!.altitude))
               ])),
       SizedBox(
           width: width * textScaleFactor(context),
-          height: 14 * textScaleFactor(context),
-          child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                _solveText("HA"),
-                _solveText(formatHourAngle(_locationBasedInfo!.hourAngle))
-              ])),
+          height: 18 * textScaleFactor(context),
+          child:
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+            solveText("HA"),
+            solveText(
+                formatHourAngle(locationBasedInfo!.hourAngle, short: true))
+          ])),
     ];
   }
 
   List<Widget> _coordInfo(bool mountAltAz, int width) {
-    if (mountAltAz && _locationBasedInfo != null) {
+    if (mountAltAz && locationBasedInfo != null) {
       return _azAlt(width) + [const SizedBox(height: 8)] + _raDec(width);
     } else {
-      if (_locationBasedInfo == null) {
+      if (locationBasedInfo == null) {
         return _raDec(width);
       } else {
         return _raDec(width) + [const SizedBox(height: 8)] + _azAlt(width);
@@ -1447,13 +1450,13 @@ class MyHomePageState extends State<MyHomePage> {
                                 GaugeAnnotation(
                                   positionFactor: 0.3,
                                   angle: 270,
-                                  widget: _solveText(sprintf("%d", [_numStars]),
+                                  widget: solveText(sprintf("%d", [_numStars]),
                                       size: 16),
                                 ),
                                 GaugeAnnotation(
                                   positionFactor: 0.4,
                                   angle: 90,
-                                  widget: _solveText("stars", size: 12),
+                                  widget: solveText("stars", size: 12),
                                 ),
                               ],
                               ranges: <GaugeRange>[
@@ -1485,25 +1488,29 @@ class MyHomePageState extends State<MyHomePage> {
               ? Container()
               : SizedBox(
                   width: 80 * textScaleFactor(context),
-                  height: 80 * textScaleFactor(context),
-                  child: Column(
-                    // RA/Dec, Alt/Az, etc.
-                    children: _coordInfo(
-                        preferences?.mountType == cedar_rpc.MountType.ALT_AZ,
-                        /*width=*/ 80),
-                  ),
-                )),
+                  height: 100 * textScaleFactor(context),
+                  child: GestureDetector(
+                    onTap: () {
+                      skyCoordsDialog(this, context);
+                    },
+                    child: Column(
+                      // RA/Dec, Alt/Az, etc.
+                      children: _coordInfo(
+                          preferences?.mountType == cedar_rpc.MountType.ALT_AZ,
+                          /*width=*/ 80),
+                    ),
+                  ))),
       const SizedBox(width: 10, height: 10),
       RotatedBox(
           quarterTurns: portrait ? 3 : 0,
           child: _hasPolarAdvice() && !_setupMode
               ? SizedBox(
-                  width: 100 * textScaleFactor(context),
-                  height: 60 * textScaleFactor(context),
+                  width: 120 * textScaleFactor(context),
+                  height: 70 * textScaleFactor(context),
                   child: Column(children: <Widget>[
-                    _primaryText("Polar Align", size: 12),
+                    _primaryText("Polar Align"),
                     _polarAlignAdvice!.hasAltitudeCorrection()
-                        ? _solveText(sprintf("alt %s", [
+                        ? solveText(sprintf("alt %s", [
                             sprintf("%s\npolar axis->%s", [
                               _formatAdvice(
                                   _polarAlignAdvice!.altitudeCorrection),
@@ -1514,7 +1521,7 @@ class MyHomePageState extends State<MyHomePage> {
                           ]))
                         : Container(),
                     _polarAlignAdvice!.hasAzimuthCorrection()
-                        ? _solveText(sprintf("az %s", [
+                        ? solveText(sprintf("az %s", [
                             sprintf("%s\npolar axis->%s", [
                               _formatAdvice(
                                   _polarAlignAdvice!.azimuthCorrection),
@@ -1821,32 +1828,35 @@ class MyHomePageState extends State<MyHomePage> {
           toolbarOpacity: hideAppBar ? 0.0 : 1.0,
           title: Text(widget.title),
           foregroundColor: Theme.of(context).colorScheme.primary),
-      body: DefaultTextStyle.merge(style: const TextStyle(fontFamilyFallback: ['Roboto']), child: SafeArea(
-          child: Container(
-              color: Theme.of(context).colorScheme.surface,
-              child: Stack(
-                fit: StackFit.expand,
-                children: [
-                  healthy
-                      ? FittedBox(child: _orientationLayout(context))
-                      : _badServerState(),
-                  Positioned(
-                      left: _rightHanded ? null : 0,
-                      right: _rightHanded ? 0 : null,
-                      top: 0,
-                      child: hideAppBar
-                          ? IconButton(
-                              icon: const Icon(Icons.menu),
-                              onPressed: () {
-                                if (_rightHanded) {
-                                  _scaffoldKey.currentState!.openEndDrawer();
-                                } else {
-                                  _scaffoldKey.currentState!.openDrawer();
-                                }
-                              })
-                          : Container()),
-                ],
-              )))),
+      body: DefaultTextStyle.merge(
+          style: const TextStyle(fontFamilyFallback: ['Roboto']),
+          child: SafeArea(
+              child: Container(
+                  color: Theme.of(context).colorScheme.surface,
+                  child: Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      healthy
+                          ? FittedBox(child: _orientationLayout(context))
+                          : _badServerState(),
+                      Positioned(
+                          left: _rightHanded ? null : 0,
+                          right: _rightHanded ? 0 : null,
+                          top: 0,
+                          child: hideAppBar
+                              ? IconButton(
+                                  icon: const Icon(Icons.menu),
+                                  onPressed: () {
+                                    if (_rightHanded) {
+                                      _scaffoldKey.currentState!
+                                          .openEndDrawer();
+                                    } else {
+                                      _scaffoldKey.currentState!.openDrawer();
+                                    }
+                                  })
+                              : Container()),
+                    ],
+                  )))),
       // Prevent jank in demo mode image file selector.
       onEndDrawerChanged: (isOpened) {
         _inhibitRefresh = isOpened;

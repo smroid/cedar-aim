@@ -7,8 +7,9 @@ import 'package:cedar_flutter/client_main.dart';
 import 'package:cedar_flutter/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:sprintf/sprintf.dart';
+import 'cedar.pbgrpc.dart' as cedar_rpc;
 
-Future<void> perfStatsDialog(
+Future<void> skyCoordsDialog(
     MyHomePageState state, BuildContext context) async {
   Text scaledText(String str) {
     return Text(str,
@@ -24,7 +25,9 @@ Future<void> perfStatsDialog(
   });
 
   Color color = Theme.of(context).colorScheme.primary;
-  final width = 200.0 * textScaleFactor(context);
+  final width = 210.0 * textScaleFactor(context);
+
+  bool displayAltAz = state.locationBasedInfo != null;
 
   bool tapInsideOverlay = false;
 
@@ -49,6 +52,8 @@ Future<void> perfStatsDialog(
           timer.cancel();
           dialogOverlayEntry!.remove();
         }
+        // TODO: for taps inside the overlay, use the tap to determine what
+        // coordinate items should be seen in the main display.
       },
       child: Material(
         color: Colors.black54,
@@ -71,66 +76,43 @@ Future<void> perfStatsDialog(
             mainAxisSize: MainAxisSize.min,
             children: [
               Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                scaledText("Performance"),
+                scaledText("Sky Location"),
               ]),
               const SizedBox(height: 5),
               Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                scaledText("Exposure time"),
-                scaledText(sprintf("%.1f ms", [state.exposureTimeMs])),
+                scaledText("Right ascension"),
+                state.solveText(state.formatRightAscension(state.solutionRA)),
               ]),
-              state.processingStats != null
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                scaledText("Declination"),
+                state.solveText(state.formatDeclination(state.solutionDec)),
+              ]),
+              displayAltAz
                   ? Column(children: [
-                      Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            scaledText("Detect"),
-                            scaledText(sprintf("%.1f ms", [
-                              state.processingStats!.detectLatency.recent.mean *
-                                  1000
-                            ])),
-                          ]),
-                      Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            scaledText("Solve"),
-                            scaledText(sprintf("%.1f ms", [
-                              state.processingStats!.solveLatency.recent.mean *
-                                  1000
-                            ])),
-                          ]),
                       const SizedBox(height: 10),
                       Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            scaledText("Solve attempt"),
-                            scaledText(sprintf("%2d%%", [
-                              (state.processingStats!.solveAttemptFraction
-                                          .recent.mean *
-                                      100)
-                                  .toInt()
-                            ])),
+                            scaledText("Azimuth"),
+                            state.solveText(state.formatAzimuth(
+                                state.locationBasedInfo!.azimuth))
                           ]),
                       Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            scaledText("Solve success"),
-                            scaledText(sprintf("%2d%%", [
-                              (state.processingStats!.solveSuccessFraction
-                                          .recent.mean *
-                                      100)
-                                  .toInt()
-                            ])),
+                            scaledText("Altitude"),
+                            state.solveText(state.formatAltitude(
+                                state.locationBasedInfo!.altitude))
+                          ]),
+                      Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            scaledText("Hour angle"),
+                            state.solveText(state.formatHourAngle(
+                                state.locationBasedInfo!.hourAngle))
                           ]),
                     ])
                   : Container(),
-              const SizedBox(height: 10),
-              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                scaledText("RMS Error"),
-                scaledText(state.solutionRMSE > 60
-                    ? sprintf("%.1f arcmin", [state.solutionRMSE / 60])
-                    : sprintf("%.0f arcsec", [state.solutionRMSE])),
-                // solveText(),
-              ]),
             ],
           ),
         )),
