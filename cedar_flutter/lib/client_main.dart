@@ -1332,7 +1332,7 @@ class MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  Text _solveText(String val, {double? size = 16}) {
+  Text _solveText(String val, {double? size = 10}) {
     return Text(
       val,
       style: TextStyle(color: _solveTextColor(), fontSize: size),
@@ -1352,7 +1352,7 @@ class MyHomePageState extends State<MyHomePage> {
     return [
       SizedBox(
           width: width * textScaleFactor(context),
-          height: 20 * textScaleFactor(context),
+          height: 14 * textScaleFactor(context),
           child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -1361,7 +1361,7 @@ class MyHomePageState extends State<MyHomePage> {
               ])),
       SizedBox(
           width: width * textScaleFactor(context),
-          height: 20 * textScaleFactor(context),
+          height: 14 * textScaleFactor(context),
           child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -1375,7 +1375,7 @@ class MyHomePageState extends State<MyHomePage> {
     return [
       SizedBox(
           width: width * textScaleFactor(context),
-          height: 20 * textScaleFactor(context),
+          height: 14 * textScaleFactor(context),
           child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -1384,7 +1384,7 @@ class MyHomePageState extends State<MyHomePage> {
               ])),
       SizedBox(
           width: width * textScaleFactor(context),
-          height: 20 * textScaleFactor(context),
+          height: 14 * textScaleFactor(context),
           child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -1393,7 +1393,7 @@ class MyHomePageState extends State<MyHomePage> {
               ])),
       SizedBox(
           width: width * textScaleFactor(context),
-          height: 20 * textScaleFactor(context),
+          height: 14 * textScaleFactor(context),
           child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -1405,12 +1405,12 @@ class MyHomePageState extends State<MyHomePage> {
 
   List<Widget> _coordInfo(bool mountAltAz, int width) {
     if (mountAltAz && _locationBasedInfo != null) {
-      return _azAlt(width) + [const SizedBox(height: 10)] + _raDec(width);
+      return _azAlt(width) + [const SizedBox(height: 8)] + _raDec(width);
     } else {
       if (_locationBasedInfo == null) {
         return _raDec(width);
       } else {
-        return _raDec(width) + [const SizedBox(height: 10)] + _azAlt(width);
+        return _raDec(width) + [const SizedBox(height: 8)] + _azAlt(width);
       }
     }
   }
@@ -1424,8 +1424,8 @@ class MyHomePageState extends State<MyHomePage> {
               ? const SizedBox(width: 75, height: 75)
               : Column(children: <Widget>[
                   SizedBox(
-                    width: 75,
-                    height: 75,
+                    width: 70,
+                    height: 70,
                     child: GestureDetector(
                         onTap: () {
                           perfStatsDialog(this, context);
@@ -1448,12 +1448,12 @@ class MyHomePageState extends State<MyHomePage> {
                                   positionFactor: 0.3,
                                   angle: 270,
                                   widget: _solveText(sprintf("%d", [_numStars]),
-                                      size: 18),
+                                      size: 16),
                                 ),
                                 GaugeAnnotation(
                                   positionFactor: 0.4,
                                   angle: 90,
-                                  widget: _solveText("stars", size: 16),
+                                  widget: _solveText("stars", size: 12),
                                 ),
                               ],
                               ranges: <GaugeRange>[
@@ -1478,19 +1478,19 @@ class MyHomePageState extends State<MyHomePage> {
                         )),
                   ),
                 ])),
-      const SizedBox(width: 20, height: 20),
+      const SizedBox(width: 15, height: 15),
       RotatedBox(
           quarterTurns: portrait ? 3 : 0,
           child: _setupMode
               ? Container()
               : SizedBox(
-                  width: 110 * textScaleFactor(context),
-                  height: 120 * textScaleFactor(context),
+                  width: 80 * textScaleFactor(context),
+                  height: 80 * textScaleFactor(context),
                   child: Column(
                     // RA/Dec, Alt/Az, etc.
                     children: _coordInfo(
                         preferences?.mountType == cedar_rpc.MountType.ALT_AZ,
-                        /*width=*/ 110),
+                        /*width=*/ 80),
                   ),
                 )),
       const SizedBox(width: 15, height: 15),
@@ -1821,7 +1821,7 @@ class MyHomePageState extends State<MyHomePage> {
           toolbarOpacity: hideAppBar ? 0.0 : 1.0,
           title: Text(widget.title),
           foregroundColor: Theme.of(context).colorScheme.primary),
-      body: SafeArea(
+      body: DefaultTextStyle.merge(style: const TextStyle(fontFamilyFallback: ['Roboto']), child: SafeArea(
           child: Container(
               color: Theme.of(context).colorScheme.surface,
               child: Stack(
@@ -1846,7 +1846,7 @@ class MyHomePageState extends State<MyHomePage> {
                               })
                           : Container()),
                 ],
-              ))),
+              )))),
       // Prevent jank in demo mode image file selector.
       onEndDrawerChanged: (isOpened) {
         _inhibitRefresh = isOpened;
