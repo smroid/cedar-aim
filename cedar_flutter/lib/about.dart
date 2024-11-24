@@ -42,45 +42,45 @@ Future<void> aboutScreen(MyHomePageState state, BuildContext context) async {
       builder: (BuildContext context) => Material(
           color: Colors.black,
           child: DefaultTextStyle.merge(
-                style: const TextStyle(fontFamilyFallback: ['Roboto']),
-                child: Stack(
-            alignment: rightHanded ? Alignment.topRight : Alignment.topLeft,
-            children: [
-              RotatedBox(
-                  quarterTurns:
-                      MediaQuery.of(context).orientation == Orientation.portrait
+              style: const TextStyle(fontFamilyFallback: ['Roboto']),
+              child: Stack(
+                alignment: rightHanded ? Alignment.topRight : Alignment.topLeft,
+                children: [
+                  RotatedBox(
+                      quarterTurns: MediaQuery.of(context).orientation ==
+                              Orientation.portrait
                           ? 1
                           : 0,
-                  child: Row(children: [
-                    Expanded(
-                        child: Container(
-                      decoration: BoxDecoration(
-                          color: Theme.of(context).colorScheme.surface,
-                          borderRadius: BorderRadius.circular(10)),
-                      margin: const EdgeInsets.fromLTRB(10, 10, 5, 10),
-                      padding: const EdgeInsets.fromLTRB(0, 10, 10, 10),
-                      child: serverInfo(state),
-                    )),
-                    Expanded(
-                        child: Container(
-                      decoration: BoxDecoration(
-                          color: Theme.of(context).colorScheme.surface,
-                          borderRadius: BorderRadius.circular(10)),
-                      margin: const EdgeInsets.fromLTRB(10, 10, 5, 10),
-                      padding: const EdgeInsets.fromLTRB(0, 10, 10, 10),
-                      child: calibrationInfo(state),
-                    )),
-                  ])),
-              IconButton(
-                icon: const Icon(Icons.close, size: 30),
-                onPressed: () {
-                  _aboutOverlayEntry?.remove();
-                  _aboutOverlayEntry = null;
-                  _timer?.cancel();
-                },
-              ),
-            ],
-          ))));
+                      child: Row(children: [
+                        Expanded(
+                            child: Container(
+                          decoration: BoxDecoration(
+                              color: Theme.of(context).colorScheme.surface,
+                              borderRadius: BorderRadius.circular(10)),
+                          margin: const EdgeInsets.fromLTRB(10, 10, 5, 10),
+                          padding: const EdgeInsets.fromLTRB(0, 10, 10, 10),
+                          child: serverInfo(state),
+                        )),
+                        Expanded(
+                            child: Container(
+                          decoration: BoxDecoration(
+                              color: Theme.of(context).colorScheme.surface,
+                              borderRadius: BorderRadius.circular(10)),
+                          margin: const EdgeInsets.fromLTRB(10, 10, 5, 10),
+                          padding: const EdgeInsets.fromLTRB(0, 10, 10, 10),
+                          child: calibrationInfo(state),
+                        )),
+                      ])),
+                  IconButton(
+                    icon: const Icon(Icons.close, size: 30),
+                    onPressed: () {
+                      _aboutOverlayEntry?.remove();
+                      _aboutOverlayEntry = null;
+                      _timer?.cancel();
+                    },
+                  ),
+                ],
+              ))));
 
   _timer = Timer.periodic(const Duration(seconds: 1), (_) async {
     _serverTimeOverlayEntry?.markNeedsBuild();
@@ -267,25 +267,26 @@ void serverTimeDialog(MyHomePageState state) {
       child: Material(
         color: Colors.black54,
         child: DefaultTextStyle.merge(
-                style: const TextStyle(fontFamilyFallback: ['Roboto']),
-                child: Center(
-          child: Container(
-            padding: const EdgeInsets.fromLTRB(10, 5, 10, 10),
-            decoration: BoxDecoration(
-              border: Border(
-                top: BorderSide(color: color),
-                bottom: BorderSide(color: color),
-                left: BorderSide(color: color),
-                right: BorderSide(color: color),
+            style: const TextStyle(fontFamilyFallback: ['Roboto']),
+            child: Center(
+              child: Container(
+                padding: const EdgeInsets.fromLTRB(10, 5, 10, 10),
+                decoration: BoxDecoration(
+                  border: Border(
+                    top: BorderSide(color: color),
+                    bottom: BorderSide(color: color),
+                    left: BorderSide(color: color),
+                    right: BorderSide(color: color),
+                  ),
+                  color: Colors.black,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Column(mainAxisSize: MainAxisSize.min, children: [
+                  _scaledText(
+                      formatTimestamp(state.serverInformation!.serverTime)),
+                ]),
               ),
-              color: Colors.black,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Column(mainAxisSize: MainAxisSize.min, children: [
-              _scaledText(formatTimestamp(state.serverInformation!.serverTime)),
-            ]),
-          ),
-        )),
+            )),
       ),
     );
   });
@@ -304,25 +305,25 @@ void copyrightDialog(String copyright) {
       child: Material(
         color: Colors.black54,
         child: DefaultTextStyle.merge(
-                style: const TextStyle(fontFamilyFallback: ['Roboto']),
-                child: Center(
-          child: Container(
-            padding: const EdgeInsets.fromLTRB(10, 5, 10, 10),
-            decoration: BoxDecoration(
-              border: Border(
-                top: BorderSide(color: color),
-                bottom: BorderSide(color: color),
-                left: BorderSide(color: color),
-                right: BorderSide(color: color),
+            style: const TextStyle(fontFamilyFallback: ['Roboto']),
+            child: Center(
+              child: Container(
+                padding: const EdgeInsets.fromLTRB(10, 5, 10, 10),
+                decoration: BoxDecoration(
+                  border: Border(
+                    top: BorderSide(color: color),
+                    bottom: BorderSide(color: color),
+                    left: BorderSide(color: color),
+                    right: BorderSide(color: color),
+                  ),
+                  color: Colors.black,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Column(mainAxisSize: MainAxisSize.min, children: [
+                  _scaledText(copyright),
+                ]),
               ),
-              color: Colors.black,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Column(mainAxisSize: MainAxisSize.min, children: [
-              _scaledText(copyright),
-            ]),
-          ),
-        )),
+            )),
       ),
     );
   });
@@ -341,26 +342,26 @@ void processorOsDialog(String processor, String osVersion) {
       child: Material(
         color: Colors.black54,
         child: DefaultTextStyle.merge(
-                style: const TextStyle(fontFamilyFallback: ['Roboto']),
-                child: Center(
-          child: Container(
-            padding: const EdgeInsets.fromLTRB(10, 5, 10, 10),
-            decoration: BoxDecoration(
-              border: Border(
-                top: BorderSide(color: color),
-                bottom: BorderSide(color: color),
-                left: BorderSide(color: color),
-                right: BorderSide(color: color),
+            style: const TextStyle(fontFamilyFallback: ['Roboto']),
+            child: Center(
+              child: Container(
+                padding: const EdgeInsets.fromLTRB(10, 5, 10, 10),
+                decoration: BoxDecoration(
+                  border: Border(
+                    top: BorderSide(color: color),
+                    bottom: BorderSide(color: color),
+                    left: BorderSide(color: color),
+                    right: BorderSide(color: color),
+                  ),
+                  color: Colors.black,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Column(mainAxisSize: MainAxisSize.min, children: [
+                  _scaledText(processor),
+                  _scaledText(osVersion),
+                ]),
               ),
-              color: Colors.black,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Column(mainAxisSize: MainAxisSize.min, children: [
-              _scaledText(processor),
-              _scaledText(osVersion),
-            ]),
-          ),
-        )),
+            )),
       ),
     );
   });

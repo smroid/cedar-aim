@@ -65,93 +65,98 @@ Future<void> skyCoordsDialog(
       child: Material(
         color: Colors.black54,
         child: DefaultTextStyle.merge(
-          style: const TextStyle(fontFamilyFallback: ['Roboto']),
-          child: Center(
-            child: Container(
-          key: dialogOverlayKey,
-          width: 210.0 * textScaleFactor(context),
-          padding: const EdgeInsets.fromLTRB(10, 5, 10, 10),
-          decoration: BoxDecoration(
-            border: Border(
-              top: BorderSide(color: color),
-              bottom: BorderSide(color: color),
-              left: BorderSide(color: color),
-              right: BorderSide(color: color),
-            ),
-            color: Colors.black,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                scaledText("Sky Location", false),
-              ]),
-              const SizedBox(height: 5),
-              GestureDetector(
-                  onTap: () async {
-                    var prefs = cedar_rpc.Preferences();
-                    prefs.celestialCoordChoice =
-                        cedar_rpc.CelestialCoordChoice.RA_DEC;
-                    await state.updatePreferences(prefs);
-                    dialogOverlayEntry!.markNeedsBuild();
-                  },
-                  child: Column(children: [
-                    Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          scaledText(
-                              "Right ascension", /*highlight=*/ preferRaDec),
-                          state.solveText(
-                              state.formatRightAscension(state.solutionRA)),
-                        ]),
-                    Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          scaledText("Declination", /*highlight=*/ preferRaDec),
-                          state.solveText(
-                              state.formatDeclination(state.solutionDec)),
-                        ])
-                  ])),
-              displayAltAz
-                  ? GestureDetector(
+            style: const TextStyle(fontFamilyFallback: ['Roboto']),
+            child: Center(
+                child: Container(
+              key: dialogOverlayKey,
+              width: 210.0 * textScaleFactor(context),
+              padding: const EdgeInsets.fromLTRB(10, 5, 10, 10),
+              decoration: BoxDecoration(
+                border: Border(
+                  top: BorderSide(color: color),
+                  bottom: BorderSide(color: color),
+                  left: BorderSide(color: color),
+                  right: BorderSide(color: color),
+                ),
+                color: Colors.black,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                    scaledText("Sky Location", false),
+                  ]),
+                  const SizedBox(height: 5),
+                  GestureDetector(
                       onTap: () async {
                         var prefs = cedar_rpc.Preferences();
                         prefs.celestialCoordChoice =
-                            cedar_rpc.CelestialCoordChoice.ALT_AZ_HA;
+                            cedar_rpc.CelestialCoordChoice.RA_DEC;
                         await state.updatePreferences(prefs);
                         dialogOverlayEntry!.markNeedsBuild();
                       },
                       child: Column(children: [
-                        const SizedBox(height: 10),
                         Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              scaledText("Azimuth", /*highlight=*/ preferAzAlt),
-                              state.solveText(state.formatAzimuth(
-                                  state.locationBasedInfo!.azimuth))
+                              scaledText("Right ascension",
+                                  /*highlight=*/ preferRaDec),
+                              state.solveText(
+                                  state.formatRightAscension(state.solutionRA)),
                             ]),
                         Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               scaledText(
-                                  "Altitude", /*highlight=*/ preferAzAlt),
-                              state.solveText(state.formatAltitude(
-                                  state.locationBasedInfo!.altitude))
-                            ]),
-                        Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              scaledText(
-                                  "Hour angle", /*highlight=*/ preferAzAlt),
-                              state.solveText(state.formatHourAngle(
-                                  state.locationBasedInfo!.hourAngle))
-                            ]),
-                      ]))
-                  : Container(),
-            ],
-          ),
-        ))),
+                                  "Declination", /*highlight=*/ preferRaDec),
+                              state.solveText(
+                                  state.formatDeclination(state.solutionDec)),
+                            ])
+                      ])),
+                  displayAltAz
+                      ? GestureDetector(
+                          onTap: () async {
+                            var prefs = cedar_rpc.Preferences();
+                            prefs.celestialCoordChoice =
+                                cedar_rpc.CelestialCoordChoice.ALT_AZ_HA;
+                            await state.updatePreferences(prefs);
+                            dialogOverlayEntry!.markNeedsBuild();
+                          },
+                          child: Column(children: [
+                            const SizedBox(height: 10),
+                            Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  scaledText(
+                                      "Azimuth", /*highlight=*/ preferAzAlt),
+                                  state.solveText(state.formatAzimuth(
+                                      state.locationBasedInfo!.azimuth))
+                                ]),
+                            Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  scaledText(
+                                      "Altitude", /*highlight=*/ preferAzAlt),
+                                  state.solveText(state.formatAltitude(
+                                      state.locationBasedInfo!.altitude))
+                                ]),
+                            Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  scaledText(
+                                      "Hour angle", /*highlight=*/ preferAzAlt),
+                                  state.solveText(state.formatHourAngle(
+                                      state.locationBasedInfo!.hourAngle))
+                                ]),
+                          ]))
+                      : Container(),
+                ],
+              ),
+            ))),
       ),
     );
   });
