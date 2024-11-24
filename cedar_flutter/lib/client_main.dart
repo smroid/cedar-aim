@@ -1066,6 +1066,13 @@ class MyHomePageState extends State<MyHomePage> {
           var prefsDiff = newPrefs.deepCopy();
           if (preferences != null && diffPreferences(preferences!, prefsDiff)) {
             updatePreferences(prefsDiff);
+            if (prefsDiff.hasHideAppBar()) {
+              if (prefsDiff.hideAppBar) {
+                goFullScreen();
+              } else {
+                cancelFullScreen();
+              }
+            }
           }
           final newOpSettings = settings.opSettingsProto;
           var opSettingsDiff = newOpSettings.deepCopy();
@@ -1444,9 +1451,13 @@ class MyHomePageState extends State<MyHomePage> {
     }
   }
 
+  Widget _selectIcon(double value, IconData positive, IconData negative) {
+    Color color = Theme.of(context).colorScheme.primary;
+    return Icon(value > 0 ? positive : negative, color: color);
+  }
+
   List<Widget> _dataItems(BuildContext context) {
     final portrait = MediaQuery.of(context).orientation == Orientation.portrait;
-    Color color = Theme.of(context).colorScheme.primary;
     return <Widget>[
       RotatedBox(
           quarterTurns: portrait ? 3 : 0,
@@ -1547,12 +1558,14 @@ class MyHomePageState extends State<MyHomePage> {
                                     : _polarAlignAdvice!.azimuthCorrection),
                             size: 10),
                         _polarAlignAdvice!.hasAltitudeCorrection()
-                            ? (_polarAlignAdvice!.altitudeCorrection.value > 0
-                                ? Icon(Icons.north, color: color)
-                                : Icon(Icons.south, color: color))
-                            : (_polarAlignAdvice!.azimuthCorrection.value > 0
-                                ? Icon(Icons.rotate_right, color: color)
-                                : Icon(Icons.rotate_left, color: color)),
+                            ? _selectIcon(
+                                _polarAlignAdvice!.altitudeCorrection.value,
+                                Icons.north,
+                                Icons.south)
+                            : _selectIcon(
+                                _polarAlignAdvice!.azimuthCorrection.value,
+                                Icons.rotate_right,
+                                Icons.rotate_left),
                       ]),
                 )
               : Container()),
