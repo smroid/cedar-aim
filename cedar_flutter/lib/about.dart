@@ -41,7 +41,9 @@ Future<void> aboutScreen(MyHomePageState state, BuildContext context) async {
   _aboutOverlayEntry = OverlayEntry(
       builder: (BuildContext context) => Material(
           color: Colors.black,
-          child: Stack(
+          child: DefaultTextStyle.merge(
+                style: const TextStyle(fontFamilyFallback: ['Roboto']),
+                child: Stack(
             alignment: rightHanded ? Alignment.topRight : Alignment.topLeft,
             children: [
               RotatedBox(
@@ -78,7 +80,7 @@ Future<void> aboutScreen(MyHomePageState state, BuildContext context) async {
                 },
               ),
             ],
-          )));
+          ))));
 
   _timer = Timer.periodic(const Duration(seconds: 1), (_) async {
     _serverTimeOverlayEntry?.markNeedsBuild();
@@ -264,7 +266,9 @@ void serverTimeDialog(MyHomePageState state) {
       },
       child: Material(
         color: Colors.black54,
-        child: Center(
+        child: DefaultTextStyle.merge(
+                style: const TextStyle(fontFamilyFallback: ['Roboto']),
+                child: Center(
           child: Container(
             padding: const EdgeInsets.fromLTRB(10, 5, 10, 10),
             decoration: BoxDecoration(
@@ -281,7 +285,7 @@ void serverTimeDialog(MyHomePageState state) {
               _scaledText(formatTimestamp(state.serverInformation!.serverTime)),
             ]),
           ),
-        ),
+        )),
       ),
     );
   });
@@ -299,7 +303,9 @@ void copyrightDialog(String copyright) {
       },
       child: Material(
         color: Colors.black54,
-        child: Center(
+        child: DefaultTextStyle.merge(
+                style: const TextStyle(fontFamilyFallback: ['Roboto']),
+                child: Center(
           child: Container(
             padding: const EdgeInsets.fromLTRB(10, 5, 10, 10),
             decoration: BoxDecoration(
@@ -316,7 +322,7 @@ void copyrightDialog(String copyright) {
               _scaledText(copyright),
             ]),
           ),
-        ),
+        )),
       ),
     );
   });
@@ -334,7 +340,9 @@ void processorOsDialog(String processor, String osVersion) {
       },
       child: Material(
         color: Colors.black54,
-        child: Center(
+        child: DefaultTextStyle.merge(
+                style: const TextStyle(fontFamilyFallback: ['Roboto']),
+                child: Center(
           child: Container(
             padding: const EdgeInsets.fromLTRB(10, 5, 10, 10),
             decoration: BoxDecoration(
@@ -352,7 +360,7 @@ void processorOsDialog(String processor, String osVersion) {
               _scaledText(osVersion),
             ]),
           ),
-        ),
+        )),
       ),
     );
   });

@@ -52,7 +52,9 @@ Future<void> perfStatsDialog(
       },
       child: Material(
         color: Colors.black54,
-        child: Center(
+        child: DefaultTextStyle.merge(
+          style: const TextStyle(fontFamilyFallback: ['Roboto']),
+          child: Center(
             child: Container(
           key: dialogOverlayKey,
           width: width,
@@ -133,7 +135,7 @@ Future<void> perfStatsDialog(
               ]),
             ],
           ),
-        )),
+        ))),
       ),
     );
   });

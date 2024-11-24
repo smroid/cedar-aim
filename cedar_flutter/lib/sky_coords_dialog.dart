@@ -64,7 +64,9 @@ Future<void> skyCoordsDialog(
       },
       child: Material(
         color: Colors.black54,
-        child: Center(
+        child: DefaultTextStyle.merge(
+          style: const TextStyle(fontFamilyFallback: ['Roboto']),
+          child: Center(
             child: Container(
           key: dialogOverlayKey,
           width: 210.0 * textScaleFactor(context),
@@ -149,7 +151,7 @@ Future<void> skyCoordsDialog(
                   : Container(),
             ],
           ),
-        )),
+        ))),
       ),
     );
   });

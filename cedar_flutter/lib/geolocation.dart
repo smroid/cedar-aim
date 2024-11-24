@@ -58,7 +58,9 @@ class _MapScreenState extends State<MapScreen> {
     }
     return Scaffold(
       appBar: AppBar(title: const Text('Select Location')),
-      body: Stack(children: [
+      body: DefaultTextStyle.merge(
+          style: const TextStyle(fontFamilyFallback: ['Roboto']),
+          child: Stack(children: [
         FlutterMap(
           mapController: _mapController,
           options: MapOptions(
@@ -135,7 +137,7 @@ class _MapScreenState extends State<MapScreen> {
             style: TextStyle(color: Colors.blueGrey),
           ),
         ),
-      ]),
+      ])),
     );
   }
 }

@@ -226,7 +226,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           actions: [rightHanded ? backButton : Container()],
         ),
-        body: SettingsList(
+        body: DefaultTextStyle.merge(
+          style: const TextStyle(fontFamilyFallback: ['Roboto']),
+          child: SettingsList(
             darkTheme: prefsProto.nightVisionTheme
                 ? const SettingsThemeData(
                     titleTextColor: Colors.red,
@@ -464,6 +466,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             : 'Upright'),
                       ),
                   ]),
-            ]));
+            ])));
   }
 }
