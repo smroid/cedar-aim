@@ -1236,25 +1236,50 @@ class MyHomePageState extends State<MyHomePage> {
     ];
   }
 
+  // ra: 0..360.
   String formatRightAscension(double ra, {bool short = false}) {
     if (preferences?.celestialCoordFormat ==
         cedar_rpc.CelestialCoordFormat.DECIMAL) {
       return sprintf("%.3f°", [ra]);
     }
+    if (short) {
+      // Round up to nearest minute.
+      const thirtySecs = 30.0 * 360 / 86400.0;
+      ra += thirtySecs;
+      if (ra > 360) {
+        ra -= 360;
+      }
+    }
     int hours = (ra / 15.0).floor();
     double fracHours = ra / 15.0 - hours;
     int minutes = (fracHours * 60.0).floor();
     double fracMinutes = fracHours * 60.0 - minutes;
-    int seconds = (fracMinutes * 60).round();
+    int seconds = (fracMinutes * 60).floor();
     return short
         ? sprintf("%02dh%02dm", [hours, minutes])
         : sprintf("%02dh%02dm%02ds", [hours, minutes, seconds]);
   }
 
+  // ha: -180..180.
   String formatHourAngle(double ha, {bool short = false}) {
     if (preferences?.celestialCoordFormat ==
         cedar_rpc.CelestialCoordFormat.DECIMAL) {
       return sprintf("%.3f°", [ha]);
+    }
+    if (short) {
+      // Round up or down to nearest minute.
+      const thirtySecs = 30.0 * 360 / 86400.0;
+      if (ha > 0) {
+        ha += thirtySecs;
+        if (ha > 180) {
+          ha -= 360;
+        }
+      } else {
+        ha -= thirtySecs;
+        if (ha < -180) {
+          ha += 360;
+        }
+      }
     }
     String sign = ha < 0 ? "-" : "+";
     if (ha < 0) {
@@ -1264,16 +1289,26 @@ class MyHomePageState extends State<MyHomePage> {
     double fracHours = ha / 15.0 - hours;
     int minutes = (fracHours * 60.0).floor();
     double fracMinutes = fracHours * 60.0 - minutes;
-    int seconds = (fracMinutes * 60).round();
+    int seconds = (fracMinutes * 60).floor();
     return short
         ? sprintf("%s%02dh%02dm", [sign, hours, minutes])
         : sprintf("%s%02dh%02dm%02ds", [sign, hours, minutes, seconds]);
   }
 
+  // dec: -90..90.
   String formatDeclination(double dec, {bool short = false}) {
     if (preferences?.celestialCoordFormat ==
         cedar_rpc.CelestialCoordFormat.DECIMAL) {
       return sprintf("%.3f°", [dec]);
+    }
+    if (short) {
+      // Round up or down to nearest minute.
+      const thirtySecs = 30.0 / 3600.0;
+      if (dec > 0) {
+        dec += thirtySecs;
+      } else {
+        dec -= thirtySecs;
+      }
     }
     String sign = dec < 0 ? "-" : "+";
     if (dec < 0) {
@@ -1283,7 +1318,7 @@ class MyHomePageState extends State<MyHomePage> {
     double fracDegrees = dec - degrees;
     int minutes = (fracDegrees * 60.0).floor();
     double fracMinutes = fracDegrees * 60.0 - minutes;
-    int seconds = (fracMinutes * 60).round();
+    int seconds = (fracMinutes * 60).floor();
     return short
         ? sprintf("%s%02d°%02d'", [sign, degrees, minutes])
         : sprintf("%s%02d°%02d'%02d''", [sign, degrees, minutes, seconds]);
@@ -1310,35 +1345,49 @@ class MyHomePageState extends State<MyHomePage> {
         : sprintf("%s %.2f°", [dir, az]);
   }
 
+  String _format2places(double val) {
+    if (val.abs() >= 10.0) {
+      return sprintf("%.0f", [val]);
+    }
+    if (val.abs() >= 1.0) {
+      return sprintf("%.1f", [val]);
+    }
+    return sprintf("%.2f", [val]);
+  }
+
   String _formatAdvice(cedar_rpc.ErrorBoundedValue? ebv) {
-    return sprintf("%.2f°±%.2f", [ebv!.value, ebv.error]);
+    if (ebv == null) {
+      return "null";
+    }
+    return sprintf(
+        "%s°±%s", [_format2places(ebv.value), _format2places(ebv.error)]);
   }
 
-  Color _starsSliderColor() {
+  Color _solveColor() {
     return _hasSolution
         ? Theme.of(context).colorScheme.primary
         : const Color(0xff606060);
   }
 
-  Color _solveTextColor() {
-    return _hasSolution
-        ? Theme.of(context).colorScheme.primary
-        : const Color(0xff606060);
-  }
-
-  Text _primaryText(String val, {double? size = 16}) {
+  Text _primaryText(String val, {double? size = 16, bool underline = false}) {
     return Text(
       val,
       style: TextStyle(
-          color: Theme.of(context).colorScheme.primary, fontSize: size),
+        color: Theme.of(context).colorScheme.primary,
+        fontSize: size,
+        decoration: underline ? TextDecoration.underline : null,
+      ),
       textScaler: textScaler(context),
     );
   }
 
-  Text solveText(String val, {double? size = 14}) {
+  Text solveText(String val, {double? size = 14, bool underline = false}) {
     return Text(
       val,
-      style: TextStyle(color: _solveTextColor(), fontSize: size),
+      style: TextStyle(
+          color: _solveColor(),
+          fontSize: size,
+          decoration: underline ? TextDecoration.underline : null),
       textScaler: textScaler(context),
     );
   }
@@ -1351,84 +1400,65 @@ class MyHomePageState extends State<MyHomePage> {
         _polarAlignAdvice!.hasAzimuthCorrection();
   }
 
-  List<Widget> _raDec(int width) {
+  List<Widget> _raDec() {
+    const size = 11.0;
     return [
-      SizedBox(
-          width: width * textScaleFactor(context),
-          height: 18 * textScaleFactor(context),
-          child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                solveText("RA"),
-                solveText(formatRightAscension(solutionRA, short: true))
-              ])),
-      SizedBox(
-          width: width * textScaleFactor(context),
-          height: 18 * textScaleFactor(context),
-          child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                solveText("Dec"),
-                solveText(formatDeclination(solutionDec, short: true))
-              ]))
+      Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [solveText("RA/Dec", size: size, underline: true)]),
+      Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+        solveText(formatRightAscension(solutionRA, short: true), size: size)
+      ]),
+      Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+        solveText(formatDeclination(solutionDec, short: true), size: size)
+      ]),
     ];
   }
 
-  List<Widget> _azAlt(int width) {
+  List<Widget> _azAlt() {
+    const size = 10.0;
     return [
-      SizedBox(
-          width: width * textScaleFactor(context),
-          height: 18 * textScaleFactor(context),
-          child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                solveText("Az"),
-                solveText(formatAzimuth(locationBasedInfo!.azimuth))
-              ])),
-      SizedBox(
-          width: width * textScaleFactor(context),
-          height: 18 * textScaleFactor(context),
-          child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                solveText("Alt"),
-                solveText(formatAltitude(locationBasedInfo!.altitude))
-              ])),
-      SizedBox(
-          width: width * textScaleFactor(context),
-          height: 18 * textScaleFactor(context),
-          child:
-              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-            solveText("HA"),
-            solveText(
-                formatHourAngle(locationBasedInfo!.hourAngle, short: true))
-          ])),
+      Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [solveText("Az/Alt/HA", size: size, underline: true)]),
+      Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+        solveText(formatAzimuth(locationBasedInfo!.azimuth), size: size)
+      ]),
+      Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+        solveText(formatAltitude(locationBasedInfo!.altitude), size: size)
+      ]),
+      Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+        solveText(formatHourAngle(locationBasedInfo!.hourAngle, short: true),
+            size: size)
+      ]),
     ];
   }
 
-  List<Widget> _coordInfo(bool mountAltAz, int width) {
-    if (mountAltAz && locationBasedInfo != null) {
-      return _azAlt(width) + [const SizedBox(height: 8)] + _raDec(width);
+  List<Widget> _coordInfo() {
+    if (preferences?.celestialCoordChoice ==
+            cedar_rpc.CelestialCoordChoice.RA_DEC ||
+        locationBasedInfo == null) {
+      return _raDec();
     } else {
-      if (locationBasedInfo == null) {
-        return _raDec(width);
-      } else {
-        return _raDec(width) + [const SizedBox(height: 8)] + _azAlt(width);
-      }
+      return _azAlt();
     }
   }
 
   List<Widget> _dataItems(BuildContext context) {
     final portrait = MediaQuery.of(context).orientation == Orientation.portrait;
+    Color color = Theme.of(context).colorScheme.primary;
     return <Widget>[
       RotatedBox(
           quarterTurns: portrait ? 3 : 0,
           child: _setupMode && !(_focusAid && _advanced && !_daylightMode)
-              ? const SizedBox(width: 75, height: 75)
+              ? SizedBox(
+                  width: 50 * textScaleFactor(context),
+                  height: 50 * textScaleFactor(context),
+                )
               : Column(children: <Widget>[
                   SizedBox(
-                    width: 70,
-                    height: 70,
+                    width: 50 * textScaleFactor(context),
+                    height: 50 * textScaleFactor(context),
                     child: GestureDetector(
                         onTap: () {
                           perfStatsDialog(this, context);
@@ -1450,13 +1480,12 @@ class MyHomePageState extends State<MyHomePage> {
                                 GaugeAnnotation(
                                   positionFactor: 0.3,
                                   angle: 270,
-                                  widget: solveText(sprintf("%d", [_numStars]),
-                                      size: 16),
+                                  widget: solveText(sprintf("%d", [_numStars])),
                                 ),
                                 GaugeAnnotation(
                                   positionFactor: 0.4,
                                   angle: 90,
-                                  widget: solveText("stars", size: 12),
+                                  widget: solveText("stars", size: 10),
                                 ),
                               ],
                               ranges: <GaugeRange>[
@@ -1474,30 +1503,29 @@ class MyHomePageState extends State<MyHomePage> {
                                     startValue: 0,
                                     endValue:
                                         math.min(10, math.sqrt(_numStars)),
-                                    color: _starsSliderColor()),
+                                    color: _solveColor()),
                               ],
                             )
                           ],
                         )),
                   ),
                 ])),
-      const SizedBox(width: 15, height: 15),
+      const SizedBox(width: 10, height: 10),
       RotatedBox(
           quarterTurns: portrait ? 3 : 0,
           child: _setupMode
               ? Container()
               : SizedBox(
-                  width: 80 * textScaleFactor(context),
-                  height: 100 * textScaleFactor(context),
+                  width: 60 * textScaleFactor(context),
+                  height: 60 * textScaleFactor(context),
                   child: GestureDetector(
                     onTap: () {
                       skyCoordsDialog(this, context);
                     },
                     child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       // RA/Dec, Alt/Az, etc.
-                      children: _coordInfo(
-                          preferences?.mountType == cedar_rpc.MountType.ALT_AZ,
-                          /*width=*/ 80),
+                      children: _coordInfo(),
                     ),
                   ))),
       const SizedBox(width: 10, height: 10),
@@ -1505,33 +1533,27 @@ class MyHomePageState extends State<MyHomePage> {
           quarterTurns: portrait ? 3 : 0,
           child: _hasPolarAdvice() && !_setupMode
               ? SizedBox(
-                  width: 120 * textScaleFactor(context),
-                  height: 70 * textScaleFactor(context),
-                  child: Column(children: <Widget>[
-                    _primaryText("Polar Align"),
-                    _polarAlignAdvice!.hasAltitudeCorrection()
-                        ? solveText(sprintf("alt %s", [
-                            sprintf("%s\npolar axis->%s", [
-                              _formatAdvice(
-                                  _polarAlignAdvice!.altitudeCorrection),
-                              _polarAlignAdvice!.altitudeCorrection.value > 0
-                                  ? "up"
-                                  : "down"
-                            ])
-                          ]))
-                        : Container(),
-                    _polarAlignAdvice!.hasAzimuthCorrection()
-                        ? solveText(sprintf("az %s", [
-                            sprintf("%s\npolar axis->%s", [
-                              _formatAdvice(
-                                  _polarAlignAdvice!.azimuthCorrection),
-                              _polarAlignAdvice!.azimuthCorrection.value > 0
-                                  ? "right"
-                                  : "left"
-                            ])
-                          ]))
-                        : Container(),
-                  ]),
+                  width: 60 * textScaleFactor(context),
+                  height: 50 * textScaleFactor(context),
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        _primaryText("Eq. Mount", size: 10, underline: true),
+                        solveText(
+                            _formatAdvice(
+                                _polarAlignAdvice!.hasAltitudeCorrection()
+                                    ? _polarAlignAdvice!.altitudeCorrection
+                                    : _polarAlignAdvice!.azimuthCorrection),
+                            size: 10),
+                        _polarAlignAdvice!.hasAltitudeCorrection()
+                            ? (_polarAlignAdvice!.altitudeCorrection.value > 0
+                                ? Icon(Icons.north, color: color)
+                                : Icon(Icons.south, color: color))
+                            : (_polarAlignAdvice!.azimuthCorrection.value > 0
+                                ? Icon(Icons.rotate_right, color: color)
+                                : Icon(Icons.rotate_left, color: color)),
+                      ]),
                 )
               : Container()),
     ];

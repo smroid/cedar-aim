@@ -777,6 +777,7 @@ class Preferences extends $pb.GeneratedMessage {
     ImageCoord? boresightPixel,
     $core.bool? invertCamera,
     $core.bool? rightHanded,
+    CelestialCoordChoice? celestialCoordChoice,
   }) {
     final $result = create();
     if (celestialCoordFormat != null) {
@@ -833,6 +834,9 @@ class Preferences extends $pb.GeneratedMessage {
     if (rightHanded != null) {
       $result.rightHanded = rightHanded;
     }
+    if (celestialCoordChoice != null) {
+      $result.celestialCoordChoice = celestialCoordChoice;
+    }
     return $result;
   }
   Preferences._() : super();
@@ -858,6 +862,7 @@ class Preferences extends $pb.GeneratedMessage {
     ..aOM<ImageCoord>(19, _omitFieldNames ? '' : 'boresightPixel', subBuilder: ImageCoord.create)
     ..aOB(20, _omitFieldNames ? '' : 'invertCamera')
     ..aOB(21, _omitFieldNames ? '' : 'rightHanded')
+    ..e<CelestialCoordChoice>(22, _omitFieldNames ? '' : 'celestialCoordChoice', $pb.PbFieldType.OE, defaultOrMaker: CelestialCoordChoice.CHOICE_UNSPECIFIED, valueOf: CelestialCoordChoice.valueOf, enumValues: CelestialCoordChoice.values)
     ..hasRequiredFields = false
   ;
 
@@ -1076,6 +1081,16 @@ class Preferences extends $pb.GeneratedMessage {
   $core.bool hasRightHanded() => $_has(17);
   @$pb.TagNumber(21)
   void clearRightHanded() => clearField(21);
+
+  /// Whether main display shows RA/Dec or Az/Alt.
+  @$pb.TagNumber(22)
+  CelestialCoordChoice get celestialCoordChoice => $_getN(18);
+  @$pb.TagNumber(22)
+  set celestialCoordChoice(CelestialCoordChoice v) { setField(22, v); }
+  @$pb.TagNumber(22)
+  $core.bool hasCelestialCoordChoice() => $_has(18);
+  @$pb.TagNumber(22)
+  void clearCelestialCoordChoice() => clearField(22);
 }
 
 class FrameRequest extends $pb.GeneratedMessage {

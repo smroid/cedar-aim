@@ -59,6 +59,21 @@ final $typed_data.Uint8List celestialCoordFormatDescriptor = $convert.base64Deco
     'ChRDZWxlc3RpYWxDb29yZEZvcm1hdBIWChJGT1JNQVRfVU5TUEVDSUZJRUQQABILCgdERUNJTU'
     'FMEAESCwoHSE1TX0RNUxAC');
 
+@$core.Deprecated('Use celestialCoordChoiceDescriptor instead')
+const CelestialCoordChoice$json = {
+  '1': 'CelestialCoordChoice',
+  '2': [
+    {'1': 'CHOICE_UNSPECIFIED', '2': 0},
+    {'1': 'RA_DEC', '2': 1},
+    {'1': 'ALT_AZ_HA', '2': 2},
+  ],
+};
+
+/// Descriptor for `CelestialCoordChoice`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List celestialCoordChoiceDescriptor = $convert.base64Decode(
+    'ChRDZWxlc3RpYWxDb29yZENob2ljZRIWChJDSE9JQ0VfVU5TUEVDSUZJRUQQABIKCgZSQV9ERU'
+    'MQARINCglBTFRfQVpfSEEQAg==');
+
 @$core.Deprecated('Use mountTypeDescriptor instead')
 const MountType$json = {
   '1': 'MountType',
@@ -258,6 +273,7 @@ const Preferences$json = {
     {'1': 'boresight_pixel', '3': 19, '4': 1, '5': 11, '6': '.cedar.ImageCoord', '9': 15, '10': 'boresightPixel', '17': true},
     {'1': 'invert_camera', '3': 20, '4': 1, '5': 8, '9': 16, '10': 'invertCamera', '17': true},
     {'1': 'right_handed', '3': 21, '4': 1, '5': 8, '9': 17, '10': 'rightHanded', '17': true},
+    {'1': 'celestial_coord_choice', '3': 22, '4': 1, '5': 14, '6': '.cedar.CelestialCoordChoice', '9': 18, '10': 'celestialCoordChoice', '17': true},
   ],
   '8': [
     {'1': '_celestial_coord_format'},
@@ -278,6 +294,7 @@ const Preferences$json = {
     {'1': '_boresight_pixel'},
     {'1': '_invert_camera'},
     {'1': '_right_handed'},
+    {'1': '_celestial_coord_choice'},
   ],
   '9': [
     {'1': 4, '2': 5},
@@ -304,14 +321,16 @@ final $typed_data.Uint8List preferencesDescriptor = $convert.base64Decode(
     'bmNlZIgBARIrCg90ZXh0X3NpemVfaW5kZXgYEiABKAVIDlINdGV4dFNpemVJbmRleIgBARI/Cg'
     '9ib3Jlc2lnaHRfcGl4ZWwYEyABKAsyES5jZWRhci5JbWFnZUNvb3JkSA9SDmJvcmVzaWdodFBp'
     'eGVsiAEBEigKDWludmVydF9jYW1lcmEYFCABKAhIEFIMaW52ZXJ0Q2FtZXJhiAEBEiYKDHJpZ2'
-    'h0X2hhbmRlZBgVIAEoCEgRUgtyaWdodEhhbmRlZIgBAUIZChdfY2VsZXN0aWFsX2Nvb3JkX2Zv'
-    'cm1hdEIPCg1fZXllcGllY2VfZm92QhUKE19uaWdodF92aXNpb25fdGhlbWVCDwoNX2hpZGVfYX'
-    'BwX2JhckINCgtfbW91bnRfdHlwZUIUChJfb2JzZXJ2ZXJfbG9jYXRpb25CEgoQX3VwZGF0ZV9p'
-    'bnRlcnZhbEIWChRfY2F0YWxvZ19lbnRyeV9tYXRjaEIWChRfbWF4X2Rpc3RhbmNlX2FjdGl2ZU'
-    'IPCg1fbWF4X2Rpc3RhbmNlQhcKFV9taW5fZWxldmF0aW9uX2FjdGl2ZUIQCg5fbWluX2VsZXZh'
-    'dGlvbkILCglfb3JkZXJpbmdCCwoJX2FkdmFuY2VkQhIKEF90ZXh0X3NpemVfaW5kZXhCEgoQX2'
-    'JvcmVzaWdodF9waXhlbEIQCg5faW52ZXJ0X2NhbWVyYUIPCg1fcmlnaHRfaGFuZGVkSgQIBBAF'
-    'SgQICBAJ');
+    'h0X2hhbmRlZBgVIAEoCEgRUgtyaWdodEhhbmRlZIgBARJWChZjZWxlc3RpYWxfY29vcmRfY2hv'
+    'aWNlGBYgASgOMhsuY2VkYXIuQ2VsZXN0aWFsQ29vcmRDaG9pY2VIElIUY2VsZXN0aWFsQ29vcm'
+    'RDaG9pY2WIAQFCGQoXX2NlbGVzdGlhbF9jb29yZF9mb3JtYXRCDwoNX2V5ZXBpZWNlX2ZvdkIV'
+    'ChNfbmlnaHRfdmlzaW9uX3RoZW1lQg8KDV9oaWRlX2FwcF9iYXJCDQoLX21vdW50X3R5cGVCFA'
+    'oSX29ic2VydmVyX2xvY2F0aW9uQhIKEF91cGRhdGVfaW50ZXJ2YWxCFgoUX2NhdGFsb2dfZW50'
+    'cnlfbWF0Y2hCFgoUX21heF9kaXN0YW5jZV9hY3RpdmVCDwoNX21heF9kaXN0YW5jZUIXChVfbW'
+    'luX2VsZXZhdGlvbl9hY3RpdmVCEAoOX21pbl9lbGV2YXRpb25CCwoJX29yZGVyaW5nQgsKCV9h'
+    'ZHZhbmNlZEISChBfdGV4dF9zaXplX2luZGV4QhIKEF9ib3Jlc2lnaHRfcGl4ZWxCEAoOX2ludm'
+    'VydF9jYW1lcmFCDwoNX3JpZ2h0X2hhbmRlZEIZChdfY2VsZXN0aWFsX2Nvb3JkX2Nob2ljZUoE'
+    'CAQQBUoECAgQCQ==');
 
 @$core.Deprecated('Use frameRequestDescriptor instead')
 const FrameRequest$json = {

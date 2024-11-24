@@ -66,6 +66,23 @@ class CelestialCoordFormat extends $pb.ProtobufEnum {
   const CelestialCoordFormat._($core.int v, $core.String n) : super(v, n);
 }
 
+class CelestialCoordChoice extends $pb.ProtobufEnum {
+  static const CelestialCoordChoice CHOICE_UNSPECIFIED = CelestialCoordChoice._(0, _omitEnumNames ? '' : 'CHOICE_UNSPECIFIED');
+  static const CelestialCoordChoice RA_DEC = CelestialCoordChoice._(1, _omitEnumNames ? '' : 'RA_DEC');
+  static const CelestialCoordChoice ALT_AZ_HA = CelestialCoordChoice._(2, _omitEnumNames ? '' : 'ALT_AZ_HA');
+
+  static const $core.List<CelestialCoordChoice> values = <CelestialCoordChoice> [
+    CHOICE_UNSPECIFIED,
+    RA_DEC,
+    ALT_AZ_HA,
+  ];
+
+  static final $core.Map<$core.int, CelestialCoordChoice> _byValue = $pb.ProtobufEnum.initByValue(values);
+  static CelestialCoordChoice? valueOf($core.int value) => _byValue[value];
+
+  const CelestialCoordChoice._($core.int v, $core.String n) : super(v, n);
+}
+
 class MountType extends $pb.ProtobufEnum {
   static const MountType MOUNT_UNSPECIFIED = MountType._(0, _omitEnumNames ? '' : 'MOUNT_UNSPECIFIED');
   static const MountType EQUATORIAL = MountType._(1, _omitEnumNames ? '' : 'EQUATORIAL');

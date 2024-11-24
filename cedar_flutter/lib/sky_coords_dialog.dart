@@ -6,32 +6,41 @@ import 'dart:async';
 import 'package:cedar_flutter/client_main.dart';
 import 'package:cedar_flutter/settings.dart';
 import 'package:flutter/material.dart';
-import 'package:sprintf/sprintf.dart';
 import 'cedar.pbgrpc.dart' as cedar_rpc;
 
 Future<void> skyCoordsDialog(
     MyHomePageState state, BuildContext context) async {
-  Text scaledText(String str) {
+  final Color color = Theme.of(context).colorScheme.primary;
+
+  Text scaledText(String str, bool highlight) {
     return Text(str,
-        style: TextStyle(color: Theme.of(context).colorScheme.primary),
+        style: TextStyle(
+          color: color,
+          fontWeight: highlight ? FontWeight.bold : null,
+        ),
         textScaler: textScaler(context));
   }
 
   OverlayEntry? dialogOverlayEntry;
-  GlobalKey dialogOverlayKey = GlobalKey();
+  final GlobalKey dialogOverlayKey = GlobalKey();
 
   Timer timer = Timer.periodic(const Duration(seconds: 1), (_) async {
     dialogOverlayEntry?.markNeedsBuild();
   });
 
-  Color color = Theme.of(context).colorScheme.primary;
-  final width = 210.0 * textScaleFactor(context);
-
-  bool displayAltAz = state.locationBasedInfo != null;
-
-  bool tapInsideOverlay = false;
-
   dialogOverlayEntry = OverlayEntry(builder: (BuildContext context) {
+    bool tapInsideOverlay = false;
+    bool displayAltAz = state.locationBasedInfo != null;
+    bool preferRaDec = false;
+    bool preferAzAlt = false;
+    if (state.preferences != null && displayAltAz) {
+      if (state.preferences!.celestialCoordChoice ==
+          cedar_rpc.CelestialCoordChoice.RA_DEC) {
+        preferRaDec = true;
+      } else {
+        preferAzAlt = true;
+      }
+    }
     return GestureDetector(
       onTapDown: (details) {
         RenderBox? renderBox =
@@ -52,15 +61,13 @@ Future<void> skyCoordsDialog(
           timer.cancel();
           dialogOverlayEntry!.remove();
         }
-        // TODO: for taps inside the overlay, use the tap to determine what
-        // coordinate items should be seen in the main display.
       },
       child: Material(
         color: Colors.black54,
         child: Center(
             child: Container(
           key: dialogOverlayKey,
-          width: width,
+          width: 210.0 * textScaleFactor(context),
           padding: const EdgeInsets.fromLTRB(10, 5, 10, 10),
           decoration: BoxDecoration(
             border: Border(
@@ -76,42 +83,69 @@ Future<void> skyCoordsDialog(
             mainAxisSize: MainAxisSize.min,
             children: [
               Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                scaledText("Sky Location"),
+                scaledText("Sky Location", false),
               ]),
               const SizedBox(height: 5),
-              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                scaledText("Right ascension"),
-                state.solveText(state.formatRightAscension(state.solutionRA)),
-              ]),
-              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                scaledText("Declination"),
-                state.solveText(state.formatDeclination(state.solutionDec)),
-              ]),
+              GestureDetector(
+                  onTap: () async {
+                    var prefs = cedar_rpc.Preferences();
+                    prefs.celestialCoordChoice =
+                        cedar_rpc.CelestialCoordChoice.RA_DEC;
+                    await state.updatePreferences(prefs);
+                    dialogOverlayEntry!.markNeedsBuild();
+                  },
+                  child: Column(children: [
+                    Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          scaledText(
+                              "Right ascension", /*highlight=*/ preferRaDec),
+                          state.solveText(
+                              state.formatRightAscension(state.solutionRA)),
+                        ]),
+                    Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          scaledText("Declination", /*highlight=*/ preferRaDec),
+                          state.solveText(
+                              state.formatDeclination(state.solutionDec)),
+                        ])
+                  ])),
               displayAltAz
-                  ? Column(children: [
-                      const SizedBox(height: 10),
-                      Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            scaledText("Azimuth"),
-                            state.solveText(state.formatAzimuth(
-                                state.locationBasedInfo!.azimuth))
-                          ]),
-                      Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            scaledText("Altitude"),
-                            state.solveText(state.formatAltitude(
-                                state.locationBasedInfo!.altitude))
-                          ]),
-                      Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            scaledText("Hour angle"),
-                            state.solveText(state.formatHourAngle(
-                                state.locationBasedInfo!.hourAngle))
-                          ]),
-                    ])
+                  ? GestureDetector(
+                      onTap: () async {
+                        var prefs = cedar_rpc.Preferences();
+                        prefs.celestialCoordChoice =
+                            cedar_rpc.CelestialCoordChoice.ALT_AZ_HA;
+                        await state.updatePreferences(prefs);
+                        dialogOverlayEntry!.markNeedsBuild();
+                      },
+                      child: Column(children: [
+                        const SizedBox(height: 10),
+                        Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              scaledText("Azimuth", /*highlight=*/ preferAzAlt),
+                              state.solveText(state.formatAzimuth(
+                                  state.locationBasedInfo!.azimuth))
+                            ]),
+                        Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              scaledText(
+                                  "Altitude", /*highlight=*/ preferAzAlt),
+                              state.solveText(state.formatAltitude(
+                                  state.locationBasedInfo!.altitude))
+                            ]),
+                        Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              scaledText(
+                                  "Hour angle", /*highlight=*/ preferAzAlt),
+                              state.solveText(state.formatHourAngle(
+                                  state.locationBasedInfo!.hourAngle))
+                            ]),
+                      ]))
                   : Container(),
             ],
           ),
