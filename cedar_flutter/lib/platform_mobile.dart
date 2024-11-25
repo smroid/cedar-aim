@@ -8,6 +8,7 @@ import 'package:cedar_flutter/cedar.pbgrpc.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:grpc/grpc.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
 
 String _tryAddress = "raspberrypi.local";
 String? _goodAddress;
@@ -69,4 +70,12 @@ void cancelFullScreenImpl() {
   } catch (e) {
     debugPrint('Could not exit full screen with setEnabledSystemUIMode: $e');
   }
+}
+
+void setWakeLockImpl(bool locked) {
+  WakelockPlus.toggle(enable: locked);
+}
+
+Future<bool> getWakeLockImpl() async {
+  return await WakelockPlus.enabled;
 }

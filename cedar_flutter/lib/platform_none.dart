@@ -22,3 +22,11 @@ void goFullScreenImpl() {
 void cancelFullScreenImpl() {
   throw UnimplementedError("No impl in platform_none");
 }
+
+void setWakeLockImpl(bool locked) {
+  throw UnimplementedError("No impl in platform_none");
+}
+
+Future<bool> getWakeLockImpl() {
+  throw UnimplementedError("No impl in platform_none");
+}

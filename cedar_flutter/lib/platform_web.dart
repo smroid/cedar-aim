@@ -9,6 +9,7 @@ import 'dart:html';
 import 'package:cedar_flutter/cedar.pbgrpc.dart';
 import 'package:flutter/foundation.dart';
 import 'package:grpc/grpc_web.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
 
 GrpcWebClientChannel? _channel;
 
@@ -25,6 +26,7 @@ CedarClient getClientImpl() {
   return CedarClient(_channel!);
 }
 
+// This usually doesn't work on Web.
 void goFullScreenImpl() {
   try {
     if (document.fullscreenEnabled!) {
@@ -47,4 +49,13 @@ void cancelFullScreenImpl() {
   } catch (e) {
     debugPrint('Could not call exitFullscreen: $e');
   }
+}
+
+// This usually doesn't work on Web.
+void setWakeLockImpl(bool locked) {
+  WakelockPlus.toggle(enable: locked);
+}
+
+Future<bool> getWakeLockImpl() async {
+  return await WakelockPlus.enabled;
 }

@@ -28,3 +28,11 @@ void goFullScreen() {
 void cancelFullScreen() {
   cancelFullScreenImpl();
 }
+
+void setWakeLock(bool locked) {
+  setWakeLockImpl(locked);
+}
+
+Future<bool> getWakeLock() async {
+  return getWakeLockImpl();
+}
