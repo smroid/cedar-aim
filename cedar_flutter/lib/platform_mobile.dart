@@ -1,13 +1,13 @@
 // Copyright (c) 2024 Steven Rosenthal smr@dt3.org
 // See LICENSE file in root directory for license terms.
 
+// Mobile impl for platform-specific functions.
+
 import 'cedar.pbgrpc.dart' as cedar_rpc;
 import 'package:cedar_flutter/cedar.pbgrpc.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:grpc/grpc.dart';
-
-// For non-web deployments.
 
 String _tryAddress = "raspberrypi.local";
 String? _goodAddress;
@@ -19,14 +19,14 @@ const _options = ChannelOptions(
   connectTimeout: Duration(seconds: 5),
 );
 
-void rpcSucceeded() {
+void rpcSucceededImpl() {
   if (_goodAddress == null) {
     _goodAddress = _tryAddress;
     debugPrint("Connected to $_goodAddress");
   }
 }
 
-void rpcFailed() {
+void rpcFailedImpl() {
   if (_goodAddress != null) {
     _channel?.shutdown();
     _channel = ClientChannel(_tryAddress, port: 80, options: _options);
@@ -34,7 +34,7 @@ void rpcFailed() {
   }
 }
 
-CedarClient getClient() {
+CedarClient getClientImpl() {
   if (_goodAddress != null) {
     return _client!;
   }
@@ -55,7 +55,7 @@ CedarClient getClient() {
   return _client!;
 }
 
-void goFullScreen() {
+void goFullScreenImpl() {
   try {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
   } catch (e) {
@@ -63,7 +63,7 @@ void goFullScreen() {
   }
 }
 
-void cancelFullScreen() {
+void cancelFullScreenImpl() {
   try {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.leanBack);
   } catch (e) {

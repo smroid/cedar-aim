@@ -27,9 +27,8 @@ import 'package:sprintf/sprintf.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 // import 'package:wakelock_plus/wakelock_plus.dart';
 import 'cedar.pbgrpc.dart' as cedar_rpc;
+import 'platform.dart';
 import 'tetra3.pb.dart';
-import 'get_cedar_client.dart'
-    if (dart.library.js_interop) 'get_cedar_client_for_web.dart';
 
 // To generate release build:
 // flutter build web --web-renderer canvaskit --no-web-resources-cdn
