@@ -1544,8 +1544,8 @@ class MyHomePageState extends State<MyHomePage> {
           quarterTurns: portrait ? 3 : 0,
           child: _hasPolarAdvice() && !_setupMode
               ? SizedBox(
-                  width: 60 * textScaleFactor(context),
-                  height: 50 * textScaleFactor(context),
+                  width: 70 * textScaleFactor(context),
+                  height: 60 * textScaleFactor(context),
                   child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
