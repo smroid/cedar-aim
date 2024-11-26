@@ -3,6 +3,8 @@
 
 // Mobile impl for platform-specific functions.
 
+import 'package:geolocator/geolocator.dart';
+
 import 'cedar.pbgrpc.dart' as cedar_rpc;
 import 'package:cedar_flutter/cedar.pbgrpc.dart';
 import 'package:flutter/foundation.dart';
@@ -79,4 +81,25 @@ void setWakeLockImpl(bool locked) {
 
 Future<bool> getWakeLockImpl() async {
   return await WakelockPlus.enabled;
+}
+
+Future<Position?> getLocationImpl() async {
+  final bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+  if (!serviceEnabled) {
+    debugPrint("Location services not enabled");
+    return null;
+  }
+  LocationPermission permission = await Geolocator.checkPermission();
+  if (permission == LocationPermission.denied) {
+    permission = await Geolocator.requestPermission();
+    if (permission == LocationPermission.denied) {
+      debugPrint("Location permissions are denied");
+      return null;
+    }
+  }
+  if (permission == LocationPermission.deniedForever) {
+    debugPrint("Location permissions are denied forever");
+    return null;
+  }
+  return await Geolocator.getLastKnownPosition();
 }

@@ -2,6 +2,7 @@
 // See LICENSE file in root directory for license terms.
 
 import 'package:cedar_flutter/cedar.pbgrpc.dart';
+import 'package:geolocator/geolocator.dart';
 
 void rpcSucceededImpl() {
   throw UnimplementedError("No impl in platform_none");
@@ -28,5 +29,9 @@ void setWakeLockImpl(bool locked) {
 }
 
 Future<bool> getWakeLockImpl() {
+  throw UnimplementedError("No impl in platform_none");
+}
+
+Future<Position?> getLocationImpl() async {
   throw UnimplementedError("No impl in platform_none");
 }

@@ -3,6 +3,7 @@
 
 import 'package:cedar_flutter/cedar.pbgrpc.dart';
 import 'package:flutter/foundation.dart';
+import 'package:geolocator/geolocator.dart';
 
 // Functions that have platform-specific implementations.
 
@@ -68,4 +69,11 @@ Future<bool> getWakeLock() async {
   }
 }
 
-// TODO: geolocation.
+Future<Position?> getLocation() async {
+  try {
+    return getLocationImpl();
+  } catch (e) {
+    debugPrint('getLocation: $e');
+    rethrow;
+  }
+}

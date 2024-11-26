@@ -8,6 +8,7 @@ import 'dart:html';
 
 import 'package:cedar_flutter/cedar.pbgrpc.dart';
 import 'package:flutter/foundation.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:grpc/grpc_web.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
@@ -58,4 +59,9 @@ void setWakeLockImpl(bool locked) {
 
 Future<bool> getWakeLockImpl() async {
   return await WakelockPlus.enabled;
+}
+
+// This is only available when we're served over HTTPS.
+Future<Position?> getLocationImpl() async {
+  throw UnimplementedError("No impl in platform_web");
 }

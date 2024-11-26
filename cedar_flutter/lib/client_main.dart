@@ -301,7 +301,7 @@ class MyHomePageState extends State<MyHomePage> {
     // over http (not https), we won't be able to get location here.
     final platformPosition = await getLocation();
     if (platformPosition != null) {
-      _mapPosition =
+      mapPosition =
           LatLng(platformPosition.latitude, platformPosition.longitude);
     }
     _tzOffset = DateTime.now().timeZoneOffset; // Get platform timezone.
