@@ -2,6 +2,7 @@
 // See LICENSE file in root directory for license terms.
 
 import 'package:cedar_flutter/cedar.pbgrpc.dart';
+import 'package:flutter/foundation.dart';
 
 // Functions that have platform-specific implementations.
 
@@ -10,29 +11,61 @@ import 'platform_none.dart'
     if (dart.library.html) 'platform_web.dart';
 
 void rpcSucceeded() {
-  rpcSucceededImpl();
+  try {
+    rpcSucceededImpl();
+  } catch (e) {
+    debugPrint('rpcSucceeded: $e');
+  }
 }
 
 void rpcFailed() {
-  rpcFailedImpl();
+  try {
+    rpcFailedImpl();
+  } catch (e) {
+    debugPrint('rpcFailed: $e');
+  }
 }
 
 CedarClient getClient() {
-  return getClientImpl();
+  try {
+    return getClientImpl();
+  } catch (e) {
+    debugPrint('getClient: $e');
+    rethrow;
+  }
 }
 
 void goFullScreen() {
-  goFullScreenImpl();
+  try {
+    goFullScreenImpl();
+  } catch (e) {
+    debugPrint('goFullScreen: $e');
+  }
 }
 
 void cancelFullScreen() {
-  cancelFullScreenImpl();
+  try {
+    cancelFullScreenImpl();
+  } catch (e) {
+    debugPrint('cancelFullScreen: $e');
+  }
 }
 
 void setWakeLock(bool locked) {
-  setWakeLockImpl(locked);
+  try {
+    setWakeLockImpl(locked);
+  } catch (e) {
+    debugPrint('setWakeLock: $e');
+  }
 }
 
 Future<bool> getWakeLock() async {
-  return getWakeLockImpl();
+  try {
+    return getWakeLockImpl();
+  } catch (e) {
+    debugPrint('rpcFailed: $e');
+    return false;
+  }
 }
+
+// TODO: geolocation.
