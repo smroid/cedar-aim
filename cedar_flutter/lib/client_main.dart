@@ -462,6 +462,19 @@ class MyHomePageState extends State<MyHomePage> {
     }
 
     _canAlign = _setupMode;
+    if (preferences == null) {
+      // First time seeing the preferences from the server.
+      if (response.preferences.hideAppBar) {
+        goFullScreen();
+      } else {
+        cancelFullScreen();
+      }
+      if (response.preferences.screenAlwaysOn) {
+        setWakeLock(true);
+      } else {
+        setWakeLock(false);
+      }
+    }
     preferences = response.preferences;
     _polarAlignAdvice = response.polarAlignAdvice;
     _labeledFovCatalogEntries = response.labeledCatalogEntries;
@@ -1069,6 +1082,13 @@ class MyHomePageState extends State<MyHomePage> {
                 goFullScreen();
               } else {
                 cancelFullScreen();
+              }
+            }
+            if (prefsDiff.hasScreenAlwaysOn()) {
+              if (prefsDiff.screenAlwaysOn) {
+                setWakeLock(true);
+              } else {
+                setWakeLock(false);
               }
             }
           }
@@ -1847,8 +1867,6 @@ class MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: preferences for this.
-    setWakeLock(true);
     final bool healthy = _serverConnected && (_hasCamera || _demoMode);
 
     // This method is rerun every time setState() is called.

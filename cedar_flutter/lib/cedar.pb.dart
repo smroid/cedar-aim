@@ -778,6 +778,7 @@ class Preferences extends $pb.GeneratedMessage {
     $core.bool? invertCamera,
     $core.bool? rightHanded,
     CelestialCoordChoice? celestialCoordChoice,
+    $core.bool? screenAlwaysOn,
   }) {
     final $result = create();
     if (celestialCoordFormat != null) {
@@ -837,6 +838,9 @@ class Preferences extends $pb.GeneratedMessage {
     if (celestialCoordChoice != null) {
       $result.celestialCoordChoice = celestialCoordChoice;
     }
+    if (screenAlwaysOn != null) {
+      $result.screenAlwaysOn = screenAlwaysOn;
+    }
     return $result;
   }
   Preferences._() : super();
@@ -863,6 +867,7 @@ class Preferences extends $pb.GeneratedMessage {
     ..aOB(20, _omitFieldNames ? '' : 'invertCamera')
     ..aOB(21, _omitFieldNames ? '' : 'rightHanded')
     ..e<CelestialCoordChoice>(22, _omitFieldNames ? '' : 'celestialCoordChoice', $pb.PbFieldType.OE, defaultOrMaker: CelestialCoordChoice.CHOICE_UNSPECIFIED, valueOf: CelestialCoordChoice.valueOf, enumValues: CelestialCoordChoice.values)
+    ..aOB(23, _omitFieldNames ? '' : 'screenAlwaysOn')
     ..hasRequiredFields = false
   ;
 
@@ -1091,6 +1096,16 @@ class Preferences extends $pb.GeneratedMessage {
   $core.bool hasCelestialCoordChoice() => $_has(18);
   @$pb.TagNumber(22)
   void clearCelestialCoordChoice() => clearField(22);
+
+  /// Whether mobile screen is kept on while in Cedar Aim.
+  @$pb.TagNumber(23)
+  $core.bool get screenAlwaysOn => $_getBF(19);
+  @$pb.TagNumber(23)
+  set screenAlwaysOn($core.bool v) { $_setBool(19, v); }
+  @$pb.TagNumber(23)
+  $core.bool hasScreenAlwaysOn() => $_has(19);
+  @$pb.TagNumber(23)
+  void clearScreenAlwaysOn() => clearField(23);
 }
 
 class FrameRequest extends $pb.GeneratedMessage {
