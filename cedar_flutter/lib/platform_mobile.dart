@@ -66,7 +66,8 @@ void goFullScreenImpl() {
 
 void cancelFullScreenImpl() {
   try {
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.leanBack);
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+        overlays: [SystemUiOverlay.top, SystemUiOverlay.bottom]);
   } catch (e) {
     debugPrint('Could not exit full screen with setEnabledSystemUIMode: $e');
   }
