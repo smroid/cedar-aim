@@ -68,7 +68,9 @@ const CatalogEntryMatch$json = {
   '1': 'CatalogEntryMatch',
   '2': [
     {'1': 'faintest_magnitude', '3': 1, '4': 1, '5': 5, '9': 0, '10': 'faintestMagnitude', '17': true},
+    {'1': 'match_catalog_label', '3': 4, '4': 1, '5': 8, '10': 'matchCatalogLabel'},
     {'1': 'catalog_label', '3': 2, '4': 3, '5': 9, '10': 'catalogLabel'},
+    {'1': 'match_object_type_label', '3': 5, '4': 1, '5': 8, '10': 'matchObjectTypeLabel'},
     {'1': 'object_type_label', '3': 3, '4': 3, '5': 9, '10': 'objectTypeLabel'},
   ],
   '8': [
@@ -79,9 +81,11 @@ const CatalogEntryMatch$json = {
 /// Descriptor for `CatalogEntryMatch`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List catalogEntryMatchDescriptor = $convert.base64Decode(
     'ChFDYXRhbG9nRW50cnlNYXRjaBIyChJmYWludGVzdF9tYWduaXR1ZGUYASABKAVIAFIRZmFpbn'
-    'Rlc3RNYWduaXR1ZGWIAQESIwoNY2F0YWxvZ19sYWJlbBgCIAMoCVIMY2F0YWxvZ0xhYmVsEioK'
-    'EW9iamVjdF90eXBlX2xhYmVsGAMgAygJUg9vYmplY3RUeXBlTGFiZWxCFQoTX2ZhaW50ZXN0X2'
-    '1hZ25pdHVkZQ==');
+    'Rlc3RNYWduaXR1ZGWIAQESLgoTbWF0Y2hfY2F0YWxvZ19sYWJlbBgEIAEoCFIRbWF0Y2hDYXRh'
+    'bG9nTGFiZWwSIwoNY2F0YWxvZ19sYWJlbBgCIAMoCVIMY2F0YWxvZ0xhYmVsEjUKF21hdGNoX2'
+    '9iamVjdF90eXBlX2xhYmVsGAUgASgIUhRtYXRjaE9iamVjdFR5cGVMYWJlbBIqChFvYmplY3Rf'
+    'dHlwZV9sYWJlbBgDIAMoCVIPb2JqZWN0VHlwZUxhYmVsQhUKE19mYWludGVzdF9tYWduaXR1ZG'
+    'U=');
 
 @$core.Deprecated('Use queryCatalogResponseDescriptor instead')
 const QueryCatalogResponse$json = {

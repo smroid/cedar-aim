@@ -155,11 +155,13 @@ class QueryCatalogRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(7)
   void clearLimitResult() => clearField(7);
 
-  /// If given, applies a text match as an additional constraint. The server
-  /// canonicalizes the given string, removing dangerous characters, tokenizing
-  /// it, etc. Each token is treated as a prefix search term, and multiple
-  /// token terms are combined with implicit AND; order is not significant.
-  /// Thus, |andr gal| and |gal andr| both match "Andromeda Galaxy".
+  /// If given, applies a text match constraint. The server canonicalizes the
+  /// given string, removing dangerous characters, tokenizing it, etc. Each token
+  /// is treated as a prefix search term, and multiple token terms are combined
+  /// with implicit AND; order is not significant. Thus, |andr gal| and
+  /// |gal andr| both match "Andromeda Galaxy".
+  /// Note that when `text_search` is given, the `catalog_entry_match`,
+  /// `max_distance`, and `min_elevation` constraints are ignored.
   @$pb.TagNumber(8)
   $core.String get textSearch => $_getSZ(6);
   @$pb.TagNumber(8)
@@ -176,6 +178,8 @@ class CatalogEntryMatch extends $pb.GeneratedMessage {
     $core.int? faintestMagnitude,
     $core.Iterable<$core.String>? catalogLabel,
     $core.Iterable<$core.String>? objectTypeLabel,
+    $core.bool? matchCatalogLabel,
+    $core.bool? matchObjectTypeLabel,
   }) {
     final $result = create();
     if (faintestMagnitude != null) {
@@ -187,6 +191,12 @@ class CatalogEntryMatch extends $pb.GeneratedMessage {
     if (objectTypeLabel != null) {
       $result.objectTypeLabel.addAll(objectTypeLabel);
     }
+    if (matchCatalogLabel != null) {
+      $result.matchCatalogLabel = matchCatalogLabel;
+    }
+    if (matchObjectTypeLabel != null) {
+      $result.matchObjectTypeLabel = matchObjectTypeLabel;
+    }
     return $result;
   }
   CatalogEntryMatch._() : super();
@@ -197,6 +207,8 @@ class CatalogEntryMatch extends $pb.GeneratedMessage {
     ..a<$core.int>(1, _omitFieldNames ? '' : 'faintestMagnitude', $pb.PbFieldType.O3)
     ..pPS(2, _omitFieldNames ? '' : 'catalogLabel')
     ..pPS(3, _omitFieldNames ? '' : 'objectTypeLabel')
+    ..aOB(4, _omitFieldNames ? '' : 'matchCatalogLabel')
+    ..aOB(5, _omitFieldNames ? '' : 'matchObjectTypeLabel')
     ..hasRequiredFields = false
   ;
 
@@ -232,8 +244,7 @@ class CatalogEntryMatch extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   void clearFaintestMagnitude() => clearField(1);
 
-  /// What catalog(s) to search. Note: if empty, no filtering on catalog is
-  /// done.
+  /// What catalog(s) to search.
   @$pb.TagNumber(2)
   $core.List<$core.String> get catalogLabel => $_getList(1);
 
@@ -241,6 +252,26 @@ class CatalogEntryMatch extends $pb.GeneratedMessage {
   /// type is done.
   @$pb.TagNumber(3)
   $core.List<$core.String> get objectTypeLabel => $_getList(2);
+
+  /// If true, `catalog_label` is used to match catalog(s).
+  @$pb.TagNumber(4)
+  $core.bool get matchCatalogLabel => $_getBF(3);
+  @$pb.TagNumber(4)
+  set matchCatalogLabel($core.bool v) { $_setBool(3, v); }
+  @$pb.TagNumber(4)
+  $core.bool hasMatchCatalogLabel() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearMatchCatalogLabel() => clearField(4);
+
+  /// If true, `object_type_label` is used to match object type(s).
+  @$pb.TagNumber(5)
+  $core.bool get matchObjectTypeLabel => $_getBF(4);
+  @$pb.TagNumber(5)
+  set matchObjectTypeLabel($core.bool v) { $_setBool(4, v); }
+  @$pb.TagNumber(5)
+  $core.bool hasMatchObjectTypeLabel() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearMatchObjectTypeLabel() => clearField(5);
 }
 
 class QueryCatalogResponse extends $pb.GeneratedMessage {

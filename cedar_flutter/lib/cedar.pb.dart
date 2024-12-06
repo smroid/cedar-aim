@@ -708,7 +708,12 @@ class OperationSettings extends $pb.GeneratedMessage {
   void clearLogDwelledPositions() => clearField(10);
 
   /// In OPERATE mode, if `catalog_entry_match` is present, this is used to
-  /// determine the `catalog_entries` returned in each FrameResult.
+  /// determine the `catalog_entries` returned in each FrameResult. Only the
+  /// `faintest_magnitude` is used; the catalog label and object type label
+  /// filters are ignored.
+  /// This field is also used to initialize the filter criteria in Cedar Aim's
+  /// catalog panel. Note that in that context the catalog label and object
+  /// type label filters are relevant.
   @$pb.TagNumber(11)
   $2.CatalogEntryMatch get catalogEntryMatch => $_getN(5);
   @$pb.TagNumber(11)
