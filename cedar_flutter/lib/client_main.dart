@@ -593,13 +593,18 @@ class MyHomePageState extends State<MyHomePage> {
 
   // Use request/response style of RPC.
   Future<void> _getFrameFromServer() async {
+    final landscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
     final request = cedar_rpc.FrameRequest()
       ..prevFrameId = _prevFrameId
-      ..nonBlocking = true;
+      ..nonBlocking = true
+      ..displayOrientation = landscape
+          ? DisplayOrientation.LANDSCAPE
+          : DisplayOrientation.PORTRAIT;
     try {
       final response = await client().getFrame(
         request,
-        options: CallOptions(timeout: const Duration(seconds: 1)),
+        options: CallOptions(timeout: const Duration(seconds: 2)),
       );
       rpcSucceeded();
       if (!_serverConnected) {

@@ -100,5 +100,23 @@ class MountType extends $pb.ProtobufEnum {
   const MountType._($core.int v, $core.String n) : super(v, n);
 }
 
+/// The orientation of the client's display.
+class DisplayOrientation extends $pb.ProtobufEnum {
+  static const DisplayOrientation ORIENTATION_UNSPECIFIED = DisplayOrientation._(0, _omitEnumNames ? '' : 'ORIENTATION_UNSPECIFIED');
+  static const DisplayOrientation LANDSCAPE = DisplayOrientation._(1, _omitEnumNames ? '' : 'LANDSCAPE');
+  static const DisplayOrientation PORTRAIT = DisplayOrientation._(2, _omitEnumNames ? '' : 'PORTRAIT');
+
+  static const $core.List<DisplayOrientation> values = <DisplayOrientation> [
+    ORIENTATION_UNSPECIFIED,
+    LANDSCAPE,
+    PORTRAIT,
+  ];
+
+  static final $core.Map<$core.int, DisplayOrientation> _byValue = $pb.ProtobufEnum.initByValue(values);
+  static DisplayOrientation? valueOf($core.int value) => _byValue[value];
+
+  const DisplayOrientation._($core.int v, $core.String n) : super(v, n);
+}
+
 
 const _omitEnumNames = $core.bool.fromEnvironment('protobuf.omit_enum_names');

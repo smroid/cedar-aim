@@ -1117,6 +1117,7 @@ class FrameRequest extends $pb.GeneratedMessage {
   factory FrameRequest({
     $core.int? prevFrameId,
     $core.bool? nonBlocking,
+    DisplayOrientation? displayOrientation,
   }) {
     final $result = create();
     if (prevFrameId != null) {
@@ -1124,6 +1125,9 @@ class FrameRequest extends $pb.GeneratedMessage {
     }
     if (nonBlocking != null) {
       $result.nonBlocking = nonBlocking;
+    }
+    if (displayOrientation != null) {
+      $result.displayOrientation = displayOrientation;
     }
     return $result;
   }
@@ -1134,6 +1138,7 @@ class FrameRequest extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'FrameRequest', package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'), createEmptyInstance: create)
     ..a<$core.int>(1, _omitFieldNames ? '' : 'prevFrameId', $pb.PbFieldType.O3)
     ..aOB(2, _omitFieldNames ? '' : 'nonBlocking')
+    ..e<DisplayOrientation>(3, _omitFieldNames ? '' : 'displayOrientation', $pb.PbFieldType.OE, defaultOrMaker: DisplayOrientation.ORIENTATION_UNSPECIFIED, valueOf: DisplayOrientation.valueOf, enumValues: DisplayOrientation.values)
     ..hasRequiredFields = false
   ;
 
@@ -1183,6 +1188,19 @@ class FrameRequest extends $pb.GeneratedMessage {
   $core.bool hasNonBlocking() => $_has(1);
   @$pb.TagNumber(2)
   void clearNonBlocking() => clearField(2);
+
+  /// In SETUP align mode, Cedar adjusts the returned image rotation so that the
+  /// zenith is towards the top of the image. When doing so, the server needs to
+  /// know the client's orientation for the displayed image.
+  /// If omitted, LANDSCAPE is assumed.
+  @$pb.TagNumber(3)
+  DisplayOrientation get displayOrientation => $_getN(2);
+  @$pb.TagNumber(3)
+  set displayOrientation(DisplayOrientation v) { setField(3, v); }
+  @$pb.TagNumber(3)
+  $core.bool hasDisplayOrientation() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearDisplayOrientation() => clearField(3);
 }
 
 /// Next tag: 35.
@@ -1614,7 +1632,8 @@ class FrameResult extends $pb.GeneratedMessage {
   Image ensureBoresightImage() => $_ensure(20);
 
   /// When the observer's geographic location is known, the `plate_solution`
-  /// field is augmented with additional information.
+  /// field is augmented with additional information. Also returned in SETUP
+  /// alignment mode.
   /// Omitted if:
   /// - no plate solution was obtained, or
   /// - FixedSettings.observer_location is absent.
@@ -3160,7 +3179,8 @@ class ActionRequest extends $pb.GeneratedMessage {
   /// Save the current image for debugging. The image is saved in the run
   /// directory on the server with the current date/time incorporated into the
   /// filename.
-  /// TODO: return filename? Provide rename action?
+  /// TODO: return filename? Provide rename action? Return image to be saved
+  /// on client device?
   @$pb.TagNumber(5)
   $core.bool get saveImage => $_getBF(4);
   @$pb.TagNumber(5)

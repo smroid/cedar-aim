@@ -89,6 +89,21 @@ final $typed_data.Uint8List mountTypeDescriptor = $convert.base64Decode(
     'CglNb3VudFR5cGUSFQoRTU9VTlRfVU5TUEVDSUZJRUQQABIOCgpFUVVBVE9SSUFMEAESCgoGQU'
     'xUX0FaEAI=');
 
+@$core.Deprecated('Use displayOrientationDescriptor instead')
+const DisplayOrientation$json = {
+  '1': 'DisplayOrientation',
+  '2': [
+    {'1': 'ORIENTATION_UNSPECIFIED', '2': 0},
+    {'1': 'LANDSCAPE', '2': 1},
+    {'1': 'PORTRAIT', '2': 2},
+  ],
+};
+
+/// Descriptor for `DisplayOrientation`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List displayOrientationDescriptor = $convert.base64Decode(
+    'ChJEaXNwbGF5T3JpZW50YXRpb24SGwoXT1JJRU5UQVRJT05fVU5TUEVDSUZJRUQQABINCglMQU'
+    '5EU0NBUEUQARIMCghQT1JUUkFJVBAC');
+
 @$core.Deprecated('Use serverInformationDescriptor instead')
 const ServerInformation$json = {
   '1': 'ServerInformation',
@@ -341,18 +356,22 @@ const FrameRequest$json = {
   '2': [
     {'1': 'prev_frame_id', '3': 1, '4': 1, '5': 5, '9': 0, '10': 'prevFrameId', '17': true},
     {'1': 'non_blocking', '3': 2, '4': 1, '5': 8, '9': 1, '10': 'nonBlocking', '17': true},
+    {'1': 'display_orientation', '3': 3, '4': 1, '5': 14, '6': '.cedar.DisplayOrientation', '9': 2, '10': 'displayOrientation', '17': true},
   ],
   '8': [
     {'1': '_prev_frame_id'},
     {'1': '_non_blocking'},
+    {'1': '_display_orientation'},
   ],
 };
 
 /// Descriptor for `FrameRequest`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List frameRequestDescriptor = $convert.base64Decode(
     'CgxGcmFtZVJlcXVlc3QSJwoNcHJldl9mcmFtZV9pZBgBIAEoBUgAUgtwcmV2RnJhbWVJZIgBAR'
-    'ImCgxub25fYmxvY2tpbmcYAiABKAhIAVILbm9uQmxvY2tpbmeIAQFCEAoOX3ByZXZfZnJhbWVf'
-    'aWRCDwoNX25vbl9ibG9ja2luZw==');
+    'ImCgxub25fYmxvY2tpbmcYAiABKAhIAVILbm9uQmxvY2tpbmeIAQESTwoTZGlzcGxheV9vcmll'
+    'bnRhdGlvbhgDIAEoDjIZLmNlZGFyLkRpc3BsYXlPcmllbnRhdGlvbkgCUhJkaXNwbGF5T3JpZW'
+    '50YXRpb26IAQFCEAoOX3ByZXZfZnJhbWVfaWRCDwoNX25vbl9ibG9ja2luZ0IWChRfZGlzcGxh'
+    'eV9vcmllbnRhdGlvbg==');
 
 @$core.Deprecated('Use frameResultDescriptor instead')
 const FrameResult$json = {
