@@ -1173,6 +1173,9 @@ class MyHomePageState extends State<MyHomePage> {
           textScaler: textScaler(context),
         ),
         onPressed: () {
+          if (_slewRequest != null) {
+            _stopSlew();
+          }
           _showCatalogBrowser!(context, this);
         });
   }
@@ -1311,7 +1314,15 @@ class MyHomePageState extends State<MyHomePage> {
                     });
                   }))
           : Container(),
-      SizedBox(height: (_slewRequest != null && !_setupMode) ? 40 : 10),
+      _slewRequest != null && !_setupMode
+          ? RotatedBox(
+              quarterTurns: portrait ? 3 : 0,
+              child: SizedBox(
+                  width: 70 * textScaleFactor(context),
+                  height: 25 * textScaleFactor(context),
+                  child: catalogButton()))
+          : Container(),
+      const SizedBox(height: 25),
       _slewRequest != null
           ? RotatedBox(
               quarterTurns: portrait ? 3 : 0,
