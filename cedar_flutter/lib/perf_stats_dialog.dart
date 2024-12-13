@@ -82,28 +82,40 @@ Future<void> perfStatsDialog(
                         scaledText("Exposure time"),
                         scaledText(sprintf("%.1f ms", [state.exposureTimeMs])),
                       ]),
+                  Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        scaledText("Stars"),
+                        scaledText(sprintf("%d", [state.numStars])),
+                      ]),
                   state.processingStats != null
                       ? Column(children: [
-                          Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                scaledText("Detect"),
-                                scaledText(sprintf("%.1f ms", [
-                                  state.processingStats!.detectLatency.recent
-                                          .mean *
-                                      1000
-                                ])),
-                              ]),
-                          Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                scaledText("Solve"),
-                                scaledText(sprintf("%.1f ms", [
-                                  state.processingStats!.solveLatency.recent
-                                          .mean *
-                                      1000
-                                ])),
-                              ]),
+                          state.advanced
+                              ? Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                      scaledText("Detect"),
+                                      scaledText(sprintf("%.1f ms", [
+                                        state.processingStats!.detectLatency
+                                                .recent.mean *
+                                            1000
+                                      ])),
+                                    ])
+                              : Container(),
+                          state.advanced
+                              ? Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                      scaledText("Solve"),
+                                      scaledText(sprintf("%.1f ms", [
+                                        state.processingStats!.solveLatency
+                                                .recent.mean *
+                                            1000
+                                      ])),
+                                    ])
+                              : Container(),
                           const SizedBox(height: 10),
                           Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -130,15 +142,29 @@ Future<void> perfStatsDialog(
                         ])
                       : Container(),
                   const SizedBox(height: 10),
-                  Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        scaledText("RMS Error"),
-                        scaledText(state.solutionRMSE > 60
-                            ? sprintf("%.1f arcmin", [state.solutionRMSE / 60])
-                            : sprintf("%.0f arcsec", [state.solutionRMSE])),
-                        // solveText(),
-                      ]),
+                  state.advanced
+                      ? Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                              scaledText("Position RMSE"),
+                              scaledText(state.solutionRMSE > 60
+                                  ? sprintf(
+                                      "%.1f arcmin", [state.solutionRMSE / 60])
+                                  : sprintf(
+                                      "%.0f arcsec", [state.solutionRMSE])),
+                              // solveText(),
+                            ])
+                      : Container(),
+                  state.advanced
+                      ? Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                              scaledText("Image noise"),
+                              scaledText(
+                                  sprintf("%.1f ADU", [state.noiseEstimate])),
+                              // solveText(),
+                            ])
+                      : Container(),
                 ],
               ),
             ))),

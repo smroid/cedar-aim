@@ -135,7 +135,7 @@ class _MainImagePainter extends CustomPainter {
             ..color = color
             ..strokeWidth = thin
             ..style = PaintingStyle.stroke);
-      if (state._advanced) {
+      if (state.advanced) {
         // Draw circles around the detected stars.
         for (var star in state._stars) {
           var offset = Offset(star.centroidPosition.x / state._binFactor,
@@ -381,7 +381,7 @@ class MyHomePageState extends State<MyHomePage> {
   bool _demoMode = false;
   List<String> _demoFiles = [];
   String _demoFile = "";
-  bool _advanced = false;
+  bool advanced = false;
   bool _rightHanded = true;
   bool _canAlign = false;
   bool _hasWifiControl = false;
@@ -405,9 +405,10 @@ class MyHomePageState extends State<MyHomePage> {
 
   int _prevFrameId = -1;
   late List<cedar_rpc.StarCentroid> _stars;
-  int _numStars = 0;
+  int numStars = 0;
   var exposureTimeMs = 0.0;
   bool _hasSolution = false;
+  double noiseEstimate = 0.0;
 
   List<Offset>? _solutionCentroids;
   // Degrees.
@@ -459,7 +460,7 @@ class MyHomePageState extends State<MyHomePage> {
   void setStateFromFrameResult(cedar_rpc.FrameResult response) {
     _prevFrameId = response.frameId;
     _stars = response.starCandidates;
-    _numStars = _stars.length;
+    numStars = _stars.length;
     if (response.fixedSettings.hasObserverLocation()) {
       _mapPosition = LatLng(response.fixedSettings.observerLocation.latitude,
           response.fixedSettings.observerLocation.longitude);
@@ -523,7 +524,7 @@ class MyHomePageState extends State<MyHomePage> {
     settingsModel.isDIY = isDIY;
     settingsModel.isBasic = isBasic;
     settingsModel.isPlus = isPlus;
-    _advanced = preferences!.advanced;
+    advanced = preferences!.advanced;
     _rightHanded = preferences!.rightHanded;
     calibrationData =
         response.hasCalibrationData() ? response.calibrationData : null;
@@ -571,6 +572,7 @@ class MyHomePageState extends State<MyHomePage> {
       // assume the eyepiece FOV is 1/10 the image width.
       _scopeFov = _imageRegion.width / 10;
     }
+    noiseEstimate = response.noiseEstimate;
     _boresightPosition = Offset(response.boresightPosition.x / _binFactor,
         response.boresightPosition.y / _binFactor);
     _fullResBoresightPosition =
@@ -956,19 +958,19 @@ class MyHomePageState extends State<MyHomePage> {
           alignment: Alignment.topLeft,
           child: TextButton.icon(
               label: _scaledText("Advanced"),
-              icon: _advanced
+              icon: advanced
                   ? const Icon(Icons.check)
                   : const Icon(Icons.check_box_outline_blank),
               onPressed: () async {
-                _advanced = !_advanced;
+                advanced = !advanced;
                 var settingsModel =
                     Provider.of<SettingsModel>(context, listen: false);
-                settingsModel.preferencesProto.advanced = _advanced;
+                settingsModel.preferencesProto.advanced = advanced;
                 var prefs = cedar_rpc.Preferences();
-                prefs.advanced = _advanced;
+                prefs.advanced = advanced;
                 await updatePreferences(prefs);
               })),
-      (_advanced || _demoMode) && _demoFiles.isNotEmpty
+      (advanced || _demoMode) && _demoFiles.isNotEmpty
           ? Column(children: <Widget>[
               const SizedBox(height: 15),
               Align(
@@ -1036,7 +1038,7 @@ class MyHomePageState extends State<MyHomePage> {
             ])
           : Container(),
       const SizedBox(height: 5),
-      _advanced
+      advanced
           ? Align(
               alignment: Alignment.topLeft,
               child: TextButton.icon(
@@ -1056,7 +1058,7 @@ class MyHomePageState extends State<MyHomePage> {
               onPressed: () {
                 _shutdownDialog();
               })),
-      _advanced
+      advanced
           ? Column(children: [
               const SizedBox(height: 10),
               Align(
@@ -1069,7 +1071,7 @@ class MyHomePageState extends State<MyHomePage> {
                       }))
             ])
           : Container(),
-      _advanced
+      advanced
           ? Column(children: [
               const SizedBox(height: 10),
               Align(
@@ -1087,7 +1089,7 @@ class MyHomePageState extends State<MyHomePage> {
                       })),
             ])
           : Container(),
-      _advanced && _hasWifiControl && _wifiDialog != null
+      advanced && _hasWifiControl && _wifiDialog != null
           ? Column(children: [
               const SizedBox(height: 10),
               Align(
@@ -1554,7 +1556,7 @@ class MyHomePageState extends State<MyHomePage> {
     return <Widget>[
       RotatedBox(
           quarterTurns: portrait ? 3 : 0,
-          child: _setupMode && !(_focusAid && _advanced && !_daylightMode)
+          child: _setupMode && !(_focusAid && advanced && !_daylightMode)
               ? SizedBox(
                   width: 50 * textScaleFactor(context),
                   height: 50 * textScaleFactor(context),
@@ -1584,7 +1586,7 @@ class MyHomePageState extends State<MyHomePage> {
                                 GaugeAnnotation(
                                   positionFactor: 0.3,
                                   angle: 270,
-                                  widget: solveText(sprintf("%d", [_numStars])),
+                                  widget: solveText(sprintf("%d", [numStars])),
                                 ),
                                 GaugeAnnotation(
                                   positionFactor: 0.4,
@@ -1605,8 +1607,7 @@ class MyHomePageState extends State<MyHomePage> {
                                     startWidth: 3,
                                     endWidth: 3,
                                     startValue: 0,
-                                    endValue:
-                                        math.min(10, math.sqrt(_numStars)),
+                                    endValue: math.min(10, math.sqrt(numStars)),
                                     color: _solveColor()),
                               ],
                             )
