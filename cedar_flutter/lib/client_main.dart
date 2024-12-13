@@ -1130,7 +1130,7 @@ class MyHomePageState extends State<MyHomePage> {
         });
   }
 
-  Widget setupAlignButton() {
+  Widget setupAlignSkipOrDoneButton() {
     return OutlinedButton(
         style: OutlinedButton.styleFrom(
             padding: const EdgeInsets.symmetric(horizontal: 0)),
@@ -1290,7 +1290,7 @@ class MyHomePageState extends State<MyHomePage> {
                 ? focusDoneButton()
                 : (_canAlign
                     ? (_slewRequest == null
-                        ? setupAlignButton()
+                        ? setupAlignSkipOrDoneButton()
                         : slewReAlignButton())
                     : (_slewRequest == null &&
                             !_setupMode &&
@@ -1682,19 +1682,23 @@ class MyHomePageState extends State<MyHomePage> {
                 if (_setupMode) {
                   if (!_focusAid) {
                     // Align mode.
-                    if (_daylightMode) {
-                      _designateBoresight(localPosition);
-                      _alignTargetTapped = true;
-                    } else {
-                      var star = _findStarHit(localPosition, 30);
-                      if (star != null) {
-                        _designateBoresight(Offset(
-                          star.centroidPosition.x,
-                          star.centroidPosition.y,
-                        ));
+                    setState(() async {
+                      if (_daylightMode) {
+                        await _designateBoresight(localPosition);
                         _alignTargetTapped = true;
+                      } else {
+                        var star = _findStarHit(localPosition, 30);
+                        if (star != null) {
+                          await _designateBoresight(Offset(
+                            star.centroidPosition.x,
+                            star.centroidPosition.y,
+                          ));
+                          _alignTargetTapped = true;
+                          // Transition to aim mode.
+                          _setOperatingMode(/*setupMode=*/ false, _focusAid);
+                        }
                       }
-                    }
+                    });
                   }
                 } else {
                   // Aim mode.
