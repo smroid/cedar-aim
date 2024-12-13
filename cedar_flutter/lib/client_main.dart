@@ -110,11 +110,20 @@ class _MainImagePainter extends CustomPainter {
     }
   }
 
+  bool _nearInImage(cedar_rpc.ImageCoord p1, cedar_rpc.ImageCoord p2) {
+    final distanceSq =
+        (p1.x - p2.x) * (p1.x - p2.x) + (p1.y - p2.y) * (p1.y - p2.y);
+    return distanceSq < 4;
+  }
+
   void _paint(Canvas canvas, Size size) {
     const double hairline = 0.5;
     const double thin = 1;
     const double thick = 1.5;
     final Color color = Theme.of(_context).colorScheme.primary;
+    final Color opaqueColor =
+        Color.fromARGB(128, color.red, color.green, color.blue);
+
     if (state._setupMode &&
         state._centerPeakRegion != null &&
         state._focusAid &&
@@ -144,6 +153,59 @@ class _MainImagePainter extends CustomPainter {
 
     final portrait =
         MediaQuery.of(_context).orientation == Orientation.portrait;
+
+    var labeledCatalogEntries = List<FovCatalogEntry>.empty(growable: true);
+    var dimLabeledCatalogEntries = List<FovCatalogEntry>.empty(growable: true);
+
+    if (state._setupMode &&
+        !state._focusAid &&
+        !state._daylightMode &&
+        state._stars.isNotEmpty) {
+      // Draw alignment targets: up to N brightest stars (or planets).
+      Paint paint = Paint()
+        ..color = color
+        ..strokeWidth = thick
+        ..style = PaintingStyle.stroke;
+      int numTargets = 0;
+      double brightest = state._stars[0].brightness;
+      // We only include stars up to two magnitude fainter.
+      double faintLimit = brightest / state._faintLimit;
+      var targetCoords = List<cedar_rpc.ImageCoord>.empty(growable: true);
+      for (var star in state._stars) {
+        if (star.brightness < faintLimit) {
+          break;
+        }
+        if (++numTargets > state._numTargets) {
+          break;
+        }
+        targetCoords.add(star.centroidPosition);
+        canvas.drawRect(
+            Rect.fromCenter(
+                center: Offset(star.centroidPosition.x / state._binFactor,
+                    star.centroidPosition.y / state._binFactor),
+                width: 16,
+                height: 16),
+            paint);
+      }
+      // Partition state._labeledFovCatalogEntries to labeledCatalogEntries or
+      // dimLabeledCatalogEntries.
+      for (var catEntry in state._labeledFovCatalogEntries) {
+        bool isTarget = false;
+        for (var tc in targetCoords) {
+          if (_nearInImage(catEntry.imagePos, tc)) {
+            isTarget = true;
+            break;
+          }
+        }
+        if (isTarget) {
+          labeledCatalogEntries.add(catEntry);
+        } else {
+          dimLabeledCatalogEntries.add(catEntry);
+        }
+      }
+    } else {
+      labeledCatalogEntries = state._labeledFovCatalogEntries;
+    }
 
     // How many display pixels is the telescope FOV?
     if (state._slewRequest != null && !state._setupMode && state._hasSolution) {
@@ -184,17 +246,21 @@ class _MainImagePainter extends CustomPainter {
       var rollAngleRad = _deg2rad(state._bullseyeDirectionIndicator());
       drawBullseye(canvas, color, state._boresightPosition, state._scopeFov / 2,
           rollAngleRad);
-      if (state._labeledFovCatalogEntries.isNotEmpty &&
+      if (labeledCatalogEntries.isNotEmpty &&
           state._slewRequest == null &&
           _drawCatalogEntries != null) {
-        _drawCatalogEntries!(
-            _context,
-            canvas,
-            color,
-            state._labeledFovCatalogEntries,
-            /*drawLabel=*/ true,
-            state._binFactor,
-            portrait);
+        _drawCatalogEntries!(_context, canvas, color, labeledCatalogEntries,
+            /*drawLabel=*/ true, state._binFactor, portrait);
+        if (dimLabeledCatalogEntries.isNotEmpty) {
+          _drawCatalogEntries!(
+              _context,
+              canvas,
+              opaqueColor,
+              dimLabeledCatalogEntries,
+              /*drawLabel=*/ true,
+              state._binFactor,
+              portrait);
+        }
         _drawCatalogEntries!(
             _context,
             canvas,
@@ -203,35 +269,6 @@ class _MainImagePainter extends CustomPainter {
             /*drawLabel=*/ false,
             state._binFactor,
             portrait);
-      }
-    }
-    if (state._setupMode &&
-        !state._focusAid &&
-        !state._daylightMode &&
-        state._stars.isNotEmpty) {
-      // Draw alignment targets: up to N brightest stars (or planets).
-      Paint paint = Paint()
-        ..color = color
-        ..strokeWidth = thick
-        ..style = PaintingStyle.stroke;
-      int numTargets = 0;
-      double brightest = state._stars[0].brightness;
-      // We only include stars up to one magnitude fainter.
-      double faintLimit = brightest / 2.5;
-      for (var star in state._stars) {
-        if (star.brightness < faintLimit) {
-          break;
-        }
-        if (++numTargets > state._numTargets) {
-          break;
-        }
-        canvas.drawRect(
-            Rect.fromCenter(
-                center: Offset(star.centroidPosition.x / state._binFactor,
-                    star.centroidPosition.y / state._binFactor),
-                width: 16,
-                height: 16),
-            paint);
       }
     }
   }
@@ -325,6 +362,7 @@ class MyHomePageState extends State<MyHomePage> {
 
   // State for align mode.
   final _numTargets = 3;
+  final _faintLimit = 2.512 * 2.512; // Two magnitudes.
   bool _alignTargetTapped = false;
 
   // Information from most recent FrameResult.
@@ -604,7 +642,7 @@ class MyHomePageState extends State<MyHomePage> {
     try {
       final response = await client().getFrame(
         request,
-        options: CallOptions(timeout: const Duration(seconds: 2)),
+        options: CallOptions(timeout: const Duration(seconds: 4)),
       );
       rpcSucceeded();
       if (!_serverConnected) {
@@ -1645,8 +1683,8 @@ class MyHomePageState extends State<MyHomePage> {
     StarCentroid? closest;
     double closestDistance = 0;
     double brightest = _stars[0].brightness;
-    // We only include stars up to one magnitude fainter.
-    double faintLimit = brightest / 2.5;
+    // We only include stars up to two magnitude fainter.
+    double faintLimit = brightest / _faintLimit;
 
     int numTargets = 0;
     for (var star in _stars) {
