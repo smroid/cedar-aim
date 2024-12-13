@@ -1108,6 +1108,89 @@ class MyHomePageState extends State<MyHomePage> {
     return row ? Row(children: children) : Column(children: children);
   }
 
+  Widget focusDoneButton() {
+    return OutlinedButton(
+        style: OutlinedButton.styleFrom(
+            padding: const EdgeInsets.symmetric(horizontal: 0)),
+        child: Text(
+          textAlign: TextAlign.center,
+          style: const TextStyle(fontSize: 14),
+          "Done",
+          textScaler: textScaler(context),
+        ),
+        onPressed: () {
+          setState(() {
+            // Transition to align mode.
+            _alignTargetTapped = false;
+            if (!_setupMode) {
+              _transitionToSetup = true;
+            }
+            _setOperatingMode(/*setupMode=*/ true, /*focusAid=*/ false);
+          });
+        });
+  }
+
+  Widget setupAlignButton() {
+    return OutlinedButton(
+        style: OutlinedButton.styleFrom(
+            padding: const EdgeInsets.symmetric(horizontal: 0)),
+        child: Text(
+          textAlign: TextAlign.center,
+          style: const TextStyle(fontSize: 14),
+          textScaler: textScaler(context),
+          _alignTargetTapped ? "Done" : "Skip",
+        ),
+        onPressed: () {
+          // Transition to aim mode.
+          setState(() {
+            _setOperatingMode(/*setupMode=*/ false, _focusAid);
+          });
+        });
+  }
+
+  Widget slewReAlignButton() {
+    return OutlinedButton(
+        style: OutlinedButton.styleFrom(
+            padding: const EdgeInsets.symmetric(horizontal: 0)),
+        child: Text(
+          textAlign: TextAlign.center,
+          style: const TextStyle(fontSize: 14),
+          textScaler: textScaler(context),
+          "Re-align",
+        ),
+        onPressed: () {
+          _captureBoresight(); // Re-align.
+        });
+  }
+
+  Widget catalogButton() {
+    return OutlinedButton(
+        style: OutlinedButton.styleFrom(
+            padding: const EdgeInsets.symmetric(horizontal: 0)),
+        child: Text(
+          style: const TextStyle(fontSize: 14),
+          "Catalog",
+          textScaler: textScaler(context),
+        ),
+        onPressed: () {
+          _showCatalogBrowser!(context, this);
+        });
+  }
+
+  Widget endGotoButton() {
+    return OutlinedButton(
+        style: OutlinedButton.styleFrom(
+            padding: const EdgeInsets.symmetric(horizontal: 0)),
+        child: Text(
+          style: const TextStyle(fontSize: 14),
+          "End goto",
+          textScaler: textScaler(context),
+        ),
+        onPressed: () {
+          _stopSlew();
+        });
+  }
+
   List<Widget> _controls() {
     final portrait = MediaQuery.of(context).orientation == Orientation.portrait;
     final color = Theme.of(context).colorScheme.primary;
@@ -1192,77 +1275,27 @@ class MyHomePageState extends State<MyHomePage> {
                                 ))),
                       ])
                 : SizedBox(
-                    width: 0,
                     height: (portrait ? 60 : 0) * textScaleFactor(context))),
       ),
-      const SizedBox(height: 15),
+      const SizedBox(height: 25),
       RotatedBox(
           quarterTurns: portrait ? 3 : 0,
           child: SizedBox(
             width: 70 * textScaleFactor(context),
             height: 25 * textScaleFactor(context),
             child: _focusAid
-                ? OutlinedButton(
-                    style: OutlinedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(horizontal: 0)),
-                    child: Text(
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(fontSize: 14),
-                      "Done",
-                      textScaler: textScaler(context),
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        // Transition to align mode.
-                        _alignTargetTapped = false;
-                        if (!_setupMode) {
-                          _transitionToSetup = true;
-                        }
-                        _setOperatingMode(
-                            /*setupMode=*/ true, /*focusAid=*/ false);
-                      });
-                    })
+                ? focusDoneButton()
                 : (_canAlign
-                    ? OutlinedButton(
-                        style: OutlinedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(horizontal: 0)),
-                        child: Text(
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(fontSize: 14),
-                          _slewRequest == null
-                              ? (_alignTargetTapped ? "Done" : "Skip")
-                              : "Re-align",
-                          textScaler: textScaler(context),
-                        ),
-                        onPressed: () {
-                          // Transition to aim mode.
-                          if (_slewRequest == null) {
-                            setState(() {
-                              _setOperatingMode(
-                                  /*setupMode=*/ false, _focusAid);
-                            });
-                          } else {
-                            _captureBoresight(); // Re-align
-                          }
-                        })
+                    ? (_slewRequest == null
+                        ? setupAlignButton()
+                        : slewReAlignButton())
                     : (_slewRequest == null &&
                             !_setupMode &&
                             _showCatalogBrowser != null
-                        ? OutlinedButton(
-                            style: OutlinedButton.styleFrom(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 0)),
-                            child: Text(
-                              style: const TextStyle(fontSize: 14),
-                              "Catalog",
-                              textScaler: textScaler(context),
-                            ),
-                            onPressed: () {
-                              _showCatalogBrowser!(context, this);
-                            })
+                        ? catalogButton()
                         : Container())),
           )),
-      const SizedBox(width: 0, height: 15),
+      const SizedBox(height: 25),
       _setupMode
           ? RotatedBox(
               quarterTurns: portrait ? 3 : 0,
@@ -1278,8 +1311,7 @@ class MyHomePageState extends State<MyHomePage> {
                     });
                   }))
           : Container(),
-      SizedBox(
-          width: 0, height: (_slewRequest != null && !_setupMode) ? 40 : 10),
+      SizedBox(height: (_slewRequest != null && !_setupMode) ? 40 : 10),
       _slewRequest != null
           ? RotatedBox(
               quarterTurns: portrait ? 3 : 0,
@@ -1287,18 +1319,7 @@ class MyHomePageState extends State<MyHomePage> {
                   width: 70 * textScaleFactor(context),
                   height: 25 * textScaleFactor(context),
                   child: _slewRequest != null && !_setupMode
-                      ? OutlinedButton(
-                          style: OutlinedButton.styleFrom(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 0)),
-                          child: Text(
-                            style: const TextStyle(fontSize: 14),
-                            "End goto",
-                            textScaler: textScaler(context),
-                          ),
-                          onPressed: () {
-                            _stopSlew();
-                          })
+                      ? endGotoButton()
                       : Container()))
           : Container(),
     ];
