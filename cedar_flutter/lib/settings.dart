@@ -216,6 +216,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final advanced = provider.preferencesProto.advanced;
     final isBasic = provider.isBasic;
     final isPlus = provider.isPlus;
+    final isDIY = provider.isDIY;
     final updateIntervalMs = durationToMs(opSettingsProto.updateInterval);
     final rightHanded = prefsProto.rightHanded;
 
@@ -420,7 +421,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       title: scaledText(sprintf(
                           'Eyepiece FOV %.1f°', [prefsProto.eyepieceFov])),
                     ),
-                    if (advanced && isPlus)
+                    if (advanced && (isPlus || isDIY))
                       SettingsTile(
                         leading: Row(children: <Widget>[
                           Switch(
