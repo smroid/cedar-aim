@@ -3,6 +3,8 @@
 
 // Mobile impl for platform-specific functions.
 
+import 'dart:io';
+
 import 'package:geolocator/geolocator.dart';
 
 import 'cedar.pbgrpc.dart' as cedar_rpc;
@@ -102,4 +104,8 @@ Future<Position?> getLocationImpl() async {
     return null;
   }
   return await Geolocator.getLastKnownPosition();
+}
+
+void exitAppImpl() {
+  exit(0);
 }

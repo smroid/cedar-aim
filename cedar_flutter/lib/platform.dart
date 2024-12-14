@@ -77,3 +77,12 @@ Future<Position?> getLocation() async {
     rethrow;
   }
 }
+
+void exitApp() {
+  try {
+    return exitAppImpl();
+  } catch (e) {
+    debugPrint('exitApp: $e');
+    rethrow;
+  }
+}

@@ -77,6 +77,7 @@ Future<void> aboutScreen(MyHomePageState state, BuildContext context) async {
                       _aboutOverlayEntry?.remove();
                       _aboutOverlayEntry = null;
                       _timer?.cancel();
+                      state.closeDrawer();
                     },
                   ),
                 ],

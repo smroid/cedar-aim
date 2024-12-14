@@ -4,6 +4,7 @@
 import 'dart:math';
 
 import 'package:cedar_flutter/cedar.pb.dart';
+import 'package:cedar_flutter/client_main.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -191,13 +192,18 @@ TextScaler textScaler(BuildContext context) {
 }
 
 class SettingsScreen extends StatefulWidget {
-  const SettingsScreen({super.key});
+  final MyHomePageState _homePageState;
+  const SettingsScreen(this._homePageState, {super.key});
 
   @override
-  State<SettingsScreen> createState() => _SettingsScreenState();
+  // ignore: no_logic_in_create_state
+  State<SettingsScreen> createState() => _SettingsScreenState(_homePageState);
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
+  final MyHomePageState _homePageState;
+
+  _SettingsScreenState(this._homePageState);
   @override
   Widget build(BuildContext context) {
     Text scaledText(String str) {
@@ -220,8 +226,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
       updateMax = 5; // 10Hz.
     }
 
-    const backButton =
-        BackButton(style: ButtonStyle(iconSize: WidgetStatePropertyAll(30)));
+    final backButton = BackButton(
+      style: const ButtonStyle(iconSize: WidgetStatePropertyAll(30)),
+      onPressed: () {
+        Navigator.pop(context);
+        _homePageState.closeDrawer();
+      },
+    );
     const sliderThemeData = SliderThemeData(
         overlayShape: RoundSliderOverlayShape(overlayRadius: 0));
 

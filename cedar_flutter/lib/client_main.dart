@@ -12,6 +12,7 @@ import 'package:cedar_flutter/google/protobuf/timestamp.pb.dart';
 import 'package:cedar_flutter/perf_stats_dialog.dart';
 import 'package:cedar_flutter/server_log.dart';
 import 'package:cedar_flutter/settings.dart';
+import 'package:cedar_flutter/shutdown_dialog.dart';
 import 'package:cedar_flutter/sky_coords_dialog.dart';
 import 'package:cedar_flutter/themes.dart';
 import 'package:fixnum/fixnum.dart';
@@ -770,49 +771,12 @@ class MyHomePageState extends State<MyHomePage> {
     return Text(str, textScaler: textScaler(context));
   }
 
-  void _shutdownDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          content: _scaledText("Shutdown Raspberry Pi?"),
-          actionsOverflowButtonSpacing: 5,
-          actions: <Widget>[
-            ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.white10),
-              child: _scaledText("Cancel"),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                _restart();
-                Navigator.of(context).pop();
-              },
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.white10),
-              child: _scaledText("Restart"),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                _shutdown();
-                Navigator.of(context).pop();
-              },
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.white10),
-              child: _scaledText("Shutdown"),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  Future<void> _shutdown() async {
+  Future<void> shutdown() async {
     final request = cedar_rpc.ActionRequest(shutdownServer: true);
     await initiateAction(request);
   }
 
-  Future<void> _restart() async {
+  Future<void> restart() async {
     final request = cedar_rpc.ActionRequest(restartServer: true);
     await initiateAction(request);
   }
@@ -933,7 +897,7 @@ class MyHomePageState extends State<MyHomePage> {
                 Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const SettingsScreen()))
+                            builder: (context) => SettingsScreen(this)))
                     .then((value) {
                   setState(() {}); // Force rebuild of the drawer.
                 });
@@ -1056,7 +1020,7 @@ class MyHomePageState extends State<MyHomePage> {
               label: _scaledText("Shutdown"),
               icon: const Icon(Icons.power_settings_new_outlined),
               onPressed: () {
-                _shutdownDialog();
+                shutdownDialog(this, context);
               })),
       advanced
           ? Column(children: [
@@ -1084,7 +1048,7 @@ class MyHomePageState extends State<MyHomePage> {
                         if (context.mounted) {
                           showDialog(
                               context: context,
-                              builder: (context) => ServerLogPopUp(logs));
+                              builder: (context) => ServerLogPopUp(this, logs));
                         }
                       })),
             ])
@@ -1933,6 +1897,11 @@ class MyHomePageState extends State<MyHomePage> {
   }
 
   final _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  void closeDrawer() {
+    _scaffoldKey.currentState?.closeDrawer();
+    _scaffoldKey.currentState?.closeEndDrawer();
+  }
 
   Widget _drawer() {
     return _serverConnected

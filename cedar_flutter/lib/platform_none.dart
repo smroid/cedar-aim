@@ -35,3 +35,7 @@ Future<bool> getWakeLockImpl() {
 Future<Position?> getLocationImpl() async {
   throw UnimplementedError("No impl in platform_none");
 }
+
+void exitAppImpl() async {
+  throw UnimplementedError("No impl in platform_none");
+}

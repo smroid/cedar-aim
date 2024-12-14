@@ -65,3 +65,7 @@ Future<bool> getWakeLockImpl() async {
 Future<Position?> getLocationImpl() async {
   throw UnimplementedError("No impl in platform_web");
 }
+
+void exitAppImpl() {
+  window.close();
+}
