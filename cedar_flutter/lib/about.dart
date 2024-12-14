@@ -243,7 +243,10 @@ Widget calibrationInfo(MyHomePageState state) {
           Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
             _scaledText("Pixel angular size"),
             _scaledText(calData.hasPixelAngularSize()
-                ? sprintf("%.1f'", [calData.pixelAngularSize * 60])
+                ? calData.pixelAngularSize > 1.0 / 60
+                    ? sprintf("%.1f arcmin", [calData.pixelAngularSize * 60.0])
+                    : sprintf(
+                        "%.0f arcsec", [calData.pixelAngularSize * 3600.0])
                 : "unknown"),
           ]),
           Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [

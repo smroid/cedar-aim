@@ -152,7 +152,6 @@ Future<void> perfStatsDialog(
                                       "%.1f arcmin", [state.solutionRMSE / 60])
                                   : sprintf(
                                       "%.0f arcsec", [state.solutionRMSE])),
-                              // solveText(),
                             ])
                       : Container(),
                   state.advanced
@@ -162,7 +161,6 @@ Future<void> perfStatsDialog(
                               scaledText("Image noise"),
                               scaledText(
                                   sprintf("%.1f ADU", [state.noiseEstimate])),
-                              // solveText(),
                             ])
                       : Container(),
                 ],
