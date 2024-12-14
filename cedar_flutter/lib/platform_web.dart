@@ -3,8 +3,9 @@
 
 // Web-based impl for platform-specific functions.
 
-// ignore: avoid_web_libraries_in_flutter
+// ignore_for_file: avoid_web_libraries_in_flutter
 import 'dart:html';
+import 'dart:js' as js;
 
 import 'package:cedar_flutter/cedar.pbgrpc.dart';
 import 'package:flutter/foundation.dart';
@@ -67,5 +68,5 @@ Future<Position?> getLocationImpl() async {
 }
 
 void exitAppImpl() {
-  window.close();
+  js.context.callMethod('close');
 }

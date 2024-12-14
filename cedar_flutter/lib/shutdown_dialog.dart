@@ -71,7 +71,8 @@ void shutdownDialog(MyHomePageState state, BuildContext context) {
                       actions: [
                         ElevatedButton(
                           onPressed: () {
-                            exitApp();
+                            Navigator.of(context).pop();
+                            exitApp(); // Might not work on Web.
                           },
                           style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.white10),
