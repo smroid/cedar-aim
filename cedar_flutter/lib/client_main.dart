@@ -1280,7 +1280,7 @@ class MyHomePageState extends State<MyHomePage> {
                     });
                   }))
           : Container(),
-      _slewRequest != null && !_setupMode
+      _slewRequest != null && !_setupMode && _showCatalogBrowser != null
           ? RotatedBox(
               quarterTurns: portrait ? 3 : 0,
               child: SizedBox(
