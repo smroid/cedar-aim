@@ -26,7 +26,10 @@ class ServerLogPopUp extends StatelessWidget {
               height: 30,
               child: Text(
                 'Cedar server log',
-                style: const TextStyle(fontSize: 16),
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
                 textScaler: textScaler(context),
               )),
           SizedBox(
@@ -47,7 +50,10 @@ class ServerLogPopUp extends StatelessWidget {
           children: [
             Text(
               _content,
-              style: const TextStyle(fontSize: 12),
+              style: TextStyle(
+                fontSize: 12,
+                color: Theme.of(context).colorScheme.primary,
+              ),
               textScaler: textScaler(context),
             ),
           ],

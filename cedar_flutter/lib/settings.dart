@@ -207,7 +207,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     Text scaledText(String str) {
-      return Text(str, textScaler: textScaler(context));
+      return Text(
+        str,
+        textScaler: textScaler(context),
+        style: TextStyle(
+          color: Theme.of(context).colorScheme.primary,
+        ),
+      );
     }
 
     final provider = Provider.of<SettingsModel>(context, listen: false);
@@ -241,7 +247,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
         appBar: AppBar(
           automaticallyImplyLeading: false,
           leading: rightHanded ? null : backButton,
-          title: const Text('Preferences'),
+          title: Text('Preferences',
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.primary,
+              )),
           actions: [rightHanded ? backButton : Container()],
         ),
         body: DefaultTextStyle.merge(

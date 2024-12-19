@@ -17,7 +17,11 @@ Timer? _timer;
 late BuildContext _context;
 
 Text _scaledText(String str) {
-  return Text(str, textScaler: textScaler(_context));
+  return Text(
+    str,
+    textScaler: textScaler(_context),
+    style: TextStyle(color: Theme.of(_context).colorScheme.primary),
+  );
 }
 
 String formatTimestamp(Timestamp timestamp) {
@@ -100,7 +104,10 @@ Widget serverInfo(MyHomePageState state) {
       child: Column(children: <Widget>[
         const SizedBox(height: 5),
         Text(
-          style: const TextStyle(fontSize: 18),
+          style: TextStyle(
+            fontSize: 18,
+            color: Theme.of(_context).colorScheme.primary,
+          ),
           "Cedar™ server",
           textScaler: textScaler(_context),
         ),
@@ -184,7 +191,10 @@ Widget calibrationInfo(MyHomePageState state) {
       child: Column(children: <Widget>[
         const SizedBox(height: 5),
         Text(
-          style: const TextStyle(fontSize: 18),
+          style: TextStyle(
+            fontSize: 18,
+            color: Theme.of(_context).colorScheme.primary,
+          ),
           "Calibration",
           textScaler: textScaler(_context),
         ),

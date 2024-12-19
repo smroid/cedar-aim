@@ -4,7 +4,11 @@ import 'package:cedar_flutter/settings.dart';
 import 'package:flutter/material.dart';
 
 Text _scaledText(String str, BuildContext context) {
-  return Text(str, textScaler: textScaler(context));
+  return Text(
+    str,
+    textScaler: textScaler(context),
+    style: TextStyle(color: Theme.of(context).colorScheme.primary),
+  );
 }
 
 void shutdownDialog(MyHomePageState state, BuildContext context) {

@@ -1996,7 +1996,10 @@ class MyHomePageState extends State<MyHomePage> {
           child: Column(mainAxisSize: MainAxisSize.min, children: [
             Text(
                 maxLines: 10,
-                style: const TextStyle(fontSize: 20),
+                style: TextStyle(
+                  fontSize: 20,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
                 _serverConnected
                     ? "Cedar could not detect a camera. "
                         "Please check the camera connection."
