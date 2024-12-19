@@ -76,9 +76,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Cedar Aim',
+      title: "Cedar Aim",
       theme: Provider.of<ThemeModel>(context).currentTheme,
-      home: const MyHomePage(title: 'Cedar Aim'),
+      home: const MyHomePage(title: "Cedar Aim"),
     );
   }
 }
@@ -622,7 +622,7 @@ class MyHomePageState extends State<MyHomePage> {
       await client().updateFixedSettings(request,
           options: CallOptions(timeout: const Duration(seconds: 2)));
     } catch (e) {
-      debugPrint('updateFixedSettings error: $e');
+      debugPrint("updateFixedSettings error: $e");
     }
   }
 
@@ -632,7 +632,7 @@ class MyHomePageState extends State<MyHomePage> {
       await client().updateOperationSettings(request,
           options: CallOptions(timeout: const Duration(seconds: 2)));
     } catch (e) {
-      debugPrint('updateOperationSettings error: $e');
+      debugPrint("updateOperationSettings error: $e");
     }
   }
 
@@ -674,7 +674,7 @@ class MyHomePageState extends State<MyHomePage> {
         }
       }
     } catch (e) {
-      debugPrint('getFrame RPC error: $e');
+      debugPrint("getFrame RPC error: $e");
       rpcFailed(); // Make a new channel.
       setState(() {
         // Has it been too long since we last succeeded?
@@ -702,7 +702,7 @@ class MyHomePageState extends State<MyHomePage> {
       await client().initiateAction(request,
           options: CallOptions(timeout: const Duration(seconds: 2)));
     } catch (e) {
-      debugPrint('initiateAction error: $e');
+      debugPrint("initiateAction error: $e");
     }
   }
 
@@ -766,7 +766,7 @@ class MyHomePageState extends State<MyHomePage> {
           options: CallOptions(timeout: const Duration(seconds: 2)));
       return infoResult.logContent;
     } catch (e) {
-      debugPrint('getServerLogs error: $e');
+      debugPrint("getServerLogs error: $e");
       return "";
     }
   }
@@ -797,7 +797,7 @@ class MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> _cancelCalibration() async {
-    await _setOperatingMode(/*setupMode=*/ true, _daylightMode);
+    await _setOperatingMode(/*setupMode=*/ true, _focusAid);
   }
 
   Future<void> updatePreferences(cedar_rpc.Preferences changedPrefs) async {
@@ -815,7 +815,7 @@ class MyHomePageState extends State<MyHomePage> {
         settingsModel.preferencesProto = preferences!.deepCopy();
       });
     } catch (e) {
-      debugPrint('updatePreferences error: $e');
+      debugPrint("updatePreferences error: $e");
     }
   }
 
@@ -1773,7 +1773,7 @@ class MyHomePageState extends State<MyHomePage> {
                           backgroundColor: Colors.black,
                           foregroundColor:
                               Theme.of(context).colorScheme.primary),
-                      child: _scaledText('Cancel'),
+                      child: _scaledText("Cancel"),
                     )
                   : Container(),
             ]));
@@ -1938,7 +1938,7 @@ class MyHomePageState extends State<MyHomePage> {
           title: Text(widget.title),
           foregroundColor: Theme.of(context).colorScheme.primary),
       body: DefaultTextStyle.merge(
-          style: const TextStyle(fontFamilyFallback: ['Roboto']),
+          style: const TextStyle(fontFamilyFallback: ["Roboto"]),
           child: SafeArea(
               child: Container(
                   color: Theme.of(context).colorScheme.surface,
