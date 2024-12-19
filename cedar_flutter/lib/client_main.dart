@@ -1283,8 +1283,7 @@ class MyHomePageState extends State<MyHomePage> {
                       : const Icon(Icons.check_box_outline_blank),
                   onPressed: () async {
                     setState(() {
-                      _daylightMode = !_daylightMode;
-                      _setDaylightMode(_daylightMode);
+                      _setDaylightMode(!_daylightMode);
                     });
                   }))
           : Container(),
