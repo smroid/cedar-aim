@@ -4,6 +4,10 @@
 import 'package:cedar_flutter/cedar.pbgrpc.dart';
 import 'package:geolocator/geolocator.dart';
 
+bool isWebImpl() {
+  throw UnimplementedError("No impl in platform_none");
+}
+
 void rpcSucceededImpl() {
   throw UnimplementedError("No impl in platform_none");
 }
@@ -30,6 +34,10 @@ void setWakeLockImpl(bool locked) {
 
 Future<bool> getWakeLockImpl() {
   throw UnimplementedError("No impl in platform_none");
+}
+
+Future<bool> canGetLocationImpl() async {
+  return false;
 }
 
 Future<Position?> getLocationImpl() async {

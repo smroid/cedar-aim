@@ -11,6 +11,10 @@ import 'platform_none.dart'
     if (dart.library.io) 'platform_mobile.dart'
     if (dart.library.html) 'platform_web.dart';
 
+bool isWeb() {
+  return isWebImpl();
+}
+
 void rpcSucceeded() {
   try {
     rpcSucceededImpl();
@@ -67,6 +71,10 @@ Future<bool> getWakeLock() async {
     debugPrint('rpcFailed: $e');
     return false;
   }
+}
+
+Future<bool> canGetLocation() async {
+  return canGetLocationImpl();
 }
 
 Future<Position?> getLocation() async {

@@ -15,6 +15,10 @@ import 'package:wakelock_plus/wakelock_plus.dart';
 
 GrpcWebClientChannel? _channel;
 
+bool isWebImpl() {
+  return true;
+}
+
 void rpcSucceededImpl() {}
 void rpcFailedImpl() {
   if (_channel != null) {
@@ -60,6 +64,10 @@ void setWakeLockImpl(bool locked) {
 
 Future<bool> getWakeLockImpl() async {
   return await WakelockPlus.enabled;
+}
+
+Future<bool> canGetLocationImpl() async {
+  return false;
 }
 
 // This is only available when we're served over HTTPS.

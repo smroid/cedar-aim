@@ -342,8 +342,12 @@ class MyHomePageState extends State<MyHomePage> {
       mapPosition =
           LatLng(platformPosition.latitude, platformPosition.longitude);
     }
+    _offerMap = isWeb() || !await canGetLocation();
     _tzOffset = DateTime.now().timeZoneOffset; // Get platform timezone.
   }
+
+  // Whether we should offer a menu item to set the observer location via a map.
+  bool _offerMap = false;
 
   // Geolocation from map.
   LatLng? _mapPosition;
@@ -902,21 +906,25 @@ class MyHomePageState extends State<MyHomePage> {
                   setState(() {}); // Force rebuild of the drawer.
                 });
               })),
-      const SizedBox(height: 15),
-      Align(
-          alignment: Alignment.topLeft,
-          child: TextButton.icon(
-              label: _mapPosition == null
-                  ? _scaledText("Location unknown")
-                  : _scaledText(sprintf("Location %.1f %.1f",
-                      [_mapPosition!.latitude, _mapPosition!.longitude])),
-              icon: Icon(_mapPosition == null
-                  ? Icons.not_listed_location
-                  : Icons.edit_location_alt),
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => MapScreen(this)));
-              })),
+      SizedBox(height: _offerMap ? 15 : 0),
+      _offerMap
+          ? Align(
+              alignment: Alignment.topLeft,
+              child: TextButton.icon(
+                  label: _mapPosition == null
+                      ? _scaledText("Location unknown")
+                      : _scaledText(sprintf("Location %.1f %.1f",
+                          [_mapPosition!.latitude, _mapPosition!.longitude])),
+                  icon: Icon(_mapPosition == null
+                      ? Icons.not_listed_location
+                      : Icons.edit_location_alt),
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => MapScreen(this)));
+                  }))
+          : Container(),
       const SizedBox(height: 15),
       Align(
           alignment: Alignment.topLeft,

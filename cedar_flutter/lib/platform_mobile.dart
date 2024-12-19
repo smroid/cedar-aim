@@ -14,6 +14,10 @@ import 'package:flutter/services.dart';
 import 'package:grpc/grpc.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
+bool isWebImpl() {
+  return false;
+}
+
 String _tryAddress = "raspberrypi.local";
 String? _goodAddress;
 ClientChannel? _channel;
@@ -85,22 +89,29 @@ Future<bool> getWakeLockImpl() async {
   return await WakelockPlus.enabled;
 }
 
-Future<Position?> getLocationImpl() async {
+Future<bool> canGetLocationImpl() async {
   final bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
   if (!serviceEnabled) {
     debugPrint("Location services not enabled");
-    return null;
+    return false;
   }
   LocationPermission permission = await Geolocator.checkPermission();
   if (permission == LocationPermission.denied) {
     permission = await Geolocator.requestPermission();
     if (permission == LocationPermission.denied) {
       debugPrint("Location permissions are denied");
-      return null;
+      return false;
     }
   }
   if (permission == LocationPermission.deniedForever) {
     debugPrint("Location permissions are denied forever");
+    return false;
+  }
+  return true;
+}
+
+Future<Position?> getLocationImpl() async {
+  if (!await canGetLocationImpl()) {
     return null;
   }
   return await Geolocator.getLastKnownPosition();
