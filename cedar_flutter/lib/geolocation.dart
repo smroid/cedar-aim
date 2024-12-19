@@ -43,7 +43,7 @@ class _MapScreenState extends State<MapScreen> {
                 initialCenter: initialCenter,
                 initialZoom: initialZoom,
                 minZoom: 1.0,
-                maxZoom: 7.0,
+                maxZoom: 6.0,
                 interactionOptions: const InteractionOptions(
                     flags: InteractiveFlag.all &
                         ~InteractiveFlag.doubleTapZoom &
@@ -58,7 +58,7 @@ class _MapScreenState extends State<MapScreen> {
                 TileLayer(
                     urlTemplate: 'assets/tiles/{z}/{x}/{y}{r}.webp',
                     tileProvider: AssetTileProvider(),
-                    maxNativeZoom: 6,
+                    maxNativeZoom: 5,
                     retinaMode: true),
                 if (selectedPosition != null)
                   MarkerLayer(
