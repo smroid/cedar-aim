@@ -3062,6 +3062,7 @@ class ActionRequest extends $pb.GeneratedMessage {
     $0.CelestialCoord? initiateSlew,
     WiFiAccessPoint? updateWifiAccessPoint,
     $core.bool? restartServer,
+    $core.bool? cancelCalibration,
   }) {
     final $result = create();
     if (captureBoresight != null) {
@@ -3088,6 +3089,9 @@ class ActionRequest extends $pb.GeneratedMessage {
     if (restartServer != null) {
       $result.restartServer = restartServer;
     }
+    if (cancelCalibration != null) {
+      $result.cancelCalibration = cancelCalibration;
+    }
     return $result;
   }
   ActionRequest._() : super();
@@ -3103,6 +3107,7 @@ class ActionRequest extends $pb.GeneratedMessage {
     ..aOM<$0.CelestialCoord>(6, _omitFieldNames ? '' : 'initiateSlew', subBuilder: $0.CelestialCoord.create)
     ..aOM<WiFiAccessPoint>(7, _omitFieldNames ? '' : 'updateWifiAccessPoint', subBuilder: WiFiAccessPoint.create)
     ..aOB(8, _omitFieldNames ? '' : 'restartServer')
+    ..aOB(9, _omitFieldNames ? '' : 'cancelCalibration')
     ..hasRequiredFields = false
   ;
 
@@ -3226,6 +3231,16 @@ class ActionRequest extends $pb.GeneratedMessage {
   $core.bool hasRestartServer() => $_has(7);
   @$pb.TagNumber(8)
   void clearRestartServer() => clearField(8);
+
+  /// Cancels a calibration; no effect if no calibration is underway.
+  @$pb.TagNumber(9)
+  $core.bool get cancelCalibration => $_getBF(8);
+  @$pb.TagNumber(9)
+  set cancelCalibration($core.bool v) { $_setBool(8, v); }
+  @$pb.TagNumber(9)
+  $core.bool hasCancelCalibration() => $_has(8);
+  @$pb.TagNumber(9)
+  void clearCancelCalibration() => clearField(9);
 }
 
 class ServerLogRequest extends $pb.GeneratedMessage {

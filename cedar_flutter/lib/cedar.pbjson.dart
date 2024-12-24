@@ -742,16 +742,18 @@ final $typed_data.Uint8List fovCatalogEntryDescriptor = $convert.base64Decode(
 const ActionRequest$json = {
   '1': 'ActionRequest',
   '2': [
-    {'1': 'capture_boresight', '3': 1, '4': 1, '5': 8, '9': 0, '10': 'captureBoresight', '17': true},
-    {'1': 'designate_boresight', '3': 2, '4': 1, '5': 11, '6': '.cedar.ImageCoord', '9': 1, '10': 'designateBoresight', '17': true},
-    {'1': 'shutdown_server', '3': 3, '4': 1, '5': 8, '9': 2, '10': 'shutdownServer', '17': true},
-    {'1': 'restart_server', '3': 8, '4': 1, '5': 8, '9': 3, '10': 'restartServer', '17': true},
-    {'1': 'initiate_slew', '3': 6, '4': 1, '5': 11, '6': '.tetra3_server.CelestialCoord', '9': 4, '10': 'initiateSlew', '17': true},
-    {'1': 'stop_slew', '3': 4, '4': 1, '5': 8, '9': 5, '10': 'stopSlew', '17': true},
-    {'1': 'save_image', '3': 5, '4': 1, '5': 8, '9': 6, '10': 'saveImage', '17': true},
-    {'1': 'update_wifi_access_point', '3': 7, '4': 1, '5': 11, '6': '.cedar.WiFiAccessPoint', '9': 7, '10': 'updateWifiAccessPoint', '17': true},
+    {'1': 'cancel_calibration', '3': 9, '4': 1, '5': 8, '9': 0, '10': 'cancelCalibration', '17': true},
+    {'1': 'capture_boresight', '3': 1, '4': 1, '5': 8, '9': 1, '10': 'captureBoresight', '17': true},
+    {'1': 'designate_boresight', '3': 2, '4': 1, '5': 11, '6': '.cedar.ImageCoord', '9': 2, '10': 'designateBoresight', '17': true},
+    {'1': 'shutdown_server', '3': 3, '4': 1, '5': 8, '9': 3, '10': 'shutdownServer', '17': true},
+    {'1': 'restart_server', '3': 8, '4': 1, '5': 8, '9': 4, '10': 'restartServer', '17': true},
+    {'1': 'initiate_slew', '3': 6, '4': 1, '5': 11, '6': '.tetra3_server.CelestialCoord', '9': 5, '10': 'initiateSlew', '17': true},
+    {'1': 'stop_slew', '3': 4, '4': 1, '5': 8, '9': 6, '10': 'stopSlew', '17': true},
+    {'1': 'save_image', '3': 5, '4': 1, '5': 8, '9': 7, '10': 'saveImage', '17': true},
+    {'1': 'update_wifi_access_point', '3': 7, '4': 1, '5': 11, '6': '.cedar.WiFiAccessPoint', '9': 8, '10': 'updateWifiAccessPoint', '17': true},
   ],
   '8': [
+    {'1': '_cancel_calibration'},
     {'1': '_capture_boresight'},
     {'1': '_designate_boresight'},
     {'1': '_shutdown_server'},
@@ -765,18 +767,19 @@ const ActionRequest$json = {
 
 /// Descriptor for `ActionRequest`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List actionRequestDescriptor = $convert.base64Decode(
-    'Cg1BY3Rpb25SZXF1ZXN0EjAKEWNhcHR1cmVfYm9yZXNpZ2h0GAEgASgISABSEGNhcHR1cmVCb3'
-    'Jlc2lnaHSIAQESRwoTZGVzaWduYXRlX2JvcmVzaWdodBgCIAEoCzIRLmNlZGFyLkltYWdlQ29v'
-    'cmRIAVISZGVzaWduYXRlQm9yZXNpZ2h0iAEBEiwKD3NodXRkb3duX3NlcnZlchgDIAEoCEgCUg'
-    '5zaHV0ZG93blNlcnZlcogBARIqCg5yZXN0YXJ0X3NlcnZlchgIIAEoCEgDUg1yZXN0YXJ0U2Vy'
-    'dmVyiAEBEkcKDWluaXRpYXRlX3NsZXcYBiABKAsyHS50ZXRyYTNfc2VydmVyLkNlbGVzdGlhbE'
-    'Nvb3JkSARSDGluaXRpYXRlU2xld4gBARIgCglzdG9wX3NsZXcYBCABKAhIBVIIc3RvcFNsZXeI'
-    'AQESIgoKc2F2ZV9pbWFnZRgFIAEoCEgGUglzYXZlSW1hZ2WIAQESVAoYdXBkYXRlX3dpZmlfYW'
-    'NjZXNzX3BvaW50GAcgASgLMhYuY2VkYXIuV2lGaUFjY2Vzc1BvaW50SAdSFXVwZGF0ZVdpZmlB'
-    'Y2Nlc3NQb2ludIgBAUIUChJfY2FwdHVyZV9ib3Jlc2lnaHRCFgoUX2Rlc2lnbmF0ZV9ib3Jlc2'
-    'lnaHRCEgoQX3NodXRkb3duX3NlcnZlckIRCg9fcmVzdGFydF9zZXJ2ZXJCEAoOX2luaXRpYXRl'
-    'X3NsZXdCDAoKX3N0b3Bfc2xld0INCgtfc2F2ZV9pbWFnZUIbChlfdXBkYXRlX3dpZmlfYWNjZX'
-    'NzX3BvaW50');
+    'Cg1BY3Rpb25SZXF1ZXN0EjIKEmNhbmNlbF9jYWxpYnJhdGlvbhgJIAEoCEgAUhFjYW5jZWxDYW'
+    'xpYnJhdGlvbogBARIwChFjYXB0dXJlX2JvcmVzaWdodBgBIAEoCEgBUhBjYXB0dXJlQm9yZXNp'
+    'Z2h0iAEBEkcKE2Rlc2lnbmF0ZV9ib3Jlc2lnaHQYAiABKAsyES5jZWRhci5JbWFnZUNvb3JkSA'
+    'JSEmRlc2lnbmF0ZUJvcmVzaWdodIgBARIsCg9zaHV0ZG93bl9zZXJ2ZXIYAyABKAhIA1IOc2h1'
+    'dGRvd25TZXJ2ZXKIAQESKgoOcmVzdGFydF9zZXJ2ZXIYCCABKAhIBFINcmVzdGFydFNlcnZlco'
+    'gBARJHCg1pbml0aWF0ZV9zbGV3GAYgASgLMh0udGV0cmEzX3NlcnZlci5DZWxlc3RpYWxDb29y'
+    'ZEgFUgxpbml0aWF0ZVNsZXeIAQESIAoJc3RvcF9zbGV3GAQgASgISAZSCHN0b3BTbGV3iAEBEi'
+    'IKCnNhdmVfaW1hZ2UYBSABKAhIB1IJc2F2ZUltYWdliAEBElQKGHVwZGF0ZV93aWZpX2FjY2Vz'
+    'c19wb2ludBgHIAEoCzIWLmNlZGFyLldpRmlBY2Nlc3NQb2ludEgIUhV1cGRhdGVXaWZpQWNjZX'
+    'NzUG9pbnSIAQFCFQoTX2NhbmNlbF9jYWxpYnJhdGlvbkIUChJfY2FwdHVyZV9ib3Jlc2lnaHRC'
+    'FgoUX2Rlc2lnbmF0ZV9ib3Jlc2lnaHRCEgoQX3NodXRkb3duX3NlcnZlckIRCg9fcmVzdGFydF'
+    '9zZXJ2ZXJCEAoOX2luaXRpYXRlX3NsZXdCDAoKX3N0b3Bfc2xld0INCgtfc2F2ZV9pbWFnZUIb'
+    'ChlfdXBkYXRlX3dpZmlfYWNjZXNzX3BvaW50');
 
 @$core.Deprecated('Use serverLogRequestDescriptor instead')
 const ServerLogRequest$json = {

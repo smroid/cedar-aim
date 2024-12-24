@@ -797,7 +797,8 @@ class MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> _cancelCalibration() async {
-    await _setOperatingMode(/*setupMode=*/ true, _focusAid);
+    final request = cedar_rpc.ActionRequest(cancelCalibration: true);
+    await initiateAction(request);
   }
 
   Future<void> updatePreferences(cedar_rpc.Preferences changedPrefs) async {
