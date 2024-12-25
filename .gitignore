@@ -13,3 +13,7 @@ cedar_flutter/macos
 cedar_flutter/pubspec.lock
 cedar_flutter/windows
 
+cedar_flutter/ios/Flutter/flutter_export_environment.sh
+cedar_flutter/ios/Flutter/Generated.xcconfig
+cedar_flutter/ios/Runner/GeneratedPluginRegistrant.h
+cedar_flutter/ios/Runner/GeneratedPluginRegistrant.m
