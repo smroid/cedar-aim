@@ -387,7 +387,6 @@ const FrameResult$json = {
     {'1': 'image', '3': 3, '4': 1, '5': 11, '6': '.cedar.Image', '10': 'image'},
     {'1': 'exposure_time', '3': 7, '4': 1, '5': 11, '6': '.google.protobuf.Duration', '10': 'exposureTime'},
     {'1': 'capture_time', '3': 9, '4': 1, '5': 11, '6': '.google.protobuf.Timestamp', '10': 'captureTime'},
-    {'1': 'camera_temperature_celsius', '3': 10, '4': 1, '5': 1, '10': 'cameraTemperatureCelsius'},
     {'1': 'star_candidates', '3': 4, '4': 3, '5': 11, '6': '.cedar.StarCentroid', '10': 'starCandidates'},
     {'1': 'plate_solution', '3': 17, '4': 1, '5': 11, '6': '.tetra3_server.SolveResult', '9': 1, '10': 'plateSolution', '17': true},
     {'1': 'noise_estimate', '3': 26, '4': 1, '5': 1, '10': 'noiseEstimate'},
@@ -417,6 +416,7 @@ const FrameResult$json = {
     {'1': '_boresight_image'},
   ],
   '9': [
+    {'1': 10, '2': 11},
     {'1': 11, '2': 12},
   ],
 };
@@ -433,30 +433,29 @@ final $typed_data.Uint8List frameResultDescriptor = $convert.base64Decode(
     '9jYWxpYnJhdGlvbkRhdGESIgoFaW1hZ2UYAyABKAsyDC5jZWRhci5JbWFnZVIFaW1hZ2USPgoN'
     'ZXhwb3N1cmVfdGltZRgHIAEoCzIZLmdvb2dsZS5wcm90b2J1Zi5EdXJhdGlvblIMZXhwb3N1cm'
     'VUaW1lEj0KDGNhcHR1cmVfdGltZRgJIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXBS'
-    'C2NhcHR1cmVUaW1lEjwKGmNhbWVyYV90ZW1wZXJhdHVyZV9jZWxzaXVzGAogASgBUhhjYW1lcm'
-    'FUZW1wZXJhdHVyZUNlbHNpdXMSPAoPc3Rhcl9jYW5kaWRhdGVzGAQgAygLMhMuY2VkYXIuU3Rh'
-    'ckNlbnRyb2lkUg5zdGFyQ2FuZGlkYXRlcxJGCg5wbGF0ZV9zb2x1dGlvbhgRIAEoCzIaLnRldH'
-    'JhM19zZXJ2ZXIuU29sdmVSZXN1bHRIAVINcGxhdGVTb2x1dGlvbogBARIlCg5ub2lzZV9lc3Rp'
-    'bWF0ZRgaIAEoAVINbm9pc2VFc3RpbWF0ZRJBChBwcm9jZXNzaW5nX3N0YXRzGAggASgLMhYuY2'
-    'VkYXIuUHJvY2Vzc2luZ1N0YXRzUg9wcm9jZXNzaW5nU3RhdHMSQAoSYm9yZXNpZ2h0X3Bvc2l0'
-    'aW9uGBUgASgLMhEuY2VkYXIuSW1hZ2VDb29yZFIRYm9yZXNpZ2h0UG9zaXRpb24SIAoLY2FsaW'
-    'JyYXRpbmcYFiABKAhSC2NhbGlicmF0aW5nEjYKFGNhbGlicmF0aW9uX3Byb2dyZXNzGBcgASgB'
-    'SAJSE2NhbGlicmF0aW9uUHJvZ3Jlc3OIAQESSAoUY2VudGVyX3BlYWtfcG9zaXRpb24YDCABKA'
-    'syES5jZWRhci5JbWFnZUNvb3JkSANSEmNlbnRlclBlYWtQb3NpdGlvbogBARIvChFjZW50ZXJf'
-    'cGVha192YWx1ZRgGIAEoBUgEUg9jZW50ZXJQZWFrVmFsdWWIAQESPQoRY2VudGVyX3BlYWtfaW'
-    '1hZ2UYDSABKAsyDC5jZWRhci5JbWFnZUgFUg9jZW50ZXJQZWFrSW1hZ2WIAQESTQoTbG9jYXRp'
-    'b25fYmFzZWRfaW5mbxgdIAEoCzIYLmNlZGFyLkxvY2F0aW9uQmFzZWRJbmZvSAZSEWxvY2F0aW'
-    '9uQmFzZWRJbmZviAEBEjoKDHNsZXdfcmVxdWVzdBgYIAEoCzISLmNlZGFyLlNsZXdSZXF1ZXN0'
-    'SAdSC3NsZXdSZXF1ZXN0iAEBEjoKD2JvcmVzaWdodF9pbWFnZRgcIAEoCzIMLmNlZGFyLkltYW'
-    'dlSAhSDmJvcmVzaWdodEltYWdliAEBEkUKEnBvbGFyX2FsaWduX2FkdmljZRgeIAEoCzIXLmNl'
-    'ZGFyLlBvbGFyQWxpZ25BZHZpY2VSEHBvbGFyQWxpZ25BZHZpY2USTgoXbGFiZWxlZF9jYXRhbG'
-    '9nX2VudHJpZXMYHyADKAsyFi5jZWRhci5Gb3ZDYXRhbG9nRW50cnlSFWxhYmVsZWRDYXRhbG9n'
-    'RW50cmllcxJSChl1bmxhYmVsZWRfY2F0YWxvZ19lbnRyaWVzGCEgAygLMhYuY2VkYXIuRm92Q2'
-    'F0YWxvZ0VudHJ5Uhd1bmxhYmVsZWRDYXRhbG9nRW50cmllc0INCgtfaGFzX3Jlc3VsdEIRCg9f'
-    'cGxhdGVfc29sdXRpb25CFwoVX2NhbGlicmF0aW9uX3Byb2dyZXNzQhcKFV9jZW50ZXJfcGVha1'
-    '9wb3NpdGlvbkIUChJfY2VudGVyX3BlYWtfdmFsdWVCFAoSX2NlbnRlcl9wZWFrX2ltYWdlQhYK'
-    'FF9sb2NhdGlvbl9iYXNlZF9pbmZvQg8KDV9zbGV3X3JlcXVlc3RCEgoQX2JvcmVzaWdodF9pbW'
-    'FnZUoECAsQDA==');
+    'C2NhcHR1cmVUaW1lEjwKD3N0YXJfY2FuZGlkYXRlcxgEIAMoCzITLmNlZGFyLlN0YXJDZW50cm'
+    '9pZFIOc3RhckNhbmRpZGF0ZXMSRgoOcGxhdGVfc29sdXRpb24YESABKAsyGi50ZXRyYTNfc2Vy'
+    'dmVyLlNvbHZlUmVzdWx0SAFSDXBsYXRlU29sdXRpb26IAQESJQoObm9pc2VfZXN0aW1hdGUYGi'
+    'ABKAFSDW5vaXNlRXN0aW1hdGUSQQoQcHJvY2Vzc2luZ19zdGF0cxgIIAEoCzIWLmNlZGFyLlBy'
+    'b2Nlc3NpbmdTdGF0c1IPcHJvY2Vzc2luZ1N0YXRzEkAKEmJvcmVzaWdodF9wb3NpdGlvbhgVIA'
+    'EoCzIRLmNlZGFyLkltYWdlQ29vcmRSEWJvcmVzaWdodFBvc2l0aW9uEiAKC2NhbGlicmF0aW5n'
+    'GBYgASgIUgtjYWxpYnJhdGluZxI2ChRjYWxpYnJhdGlvbl9wcm9ncmVzcxgXIAEoAUgCUhNjYW'
+    'xpYnJhdGlvblByb2dyZXNziAEBEkgKFGNlbnRlcl9wZWFrX3Bvc2l0aW9uGAwgASgLMhEuY2Vk'
+    'YXIuSW1hZ2VDb29yZEgDUhJjZW50ZXJQZWFrUG9zaXRpb26IAQESLwoRY2VudGVyX3BlYWtfdm'
+    'FsdWUYBiABKAVIBFIPY2VudGVyUGVha1ZhbHVliAEBEj0KEWNlbnRlcl9wZWFrX2ltYWdlGA0g'
+    'ASgLMgwuY2VkYXIuSW1hZ2VIBVIPY2VudGVyUGVha0ltYWdliAEBEk0KE2xvY2F0aW9uX2Jhc2'
+    'VkX2luZm8YHSABKAsyGC5jZWRhci5Mb2NhdGlvbkJhc2VkSW5mb0gGUhFsb2NhdGlvbkJhc2Vk'
+    'SW5mb4gBARI6CgxzbGV3X3JlcXVlc3QYGCABKAsyEi5jZWRhci5TbGV3UmVxdWVzdEgHUgtzbG'
+    'V3UmVxdWVzdIgBARI6Cg9ib3Jlc2lnaHRfaW1hZ2UYHCABKAsyDC5jZWRhci5JbWFnZUgIUg5i'
+    'b3Jlc2lnaHRJbWFnZYgBARJFChJwb2xhcl9hbGlnbl9hZHZpY2UYHiABKAsyFy5jZWRhci5Qb2'
+    'xhckFsaWduQWR2aWNlUhBwb2xhckFsaWduQWR2aWNlEk4KF2xhYmVsZWRfY2F0YWxvZ19lbnRy'
+    'aWVzGB8gAygLMhYuY2VkYXIuRm92Q2F0YWxvZ0VudHJ5UhVsYWJlbGVkQ2F0YWxvZ0VudHJpZX'
+    'MSUgoZdW5sYWJlbGVkX2NhdGFsb2dfZW50cmllcxghIAMoCzIWLmNlZGFyLkZvdkNhdGFsb2dF'
+    'bnRyeVIXdW5sYWJlbGVkQ2F0YWxvZ0VudHJpZXNCDQoLX2hhc19yZXN1bHRCEQoPX3BsYXRlX3'
+    'NvbHV0aW9uQhcKFV9jYWxpYnJhdGlvbl9wcm9ncmVzc0IXChVfY2VudGVyX3BlYWtfcG9zaXRp'
+    'b25CFAoSX2NlbnRlcl9wZWFrX3ZhbHVlQhQKEl9jZW50ZXJfcGVha19pbWFnZUIWChRfbG9jYX'
+    'Rpb25fYmFzZWRfaW5mb0IPCg1fc2xld19yZXF1ZXN0QhIKEF9ib3Jlc2lnaHRfaW1hZ2VKBAgK'
+    'EAtKBAgLEAw=');
 
 @$core.Deprecated('Use imageDescriptor instead')
 const Image$json = {
