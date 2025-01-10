@@ -72,7 +72,7 @@ Future<bool> canGetLocationImpl() async {
 
 // This is only available when we're served over HTTPS.
 Future<Position?> getLocationImpl() async {
-  throw UnimplementedError("No impl in platform_web");
+  throw UnimplementedError("No getLocationImpl in platform_web");
 }
 
 void exitAppImpl() {
