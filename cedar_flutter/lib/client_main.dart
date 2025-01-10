@@ -335,15 +335,17 @@ class MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> _initLocation() async {
-    // See if we can get location from the platform. If we are a web app, served
-    // over http (not https), we won't be able to get location here.
-    final platformPosition = await getLocation();
-    if (platformPosition != null) {
-      mapPosition =
-          LatLng(platformPosition.latitude, platformPosition.longitude);
-    }
     _offerMap = isWeb() || !await canGetLocation();
     _tzOffset = DateTime.now().timeZoneOffset; // Get platform timezone.
+    if (await canGetLocation()) {
+      // Try to get location from the platform. If we are a web app, served
+      // over http (not https), we won't be able to get location here.
+      final platformPosition = await getLocation();
+      if (platformPosition != null) {
+        mapPosition =
+        LatLng(platformPosition.latitude, platformPosition.longitude);
+      }
+    }
   }
 
   // Whether we should offer a menu item to set the observer location via a map.
@@ -861,7 +863,7 @@ class MyHomePageState extends State<MyHomePage> {
                     );
                   }).toList(),
                   textStyle: TextStyle(
-                      fontSize: 14 * textScaleFactor(context),
+                      fontSize: 12 * textScaleFactor(context),
                       color: Theme.of(context).colorScheme.primary),
                   onSelected: (String? newValue) async {
                     if (newValue == "Focus") {
@@ -1667,8 +1669,6 @@ class MyHomePageState extends State<MyHomePage> {
                             star.centroidPosition.y,
                           ));
                           _alignTargetTapped = true;
-                          // Transition to aim mode.
-                          _setOperatingMode(/*setupMode=*/ false, _focusAid);
                         }
                       }
                     });
