@@ -89,7 +89,19 @@ Future<bool> getWakeLockImpl() async {
   return await WakelockPlus.enabled;
 }
 
+bool evaluatedCanGetLocation = false;
+bool canGetLocation = false;
+
 Future<bool> canGetLocationImpl() async {
+  if (evaluatedCanGetLocation) {
+    return canGetLocation;
+  }
+  canGetLocation = _canGetLocationImpl();
+  evaluatedCanGetLocation = true;
+  return canGetLocation;
+}
+
+bool _canGetLocationImpl() {
   final bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
   if (!serviceEnabled) {
     debugPrint("Location services not enabled");
