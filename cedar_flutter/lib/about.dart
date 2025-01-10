@@ -4,6 +4,7 @@
 import 'dart:async';
 
 import 'package:cedar_flutter/client_main.dart';
+import 'package:cedar_flutter/platform.dart';
 import 'package:cedar_flutter/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -63,7 +64,7 @@ Future<void> aboutScreen(MyHomePageState state, BuildContext context) async {
                               borderRadius: BorderRadius.circular(10)),
                           margin: const EdgeInsets.fromLTRB(10, 10, 5, 10),
                           padding: const EdgeInsets.fromLTRB(0, 10, 10, 10),
-                          child: serverInfo(state),
+                          child: systemInfo(state),
                         )),
                         Expanded(
                             child: Container(
@@ -95,9 +96,10 @@ Future<void> aboutScreen(MyHomePageState state, BuildContext context) async {
   Overlay.of(context).insert(_aboutOverlayEntry!);
 }
 
-Widget serverInfo(MyHomePageState state) {
+Widget systemInfo(MyHomePageState state) {
   final portrait = MediaQuery.of(_context).orientation == Orientation.portrait;
   final serverInfo = state.serverInformation!;
+  final platform = isWeb() ? "Web" : "Mobile";
 
   return RotatedBox(
       quarterTurns: portrait ? 3 : 0,
@@ -108,7 +110,7 @@ Widget serverInfo(MyHomePageState state) {
             fontSize: 18,
             color: Theme.of(_context).colorScheme.primary,
           ),
-          "Cedar™ server",
+          "Cedar™ system",
           textScaler: textScaler(_context),
         ),
         const SizedBox(height: 20),
@@ -150,8 +152,6 @@ Widget serverInfo(MyHomePageState state) {
               },
               child: _scaledText(formatTime(serverInfo.serverTime)),
             ),
-
-            // _scaledText(formatTimestamp(serverInfo.serverTime)),
           ]),
           Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
             _scaledText("CPU temp"),
@@ -173,6 +173,11 @@ Widget serverInfo(MyHomePageState state) {
           Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
             _scaledText("Serial #"),
             _scaledText(serverInfo.serialNumber)
+          ]),
+          const SizedBox(height: 15),
+          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+            _scaledText("Platform"),
+            _scaledText(platform)
           ]),
         ]))
       ]));
