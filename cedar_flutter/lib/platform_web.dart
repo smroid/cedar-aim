@@ -19,6 +19,14 @@ bool isWebImpl() {
   return true;
 }
 
+bool isAndroidImpl() {
+  return false;
+}
+
+bool isIOSImpl() {
+  return false;
+}
+
 void rpcSucceededImpl() {}
 void rpcFailedImpl() {
   if (_channel != null) {

@@ -31,7 +31,7 @@ import 'platform.dart';
 import 'tetra3.pb.dart';
 
 // To generate release build:
-// flutter build web --web-renderer canvaskit --no-web-resources-cdn
+// flutter build web --no-web-resources-cdn
 
 typedef DrawCatalogEntriesFunction = void Function(BuildContext, Canvas, Color,
     List<cedar_rpc.FovCatalogEntry>, bool, int, bool);
@@ -343,7 +343,7 @@ class MyHomePageState extends State<MyHomePage> {
       final platformPosition = await getLocation();
       if (platformPosition != null) {
         mapPosition =
-        LatLng(platformPosition.latitude, platformPosition.longitude);
+            LatLng(platformPosition.latitude, platformPosition.longitude);
       }
     }
   }

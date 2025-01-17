@@ -8,6 +8,14 @@ bool isWebImpl() {
   throw UnimplementedError("No impl in platform_none");
 }
 
+bool isAndroidImpl() {
+  throw UnimplementedError("No impl in platform_none");
+}
+
+bool isIOSImpl() {
+  throw UnimplementedError("No impl in platform_none");
+}
+
 void rpcSucceededImpl() {
   throw UnimplementedError("No impl in platform_none");
 }

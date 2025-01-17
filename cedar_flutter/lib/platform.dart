@@ -15,6 +15,14 @@ bool isWeb() {
   return isWebImpl();
 }
 
+bool isAndroid() {
+  return isAndroidImpl();
+}
+
+bool isIOS() {
+  return isIOSImpl();
+}
+
 void rpcSucceeded() {
   try {
     rpcSucceededImpl();

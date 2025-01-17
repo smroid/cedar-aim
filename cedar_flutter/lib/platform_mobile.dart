@@ -18,6 +18,14 @@ bool isWebImpl() {
   return false;
 }
 
+bool isAndroidImpl() {
+  return Platform.isAndroid;
+}
+
+bool isIOSImpl() {
+  return Platform.isIOS;
+}
+
 String _tryAddress = "raspberrypi.local";
 String? _goodAddress;
 ClientChannel? _channel;
@@ -96,12 +104,12 @@ Future<bool> canGetLocationImpl() async {
   if (evaluatedCanGetLocation) {
     return canGetLocation;
   }
-  canGetLocation = _canGetLocationImpl();
+  canGetLocation = await _canGetLocationImpl();
   evaluatedCanGetLocation = true;
   return canGetLocation;
 }
 
-bool _canGetLocationImpl() {
+Future<bool> _canGetLocationImpl() async {
   final bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
   if (!serviceEnabled) {
     debugPrint("Location services not enabled");

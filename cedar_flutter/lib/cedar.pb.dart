@@ -1409,7 +1409,9 @@ class FrameResult extends $pb.GeneratedMessage {
   Image ensureImage() => $_ensure(2);
 
   /// The star candidates detected by CedarDetect; ordered by brightest
-  /// first.
+  /// first. In SETUP alignment mode, these are the catalog stars from
+  /// the plate solution, with relative `brightness` values derived from
+  /// the star catalog magnitudes.
   @$pb.TagNumber(4)
   $core.List<StarCentroid> get starCandidates => $_getList(3);
 
