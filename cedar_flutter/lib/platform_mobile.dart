@@ -26,7 +26,7 @@ bool isIOSImpl() {
   return Platform.isIOS;
 }
 
-String _tryAddress = "raspberrypi.local";
+String _tryAddress = "";
 String? _goodAddress;
 ClientChannel? _channel;
 cedar_rpc.CedarClient? _client;
@@ -56,14 +56,17 @@ CedarClient getClientImpl() {
     return _client!;
   }
   switch (_tryAddress) {
-    case "raspberrypi.local":
+    case "":
       _tryAddress = "192.168.4.1";
       break;
     case "192.168.4.1":
       _tryAddress = "192.168.1.133";
       break;
+    case "192.168.1.133":
+      _tryAddress = "192.168.1.158";
+      break;
     default:
-      _tryAddress = "raspberrypi.local";
+      _tryAddress = "192.168.4.1";
       break;
   }
   _channel?.shutdown();
