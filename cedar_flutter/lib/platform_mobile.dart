@@ -26,8 +26,7 @@ bool isIOSImpl() {
   return Platform.isIOS;
 }
 
-String _tryAddress = "";
-String? _goodAddress;
+String _wifiAddress = "192.168.4.1";
 ClientChannel? _channel;
 cedar_rpc.CedarClient? _client;
 
@@ -36,41 +35,17 @@ const _options = ChannelOptions(
   connectTimeout: Duration(seconds: 5),
 );
 
-void rpcSucceededImpl() {
-  if (_goodAddress == null) {
-    _goodAddress = _tryAddress;
-    debugPrint("Connected to $_goodAddress");
-  }
-}
-
+void rpcSucceededImpl() {}
 void rpcFailedImpl() {
-  if (_goodAddress != null) {
-    _channel?.shutdown();
-    _channel = ClientChannel(_tryAddress, port: 80, options: _options);
-    _client = CedarClient(_channel!);
-  }
+  _client = null;
 }
 
 CedarClient getClientImpl() {
-  if (_goodAddress != null) {
+  if (_client != null) {
     return _client!;
   }
-  switch (_tryAddress) {
-    case "":
-      _tryAddress = "192.168.4.1";
-      break;
-    case "192.168.4.1":
-      _tryAddress = "192.168.1.133";
-      break;
-    case "192.168.1.133":
-      _tryAddress = "192.168.1.158";
-      break;
-    default:
-      _tryAddress = "192.168.4.1";
-      break;
-  }
   _channel?.shutdown();
-  _channel = ClientChannel(_tryAddress, port: 80, options: _options);
+  _channel = ClientChannel(_wifiAddress, port: 80, options: _options);
   _client = CedarClient(_channel!);
   return _client!;
 }
