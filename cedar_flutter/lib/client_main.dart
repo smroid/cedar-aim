@@ -363,6 +363,7 @@ class MyHomePageState extends State<MyHomePage> {
   bool _paintPending = false;
   bool _inhibitRefresh = false;
 
+  final DateTime _startTime = DateTime.now();
   bool _serverConnected = false;
   bool _everConnected = false;
   DateTime _lastServerResponseTime = DateTime.now();
@@ -1980,7 +1981,16 @@ class MyHomePageState extends State<MyHomePage> {
   }
 
   Widget _badServerState() {
+    final elapsed = DateTime.now().difference(_startTime);
+    if (elapsed.inMilliseconds < 1000) {
+      return const Center(child: CircularProgressIndicator());
+    }
     Color color = Theme.of(context).colorScheme.primary;
+    // TODO: if !_everConnected, go to wifi setup flow:
+    // If web, put up message
+    // If Android, put up list of wifi access points, highlight cedar, and
+    //   offer to connect
+    // If IOS, put up message with option to switch to WiFi settings.
     final connMessage = _everConnected
         ? "Connection lost to Cedar server"
         : "No connection to Cedar server";
