@@ -42,22 +42,23 @@ typedef ShowCatalogBrowserFunction = void Function(
 typedef ObjectInfoDialogFunction = void Function(
     MyHomePageState, BuildContext, SelectedCatalogEntry);
 
-typedef WifiDialogFunction = void Function(MyHomePageState, BuildContext);
+typedef WifiAccessPointDialogFunction = void Function(
+    MyHomePageState, BuildContext);
 
 DrawCatalogEntriesFunction? _drawCatalogEntries;
 ShowCatalogBrowserFunction? _showCatalogBrowser;
 ObjectInfoDialogFunction? _objectInfoDialog;
-WifiDialogFunction? _wifiDialog;
+WifiAccessPointDialogFunction? _wifiAccessPointDialog;
 
 void clientMain(
     DrawCatalogEntriesFunction? drawCatalogEntries,
     ShowCatalogBrowserFunction? showCatalogBrowser,
     ObjectInfoDialogFunction? objectInfoDialog,
-    WifiDialogFunction? wifiDialog) {
+    WifiAccessPointDialogFunction? wifiAccessPointDialog) {
   _drawCatalogEntries = drawCatalogEntries;
   _showCatalogBrowser = showCatalogBrowser;
   _objectInfoDialog = objectInfoDialog;
-  _wifiDialog = wifiDialog;
+  _wifiAccessPointDialog = wifiAccessPointDialog;
 
   WidgetsFlutterBinding.ensureInitialized();
   runApp(MultiProvider(
@@ -1065,7 +1066,7 @@ class MyHomePageState extends State<MyHomePage> {
                       })),
             ])
           : Container(),
-      advanced && _hasWifiControl && _wifiDialog != null
+      advanced && _hasWifiControl && _wifiAccessPointDialog != null
           ? Column(children: [
               const SizedBox(height: 10),
               Align(
@@ -1074,7 +1075,7 @@ class MyHomePageState extends State<MyHomePage> {
                       label: _scaledText("Wifi"),
                       icon: const Icon(Icons.wifi),
                       onPressed: () {
-                        _wifiDialog!(this, context);
+                        _wifiAccessPointDialog!(this, context);
                       }))
             ])
           : Container(),
@@ -1981,16 +1982,21 @@ class MyHomePageState extends State<MyHomePage> {
   }
 
   Widget _badServerState() {
+    // Give some time for an initial connection to succeed.
     final elapsed = DateTime.now().difference(_startTime);
     if (elapsed.inMilliseconds < 1000) {
       return const Center(child: CircularProgressIndicator());
     }
+    if (!isWeb() && !_everConnected) {
+      // If Android, put up list of wifi access points, highlight cedar, and
+      //   offer to connect
+      // If IOS, put up message with option to switch to WiFi settings.
+      // TODO: do this.
+    }
+    // If we're still here, we are on Web platform or the camera is not present.
+
     Color color = Theme.of(context).colorScheme.primary;
-    // TODO: if !_everConnected, go to wifi setup flow:
     // If web, put up message
-    // If Android, put up list of wifi access points, highlight cedar, and
-    //   offer to connect
-    // If IOS, put up message with option to switch to WiFi settings.
     final connMessage = _everConnected
         ? "Connection lost to Cedar server"
         : "No connection to Cedar server";
