@@ -26,7 +26,8 @@ bool isIOSImpl() {
   return Platform.isIOS;
 }
 
-String _wifiAddress = "192.168.4.1";
+// String _wifiAddress = "192.168.4.1";
+String _wifiAddress = "192.168.1.158";
 ClientChannel? _channel;
 cedar_rpc.CedarClient? _client;
 

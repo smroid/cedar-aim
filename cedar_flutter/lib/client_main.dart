@@ -17,6 +17,7 @@ import 'package:cedar_flutter/sky_coords_dialog.dart';
 import 'package:cedar_flutter/themes.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart' as dart_widgets;
 import 'package:grpc/grpc.dart';
@@ -45,20 +46,25 @@ typedef ObjectInfoDialogFunction = void Function(
 typedef WifiAccessPointDialogFunction = void Function(
     MyHomePageState, BuildContext);
 
+typedef WifiClientDialogFunction = void Function(MyHomePageState, BuildContext);
+
 DrawCatalogEntriesFunction? _drawCatalogEntries;
 ShowCatalogBrowserFunction? _showCatalogBrowser;
 ObjectInfoDialogFunction? _objectInfoDialog;
 WifiAccessPointDialogFunction? _wifiAccessPointDialog;
+WifiClientDialogFunction? _wifiClientDialog;
 
 void clientMain(
     DrawCatalogEntriesFunction? drawCatalogEntries,
     ShowCatalogBrowserFunction? showCatalogBrowser,
     ObjectInfoDialogFunction? objectInfoDialog,
-    WifiAccessPointDialogFunction? wifiAccessPointDialog) {
+    WifiAccessPointDialogFunction? wifiAccessPointDialog,
+    WifiClientDialogFunction? wifiClientDialog) {
   _drawCatalogEntries = drawCatalogEntries;
   _showCatalogBrowser = showCatalogBrowser;
   _objectInfoDialog = objectInfoDialog;
   _wifiAccessPointDialog = wifiAccessPointDialog;
+  _wifiClientDialog = wifiClientDialog;
 
   WidgetsFlutterBinding.ensureInitialized();
   runApp(MultiProvider(
@@ -1927,6 +1933,7 @@ class MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     final bool healthy = _serverConnected && (_hasCamera || _demoMode);
+    // final bool healthy = false;
 
     // This method is rerun every time setState() is called.
     bool hideAppBar = Provider.of<SettingsModel>(context, listen: false)
@@ -1982,16 +1989,22 @@ class MyHomePageState extends State<MyHomePage> {
   }
 
   Widget _badServerState() {
+    _paintPending = false;
     // Give some time for an initial connection to succeed.
     final elapsed = DateTime.now().difference(_startTime);
     if (elapsed.inMilliseconds < 1000) {
       return const Center(child: CircularProgressIndicator());
     }
     if (!isWeb() && !_everConnected) {
+      // SchedulerBinding.instance.addPostFrameCallback((_) {
+      //   _wifiClientDialog!(this, context);
+      // });
+
       // If Android, put up list of wifi access points, highlight cedar, and
       //   offer to connect
       // If IOS, put up message with option to switch to WiFi settings.
       // TODO: do this.
+      // return Container();
     }
     // If we're still here, we are on Web platform or the camera is not present.
 
@@ -2000,7 +2013,6 @@ class MyHomePageState extends State<MyHomePage> {
     final connMessage = _everConnected
         ? "Connection lost to Cedar server"
         : "No connection to Cedar server";
-    _paintPending = false;
     return Material(
       color: Colors.black54,
       child: Center(
