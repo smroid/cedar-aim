@@ -5,5 +5,6 @@ import 'package:cedar_flutter/client_main.dart';
 
 void main() {
   clientMain(/*drawCatalogEntries=*/ null, /*showCatalogBrowser=*/ null,
-      /*objectInfoDialog=*/ null, /*wifiDialog=*/ null);
+      /*objectInfoDialog=*/ null, /*wifiAccessPointDialog=*/ null,
+      /*wifiClientDiaglog=*/null);
 }

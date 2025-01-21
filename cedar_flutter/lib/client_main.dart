@@ -46,7 +46,8 @@ typedef ObjectInfoDialogFunction = void Function(
 typedef WifiAccessPointDialogFunction = void Function(
     MyHomePageState, BuildContext);
 
-typedef WifiClientDialogFunction = void Function(MyHomePageState, BuildContext);
+typedef WifiClientDialogFunction = void Function(
+    bool, MyHomePageState, BuildContext);
 
 DrawCatalogEntriesFunction? _drawCatalogEntries;
 ShowCatalogBrowserFunction? _showCatalogBrowser;
@@ -372,7 +373,7 @@ class MyHomePageState extends State<MyHomePage> {
 
   final DateTime _startTime = DateTime.now();
   bool _serverConnected = false;
-  bool _everConnected = false;
+  bool everConnected = false;
   DateTime _lastServerResponseTime = DateTime.now();
 
   // State for align mode.
@@ -671,7 +672,7 @@ class MyHomePageState extends State<MyHomePage> {
         }
       }
       _serverConnected = true;
-      _everConnected = true;
+      everConnected = true;
       _lastServerResponseTime = DateTime.now();
       if (response.hasResult) {
         if (_inhibitRefresh) {
@@ -1618,7 +1619,7 @@ class MyHomePageState extends State<MyHomePage> {
       const SizedBox(width: 10, height: 10),
       RotatedBox(
           quarterTurns: portrait ? 3 : 0,
-          child: _hasPolarAdvice() && !_setupMode
+          child: _hasPolarAdvice() && !_setupMode && (isPlus || isDIY)
               ? SizedBox(
                   width: 70 * textScaleFactor(context),
                   height: 60 * textScaleFactor(context),
@@ -1933,6 +1934,9 @@ class MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     final bool healthy = _serverConnected && (_hasCamera || _demoMode);
+    if (healthy) {
+      _wifiClientDialog!(/*open=*/ false, this, context);
+    }
     // final bool healthy = false;
 
     // This method is rerun every time setState() is called.
@@ -1995,22 +1999,17 @@ class MyHomePageState extends State<MyHomePage> {
     if (elapsed.inMilliseconds < 1000) {
       return const Center(child: CircularProgressIndicator());
     }
-    if (!isWeb() && !_everConnected) {
-      // SchedulerBinding.instance.addPostFrameCallback((_) {
-      //   _wifiClientDialog!(this, context);
-      // });
-
-      // If Android, put up list of wifi access points, highlight cedar, and
-      //   offer to connect
-      // If IOS, put up message with option to switch to WiFi settings.
-      // TODO: do this.
-      // return Container();
+    if ((isAndroid() || isIOS()) && !_serverConnected) {
+      SchedulerBinding.instance.addPostFrameCallback((_) {
+        _wifiClientDialog!(/*open=*/ true, this, context);
+      });
+      return Container();
     }
     // If we're still here, we are on Web platform or the camera is not present.
 
     Color color = Theme.of(context).colorScheme.primary;
     // If web, put up message
-    final connMessage = _everConnected
+    final connMessage = everConnected
         ? "Connection lost to Cedar server"
         : "No connection to Cedar server";
     return Material(
@@ -2040,9 +2039,8 @@ class MyHomePageState extends State<MyHomePage> {
                     ? "Cedar could not detect a camera. "
                         "Please check the camera connection."
                     : "$connMessage. Please ensure that Cedar "
-                        "server is running, connect this device to the Cedar WiFi "
-                        "hotspot, and navigate to http://cedar.local or "
-                        "http://192.168.4.1."),
+                        "server is running, connect this device to the Cedar "
+                        "WiFi hotspot, and navigate to http://192.168.4.1."),
           ]),
         ),
       ),
