@@ -23,6 +23,10 @@ bool isIOS() {
   return isIOSImpl();
 }
 
+bool isMobile() {
+  return isAndroid() || isIOS();
+}
+
 void rpcSucceeded() {
   try {
     rpcSucceededImpl();

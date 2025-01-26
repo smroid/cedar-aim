@@ -1999,7 +1999,7 @@ class MyHomePageState extends State<MyHomePage> {
     if (elapsed.inMilliseconds < 1000) {
       return const Center(child: CircularProgressIndicator());
     }
-    if ((isAndroid() || isIOS()) && !_serverConnected) {
+    if (isMobile() && !_serverConnected) {
       SchedulerBinding.instance.addPostFrameCallback((_) {
         _wifiClientDialog!(/*open=*/ true, this, context);
       });
