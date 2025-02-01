@@ -1666,25 +1666,23 @@ class MyHomePageState extends State<MyHomePage> {
                 if (_setupMode) {
                   if (!_focusAid) {
                     // Align mode.
-                    setState(() async {
-                      if (_daylightMode) {
-                        await _designateBoresight(localPosition);
+                    if (_daylightMode) {
+                      await _designateBoresight(localPosition);
+                      _alignTargetTapped = true;
+                    } else {
+                      var star = _findStarHit(localPosition, 15);
+                      if (star != null) {
+                        await _designateBoresight(Offset(
+                          star.centroidPosition.x,
+                          star.centroidPosition.y,
+                        ));
                         _alignTargetTapped = true;
-                      } else {
-                        var star = _findStarHit(localPosition, 30);
-                        if (star != null) {
-                          await _designateBoresight(Offset(
-                            star.centroidPosition.x,
-                            star.centroidPosition.y,
-                          ));
-                          _alignTargetTapped = true;
-                        }
                       }
-                    });
+                    }
                   }
                 } else {
                   // Aim mode.
-                  var object = _findObjectHit(localPosition, 30);
+                  var object = _findObjectHit(localPosition, 15);
                   if (object != null && _objectInfoDialog != null) {
                     var selEntry = SelectedCatalogEntry(entry: object.entry);
                     _objectInfoDialog!(this, context, selEntry);
@@ -1720,8 +1718,7 @@ class MyHomePageState extends State<MyHomePage> {
         closestDistance = distance;
       }
     }
-
-    if (closest != null && closestDistance < tolerance) {
+    if (closest != null && closestDistance < tolerance * _binFactor) {
       return closest;
     }
     return null;
@@ -1747,7 +1744,7 @@ class MyHomePageState extends State<MyHomePage> {
         closestDistance = distance;
       }
     }
-    if (closest != null && closestDistance < tolerance) {
+    if (closest != null && closestDistance < tolerance * _binFactor) {
       return closest;
     }
     return null;
