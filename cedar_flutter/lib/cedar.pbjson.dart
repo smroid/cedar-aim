@@ -388,7 +388,7 @@ const FrameResult$json = {
     {'1': 'exposure_time', '3': 7, '4': 1, '5': 11, '6': '.google.protobuf.Duration', '10': 'exposureTime'},
     {'1': 'capture_time', '3': 9, '4': 1, '5': 11, '6': '.google.protobuf.Timestamp', '10': 'captureTime'},
     {'1': 'star_candidates', '3': 4, '4': 3, '5': 11, '6': '.cedar.StarCentroid', '10': 'starCandidates'},
-    {'1': 'plate_solution', '3': 17, '4': 1, '5': 11, '6': '.tetra3_server.SolveResult', '9': 1, '10': 'plateSolution', '17': true},
+    {'1': 'plate_solution', '3': 17, '4': 1, '5': 11, '6': '.cedar.PlateSolution', '9': 1, '10': 'plateSolution', '17': true},
     {'1': 'noise_estimate', '3': 26, '4': 1, '5': 1, '10': 'noiseEstimate'},
     {'1': 'processing_stats', '3': 8, '4': 1, '5': 11, '6': '.cedar.ProcessingStats', '10': 'processingStats'},
     {'1': 'boresight_position', '3': 21, '4': 1, '5': 11, '6': '.cedar.ImageCoord', '10': 'boresightPosition'},
@@ -434,28 +434,28 @@ final $typed_data.Uint8List frameResultDescriptor = $convert.base64Decode(
     'ZXhwb3N1cmVfdGltZRgHIAEoCzIZLmdvb2dsZS5wcm90b2J1Zi5EdXJhdGlvblIMZXhwb3N1cm'
     'VUaW1lEj0KDGNhcHR1cmVfdGltZRgJIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXBS'
     'C2NhcHR1cmVUaW1lEjwKD3N0YXJfY2FuZGlkYXRlcxgEIAMoCzITLmNlZGFyLlN0YXJDZW50cm'
-    '9pZFIOc3RhckNhbmRpZGF0ZXMSRgoOcGxhdGVfc29sdXRpb24YESABKAsyGi50ZXRyYTNfc2Vy'
-    'dmVyLlNvbHZlUmVzdWx0SAFSDXBsYXRlU29sdXRpb26IAQESJQoObm9pc2VfZXN0aW1hdGUYGi'
-    'ABKAFSDW5vaXNlRXN0aW1hdGUSQQoQcHJvY2Vzc2luZ19zdGF0cxgIIAEoCzIWLmNlZGFyLlBy'
-    'b2Nlc3NpbmdTdGF0c1IPcHJvY2Vzc2luZ1N0YXRzEkAKEmJvcmVzaWdodF9wb3NpdGlvbhgVIA'
-    'EoCzIRLmNlZGFyLkltYWdlQ29vcmRSEWJvcmVzaWdodFBvc2l0aW9uEiAKC2NhbGlicmF0aW5n'
-    'GBYgASgIUgtjYWxpYnJhdGluZxI2ChRjYWxpYnJhdGlvbl9wcm9ncmVzcxgXIAEoAUgCUhNjYW'
-    'xpYnJhdGlvblByb2dyZXNziAEBEkgKFGNlbnRlcl9wZWFrX3Bvc2l0aW9uGAwgASgLMhEuY2Vk'
-    'YXIuSW1hZ2VDb29yZEgDUhJjZW50ZXJQZWFrUG9zaXRpb26IAQESLwoRY2VudGVyX3BlYWtfdm'
-    'FsdWUYBiABKAVIBFIPY2VudGVyUGVha1ZhbHVliAEBEj0KEWNlbnRlcl9wZWFrX2ltYWdlGA0g'
-    'ASgLMgwuY2VkYXIuSW1hZ2VIBVIPY2VudGVyUGVha0ltYWdliAEBEk0KE2xvY2F0aW9uX2Jhc2'
-    'VkX2luZm8YHSABKAsyGC5jZWRhci5Mb2NhdGlvbkJhc2VkSW5mb0gGUhFsb2NhdGlvbkJhc2Vk'
-    'SW5mb4gBARI6CgxzbGV3X3JlcXVlc3QYGCABKAsyEi5jZWRhci5TbGV3UmVxdWVzdEgHUgtzbG'
-    'V3UmVxdWVzdIgBARI6Cg9ib3Jlc2lnaHRfaW1hZ2UYHCABKAsyDC5jZWRhci5JbWFnZUgIUg5i'
-    'b3Jlc2lnaHRJbWFnZYgBARJFChJwb2xhcl9hbGlnbl9hZHZpY2UYHiABKAsyFy5jZWRhci5Qb2'
-    'xhckFsaWduQWR2aWNlUhBwb2xhckFsaWduQWR2aWNlEk4KF2xhYmVsZWRfY2F0YWxvZ19lbnRy'
-    'aWVzGB8gAygLMhYuY2VkYXIuRm92Q2F0YWxvZ0VudHJ5UhVsYWJlbGVkQ2F0YWxvZ0VudHJpZX'
-    'MSUgoZdW5sYWJlbGVkX2NhdGFsb2dfZW50cmllcxghIAMoCzIWLmNlZGFyLkZvdkNhdGFsb2dF'
-    'bnRyeVIXdW5sYWJlbGVkQ2F0YWxvZ0VudHJpZXNCDQoLX2hhc19yZXN1bHRCEQoPX3BsYXRlX3'
-    'NvbHV0aW9uQhcKFV9jYWxpYnJhdGlvbl9wcm9ncmVzc0IXChVfY2VudGVyX3BlYWtfcG9zaXRp'
-    'b25CFAoSX2NlbnRlcl9wZWFrX3ZhbHVlQhQKEl9jZW50ZXJfcGVha19pbWFnZUIWChRfbG9jYX'
-    'Rpb25fYmFzZWRfaW5mb0IPCg1fc2xld19yZXF1ZXN0QhIKEF9ib3Jlc2lnaHRfaW1hZ2VKBAgK'
-    'EAtKBAgLEAw=');
+    '9pZFIOc3RhckNhbmRpZGF0ZXMSQAoOcGxhdGVfc29sdXRpb24YESABKAsyFC5jZWRhci5QbGF0'
+    'ZVNvbHV0aW9uSAFSDXBsYXRlU29sdXRpb26IAQESJQoObm9pc2VfZXN0aW1hdGUYGiABKAFSDW'
+    '5vaXNlRXN0aW1hdGUSQQoQcHJvY2Vzc2luZ19zdGF0cxgIIAEoCzIWLmNlZGFyLlByb2Nlc3Np'
+    'bmdTdGF0c1IPcHJvY2Vzc2luZ1N0YXRzEkAKEmJvcmVzaWdodF9wb3NpdGlvbhgVIAEoCzIRLm'
+    'NlZGFyLkltYWdlQ29vcmRSEWJvcmVzaWdodFBvc2l0aW9uEiAKC2NhbGlicmF0aW5nGBYgASgI'
+    'UgtjYWxpYnJhdGluZxI2ChRjYWxpYnJhdGlvbl9wcm9ncmVzcxgXIAEoAUgCUhNjYWxpYnJhdG'
+    'lvblByb2dyZXNziAEBEkgKFGNlbnRlcl9wZWFrX3Bvc2l0aW9uGAwgASgLMhEuY2VkYXIuSW1h'
+    'Z2VDb29yZEgDUhJjZW50ZXJQZWFrUG9zaXRpb26IAQESLwoRY2VudGVyX3BlYWtfdmFsdWUYBi'
+    'ABKAVIBFIPY2VudGVyUGVha1ZhbHVliAEBEj0KEWNlbnRlcl9wZWFrX2ltYWdlGA0gASgLMgwu'
+    'Y2VkYXIuSW1hZ2VIBVIPY2VudGVyUGVha0ltYWdliAEBEk0KE2xvY2F0aW9uX2Jhc2VkX2luZm'
+    '8YHSABKAsyGC5jZWRhci5Mb2NhdGlvbkJhc2VkSW5mb0gGUhFsb2NhdGlvbkJhc2VkSW5mb4gB'
+    'ARI6CgxzbGV3X3JlcXVlc3QYGCABKAsyEi5jZWRhci5TbGV3UmVxdWVzdEgHUgtzbGV3UmVxdW'
+    'VzdIgBARI6Cg9ib3Jlc2lnaHRfaW1hZ2UYHCABKAsyDC5jZWRhci5JbWFnZUgIUg5ib3Jlc2ln'
+    'aHRJbWFnZYgBARJFChJwb2xhcl9hbGlnbl9hZHZpY2UYHiABKAsyFy5jZWRhci5Qb2xhckFsaW'
+    'duQWR2aWNlUhBwb2xhckFsaWduQWR2aWNlEk4KF2xhYmVsZWRfY2F0YWxvZ19lbnRyaWVzGB8g'
+    'AygLMhYuY2VkYXIuRm92Q2F0YWxvZ0VudHJ5UhVsYWJlbGVkQ2F0YWxvZ0VudHJpZXMSUgoZdW'
+    '5sYWJlbGVkX2NhdGFsb2dfZW50cmllcxghIAMoCzIWLmNlZGFyLkZvdkNhdGFsb2dFbnRyeVIX'
+    'dW5sYWJlbGVkQ2F0YWxvZ0VudHJpZXNCDQoLX2hhc19yZXN1bHRCEQoPX3BsYXRlX3NvbHV0aW'
+    '9uQhcKFV9jYWxpYnJhdGlvbl9wcm9ncmVzc0IXChVfY2VudGVyX3BlYWtfcG9zaXRpb25CFAoS'
+    'X2NlbnRlcl9wZWFrX3ZhbHVlQhQKEl9jZW50ZXJfcGVha19pbWFnZUIWChRfbG9jYXRpb25fYm'
+    'FzZWRfaW5mb0IPCg1fc2xld19yZXF1ZXN0QhIKEF9ib3Jlc2lnaHRfaW1hZ2VKBAgKEAtKBAgL'
+    'EAw=');
 
 @$core.Deprecated('Use imageDescriptor instead')
 const Image$json = {
@@ -517,6 +517,68 @@ const ImageCoord$json = {
 /// Descriptor for `ImageCoord`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List imageCoordDescriptor = $convert.base64Decode(
     'CgpJbWFnZUNvb3JkEgwKAXgYASABKAFSAXgSDAoBeRgCIAEoAVIBeQ==');
+
+@$core.Deprecated('Use plateSolutionDescriptor instead')
+const PlateSolution$json = {
+  '1': 'PlateSolution',
+  '2': [
+    {'1': 'image_sky_coord', '3': 1, '4': 1, '5': 11, '6': '.cedar_common.CelestialCoord', '10': 'imageSkyCoord'},
+    {'1': 'roll', '3': 2, '4': 1, '5': 1, '10': 'roll'},
+    {'1': 'fov', '3': 3, '4': 1, '5': 1, '10': 'fov'},
+    {'1': 'distortion', '3': 4, '4': 1, '5': 1, '9': 0, '10': 'distortion', '17': true},
+    {'1': 'rmse', '3': 5, '4': 1, '5': 1, '10': 'rmse'},
+    {'1': 'p90_error', '3': 6, '4': 1, '5': 1, '10': 'p90Error'},
+    {'1': 'max_error', '3': 7, '4': 1, '5': 1, '10': 'maxError'},
+    {'1': 'num_matches', '3': 8, '4': 1, '5': 5, '10': 'numMatches'},
+    {'1': 'prob', '3': 9, '4': 1, '5': 1, '10': 'prob'},
+    {'1': 'epoch_equinox', '3': 10, '4': 1, '5': 5, '10': 'epochEquinox'},
+    {'1': 'epoch_proper_motion', '3': 11, '4': 1, '5': 2, '10': 'epochProperMotion'},
+    {'1': 'solve_time', '3': 12, '4': 1, '5': 11, '6': '.google.protobuf.Duration', '10': 'solveTime'},
+    {'1': 'target_sky_coord', '3': 13, '4': 3, '5': 11, '6': '.cedar_common.CelestialCoord', '10': 'targetSkyCoord'},
+    {'1': 'target_pixel', '3': 14, '4': 3, '5': 11, '6': '.cedar.ImageCoord', '10': 'targetPixel'},
+    {'1': 'matched_stars', '3': 15, '4': 3, '5': 11, '6': '.cedar.StarInfo', '10': 'matchedStars'},
+    {'1': 'pattern_centroids', '3': 16, '4': 3, '5': 11, '6': '.cedar.ImageCoord', '10': 'patternCentroids'},
+    {'1': 'catalog_stars', '3': 17, '4': 3, '5': 11, '6': '.cedar.StarInfo', '10': 'catalogStars'},
+    {'1': 'rotation_matrix', '3': 18, '4': 3, '5': 1, '10': 'rotationMatrix'},
+  ],
+  '8': [
+    {'1': '_distortion'},
+  ],
+};
+
+/// Descriptor for `PlateSolution`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List plateSolutionDescriptor = $convert.base64Decode(
+    'Cg1QbGF0ZVNvbHV0aW9uEkQKD2ltYWdlX3NreV9jb29yZBgBIAEoCzIcLmNlZGFyX2NvbW1vbi'
+    '5DZWxlc3RpYWxDb29yZFINaW1hZ2VTa3lDb29yZBISCgRyb2xsGAIgASgBUgRyb2xsEhAKA2Zv'
+    'dhgDIAEoAVIDZm92EiMKCmRpc3RvcnRpb24YBCABKAFIAFIKZGlzdG9ydGlvbogBARISCgRybX'
+    'NlGAUgASgBUgRybXNlEhsKCXA5MF9lcnJvchgGIAEoAVIIcDkwRXJyb3ISGwoJbWF4X2Vycm9y'
+    'GAcgASgBUghtYXhFcnJvchIfCgtudW1fbWF0Y2hlcxgIIAEoBVIKbnVtTWF0Y2hlcxISCgRwcm'
+    '9iGAkgASgBUgRwcm9iEiMKDWVwb2NoX2VxdWlub3gYCiABKAVSDGVwb2NoRXF1aW5veBIuChNl'
+    'cG9jaF9wcm9wZXJfbW90aW9uGAsgASgCUhFlcG9jaFByb3Blck1vdGlvbhI4Cgpzb2x2ZV90aW'
+    '1lGAwgASgLMhkuZ29vZ2xlLnByb3RvYnVmLkR1cmF0aW9uUglzb2x2ZVRpbWUSRgoQdGFyZ2V0'
+    'X3NreV9jb29yZBgNIAMoCzIcLmNlZGFyX2NvbW1vbi5DZWxlc3RpYWxDb29yZFIOdGFyZ2V0U2'
+    't5Q29vcmQSNAoMdGFyZ2V0X3BpeGVsGA4gAygLMhEuY2VkYXIuSW1hZ2VDb29yZFILdGFyZ2V0'
+    'UGl4ZWwSNAoNbWF0Y2hlZF9zdGFycxgPIAMoCzIPLmNlZGFyLlN0YXJJbmZvUgxtYXRjaGVkU3'
+    'RhcnMSPgoRcGF0dGVybl9jZW50cm9pZHMYECADKAsyES5jZWRhci5JbWFnZUNvb3JkUhBwYXR0'
+    'ZXJuQ2VudHJvaWRzEjQKDWNhdGFsb2dfc3RhcnMYESADKAsyDy5jZWRhci5TdGFySW5mb1IMY2'
+    'F0YWxvZ1N0YXJzEicKD3JvdGF0aW9uX21hdHJpeBgSIAMoAVIOcm90YXRpb25NYXRyaXhCDQoL'
+    'X2Rpc3RvcnRpb24=');
+
+@$core.Deprecated('Use starInfoDescriptor instead')
+const StarInfo$json = {
+  '1': 'StarInfo',
+  '2': [
+    {'1': 'pixel', '3': 1, '4': 1, '5': 11, '6': '.cedar.ImageCoord', '10': 'pixel'},
+    {'1': 'sky_coord', '3': 2, '4': 1, '5': 11, '6': '.cedar_common.CelestialCoord', '10': 'skyCoord'},
+    {'1': 'mag', '3': 3, '4': 1, '5': 2, '10': 'mag'},
+  ],
+};
+
+/// Descriptor for `StarInfo`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List starInfoDescriptor = $convert.base64Decode(
+    'CghTdGFySW5mbxInCgVwaXhlbBgBIAEoCzIRLmNlZGFyLkltYWdlQ29vcmRSBXBpeGVsEjkKCX'
+    'NreV9jb29yZBgCIAEoCzIcLmNlZGFyX2NvbW1vbi5DZWxlc3RpYWxDb29yZFIIc2t5Q29vcmQS'
+    'EAoDbWFnGAMgASgCUgNtYWc=');
 
 @$core.Deprecated('Use processingStatsDescriptor instead')
 const ProcessingStats$json = {
@@ -649,7 +711,7 @@ final $typed_data.Uint8List locationBasedInfoDescriptor = $convert.base64Decode(
 const SlewRequest$json = {
   '1': 'SlewRequest',
   '2': [
-    {'1': 'target', '3': 1, '4': 1, '5': 11, '6': '.tetra3_server.CelestialCoord', '10': 'target'},
+    {'1': 'target', '3': 1, '4': 1, '5': 11, '6': '.cedar_common.CelestialCoord', '10': 'target'},
     {'1': 'target_catalog_entry', '3': 8, '4': 1, '5': 11, '6': '.cedar_sky.CatalogEntry', '9': 0, '10': 'targetCatalogEntry', '17': true},
     {'1': 'target_catalog_entry_distance', '3': 9, '4': 1, '5': 1, '9': 1, '10': 'targetCatalogEntryDistance', '17': true},
     {'1': 'target_distance', '3': 2, '4': 1, '5': 1, '9': 2, '10': 'targetDistance', '17': true},
@@ -674,18 +736,18 @@ const SlewRequest$json = {
 
 /// Descriptor for `SlewRequest`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List slewRequestDescriptor = $convert.base64Decode(
-    'CgtTbGV3UmVxdWVzdBI1CgZ0YXJnZXQYASABKAsyHS50ZXRyYTNfc2VydmVyLkNlbGVzdGlhbE'
-    'Nvb3JkUgZ0YXJnZXQSTgoUdGFyZ2V0X2NhdGFsb2dfZW50cnkYCCABKAsyFy5jZWRhcl9za3ku'
-    'Q2F0YWxvZ0VudHJ5SABSEnRhcmdldENhdGFsb2dFbnRyeYgBARJGCh10YXJnZXRfY2F0YWxvZ1'
-    '9lbnRyeV9kaXN0YW5jZRgJIAEoAUgBUhp0YXJnZXRDYXRhbG9nRW50cnlEaXN0YW5jZYgBARIs'
-    'Cg90YXJnZXRfZGlzdGFuY2UYAiABKAFIAlIOdGFyZ2V0RGlzdGFuY2WIAQESJgoMdGFyZ2V0X2'
-    'FuZ2xlGAMgASgBSANSC3RhcmdldEFuZ2xliAEBEjUKFG9mZnNldF9yb3RhdGlvbl9heGlzGAUg'
-    'ASgBSARSEm9mZnNldFJvdGF0aW9uQXhpc4gBARItChBvZmZzZXRfdGlsdF9heGlzGAYgASgBSA'
-    'VSDm9mZnNldFRpbHRBeGlziAEBEjMKCWltYWdlX3BvcxgEIAEoCzIRLmNlZGFyLkltYWdlQ29v'
-    'cmRIBlIIaW1hZ2VQb3OIAQFCFwoVX3RhcmdldF9jYXRhbG9nX2VudHJ5QiAKHl90YXJnZXRfY2'
-    'F0YWxvZ19lbnRyeV9kaXN0YW5jZUISChBfdGFyZ2V0X2Rpc3RhbmNlQg8KDV90YXJnZXRfYW5n'
-    'bGVCFwoVX29mZnNldF9yb3RhdGlvbl9heGlzQhMKEV9vZmZzZXRfdGlsdF9heGlzQgwKCl9pbW'
-    'FnZV9wb3NKBAgHEAg=');
+    'CgtTbGV3UmVxdWVzdBI0CgZ0YXJnZXQYASABKAsyHC5jZWRhcl9jb21tb24uQ2VsZXN0aWFsQ2'
+    '9vcmRSBnRhcmdldBJOChR0YXJnZXRfY2F0YWxvZ19lbnRyeRgIIAEoCzIXLmNlZGFyX3NreS5D'
+    'YXRhbG9nRW50cnlIAFISdGFyZ2V0Q2F0YWxvZ0VudHJ5iAEBEkYKHXRhcmdldF9jYXRhbG9nX2'
+    'VudHJ5X2Rpc3RhbmNlGAkgASgBSAFSGnRhcmdldENhdGFsb2dFbnRyeURpc3RhbmNliAEBEiwK'
+    'D3RhcmdldF9kaXN0YW5jZRgCIAEoAUgCUg50YXJnZXREaXN0YW5jZYgBARImCgx0YXJnZXRfYW'
+    '5nbGUYAyABKAFIA1ILdGFyZ2V0QW5nbGWIAQESNQoUb2Zmc2V0X3JvdGF0aW9uX2F4aXMYBSAB'
+    'KAFIBFISb2Zmc2V0Um90YXRpb25BeGlziAEBEi0KEG9mZnNldF90aWx0X2F4aXMYBiABKAFIBV'
+    'IOb2Zmc2V0VGlsdEF4aXOIAQESMwoJaW1hZ2VfcG9zGAQgASgLMhEuY2VkYXIuSW1hZ2VDb29y'
+    'ZEgGUghpbWFnZVBvc4gBAUIXChVfdGFyZ2V0X2NhdGFsb2dfZW50cnlCIAoeX3RhcmdldF9jYX'
+    'RhbG9nX2VudHJ5X2Rpc3RhbmNlQhIKEF90YXJnZXRfZGlzdGFuY2VCDwoNX3RhcmdldF9hbmds'
+    'ZUIXChVfb2Zmc2V0X3JvdGF0aW9uX2F4aXNCEwoRX29mZnNldF90aWx0X2F4aXNCDAoKX2ltYW'
+    'dlX3Bvc0oECAcQCA==');
 
 @$core.Deprecated('Use polarAlignAdviceDescriptor instead')
 const PolarAlignAdvice$json = {
@@ -746,7 +808,7 @@ const ActionRequest$json = {
     {'1': 'designate_boresight', '3': 2, '4': 1, '5': 11, '6': '.cedar.ImageCoord', '9': 2, '10': 'designateBoresight', '17': true},
     {'1': 'shutdown_server', '3': 3, '4': 1, '5': 8, '9': 3, '10': 'shutdownServer', '17': true},
     {'1': 'restart_server', '3': 8, '4': 1, '5': 8, '9': 4, '10': 'restartServer', '17': true},
-    {'1': 'initiate_slew', '3': 6, '4': 1, '5': 11, '6': '.tetra3_server.CelestialCoord', '9': 5, '10': 'initiateSlew', '17': true},
+    {'1': 'initiate_slew', '3': 6, '4': 1, '5': 11, '6': '.cedar_common.CelestialCoord', '9': 5, '10': 'initiateSlew', '17': true},
     {'1': 'stop_slew', '3': 4, '4': 1, '5': 8, '9': 6, '10': 'stopSlew', '17': true},
     {'1': 'save_image', '3': 5, '4': 1, '5': 8, '9': 7, '10': 'saveImage', '17': true},
     {'1': 'update_wifi_access_point', '3': 7, '4': 1, '5': 11, '6': '.cedar.WiFiAccessPoint', '9': 8, '10': 'updateWifiAccessPoint', '17': true},
@@ -771,14 +833,14 @@ final $typed_data.Uint8List actionRequestDescriptor = $convert.base64Decode(
     'Z2h0iAEBEkcKE2Rlc2lnbmF0ZV9ib3Jlc2lnaHQYAiABKAsyES5jZWRhci5JbWFnZUNvb3JkSA'
     'JSEmRlc2lnbmF0ZUJvcmVzaWdodIgBARIsCg9zaHV0ZG93bl9zZXJ2ZXIYAyABKAhIA1IOc2h1'
     'dGRvd25TZXJ2ZXKIAQESKgoOcmVzdGFydF9zZXJ2ZXIYCCABKAhIBFINcmVzdGFydFNlcnZlco'
-    'gBARJHCg1pbml0aWF0ZV9zbGV3GAYgASgLMh0udGV0cmEzX3NlcnZlci5DZWxlc3RpYWxDb29y'
-    'ZEgFUgxpbml0aWF0ZVNsZXeIAQESIAoJc3RvcF9zbGV3GAQgASgISAZSCHN0b3BTbGV3iAEBEi'
-    'IKCnNhdmVfaW1hZ2UYBSABKAhIB1IJc2F2ZUltYWdliAEBElQKGHVwZGF0ZV93aWZpX2FjY2Vz'
-    'c19wb2ludBgHIAEoCzIWLmNlZGFyLldpRmlBY2Nlc3NQb2ludEgIUhV1cGRhdGVXaWZpQWNjZX'
-    'NzUG9pbnSIAQFCFQoTX2NhbmNlbF9jYWxpYnJhdGlvbkIUChJfY2FwdHVyZV9ib3Jlc2lnaHRC'
-    'FgoUX2Rlc2lnbmF0ZV9ib3Jlc2lnaHRCEgoQX3NodXRkb3duX3NlcnZlckIRCg9fcmVzdGFydF'
-    '9zZXJ2ZXJCEAoOX2luaXRpYXRlX3NsZXdCDAoKX3N0b3Bfc2xld0INCgtfc2F2ZV9pbWFnZUIb'
-    'ChlfdXBkYXRlX3dpZmlfYWNjZXNzX3BvaW50');
+    'gBARJGCg1pbml0aWF0ZV9zbGV3GAYgASgLMhwuY2VkYXJfY29tbW9uLkNlbGVzdGlhbENvb3Jk'
+    'SAVSDGluaXRpYXRlU2xld4gBARIgCglzdG9wX3NsZXcYBCABKAhIBlIIc3RvcFNsZXeIAQESIg'
+    'oKc2F2ZV9pbWFnZRgFIAEoCEgHUglzYXZlSW1hZ2WIAQESVAoYdXBkYXRlX3dpZmlfYWNjZXNz'
+    'X3BvaW50GAcgASgLMhYuY2VkYXIuV2lGaUFjY2Vzc1BvaW50SAhSFXVwZGF0ZVdpZmlBY2Nlc3'
+    'NQb2ludIgBAUIVChNfY2FuY2VsX2NhbGlicmF0aW9uQhQKEl9jYXB0dXJlX2JvcmVzaWdodEIW'
+    'ChRfZGVzaWduYXRlX2JvcmVzaWdodEISChBfc2h1dGRvd25fc2VydmVyQhEKD19yZXN0YXJ0X3'
+    'NlcnZlckIQCg5faW5pdGlhdGVfc2xld0IMCgpfc3RvcF9zbGV3Qg0KC19zYXZlX2ltYWdlQhsK'
+    'GV91cGRhdGVfd2lmaV9hY2Nlc3NfcG9pbnQ=');
 
 @$core.Deprecated('Use serverLogRequestDescriptor instead')
 const ServerLogRequest$json = {

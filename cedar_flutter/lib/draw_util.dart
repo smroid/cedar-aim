@@ -3,10 +3,10 @@
 
 import 'dart:math' as math;
 import 'dart:math';
+import 'package:cedar_flutter/cedar_common.pb.dart';
 import 'package:cedar_flutter/cedar_sky.pb.dart';
 import 'package:cedar_flutter/client_main.dart';
 import 'package:cedar_flutter/settings.dart';
-import 'package:cedar_flutter/tetra3.pb.dart';
 import 'package:flutter/material.dart';
 import 'package:sprintf/sprintf.dart';
 

@@ -133,7 +133,7 @@ const CatalogEntry$json = {
   '2': [
     {'1': 'catalog_label', '3': 1, '4': 1, '5': 9, '10': 'catalogLabel'},
     {'1': 'catalog_entry', '3': 2, '4': 1, '5': 9, '10': 'catalogEntry'},
-    {'1': 'coord', '3': 3, '4': 1, '5': 11, '6': '.tetra3_server.CelestialCoord', '10': 'coord'},
+    {'1': 'coord', '3': 3, '4': 1, '5': 11, '6': '.cedar_common.CelestialCoord', '10': 'coord'},
     {'1': 'constellation', '3': 4, '4': 1, '5': 11, '6': '.cedar_sky.Constellation', '9': 0, '10': 'constellation', '17': true},
     {'1': 'object_type', '3': 5, '4': 1, '5': 11, '6': '.cedar_sky.ObjectType', '10': 'objectType'},
     {'1': 'magnitude', '3': 6, '4': 1, '5': 1, '10': 'magnitude'},
@@ -152,14 +152,14 @@ const CatalogEntry$json = {
 /// Descriptor for `CatalogEntry`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List catalogEntryDescriptor = $convert.base64Decode(
     'CgxDYXRhbG9nRW50cnkSIwoNY2F0YWxvZ19sYWJlbBgBIAEoCVIMY2F0YWxvZ0xhYmVsEiMKDW'
-    'NhdGFsb2dfZW50cnkYAiABKAlSDGNhdGFsb2dFbnRyeRIzCgVjb29yZBgDIAEoCzIdLnRldHJh'
-    'M19zZXJ2ZXIuQ2VsZXN0aWFsQ29vcmRSBWNvb3JkEkMKDWNvbnN0ZWxsYXRpb24YBCABKAsyGC'
-    '5jZWRhcl9za3kuQ29uc3RlbGxhdGlvbkgAUg1jb25zdGVsbGF0aW9uiAEBEjYKC29iamVjdF90'
-    'eXBlGAUgASgLMhUuY2VkYXJfc2t5Lk9iamVjdFR5cGVSCm9iamVjdFR5cGUSHAoJbWFnbml0dW'
-    'RlGAYgASgBUgltYWduaXR1ZGUSJgoMYW5ndWxhcl9zaXplGAcgASgJSAFSC2FuZ3VsYXJTaXpl'
-    'iAEBEiQKC2NvbW1vbl9uYW1lGAggASgJSAJSCmNvbW1vbk5hbWWIAQESGQoFbm90ZXMYCSABKA'
-    'lIA1IFbm90ZXOIAQFCEAoOX2NvbnN0ZWxsYXRpb25CDwoNX2FuZ3VsYXJfc2l6ZUIOCgxfY29t'
-    'bW9uX25hbWVCCAoGX25vdGVz');
+    'NhdGFsb2dfZW50cnkYAiABKAlSDGNhdGFsb2dFbnRyeRIyCgVjb29yZBgDIAEoCzIcLmNlZGFy'
+    'X2NvbW1vbi5DZWxlc3RpYWxDb29yZFIFY29vcmQSQwoNY29uc3RlbGxhdGlvbhgEIAEoCzIYLm'
+    'NlZGFyX3NreS5Db25zdGVsbGF0aW9uSABSDWNvbnN0ZWxsYXRpb26IAQESNgoLb2JqZWN0X3R5'
+    'cGUYBSABKAsyFS5jZWRhcl9za3kuT2JqZWN0VHlwZVIKb2JqZWN0VHlwZRIcCgltYWduaXR1ZG'
+    'UYBiABKAFSCW1hZ25pdHVkZRImCgxhbmd1bGFyX3NpemUYByABKAlIAVILYW5ndWxhclNpemWI'
+    'AQESJAoLY29tbW9uX25hbWUYCCABKAlIAlIKY29tbW9uTmFtZYgBARIZCgVub3RlcxgJIAEoCU'
+    'gDUgVub3Rlc4gBAUIQCg5fY29uc3RlbGxhdGlvbkIPCg1fYW5ndWxhcl9zaXplQg4KDF9jb21t'
+    'b25fbmFtZUIICgZfbm90ZXM=');
 
 @$core.Deprecated('Use catalogDescriptionDescriptor instead')
 const CatalogDescription$json = {

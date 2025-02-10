@@ -15,57 +15,57 @@ import 'dart:core' as $core;
 import 'package:grpc/service_api.dart' as $grpc;
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import 'cedar.pb.dart' as $1;
-import 'cedar_sky.pb.dart' as $2;
+import 'cedar.pb.dart' as $0;
+import 'cedar_sky.pb.dart' as $1;
 
 export 'cedar.pb.dart';
 
 @$pb.GrpcServiceName('cedar.Cedar')
 class CedarClient extends $grpc.Client {
-  static final _$getServerLog = $grpc.ClientMethod<$1.ServerLogRequest, $1.ServerLogResult>(
+  static final _$getServerLog = $grpc.ClientMethod<$0.ServerLogRequest, $0.ServerLogResult>(
       '/cedar.Cedar/GetServerLog',
-      ($1.ServerLogRequest value) => value.writeToBuffer(),
-      ($core.List<$core.int> value) => $1.ServerLogResult.fromBuffer(value));
-  static final _$updateFixedSettings = $grpc.ClientMethod<$1.FixedSettings, $1.FixedSettings>(
+      ($0.ServerLogRequest value) => value.writeToBuffer(),
+      ($core.List<$core.int> value) => $0.ServerLogResult.fromBuffer(value));
+  static final _$updateFixedSettings = $grpc.ClientMethod<$0.FixedSettings, $0.FixedSettings>(
       '/cedar.Cedar/UpdateFixedSettings',
-      ($1.FixedSettings value) => value.writeToBuffer(),
-      ($core.List<$core.int> value) => $1.FixedSettings.fromBuffer(value));
-  static final _$updateOperationSettings = $grpc.ClientMethod<$1.OperationSettings, $1.OperationSettings>(
+      ($0.FixedSettings value) => value.writeToBuffer(),
+      ($core.List<$core.int> value) => $0.FixedSettings.fromBuffer(value));
+  static final _$updateOperationSettings = $grpc.ClientMethod<$0.OperationSettings, $0.OperationSettings>(
       '/cedar.Cedar/UpdateOperationSettings',
-      ($1.OperationSettings value) => value.writeToBuffer(),
-      ($core.List<$core.int> value) => $1.OperationSettings.fromBuffer(value));
-  static final _$updatePreferences = $grpc.ClientMethod<$1.Preferences, $1.Preferences>(
+      ($0.OperationSettings value) => value.writeToBuffer(),
+      ($core.List<$core.int> value) => $0.OperationSettings.fromBuffer(value));
+  static final _$updatePreferences = $grpc.ClientMethod<$0.Preferences, $0.Preferences>(
       '/cedar.Cedar/UpdatePreferences',
-      ($1.Preferences value) => value.writeToBuffer(),
-      ($core.List<$core.int> value) => $1.Preferences.fromBuffer(value));
-  static final _$getFrame = $grpc.ClientMethod<$1.FrameRequest, $1.FrameResult>(
+      ($0.Preferences value) => value.writeToBuffer(),
+      ($core.List<$core.int> value) => $0.Preferences.fromBuffer(value));
+  static final _$getFrame = $grpc.ClientMethod<$0.FrameRequest, $0.FrameResult>(
       '/cedar.Cedar/GetFrame',
-      ($1.FrameRequest value) => value.writeToBuffer(),
-      ($core.List<$core.int> value) => $1.FrameResult.fromBuffer(value));
-  static final _$initiateAction = $grpc.ClientMethod<$1.ActionRequest, $1.EmptyMessage>(
+      ($0.FrameRequest value) => value.writeToBuffer(),
+      ($core.List<$core.int> value) => $0.FrameResult.fromBuffer(value));
+  static final _$initiateAction = $grpc.ClientMethod<$0.ActionRequest, $0.EmptyMessage>(
       '/cedar.Cedar/InitiateAction',
-      ($1.ActionRequest value) => value.writeToBuffer(),
-      ($core.List<$core.int> value) => $1.EmptyMessage.fromBuffer(value));
-  static final _$queryCatalogEntries = $grpc.ClientMethod<$2.QueryCatalogRequest, $2.QueryCatalogResponse>(
+      ($0.ActionRequest value) => value.writeToBuffer(),
+      ($core.List<$core.int> value) => $0.EmptyMessage.fromBuffer(value));
+  static final _$queryCatalogEntries = $grpc.ClientMethod<$1.QueryCatalogRequest, $1.QueryCatalogResponse>(
       '/cedar.Cedar/QueryCatalogEntries',
-      ($2.QueryCatalogRequest value) => value.writeToBuffer(),
-      ($core.List<$core.int> value) => $2.QueryCatalogResponse.fromBuffer(value));
-  static final _$getCatalogEntry = $grpc.ClientMethod<$2.CatalogEntryKey, $2.CatalogEntry>(
+      ($1.QueryCatalogRequest value) => value.writeToBuffer(),
+      ($core.List<$core.int> value) => $1.QueryCatalogResponse.fromBuffer(value));
+  static final _$getCatalogEntry = $grpc.ClientMethod<$1.CatalogEntryKey, $1.CatalogEntry>(
       '/cedar.Cedar/GetCatalogEntry',
-      ($2.CatalogEntryKey value) => value.writeToBuffer(),
-      ($core.List<$core.int> value) => $2.CatalogEntry.fromBuffer(value));
-  static final _$getCatalogDescriptions = $grpc.ClientMethod<$1.EmptyMessage, $2.CatalogDescriptionResponse>(
+      ($1.CatalogEntryKey value) => value.writeToBuffer(),
+      ($core.List<$core.int> value) => $1.CatalogEntry.fromBuffer(value));
+  static final _$getCatalogDescriptions = $grpc.ClientMethod<$0.EmptyMessage, $1.CatalogDescriptionResponse>(
       '/cedar.Cedar/GetCatalogDescriptions',
-      ($1.EmptyMessage value) => value.writeToBuffer(),
-      ($core.List<$core.int> value) => $2.CatalogDescriptionResponse.fromBuffer(value));
-  static final _$getObjectTypes = $grpc.ClientMethod<$1.EmptyMessage, $2.ObjectTypeResponse>(
+      ($0.EmptyMessage value) => value.writeToBuffer(),
+      ($core.List<$core.int> value) => $1.CatalogDescriptionResponse.fromBuffer(value));
+  static final _$getObjectTypes = $grpc.ClientMethod<$0.EmptyMessage, $1.ObjectTypeResponse>(
       '/cedar.Cedar/GetObjectTypes',
-      ($1.EmptyMessage value) => value.writeToBuffer(),
-      ($core.List<$core.int> value) => $2.ObjectTypeResponse.fromBuffer(value));
-  static final _$getConstellations = $grpc.ClientMethod<$1.EmptyMessage, $2.ConstellationResponse>(
+      ($0.EmptyMessage value) => value.writeToBuffer(),
+      ($core.List<$core.int> value) => $1.ObjectTypeResponse.fromBuffer(value));
+  static final _$getConstellations = $grpc.ClientMethod<$0.EmptyMessage, $1.ConstellationResponse>(
       '/cedar.Cedar/GetConstellations',
-      ($1.EmptyMessage value) => value.writeToBuffer(),
-      ($core.List<$core.int> value) => $2.ConstellationResponse.fromBuffer(value));
+      ($0.EmptyMessage value) => value.writeToBuffer(),
+      ($core.List<$core.int> value) => $1.ConstellationResponse.fromBuffer(value));
 
   CedarClient($grpc.ClientChannel channel,
       {$grpc.CallOptions? options,
@@ -73,47 +73,47 @@ class CedarClient extends $grpc.Client {
       : super(channel, options: options,
         interceptors: interceptors);
 
-  $grpc.ResponseFuture<$1.ServerLogResult> getServerLog($1.ServerLogRequest request, {$grpc.CallOptions? options}) {
+  $grpc.ResponseFuture<$0.ServerLogResult> getServerLog($0.ServerLogRequest request, {$grpc.CallOptions? options}) {
     return $createUnaryCall(_$getServerLog, request, options: options);
   }
 
-  $grpc.ResponseFuture<$1.FixedSettings> updateFixedSettings($1.FixedSettings request, {$grpc.CallOptions? options}) {
+  $grpc.ResponseFuture<$0.FixedSettings> updateFixedSettings($0.FixedSettings request, {$grpc.CallOptions? options}) {
     return $createUnaryCall(_$updateFixedSettings, request, options: options);
   }
 
-  $grpc.ResponseFuture<$1.OperationSettings> updateOperationSettings($1.OperationSettings request, {$grpc.CallOptions? options}) {
+  $grpc.ResponseFuture<$0.OperationSettings> updateOperationSettings($0.OperationSettings request, {$grpc.CallOptions? options}) {
     return $createUnaryCall(_$updateOperationSettings, request, options: options);
   }
 
-  $grpc.ResponseFuture<$1.Preferences> updatePreferences($1.Preferences request, {$grpc.CallOptions? options}) {
+  $grpc.ResponseFuture<$0.Preferences> updatePreferences($0.Preferences request, {$grpc.CallOptions? options}) {
     return $createUnaryCall(_$updatePreferences, request, options: options);
   }
 
-  $grpc.ResponseFuture<$1.FrameResult> getFrame($1.FrameRequest request, {$grpc.CallOptions? options}) {
+  $grpc.ResponseFuture<$0.FrameResult> getFrame($0.FrameRequest request, {$grpc.CallOptions? options}) {
     return $createUnaryCall(_$getFrame, request, options: options);
   }
 
-  $grpc.ResponseFuture<$1.EmptyMessage> initiateAction($1.ActionRequest request, {$grpc.CallOptions? options}) {
+  $grpc.ResponseFuture<$0.EmptyMessage> initiateAction($0.ActionRequest request, {$grpc.CallOptions? options}) {
     return $createUnaryCall(_$initiateAction, request, options: options);
   }
 
-  $grpc.ResponseFuture<$2.QueryCatalogResponse> queryCatalogEntries($2.QueryCatalogRequest request, {$grpc.CallOptions? options}) {
+  $grpc.ResponseFuture<$1.QueryCatalogResponse> queryCatalogEntries($1.QueryCatalogRequest request, {$grpc.CallOptions? options}) {
     return $createUnaryCall(_$queryCatalogEntries, request, options: options);
   }
 
-  $grpc.ResponseFuture<$2.CatalogEntry> getCatalogEntry($2.CatalogEntryKey request, {$grpc.CallOptions? options}) {
+  $grpc.ResponseFuture<$1.CatalogEntry> getCatalogEntry($1.CatalogEntryKey request, {$grpc.CallOptions? options}) {
     return $createUnaryCall(_$getCatalogEntry, request, options: options);
   }
 
-  $grpc.ResponseFuture<$2.CatalogDescriptionResponse> getCatalogDescriptions($1.EmptyMessage request, {$grpc.CallOptions? options}) {
+  $grpc.ResponseFuture<$1.CatalogDescriptionResponse> getCatalogDescriptions($0.EmptyMessage request, {$grpc.CallOptions? options}) {
     return $createUnaryCall(_$getCatalogDescriptions, request, options: options);
   }
 
-  $grpc.ResponseFuture<$2.ObjectTypeResponse> getObjectTypes($1.EmptyMessage request, {$grpc.CallOptions? options}) {
+  $grpc.ResponseFuture<$1.ObjectTypeResponse> getObjectTypes($0.EmptyMessage request, {$grpc.CallOptions? options}) {
     return $createUnaryCall(_$getObjectTypes, request, options: options);
   }
 
-  $grpc.ResponseFuture<$2.ConstellationResponse> getConstellations($1.EmptyMessage request, {$grpc.CallOptions? options}) {
+  $grpc.ResponseFuture<$1.ConstellationResponse> getConstellations($0.EmptyMessage request, {$grpc.CallOptions? options}) {
     return $createUnaryCall(_$getConstellations, request, options: options);
   }
 }
@@ -123,138 +123,138 @@ abstract class CedarServiceBase extends $grpc.Service {
   $core.String get $name => 'cedar.Cedar';
 
   CedarServiceBase() {
-    $addMethod($grpc.ServiceMethod<$1.ServerLogRequest, $1.ServerLogResult>(
+    $addMethod($grpc.ServiceMethod<$0.ServerLogRequest, $0.ServerLogResult>(
         'GetServerLog',
         getServerLog_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $1.ServerLogRequest.fromBuffer(value),
-        ($1.ServerLogResult value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$1.FixedSettings, $1.FixedSettings>(
+        ($core.List<$core.int> value) => $0.ServerLogRequest.fromBuffer(value),
+        ($0.ServerLogResult value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.FixedSettings, $0.FixedSettings>(
         'UpdateFixedSettings',
         updateFixedSettings_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $1.FixedSettings.fromBuffer(value),
-        ($1.FixedSettings value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$1.OperationSettings, $1.OperationSettings>(
+        ($core.List<$core.int> value) => $0.FixedSettings.fromBuffer(value),
+        ($0.FixedSettings value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.OperationSettings, $0.OperationSettings>(
         'UpdateOperationSettings',
         updateOperationSettings_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $1.OperationSettings.fromBuffer(value),
-        ($1.OperationSettings value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$1.Preferences, $1.Preferences>(
+        ($core.List<$core.int> value) => $0.OperationSettings.fromBuffer(value),
+        ($0.OperationSettings value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.Preferences, $0.Preferences>(
         'UpdatePreferences',
         updatePreferences_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $1.Preferences.fromBuffer(value),
-        ($1.Preferences value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$1.FrameRequest, $1.FrameResult>(
+        ($core.List<$core.int> value) => $0.Preferences.fromBuffer(value),
+        ($0.Preferences value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.FrameRequest, $0.FrameResult>(
         'GetFrame',
         getFrame_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $1.FrameRequest.fromBuffer(value),
-        ($1.FrameResult value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$1.ActionRequest, $1.EmptyMessage>(
+        ($core.List<$core.int> value) => $0.FrameRequest.fromBuffer(value),
+        ($0.FrameResult value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.ActionRequest, $0.EmptyMessage>(
         'InitiateAction',
         initiateAction_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $1.ActionRequest.fromBuffer(value),
-        ($1.EmptyMessage value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$2.QueryCatalogRequest, $2.QueryCatalogResponse>(
+        ($core.List<$core.int> value) => $0.ActionRequest.fromBuffer(value),
+        ($0.EmptyMessage value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$1.QueryCatalogRequest, $1.QueryCatalogResponse>(
         'QueryCatalogEntries',
         queryCatalogEntries_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $2.QueryCatalogRequest.fromBuffer(value),
-        ($2.QueryCatalogResponse value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$2.CatalogEntryKey, $2.CatalogEntry>(
+        ($core.List<$core.int> value) => $1.QueryCatalogRequest.fromBuffer(value),
+        ($1.QueryCatalogResponse value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$1.CatalogEntryKey, $1.CatalogEntry>(
         'GetCatalogEntry',
         getCatalogEntry_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $2.CatalogEntryKey.fromBuffer(value),
-        ($2.CatalogEntry value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$1.EmptyMessage, $2.CatalogDescriptionResponse>(
+        ($core.List<$core.int> value) => $1.CatalogEntryKey.fromBuffer(value),
+        ($1.CatalogEntry value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.EmptyMessage, $1.CatalogDescriptionResponse>(
         'GetCatalogDescriptions',
         getCatalogDescriptions_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $1.EmptyMessage.fromBuffer(value),
-        ($2.CatalogDescriptionResponse value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$1.EmptyMessage, $2.ObjectTypeResponse>(
+        ($core.List<$core.int> value) => $0.EmptyMessage.fromBuffer(value),
+        ($1.CatalogDescriptionResponse value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.EmptyMessage, $1.ObjectTypeResponse>(
         'GetObjectTypes',
         getObjectTypes_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $1.EmptyMessage.fromBuffer(value),
-        ($2.ObjectTypeResponse value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$1.EmptyMessage, $2.ConstellationResponse>(
+        ($core.List<$core.int> value) => $0.EmptyMessage.fromBuffer(value),
+        ($1.ObjectTypeResponse value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.EmptyMessage, $1.ConstellationResponse>(
         'GetConstellations',
         getConstellations_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $1.EmptyMessage.fromBuffer(value),
-        ($2.ConstellationResponse value) => value.writeToBuffer()));
+        ($core.List<$core.int> value) => $0.EmptyMessage.fromBuffer(value),
+        ($1.ConstellationResponse value) => value.writeToBuffer()));
   }
 
-  $async.Future<$1.ServerLogResult> getServerLog_Pre($grpc.ServiceCall call, $async.Future<$1.ServerLogRequest> request) async {
+  $async.Future<$0.ServerLogResult> getServerLog_Pre($grpc.ServiceCall call, $async.Future<$0.ServerLogRequest> request) async {
     return getServerLog(call, await request);
   }
 
-  $async.Future<$1.FixedSettings> updateFixedSettings_Pre($grpc.ServiceCall call, $async.Future<$1.FixedSettings> request) async {
+  $async.Future<$0.FixedSettings> updateFixedSettings_Pre($grpc.ServiceCall call, $async.Future<$0.FixedSettings> request) async {
     return updateFixedSettings(call, await request);
   }
 
-  $async.Future<$1.OperationSettings> updateOperationSettings_Pre($grpc.ServiceCall call, $async.Future<$1.OperationSettings> request) async {
+  $async.Future<$0.OperationSettings> updateOperationSettings_Pre($grpc.ServiceCall call, $async.Future<$0.OperationSettings> request) async {
     return updateOperationSettings(call, await request);
   }
 
-  $async.Future<$1.Preferences> updatePreferences_Pre($grpc.ServiceCall call, $async.Future<$1.Preferences> request) async {
+  $async.Future<$0.Preferences> updatePreferences_Pre($grpc.ServiceCall call, $async.Future<$0.Preferences> request) async {
     return updatePreferences(call, await request);
   }
 
-  $async.Future<$1.FrameResult> getFrame_Pre($grpc.ServiceCall call, $async.Future<$1.FrameRequest> request) async {
+  $async.Future<$0.FrameResult> getFrame_Pre($grpc.ServiceCall call, $async.Future<$0.FrameRequest> request) async {
     return getFrame(call, await request);
   }
 
-  $async.Future<$1.EmptyMessage> initiateAction_Pre($grpc.ServiceCall call, $async.Future<$1.ActionRequest> request) async {
+  $async.Future<$0.EmptyMessage> initiateAction_Pre($grpc.ServiceCall call, $async.Future<$0.ActionRequest> request) async {
     return initiateAction(call, await request);
   }
 
-  $async.Future<$2.QueryCatalogResponse> queryCatalogEntries_Pre($grpc.ServiceCall call, $async.Future<$2.QueryCatalogRequest> request) async {
+  $async.Future<$1.QueryCatalogResponse> queryCatalogEntries_Pre($grpc.ServiceCall call, $async.Future<$1.QueryCatalogRequest> request) async {
     return queryCatalogEntries(call, await request);
   }
 
-  $async.Future<$2.CatalogEntry> getCatalogEntry_Pre($grpc.ServiceCall call, $async.Future<$2.CatalogEntryKey> request) async {
+  $async.Future<$1.CatalogEntry> getCatalogEntry_Pre($grpc.ServiceCall call, $async.Future<$1.CatalogEntryKey> request) async {
     return getCatalogEntry(call, await request);
   }
 
-  $async.Future<$2.CatalogDescriptionResponse> getCatalogDescriptions_Pre($grpc.ServiceCall call, $async.Future<$1.EmptyMessage> request) async {
+  $async.Future<$1.CatalogDescriptionResponse> getCatalogDescriptions_Pre($grpc.ServiceCall call, $async.Future<$0.EmptyMessage> request) async {
     return getCatalogDescriptions(call, await request);
   }
 
-  $async.Future<$2.ObjectTypeResponse> getObjectTypes_Pre($grpc.ServiceCall call, $async.Future<$1.EmptyMessage> request) async {
+  $async.Future<$1.ObjectTypeResponse> getObjectTypes_Pre($grpc.ServiceCall call, $async.Future<$0.EmptyMessage> request) async {
     return getObjectTypes(call, await request);
   }
 
-  $async.Future<$2.ConstellationResponse> getConstellations_Pre($grpc.ServiceCall call, $async.Future<$1.EmptyMessage> request) async {
+  $async.Future<$1.ConstellationResponse> getConstellations_Pre($grpc.ServiceCall call, $async.Future<$0.EmptyMessage> request) async {
     return getConstellations(call, await request);
   }
 
-  $async.Future<$1.ServerLogResult> getServerLog($grpc.ServiceCall call, $1.ServerLogRequest request);
-  $async.Future<$1.FixedSettings> updateFixedSettings($grpc.ServiceCall call, $1.FixedSettings request);
-  $async.Future<$1.OperationSettings> updateOperationSettings($grpc.ServiceCall call, $1.OperationSettings request);
-  $async.Future<$1.Preferences> updatePreferences($grpc.ServiceCall call, $1.Preferences request);
-  $async.Future<$1.FrameResult> getFrame($grpc.ServiceCall call, $1.FrameRequest request);
-  $async.Future<$1.EmptyMessage> initiateAction($grpc.ServiceCall call, $1.ActionRequest request);
-  $async.Future<$2.QueryCatalogResponse> queryCatalogEntries($grpc.ServiceCall call, $2.QueryCatalogRequest request);
-  $async.Future<$2.CatalogEntry> getCatalogEntry($grpc.ServiceCall call, $2.CatalogEntryKey request);
-  $async.Future<$2.CatalogDescriptionResponse> getCatalogDescriptions($grpc.ServiceCall call, $1.EmptyMessage request);
-  $async.Future<$2.ObjectTypeResponse> getObjectTypes($grpc.ServiceCall call, $1.EmptyMessage request);
-  $async.Future<$2.ConstellationResponse> getConstellations($grpc.ServiceCall call, $1.EmptyMessage request);
+  $async.Future<$0.ServerLogResult> getServerLog($grpc.ServiceCall call, $0.ServerLogRequest request);
+  $async.Future<$0.FixedSettings> updateFixedSettings($grpc.ServiceCall call, $0.FixedSettings request);
+  $async.Future<$0.OperationSettings> updateOperationSettings($grpc.ServiceCall call, $0.OperationSettings request);
+  $async.Future<$0.Preferences> updatePreferences($grpc.ServiceCall call, $0.Preferences request);
+  $async.Future<$0.FrameResult> getFrame($grpc.ServiceCall call, $0.FrameRequest request);
+  $async.Future<$0.EmptyMessage> initiateAction($grpc.ServiceCall call, $0.ActionRequest request);
+  $async.Future<$1.QueryCatalogResponse> queryCatalogEntries($grpc.ServiceCall call, $1.QueryCatalogRequest request);
+  $async.Future<$1.CatalogEntry> getCatalogEntry($grpc.ServiceCall call, $1.CatalogEntryKey request);
+  $async.Future<$1.CatalogDescriptionResponse> getCatalogDescriptions($grpc.ServiceCall call, $0.EmptyMessage request);
+  $async.Future<$1.ObjectTypeResponse> getObjectTypes($grpc.ServiceCall call, $0.EmptyMessage request);
+  $async.Future<$1.ConstellationResponse> getConstellations($grpc.ServiceCall call, $0.EmptyMessage request);
 }

@@ -14,11 +14,11 @@ import 'dart:core' as $core;
 import 'package:protobuf/protobuf.dart' as $pb;
 
 import 'cedar.pbenum.dart';
-import 'cedar_sky.pb.dart' as $2;
-import 'cedar_sky.pbenum.dart' as $2;
+import 'cedar_common.pb.dart' as $2;
+import 'cedar_sky.pb.dart' as $1;
+import 'cedar_sky.pbenum.dart' as $1;
 import 'google/protobuf/duration.pb.dart' as $4;
 import 'google/protobuf/timestamp.pb.dart' as $3;
-import 'tetra3.pb.dart' as $0;
 
 export 'cedar.pbenum.dart';
 
@@ -565,7 +565,7 @@ class OperationSettings extends $pb.GeneratedMessage {
     $4.Duration? updateInterval,
     $4.Duration? dwellUpdateInterval,
     $core.bool? logDwelledPositions,
-    $2.CatalogEntryMatch? catalogEntryMatch,
+    $1.CatalogEntryMatch? catalogEntryMatch,
     $core.String? demoImageFilename,
     $core.bool? invertCamera,
     $core.bool? focusAssistMode,
@@ -610,7 +610,7 @@ class OperationSettings extends $pb.GeneratedMessage {
     ..aOM<$4.Duration>(7, _omitFieldNames ? '' : 'updateInterval', subBuilder: $4.Duration.create)
     ..aOM<$4.Duration>(8, _omitFieldNames ? '' : 'dwellUpdateInterval', subBuilder: $4.Duration.create)
     ..aOB(10, _omitFieldNames ? '' : 'logDwelledPositions')
-    ..aOM<$2.CatalogEntryMatch>(11, _omitFieldNames ? '' : 'catalogEntryMatch', subBuilder: $2.CatalogEntryMatch.create)
+    ..aOM<$1.CatalogEntryMatch>(11, _omitFieldNames ? '' : 'catalogEntryMatch', subBuilder: $1.CatalogEntryMatch.create)
     ..aOS(12, _omitFieldNames ? '' : 'demoImageFilename')
     ..aOB(13, _omitFieldNames ? '' : 'invertCamera')
     ..aOB(14, _omitFieldNames ? '' : 'focusAssistMode')
@@ -715,15 +715,15 @@ class OperationSettings extends $pb.GeneratedMessage {
   /// catalog panel. Note that in that context the catalog label and object
   /// type label filters are relevant.
   @$pb.TagNumber(11)
-  $2.CatalogEntryMatch get catalogEntryMatch => $_getN(5);
+  $1.CatalogEntryMatch get catalogEntryMatch => $_getN(5);
   @$pb.TagNumber(11)
-  set catalogEntryMatch($2.CatalogEntryMatch v) { setField(11, v); }
+  set catalogEntryMatch($1.CatalogEntryMatch v) { setField(11, v); }
   @$pb.TagNumber(11)
   $core.bool hasCatalogEntryMatch() => $_has(5);
   @$pb.TagNumber(11)
   void clearCatalogEntryMatch() => clearField(11);
   @$pb.TagNumber(11)
-  $2.CatalogEntryMatch ensureCatalogEntryMatch() => $_ensure(5);
+  $1.CatalogEntryMatch ensureCatalogEntryMatch() => $_ensure(5);
 
   /// Controls whether an image file is substituted for the camera. When calling
   /// UpdateOperationSettings(), set this field to empty string to cancel
@@ -771,10 +771,10 @@ class Preferences extends $pb.GeneratedMessage {
     MountType? mountType,
     LatLong? observerLocation,
     $4.Duration? updateInterval,
-    $2.CatalogEntryMatch? catalogEntryMatch,
+    $1.CatalogEntryMatch? catalogEntryMatch,
     $core.double? maxDistance,
     $core.double? minElevation,
-    $2.Ordering? ordering,
+    $1.Ordering? ordering,
     $core.bool? maxDistanceActive,
     $core.bool? minElevationActive,
     $core.bool? advanced,
@@ -860,10 +860,10 @@ class Preferences extends $pb.GeneratedMessage {
     ..e<MountType>(6, _omitFieldNames ? '' : 'mountType', $pb.PbFieldType.OE, defaultOrMaker: MountType.MOUNT_UNSPECIFIED, valueOf: MountType.valueOf, enumValues: MountType.values)
     ..aOM<LatLong>(7, _omitFieldNames ? '' : 'observerLocation', subBuilder: LatLong.create)
     ..aOM<$4.Duration>(9, _omitFieldNames ? '' : 'updateInterval', subBuilder: $4.Duration.create)
-    ..aOM<$2.CatalogEntryMatch>(11, _omitFieldNames ? '' : 'catalogEntryMatch', subBuilder: $2.CatalogEntryMatch.create)
+    ..aOM<$1.CatalogEntryMatch>(11, _omitFieldNames ? '' : 'catalogEntryMatch', subBuilder: $1.CatalogEntryMatch.create)
     ..a<$core.double>(12, _omitFieldNames ? '' : 'maxDistance', $pb.PbFieldType.OD)
     ..a<$core.double>(13, _omitFieldNames ? '' : 'minElevation', $pb.PbFieldType.OD)
-    ..e<$2.Ordering>(14, _omitFieldNames ? '' : 'ordering', $pb.PbFieldType.OE, defaultOrMaker: $2.Ordering.UNSPECIFIED, valueOf: $2.Ordering.valueOf, enumValues: $2.Ordering.values)
+    ..e<$1.Ordering>(14, _omitFieldNames ? '' : 'ordering', $pb.PbFieldType.OE, defaultOrMaker: $1.Ordering.UNSPECIFIED, valueOf: $1.Ordering.valueOf, enumValues: $1.Ordering.values)
     ..aOB(15, _omitFieldNames ? '' : 'maxDistanceActive')
     ..aOB(16, _omitFieldNames ? '' : 'minElevationActive')
     ..aOB(17, _omitFieldNames ? '' : 'advanced')
@@ -982,15 +982,15 @@ class Preferences extends $pb.GeneratedMessage {
   /// startup we use this to initialize the corresponding OperationSettings
   /// field. Note: do not update this via UpdatePreferences().
   @$pb.TagNumber(11)
-  $2.CatalogEntryMatch get catalogEntryMatch => $_getN(7);
+  $1.CatalogEntryMatch get catalogEntryMatch => $_getN(7);
   @$pb.TagNumber(11)
-  set catalogEntryMatch($2.CatalogEntryMatch v) { setField(11, v); }
+  set catalogEntryMatch($1.CatalogEntryMatch v) { setField(11, v); }
   @$pb.TagNumber(11)
   $core.bool hasCatalogEntryMatch() => $_has(7);
   @$pb.TagNumber(11)
   void clearCatalogEntryMatch() => clearField(11);
   @$pb.TagNumber(11)
-  $2.CatalogEntryMatch ensureCatalogEntryMatch() => $_ensure(7);
+  $1.CatalogEntryMatch ensureCatalogEntryMatch() => $_ensure(7);
 
   @$pb.TagNumber(12)
   $core.double get maxDistance => $_getN(8);
@@ -1011,9 +1011,9 @@ class Preferences extends $pb.GeneratedMessage {
   void clearMinElevation() => clearField(13);
 
   @$pb.TagNumber(14)
-  $2.Ordering get ordering => $_getN(10);
+  $1.Ordering get ordering => $_getN(10);
   @$pb.TagNumber(14)
-  set ordering($2.Ordering v) { setField(14, v); }
+  set ordering($1.Ordering v) { setField(14, v); }
   @$pb.TagNumber(14)
   $core.bool hasOrdering() => $_has(10);
   @$pb.TagNumber(14)
@@ -1217,7 +1217,7 @@ class FrameResult extends $pb.GeneratedMessage {
     $3.Timestamp? captureTime,
     ImageCoord? centerPeakPosition,
     Image? centerPeakImage,
-    $0.SolveResult? plateSolution,
+    PlateSolution? plateSolution,
     ImageCoord? boresightPosition,
     $core.bool? calibrating,
     $core.double? calibrationProgress,
@@ -1330,7 +1330,7 @@ class FrameResult extends $pb.GeneratedMessage {
     ..aOM<$3.Timestamp>(9, _omitFieldNames ? '' : 'captureTime', subBuilder: $3.Timestamp.create)
     ..aOM<ImageCoord>(12, _omitFieldNames ? '' : 'centerPeakPosition', subBuilder: ImageCoord.create)
     ..aOM<Image>(13, _omitFieldNames ? '' : 'centerPeakImage', subBuilder: Image.create)
-    ..aOM<$0.SolveResult>(17, _omitFieldNames ? '' : 'plateSolution', subBuilder: $0.SolveResult.create)
+    ..aOM<PlateSolution>(17, _omitFieldNames ? '' : 'plateSolution', subBuilder: PlateSolution.create)
     ..aOM<ImageCoord>(21, _omitFieldNames ? '' : 'boresightPosition', subBuilder: ImageCoord.create)
     ..aOB(22, _omitFieldNames ? '' : 'calibrating')
     ..a<$core.double>(23, _omitFieldNames ? '' : 'calibrationProgress', $pb.PbFieldType.OD)
@@ -1505,16 +1505,18 @@ class FrameResult extends $pb.GeneratedMessage {
   /// The current plate solution. Omitted if no plate solve was attempted for
   /// this frame. Relevant in OPERATE mode and in SETUP mode when neither
   /// `focus_assist_mode` nor `daylight_mode` is present.
+  /// Omitted if plate solving was not attempted or did not result in a
+  /// solution.
   @$pb.TagNumber(17)
-  $0.SolveResult get plateSolution => $_getN(11);
+  PlateSolution get plateSolution => $_getN(11);
   @$pb.TagNumber(17)
-  set plateSolution($0.SolveResult v) { setField(17, v); }
+  set plateSolution(PlateSolution v) { setField(17, v); }
   @$pb.TagNumber(17)
   $core.bool hasPlateSolution() => $_has(11);
   @$pb.TagNumber(17)
   void clearPlateSolution() => clearField(17);
   @$pb.TagNumber(17)
-  $0.SolveResult ensurePlateSolution() => $_ensure(11);
+  PlateSolution ensurePlateSolution() => $_ensure(11);
 
   /// The position in full resolution image coordinates of the captured
   /// boresight. If no boresight has been captured, is the image center. See
@@ -2024,6 +2026,350 @@ class ImageCoord extends $pb.GeneratedMessage {
   void clearY() => clearField(2);
 }
 
+class PlateSolution extends $pb.GeneratedMessage {
+  factory PlateSolution({
+    $2.CelestialCoord? imageSkyCoord,
+    $core.double? roll,
+    $core.double? fov,
+    $core.double? distortion,
+    $core.double? rmse,
+    $core.double? p90Error,
+    $core.double? maxError,
+    $core.int? numMatches,
+    $core.double? prob,
+    $core.int? epochEquinox,
+    $core.double? epochProperMotion,
+    $4.Duration? solveTime,
+    $core.Iterable<$2.CelestialCoord>? targetSkyCoord,
+    $core.Iterable<ImageCoord>? targetPixel,
+    $core.Iterable<StarInfo>? matchedStars,
+    $core.Iterable<ImageCoord>? patternCentroids,
+    $core.Iterable<StarInfo>? catalogStars,
+    $core.Iterable<$core.double>? rotationMatrix,
+  }) {
+    final $result = create();
+    if (imageSkyCoord != null) {
+      $result.imageSkyCoord = imageSkyCoord;
+    }
+    if (roll != null) {
+      $result.roll = roll;
+    }
+    if (fov != null) {
+      $result.fov = fov;
+    }
+    if (distortion != null) {
+      $result.distortion = distortion;
+    }
+    if (rmse != null) {
+      $result.rmse = rmse;
+    }
+    if (p90Error != null) {
+      $result.p90Error = p90Error;
+    }
+    if (maxError != null) {
+      $result.maxError = maxError;
+    }
+    if (numMatches != null) {
+      $result.numMatches = numMatches;
+    }
+    if (prob != null) {
+      $result.prob = prob;
+    }
+    if (epochEquinox != null) {
+      $result.epochEquinox = epochEquinox;
+    }
+    if (epochProperMotion != null) {
+      $result.epochProperMotion = epochProperMotion;
+    }
+    if (solveTime != null) {
+      $result.solveTime = solveTime;
+    }
+    if (targetSkyCoord != null) {
+      $result.targetSkyCoord.addAll(targetSkyCoord);
+    }
+    if (targetPixel != null) {
+      $result.targetPixel.addAll(targetPixel);
+    }
+    if (matchedStars != null) {
+      $result.matchedStars.addAll(matchedStars);
+    }
+    if (patternCentroids != null) {
+      $result.patternCentroids.addAll(patternCentroids);
+    }
+    if (catalogStars != null) {
+      $result.catalogStars.addAll(catalogStars);
+    }
+    if (rotationMatrix != null) {
+      $result.rotationMatrix.addAll(rotationMatrix);
+    }
+    return $result;
+  }
+  PlateSolution._() : super();
+  factory PlateSolution.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory PlateSolution.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'PlateSolution', package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'), createEmptyInstance: create)
+    ..aOM<$2.CelestialCoord>(1, _omitFieldNames ? '' : 'imageSkyCoord', subBuilder: $2.CelestialCoord.create)
+    ..a<$core.double>(2, _omitFieldNames ? '' : 'roll', $pb.PbFieldType.OD)
+    ..a<$core.double>(3, _omitFieldNames ? '' : 'fov', $pb.PbFieldType.OD)
+    ..a<$core.double>(4, _omitFieldNames ? '' : 'distortion', $pb.PbFieldType.OD)
+    ..a<$core.double>(5, _omitFieldNames ? '' : 'rmse', $pb.PbFieldType.OD)
+    ..a<$core.double>(6, _omitFieldNames ? '' : 'p90Error', $pb.PbFieldType.OD)
+    ..a<$core.double>(7, _omitFieldNames ? '' : 'maxError', $pb.PbFieldType.OD)
+    ..a<$core.int>(8, _omitFieldNames ? '' : 'numMatches', $pb.PbFieldType.O3)
+    ..a<$core.double>(9, _omitFieldNames ? '' : 'prob', $pb.PbFieldType.OD)
+    ..a<$core.int>(10, _omitFieldNames ? '' : 'epochEquinox', $pb.PbFieldType.O3)
+    ..a<$core.double>(11, _omitFieldNames ? '' : 'epochProperMotion', $pb.PbFieldType.OF)
+    ..aOM<$4.Duration>(12, _omitFieldNames ? '' : 'solveTime', subBuilder: $4.Duration.create)
+    ..pc<$2.CelestialCoord>(13, _omitFieldNames ? '' : 'targetSkyCoord', $pb.PbFieldType.PM, subBuilder: $2.CelestialCoord.create)
+    ..pc<ImageCoord>(14, _omitFieldNames ? '' : 'targetPixel', $pb.PbFieldType.PM, subBuilder: ImageCoord.create)
+    ..pc<StarInfo>(15, _omitFieldNames ? '' : 'matchedStars', $pb.PbFieldType.PM, subBuilder: StarInfo.create)
+    ..pc<ImageCoord>(16, _omitFieldNames ? '' : 'patternCentroids', $pb.PbFieldType.PM, subBuilder: ImageCoord.create)
+    ..pc<StarInfo>(17, _omitFieldNames ? '' : 'catalogStars', $pb.PbFieldType.PM, subBuilder: StarInfo.create)
+    ..p<$core.double>(18, _omitFieldNames ? '' : 'rotationMatrix', $pb.PbFieldType.KD)
+    ..hasRequiredFields = false
+  ;
+
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  PlateSolution clone() => PlateSolution()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  PlateSolution copyWith(void Function(PlateSolution) updates) => super.copyWith((message) => updates(message as PlateSolution)) as PlateSolution;
+
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static PlateSolution create() => PlateSolution._();
+  PlateSolution createEmptyInstance() => create();
+  static $pb.PbList<PlateSolution> createRepeated() => $pb.PbList<PlateSolution>();
+  @$core.pragma('dart2js:noInline')
+  static PlateSolution getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<PlateSolution>(create);
+  static PlateSolution? _defaultInstance;
+
+  /// See tetra3.py for descriptions of fields.
+  @$pb.TagNumber(1)
+  $2.CelestialCoord get imageSkyCoord => $_getN(0);
+  @$pb.TagNumber(1)
+  set imageSkyCoord($2.CelestialCoord v) { setField(1, v); }
+  @$pb.TagNumber(1)
+  $core.bool hasImageSkyCoord() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearImageSkyCoord() => clearField(1);
+  @$pb.TagNumber(1)
+  $2.CelestialCoord ensureImageSkyCoord() => $_ensure(0);
+
+  @$pb.TagNumber(2)
+  $core.double get roll => $_getN(1);
+  @$pb.TagNumber(2)
+  set roll($core.double v) { $_setDouble(1, v); }
+  @$pb.TagNumber(2)
+  $core.bool hasRoll() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearRoll() => clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.double get fov => $_getN(2);
+  @$pb.TagNumber(3)
+  set fov($core.double v) { $_setDouble(2, v); }
+  @$pb.TagNumber(3)
+  $core.bool hasFov() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearFov() => clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.double get distortion => $_getN(3);
+  @$pb.TagNumber(4)
+  set distortion($core.double v) { $_setDouble(3, v); }
+  @$pb.TagNumber(4)
+  $core.bool hasDistortion() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearDistortion() => clearField(4);
+
+  /// Arcseconds.
+  @$pb.TagNumber(5)
+  $core.double get rmse => $_getN(4);
+  @$pb.TagNumber(5)
+  set rmse($core.double v) { $_setDouble(4, v); }
+  @$pb.TagNumber(5)
+  $core.bool hasRmse() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearRmse() => clearField(5);
+
+  @$pb.TagNumber(6)
+  $core.double get p90Error => $_getN(5);
+  @$pb.TagNumber(6)
+  set p90Error($core.double v) { $_setDouble(5, v); }
+  @$pb.TagNumber(6)
+  $core.bool hasP90Error() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearP90Error() => clearField(6);
+
+  @$pb.TagNumber(7)
+  $core.double get maxError => $_getN(6);
+  @$pb.TagNumber(7)
+  set maxError($core.double v) { $_setDouble(6, v); }
+  @$pb.TagNumber(7)
+  $core.bool hasMaxError() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearMaxError() => clearField(7);
+
+  @$pb.TagNumber(8)
+  $core.int get numMatches => $_getIZ(7);
+  @$pb.TagNumber(8)
+  set numMatches($core.int v) { $_setSignedInt32(7, v); }
+  @$pb.TagNumber(8)
+  $core.bool hasNumMatches() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearNumMatches() => clearField(8);
+
+  @$pb.TagNumber(9)
+  $core.double get prob => $_getN(8);
+  @$pb.TagNumber(9)
+  set prob($core.double v) { $_setDouble(8, v); }
+  @$pb.TagNumber(9)
+  $core.bool hasProb() => $_has(8);
+  @$pb.TagNumber(9)
+  void clearProb() => clearField(9);
+
+  @$pb.TagNumber(10)
+  $core.int get epochEquinox => $_getIZ(9);
+  @$pb.TagNumber(10)
+  set epochEquinox($core.int v) { $_setSignedInt32(9, v); }
+  @$pb.TagNumber(10)
+  $core.bool hasEpochEquinox() => $_has(9);
+  @$pb.TagNumber(10)
+  void clearEpochEquinox() => clearField(10);
+
+  @$pb.TagNumber(11)
+  $core.double get epochProperMotion => $_getN(10);
+  @$pb.TagNumber(11)
+  set epochProperMotion($core.double v) { $_setFloat(10, v); }
+  @$pb.TagNumber(11)
+  $core.bool hasEpochProperMotion() => $_has(10);
+  @$pb.TagNumber(11)
+  void clearEpochProperMotion() => clearField(11);
+
+  @$pb.TagNumber(12)
+  $4.Duration get solveTime => $_getN(11);
+  @$pb.TagNumber(12)
+  set solveTime($4.Duration v) { setField(12, v); }
+  @$pb.TagNumber(12)
+  $core.bool hasSolveTime() => $_has(11);
+  @$pb.TagNumber(12)
+  void clearSolveTime() => clearField(12);
+  @$pb.TagNumber(12)
+  $4.Duration ensureSolveTime() => $_ensure(11);
+
+  /// Result of SolveExtension.target_pixel.
+  @$pb.TagNumber(13)
+  $core.List<$2.CelestialCoord> get targetSkyCoord => $_getList(12);
+
+  /// Result of SolveExtension.target_sky_coord. (-1,-1) if sky target is not in
+  /// image.
+  @$pb.TagNumber(14)
+  $core.List<ImageCoord> get targetPixel => $_getList(13);
+
+  @$pb.TagNumber(15)
+  $core.List<StarInfo> get matchedStars => $_getList(14);
+
+  @$pb.TagNumber(16)
+  $core.List<ImageCoord> get patternCentroids => $_getList(15);
+
+  @$pb.TagNumber(17)
+  $core.List<StarInfo> get catalogStars => $_getList(16);
+
+  /// 3x3 matrix in row-major order.
+  @$pb.TagNumber(18)
+  $core.List<$core.double> get rotationMatrix => $_getList(17);
+}
+
+class StarInfo extends $pb.GeneratedMessage {
+  factory StarInfo({
+    ImageCoord? pixel,
+    $2.CelestialCoord? skyCoord,
+    $core.double? mag,
+  }) {
+    final $result = create();
+    if (pixel != null) {
+      $result.pixel = pixel;
+    }
+    if (skyCoord != null) {
+      $result.skyCoord = skyCoord;
+    }
+    if (mag != null) {
+      $result.mag = mag;
+    }
+    return $result;
+  }
+  StarInfo._() : super();
+  factory StarInfo.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory StarInfo.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'StarInfo', package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'), createEmptyInstance: create)
+    ..aOM<ImageCoord>(1, _omitFieldNames ? '' : 'pixel', subBuilder: ImageCoord.create)
+    ..aOM<$2.CelestialCoord>(2, _omitFieldNames ? '' : 'skyCoord', subBuilder: $2.CelestialCoord.create)
+    ..a<$core.double>(3, _omitFieldNames ? '' : 'mag', $pb.PbFieldType.OF)
+    ..hasRequiredFields = false
+  ;
+
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  StarInfo clone() => StarInfo()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  StarInfo copyWith(void Function(StarInfo) updates) => super.copyWith((message) => updates(message as StarInfo)) as StarInfo;
+
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static StarInfo create() => StarInfo._();
+  StarInfo createEmptyInstance() => create();
+  static $pb.PbList<StarInfo> createRepeated() => $pb.PbList<StarInfo>();
+  @$core.pragma('dart2js:noInline')
+  static StarInfo getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<StarInfo>(create);
+  static StarInfo? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  ImageCoord get pixel => $_getN(0);
+  @$pb.TagNumber(1)
+  set pixel(ImageCoord v) { setField(1, v); }
+  @$pb.TagNumber(1)
+  $core.bool hasPixel() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearPixel() => clearField(1);
+  @$pb.TagNumber(1)
+  ImageCoord ensurePixel() => $_ensure(0);
+
+  @$pb.TagNumber(2)
+  $2.CelestialCoord get skyCoord => $_getN(1);
+  @$pb.TagNumber(2)
+  set skyCoord($2.CelestialCoord v) { setField(2, v); }
+  @$pb.TagNumber(2)
+  $core.bool hasSkyCoord() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearSkyCoord() => clearField(2);
+  @$pb.TagNumber(2)
+  $2.CelestialCoord ensureSkyCoord() => $_ensure(1);
+
+  @$pb.TagNumber(3)
+  $core.double get mag => $_getN(2);
+  @$pb.TagNumber(3)
+  set mag($core.double v) { $_setFloat(2, v); }
+  @$pb.TagNumber(3)
+  $core.bool hasMag() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearMag() => clearField(3);
+}
+
 /// Diagnostic information summarizing Cedar's performance.
 class ProcessingStats extends $pb.GeneratedMessage {
   factory ProcessingStats({
@@ -2491,7 +2837,7 @@ class CalibrationData extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   void clearFovHorizontal() => clearField(4);
 
-  /// Tetra3's estimate of the lens distortion (pincushion or barrel).
+  /// The plate solver's estimate of the lens distortion (pincushion or barrel).
   /// Omitted if a sky/camera calibration has not succeeded.
   @$pb.TagNumber(5)
   $core.double get lensDistortion => $_getN(4);
@@ -2527,7 +2873,7 @@ class CalibrationData extends $pb.GeneratedMessage {
   @$pb.TagNumber(7)
   void clearPixelAngularSize() => clearField(7);
 
-  /// The 'match_max_error' value that we pass to Tetra3's solve_from_centroids.
+  /// The 'match_max_error' value that we pass to the plate solver.
   @$pb.TagNumber(8)
   $core.double get matchMaxError => $_getN(7);
   @$pb.TagNumber(8)
@@ -2644,13 +2990,13 @@ class LocationBasedInfo extends $pb.GeneratedMessage {
 /// Describes a telescope motion request from SkySafari or Cedar Sky.
 class SlewRequest extends $pb.GeneratedMessage {
   factory SlewRequest({
-    $0.CelestialCoord? target,
+    $2.CelestialCoord? target,
     $core.double? targetDistance,
     $core.double? targetAngle,
     ImageCoord? imagePos,
     $core.double? offsetRotationAxis,
     $core.double? offsetTiltAxis,
-    $2.CatalogEntry? targetCatalogEntry,
+    $1.CatalogEntry? targetCatalogEntry,
     $core.double? targetCatalogEntryDistance,
   }) {
     final $result = create();
@@ -2685,13 +3031,13 @@ class SlewRequest extends $pb.GeneratedMessage {
   factory SlewRequest.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'SlewRequest', package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'), createEmptyInstance: create)
-    ..aOM<$0.CelestialCoord>(1, _omitFieldNames ? '' : 'target', subBuilder: $0.CelestialCoord.create)
+    ..aOM<$2.CelestialCoord>(1, _omitFieldNames ? '' : 'target', subBuilder: $2.CelestialCoord.create)
     ..a<$core.double>(2, _omitFieldNames ? '' : 'targetDistance', $pb.PbFieldType.OD)
     ..a<$core.double>(3, _omitFieldNames ? '' : 'targetAngle', $pb.PbFieldType.OD)
     ..aOM<ImageCoord>(4, _omitFieldNames ? '' : 'imagePos', subBuilder: ImageCoord.create)
     ..a<$core.double>(5, _omitFieldNames ? '' : 'offsetRotationAxis', $pb.PbFieldType.OD)
     ..a<$core.double>(6, _omitFieldNames ? '' : 'offsetTiltAxis', $pb.PbFieldType.OD)
-    ..aOM<$2.CatalogEntry>(8, _omitFieldNames ? '' : 'targetCatalogEntry', subBuilder: $2.CatalogEntry.create)
+    ..aOM<$1.CatalogEntry>(8, _omitFieldNames ? '' : 'targetCatalogEntry', subBuilder: $1.CatalogEntry.create)
     ..a<$core.double>(9, _omitFieldNames ? '' : 'targetCatalogEntryDistance', $pb.PbFieldType.OD)
     ..hasRequiredFields = false
   ;
@@ -2719,15 +3065,15 @@ class SlewRequest extends $pb.GeneratedMessage {
 
   /// Identifies the target coordinate of the telescope motion request.
   @$pb.TagNumber(1)
-  $0.CelestialCoord get target => $_getN(0);
+  $2.CelestialCoord get target => $_getN(0);
   @$pb.TagNumber(1)
-  set target($0.CelestialCoord v) { setField(1, v); }
+  set target($2.CelestialCoord v) { setField(1, v); }
   @$pb.TagNumber(1)
   $core.bool hasTarget() => $_has(0);
   @$pb.TagNumber(1)
   void clearTarget() => clearField(1);
   @$pb.TagNumber(1)
-  $0.CelestialCoord ensureTarget() => $_ensure(0);
+  $2.CelestialCoord ensureTarget() => $_ensure(0);
 
   /// The distance, in degrees, between the boresight and the target. Omitted
   /// if there is no valid plate solution.
@@ -2802,15 +3148,15 @@ class SlewRequest extends $pb.GeneratedMessage {
 
   /// The Cedar Sky catalog entry, if any, for `target`.
   @$pb.TagNumber(8)
-  $2.CatalogEntry get targetCatalogEntry => $_getN(6);
+  $1.CatalogEntry get targetCatalogEntry => $_getN(6);
   @$pb.TagNumber(8)
-  set targetCatalogEntry($2.CatalogEntry v) { setField(8, v); }
+  set targetCatalogEntry($1.CatalogEntry v) { setField(8, v); }
   @$pb.TagNumber(8)
   $core.bool hasTargetCatalogEntry() => $_has(6);
   @$pb.TagNumber(8)
   void clearTargetCatalogEntry() => clearField(8);
   @$pb.TagNumber(8)
-  $2.CatalogEntry ensureTargetCatalogEntry() => $_ensure(6);
+  $1.CatalogEntry ensureTargetCatalogEntry() => $_ensure(6);
 
   /// If `target_catalog_entry` is given, this field is the distance, in
   /// degrees, between `target` and `target_catalog_entry.coord`.
@@ -2973,7 +3319,7 @@ class ErrorBoundedValue extends $pb.GeneratedMessage {
 /// the `catalog_entry_match` criteria.
 class FovCatalogEntry extends $pb.GeneratedMessage {
   factory FovCatalogEntry({
-    $2.CatalogEntry? entry,
+    $1.CatalogEntry? entry,
     ImageCoord? imagePos,
   }) {
     final $result = create();
@@ -2990,7 +3336,7 @@ class FovCatalogEntry extends $pb.GeneratedMessage {
   factory FovCatalogEntry.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'FovCatalogEntry', package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'), createEmptyInstance: create)
-    ..aOM<$2.CatalogEntry>(1, _omitFieldNames ? '' : 'entry', subBuilder: $2.CatalogEntry.create)
+    ..aOM<$1.CatalogEntry>(1, _omitFieldNames ? '' : 'entry', subBuilder: $1.CatalogEntry.create)
     ..aOM<ImageCoord>(2, _omitFieldNames ? '' : 'imagePos', subBuilder: ImageCoord.create)
     ..hasRequiredFields = false
   ;
@@ -3017,15 +3363,15 @@ class FovCatalogEntry extends $pb.GeneratedMessage {
   static FovCatalogEntry? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $2.CatalogEntry get entry => $_getN(0);
+  $1.CatalogEntry get entry => $_getN(0);
   @$pb.TagNumber(1)
-  set entry($2.CatalogEntry v) { setField(1, v); }
+  set entry($1.CatalogEntry v) { setField(1, v); }
   @$pb.TagNumber(1)
   $core.bool hasEntry() => $_has(0);
   @$pb.TagNumber(1)
   void clearEntry() => clearField(1);
   @$pb.TagNumber(1)
-  $2.CatalogEntry ensureEntry() => $_ensure(0);
+  $1.CatalogEntry ensureEntry() => $_ensure(0);
 
   @$pb.TagNumber(2)
   ImageCoord get imagePos => $_getN(1);
@@ -3046,7 +3392,7 @@ class ActionRequest extends $pb.GeneratedMessage {
     $core.bool? shutdownServer,
     $core.bool? stopSlew,
     $core.bool? saveImage,
-    $0.CelestialCoord? initiateSlew,
+    $2.CelestialCoord? initiateSlew,
     WiFiAccessPoint? updateWifiAccessPoint,
     $core.bool? restartServer,
     $core.bool? cancelCalibration,
@@ -3091,7 +3437,7 @@ class ActionRequest extends $pb.GeneratedMessage {
     ..aOB(3, _omitFieldNames ? '' : 'shutdownServer')
     ..aOB(4, _omitFieldNames ? '' : 'stopSlew')
     ..aOB(5, _omitFieldNames ? '' : 'saveImage')
-    ..aOM<$0.CelestialCoord>(6, _omitFieldNames ? '' : 'initiateSlew', subBuilder: $0.CelestialCoord.create)
+    ..aOM<$2.CelestialCoord>(6, _omitFieldNames ? '' : 'initiateSlew', subBuilder: $2.CelestialCoord.create)
     ..aOM<WiFiAccessPoint>(7, _omitFieldNames ? '' : 'updateWifiAccessPoint', subBuilder: WiFiAccessPoint.create)
     ..aOB(8, _omitFieldNames ? '' : 'restartServer')
     ..aOB(9, _omitFieldNames ? '' : 'cancelCalibration')
@@ -3185,15 +3531,15 @@ class ActionRequest extends $pb.GeneratedMessage {
   /// Cedar-aim is initiating a goto operation. This might be from a Cedar Sky
   /// catalog selection, or it might be a user-entered RA/Dec value.
   @$pb.TagNumber(6)
-  $0.CelestialCoord get initiateSlew => $_getN(5);
+  $2.CelestialCoord get initiateSlew => $_getN(5);
   @$pb.TagNumber(6)
-  set initiateSlew($0.CelestialCoord v) { setField(6, v); }
+  set initiateSlew($2.CelestialCoord v) { setField(6, v); }
   @$pb.TagNumber(6)
   $core.bool hasInitiateSlew() => $_has(5);
   @$pb.TagNumber(6)
   void clearInitiateSlew() => clearField(6);
   @$pb.TagNumber(6)
-  $0.CelestialCoord ensureInitiateSlew() => $_ensure(5);
+  $2.CelestialCoord ensureInitiateSlew() => $_ensure(5);
 
   /// Update ssid, psk, and/or channel setting for Cedar server's
   /// WiFi access point. TODO: Switches to access point mode if currently

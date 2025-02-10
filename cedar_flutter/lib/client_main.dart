@@ -29,7 +29,6 @@ import 'package:sprintf/sprintf.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 import 'cedar.pbgrpc.dart' as cedar_rpc;
 import 'platform.dart';
-import 'tetra3.pb.dart';
 
 // To generate release build:
 // flutter build web --no-web-resources-cdn
@@ -560,19 +559,19 @@ class MyHomePageState extends State<MyHomePage> {
           response.image.rectangle.height.toDouble() / _binFactor);
     }
     if (response.hasPlateSolution()) {
-      SolveResult plateSolution = response.plateSolution;
-      if (plateSolution.status == SolveStatus.MATCH_FOUND) {
+      PlateSolution plateSolution = response.plateSolution;
+      if (plateSolution != null) {
         _hasSolution = true;
         _solutionCentroids = <Offset>[];
         for (var centroid in plateSolution.patternCentroids) {
           _solutionCentroids!.add(Offset(centroid.x, centroid.y));
         }
-        if (plateSolution.targetCoords.isNotEmpty) {
-          solutionRA = plateSolution.targetCoords.first.ra;
-          solutionDec = plateSolution.targetCoords.first.dec;
+        if (plateSolution.targetSkyCoord.isNotEmpty) {
+          solutionRA = plateSolution.targetSkyCoord.first.ra;
+          solutionDec = plateSolution.targetSkyCoord.first.dec;
         } else {
-          solutionRA = plateSolution.imageCenterCoords.ra;
-          solutionDec = plateSolution.imageCenterCoords.dec;
+          solutionRA = plateSolution.imageSkyCoord.ra;
+          solutionDec = plateSolution.imageSkyCoord.dec;
         }
         _solutionRollAngle = plateSolution.roll;
         solutionRMSE = plateSolution.rmse;
