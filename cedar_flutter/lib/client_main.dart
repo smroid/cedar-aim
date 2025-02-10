@@ -1930,7 +1930,7 @@ class MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     final bool healthy = _serverConnected && (_hasCamera || _demoMode);
-    if (healthy) {
+    if (healthy && _wifiClientDialog != null) {
       _wifiClientDialog!(/*open=*/ false, this, context);
     }
     // final bool healthy = false;
@@ -1995,7 +1995,7 @@ class MyHomePageState extends State<MyHomePage> {
     if (elapsed.inMilliseconds < 1000) {
       return const Center(child: CircularProgressIndicator());
     }
-    if (isMobile() && !_serverConnected) {
+    if (isMobile() && !_serverConnected && _wifiClientDialog != null) {
       SchedulerBinding.instance.addPostFrameCallback((_) {
         _wifiClientDialog!(/*open=*/ true, this, context);
       });
