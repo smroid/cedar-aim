@@ -1015,6 +1015,7 @@ class MyHomePageState extends State<MyHomePage> {
                         _demoFile = newValue!;
                         _setDemoImage(_demoFile);
                       });
+                      Navigator.of(context).pop();
                     })
               ]),
               const SizedBox(height: 15),
