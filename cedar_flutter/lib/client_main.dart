@@ -699,7 +699,7 @@ class MyHomePageState extends State<MyHomePage> {
   // Issue repeated request/response RPCs.
   Future<void> _refreshStateFromServer() async {
     await Future.doWhile(() async {
-      await Future.delayed(const Duration(milliseconds: 50));
+      await Future.delayed(const Duration(milliseconds: 100));
       if (!_paintPending) {
         await _getFrameFromServer();
       }
