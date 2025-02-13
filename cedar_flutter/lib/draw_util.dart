@@ -204,12 +204,17 @@ void drawSlewDirections(
   final String rotationCue = altAz
       ? (offsetRotationAxis >= 0 ? "clockwise" : "anti-clockwise")
       : (offsetRotationAxis >= 0 ? "towards east" : "towards west");
+  final String rotationIconChar =
+      altAz ? (offsetRotationAxis >= 0 ? "↻ " : "↺ ") : "";
+
+  final String tiltAxisName = altAz ? "Alt" : "Dec";
   final bool towardsPole =
       northernHemisphere ? offsetTiltAxis >= 0 : offsetTiltAxis <= 0;
   final String tiltCue = altAz
       ? (offsetTiltAxis > 0 ? "up" : "down")
       : (towardsPole ? "towards pole" : "away from pole");
-  final String tiltAxisName = altAz ? "Alt" : "Dec";
+  final String tiltIconChar = altAz ? (offsetTiltAxis > 0 ? "⇑ " : "⇓ ") : "";
+
   int precision = 0;
   if (offsetRotationAxis.abs() < 10.0 && offsetTiltAxis.abs() < 10.0) {
     precision = 1;
@@ -249,6 +254,10 @@ void drawSlewDirections(
             TextSpan(text: "°", style: TextStyle(fontSize: largeFont)),
             const TextSpan(text: "\n"),
             TextSpan(
+              text: sprintf("%s", [rotationIconChar]),
+              style: TextStyle(fontSize: smallFont),
+            ),
+            TextSpan(
               text: sprintf("%s", [rotationCue]),
               style:
                   TextStyle(fontSize: smallFont, fontStyle: FontStyle.italic),
@@ -265,6 +274,10 @@ void drawSlewDirections(
             ),
             TextSpan(text: "°", style: TextStyle(fontSize: largeFont)),
             const TextSpan(text: "\n"),
+            TextSpan(
+              text: sprintf("%s", [tiltIconChar]),
+              style: TextStyle(fontSize: smallFont),
+            ),
             TextSpan(
               text: sprintf("%s", [tiltCue]),
               style:

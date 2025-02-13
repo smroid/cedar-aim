@@ -242,7 +242,7 @@ class _MainImagePainter extends CustomPainter {
           slew.targetCatalogEntry,
           canvas,
           color,
-          const Offset(5, 5),
+          const Offset(15, 15),
           state.preferences?.mountType == cedar_rpc.MountType.ALT_AZ,
           state._northernHemisphere,
           slew.offsetRotationAxis,
