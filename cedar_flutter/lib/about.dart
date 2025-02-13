@@ -99,7 +99,14 @@ Future<void> aboutScreen(MyHomePageState state, BuildContext context) async {
 Widget systemInfo(MyHomePageState state) {
   final portrait = MediaQuery.of(_context).orientation == Orientation.portrait;
   final serverInfo = state.serverInformation!;
-  final platform = isWeb() ? "Web" : "Mobile";
+  var platform = "Unknown";
+  if (isWeb()) {
+    platform = "Web";
+  } else if (isIOS()) {
+    platform = "iOS";
+  } else if (isAndroid()) {
+    platform = "Android";
+  }
 
   return RotatedBox(
       quarterTurns: portrait ? 3 : 0,
@@ -175,10 +182,9 @@ Widget systemInfo(MyHomePageState state) {
             _scaledText(serverInfo.serialNumber)
           ]),
           const SizedBox(height: 15),
-          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-            _scaledText("Platform"),
-            _scaledText(platform)
-          ]),
+          Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [_scaledText("Platform"), _scaledText(platform)]),
         ]))
       ]));
 }
