@@ -560,28 +560,25 @@ class MyHomePageState extends State<MyHomePage> {
     }
     if (response.hasPlateSolution()) {
       PlateSolution plateSolution = response.plateSolution;
-      if (plateSolution != null) {
-        _hasSolution = true;
-        _solutionCentroids = <Offset>[];
-        for (var centroid in plateSolution.patternCentroids) {
-          _solutionCentroids!.add(Offset(centroid.x, centroid.y));
-        }
-        if (plateSolution.targetSkyCoord.isNotEmpty) {
-          solutionRA = plateSolution.targetSkyCoord.first.ra;
-          solutionDec = plateSolution.targetSkyCoord.first.dec;
-        } else {
-          solutionRA = plateSolution.imageSkyCoord.ra;
-          solutionDec = plateSolution.imageSkyCoord.dec;
-        }
-        _solutionRollAngle = plateSolution.roll;
-        solutionRMSE = plateSolution.rmse;
-        _solutionFOV = plateSolution.fov;
-        if (response.hasLocationBasedInfo()) {
-          locationBasedInfo = response.locationBasedInfo;
-        }
-        _scopeFov =
-            preferences!.eyepieceFov * _imageRegion.width / _solutionFOV;
+      _hasSolution = true;
+      _solutionCentroids = <Offset>[];
+      for (var centroid in plateSolution.patternCentroids) {
+        _solutionCentroids!.add(Offset(centroid.x, centroid.y));
       }
+      if (plateSolution.targetSkyCoord.isNotEmpty) {
+        solutionRA = plateSolution.targetSkyCoord.first.ra;
+        solutionDec = plateSolution.targetSkyCoord.first.dec;
+      } else {
+        solutionRA = plateSolution.imageSkyCoord.ra;
+        solutionDec = plateSolution.imageSkyCoord.dec;
+      }
+      _solutionRollAngle = plateSolution.roll;
+      solutionRMSE = plateSolution.rmse;
+      _solutionFOV = plateSolution.fov;
+      if (response.hasLocationBasedInfo()) {
+        locationBasedInfo = response.locationBasedInfo;
+      }
+      _scopeFov = preferences!.eyepieceFov * _imageRegion.width / _solutionFOV;
     } else if (_scopeFov == 0) {
       // No plate solution yet, so we don't know the image scale. For now,
       // assume the eyepiece FOV is 1/10 the image width.
@@ -1277,7 +1274,9 @@ class MyHomePageState extends State<MyHomePage> {
                 : (_canAlign
                     ? (_slewRequest == null
                         ? setupAlignSkipOrDoneButton()
-                        : slewReAlignButton())
+                        : (_boresightImageBytes != null
+                            ? slewReAlignButton()
+                            : Container()))
                     : (_slewRequest == null &&
                             !_setupMode &&
                             _showCatalogBrowser != null
