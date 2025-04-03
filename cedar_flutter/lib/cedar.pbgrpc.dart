@@ -2,7 +2,7 @@
 //  Generated code. Do not modify.
 //  source: cedar.proto
 //
-// @dart = 2.12
+// @dart = 3.3
 
 // ignore_for_file: annotate_overrides, camel_case_types, comment_references
 // ignore_for_file: constant_identifier_names, library_prefixes
@@ -202,48 +202,48 @@ abstract class CedarServiceBase extends $grpc.Service {
         ($1.ConstellationResponse value) => value.writeToBuffer()));
   }
 
-  $async.Future<$0.ServerLogResult> getServerLog_Pre($grpc.ServiceCall call, $async.Future<$0.ServerLogRequest> request) async {
-    return getServerLog(call, await request);
+  $async.Future<$0.ServerLogResult> getServerLog_Pre($grpc.ServiceCall $call, $async.Future<$0.ServerLogRequest> $request) async {
+    return getServerLog($call, await $request);
   }
 
-  $async.Future<$0.FixedSettings> updateFixedSettings_Pre($grpc.ServiceCall call, $async.Future<$0.FixedSettings> request) async {
-    return updateFixedSettings(call, await request);
+  $async.Future<$0.FixedSettings> updateFixedSettings_Pre($grpc.ServiceCall $call, $async.Future<$0.FixedSettings> $request) async {
+    return updateFixedSettings($call, await $request);
   }
 
-  $async.Future<$0.OperationSettings> updateOperationSettings_Pre($grpc.ServiceCall call, $async.Future<$0.OperationSettings> request) async {
-    return updateOperationSettings(call, await request);
+  $async.Future<$0.OperationSettings> updateOperationSettings_Pre($grpc.ServiceCall $call, $async.Future<$0.OperationSettings> $request) async {
+    return updateOperationSettings($call, await $request);
   }
 
-  $async.Future<$0.Preferences> updatePreferences_Pre($grpc.ServiceCall call, $async.Future<$0.Preferences> request) async {
-    return updatePreferences(call, await request);
+  $async.Future<$0.Preferences> updatePreferences_Pre($grpc.ServiceCall $call, $async.Future<$0.Preferences> $request) async {
+    return updatePreferences($call, await $request);
   }
 
-  $async.Future<$0.FrameResult> getFrame_Pre($grpc.ServiceCall call, $async.Future<$0.FrameRequest> request) async {
-    return getFrame(call, await request);
+  $async.Future<$0.FrameResult> getFrame_Pre($grpc.ServiceCall $call, $async.Future<$0.FrameRequest> $request) async {
+    return getFrame($call, await $request);
   }
 
-  $async.Future<$0.EmptyMessage> initiateAction_Pre($grpc.ServiceCall call, $async.Future<$0.ActionRequest> request) async {
-    return initiateAction(call, await request);
+  $async.Future<$0.EmptyMessage> initiateAction_Pre($grpc.ServiceCall $call, $async.Future<$0.ActionRequest> $request) async {
+    return initiateAction($call, await $request);
   }
 
-  $async.Future<$1.QueryCatalogResponse> queryCatalogEntries_Pre($grpc.ServiceCall call, $async.Future<$1.QueryCatalogRequest> request) async {
-    return queryCatalogEntries(call, await request);
+  $async.Future<$1.QueryCatalogResponse> queryCatalogEntries_Pre($grpc.ServiceCall $call, $async.Future<$1.QueryCatalogRequest> $request) async {
+    return queryCatalogEntries($call, await $request);
   }
 
-  $async.Future<$1.CatalogEntry> getCatalogEntry_Pre($grpc.ServiceCall call, $async.Future<$1.CatalogEntryKey> request) async {
-    return getCatalogEntry(call, await request);
+  $async.Future<$1.CatalogEntry> getCatalogEntry_Pre($grpc.ServiceCall $call, $async.Future<$1.CatalogEntryKey> $request) async {
+    return getCatalogEntry($call, await $request);
   }
 
-  $async.Future<$1.CatalogDescriptionResponse> getCatalogDescriptions_Pre($grpc.ServiceCall call, $async.Future<$0.EmptyMessage> request) async {
-    return getCatalogDescriptions(call, await request);
+  $async.Future<$1.CatalogDescriptionResponse> getCatalogDescriptions_Pre($grpc.ServiceCall $call, $async.Future<$0.EmptyMessage> $request) async {
+    return getCatalogDescriptions($call, await $request);
   }
 
-  $async.Future<$1.ObjectTypeResponse> getObjectTypes_Pre($grpc.ServiceCall call, $async.Future<$0.EmptyMessage> request) async {
-    return getObjectTypes(call, await request);
+  $async.Future<$1.ObjectTypeResponse> getObjectTypes_Pre($grpc.ServiceCall $call, $async.Future<$0.EmptyMessage> $request) async {
+    return getObjectTypes($call, await $request);
   }
 
-  $async.Future<$1.ConstellationResponse> getConstellations_Pre($grpc.ServiceCall call, $async.Future<$0.EmptyMessage> request) async {
-    return getConstellations(call, await request);
+  $async.Future<$1.ConstellationResponse> getConstellations_Pre($grpc.ServiceCall $call, $async.Future<$0.EmptyMessage> $request) async {
+    return getConstellations($call, await $request);
   }
 
   $async.Future<$0.ServerLogResult> getServerLog($grpc.ServiceCall call, $0.ServerLogRequest request);
