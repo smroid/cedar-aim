@@ -9,6 +9,7 @@ import 'package:cedar_flutter/draw_slew_target.dart';
 import 'package:cedar_flutter/draw_util.dart';
 import 'package:cedar_flutter/geolocation.dart';
 import 'package:cedar_flutter/google/protobuf/timestamp.pb.dart';
+import 'package:cedar_flutter/interstitial_msg.dart';
 import 'package:cedar_flutter/perf_stats_dialog.dart';
 import 'package:cedar_flutter/server_log.dart';
 import 'package:cedar_flutter/settings.dart';
@@ -23,7 +24,6 @@ import 'package:flutter/widgets.dart' as dart_widgets;
 import 'package:grpc/grpc.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:path/path.dart' as path;
-import 'package:protobuf/protobuf.dart';
 import 'package:provider/provider.dart';
 import 'package:sprintf/sprintf.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
@@ -341,19 +341,9 @@ class MyHomePageState extends State<MyHomePage> {
     _refreshStateFromServer();
   }
 
-  Future<void> _initLocation() async {
-    _offerMap = isWeb() || !await canGetLocation();
-    _tzOffset = DateTime.now().timeZoneOffset; // Get platform timezone.
-    if (await canGetLocation()) {
-      // Try to get location from the platform. If we are a web app, served
-      // over http (not https), we won't be able to get location here.
-      final platformPosition = await getLocation();
-      if (platformPosition != null) {
-        mapPosition =
-            LatLng(platformPosition.latitude, platformPosition.longitude);
-      }
-    }
-  }
+  bool _showedIntroExplainer = false;
+  bool _showedFocusExplainer = false;
+  bool _showedAlignExplainer = false;
 
   // Whether we should offer a menu item to set the observer location via a map.
   bool _offerMap = false;
@@ -454,7 +444,19 @@ class MyHomePageState extends State<MyHomePage> {
   // define a flag so we can know when it is done.
   bool _transitionToSetup = false;
 
-  // Values set from on-screen controls.
+  Future<void> _initLocation() async {
+    _offerMap = isWeb() || !await canGetLocation();
+    _tzOffset = DateTime.now().timeZoneOffset; // Get platform timezone.
+    if (await canGetLocation()) {
+      // Try to get location from the platform. If we are a web app, served
+      // over http (not https), we won't be able to get location here.
+      final platformPosition = await getLocation();
+      if (platformPosition != null) {
+        mapPosition =
+            LatLng(platformPosition.latitude, platformPosition.longitude);
+      }
+    }
+  }
 
   cedar_rpc.CedarClient client() {
     return getClient();
@@ -878,6 +880,7 @@ class MyHomePageState extends State<MyHomePage> {
                         }
                         _setOperatingMode(
                             /*setupMode=*/ true, /*focusAid=*/ true);
+                        _showedFocusExplainer = false;
                       });
                     } else if (newValue == "Align") {
                       setState(() {
@@ -887,6 +890,7 @@ class MyHomePageState extends State<MyHomePage> {
                         }
                         _setOperatingMode(
                             /*setupMode=*/ true, /*focusAid=*/ false);
+                        _showedAlignExplainer = false;
                       });
                     } else {
                       // Aim.
@@ -1253,7 +1257,7 @@ class MyHomePageState extends State<MyHomePage> {
                             child: Align(
                                 alignment: Alignment.center,
                                 child: Text(
-                                  "Center a highlighted object in telescope, then tap the object",
+                                  "Move telescope to center a highlighted object, then tap on it",
                                   maxLines: 8,
                                   textAlign: TextAlign.center,
                                   style: TextStyle(color: color, fontSize: 12),
@@ -1933,12 +1937,65 @@ class MyHomePageState extends State<MyHomePage> {
     if (healthy && _wifiClientDialog != null) {
       _wifiClientDialog!(/*open=*/ false, this, context);
     }
-    // final bool healthy = false;
 
     // This method is rerun every time setState() is called.
     bool hideAppBar = Provider.of<SettingsModel>(context, listen: false)
         .preferencesProto
         .hideAppBar;
+    final String product =
+        serverInformation != null ? serverInformation!.productName : "e-finder";
+
+    if (!_showedIntroExplainer) {
+      return interstitialDialog(
+        "Welcome to Cedar Aim!\n\nThe next few screens will walk you through the "
+        "setup procedure for your $product.",
+        context,
+        onConfirm: () {
+          setState(() {
+            _showedIntroExplainer = true;
+          });
+        },
+      );
+    }
+    if (!_showedFocusExplainer && _setupMode && _focusAid) {
+      return interstitialDialog(
+        product == "Hopper"
+            ? "We will verify the focus of your $product, which was set "
+                "at the factory and should not need adjustment.\n\n"
+                "Please point your telescope "
+                "towards some stars. At the next screen, one of the stars "
+                "will be magnified; it should be round and compact.\n\n"
+                "You can select 'Day' to check focus using a daylight scene."
+            : "We will check and adjust the focusing of your $product.\n\nPlease point "
+                "your telescope towards some stars. "
+                "At the next screen, adjust the $product lens to make "
+                "the highlighted star image as compact as possible.\n\n"
+                "You can select 'Day' to adjust focus using a daylight scene.",
+        context,
+        onConfirm: () {
+          setState(() {
+            _showedFocusExplainer = true;
+            _showedAlignExplainer = false;
+          });
+        },
+      );
+    }
+    if (!_showedAlignExplainer && _setupMode && !_focusAid) {
+      return interstitialDialog(
+        "We will set the alignment of your $product "
+        "relative to your telescope.\n\nStart by pointing your telescope at "
+        "any bright star or planet, preferably one that is the brightest in "
+        "its area of the sky. Then, follow the prompt on the next screen.\n\n"
+        "You can select 'Day' to set alignment using a daylight scene.",
+        context,
+        onConfirm: () {
+          setState(() {
+            _showedAlignExplainer = true;
+          });
+        },
+      );
+    }
+
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
