@@ -202,7 +202,7 @@ void drawSlewDirections(
 
   final String rotationAxisName = altAz ? "Az " : "RA ";
   final String rotationCue = altAz
-      ? (offsetRotationAxis >= 0 ? "clockwise" : "anti-clockwise")
+      ? (offsetRotationAxis >= 0 ? "right" : "left")
       : (offsetRotationAxis >= 0 ? "towards east" : "towards west");
   final String rotationIconChar =
       altAz ? (offsetRotationAxis >= 0 ? "↻ " : "↺ ") : "";
