@@ -1656,6 +1656,11 @@ class MyHomePageState extends State<MyHomePage> {
     return dart_widgets.Image.memory(_imageBytes, gaplessPlayback: true);
   }
 
+  // Use a generous hit tolerance, otherwise it is difficult to tap on a sky
+  // object. There can be multiple objects within this tolerance; we take care
+  // to return the closest one.
+  static const int hitTolerance = 50;
+
   Widget _mainImage() {
     return ClipRect(
         child: CustomPaint(
@@ -1673,7 +1678,7 @@ class MyHomePageState extends State<MyHomePage> {
                       await _designateBoresight(localPosition);
                       _alignTargetTapped = true;
                     } else {
-                      var star = _findStarHit(localPosition, 15);
+                      var star = _findStarHit(localPosition, hitTolerance);
                       if (star != null) {
                         await _designateBoresight(Offset(
                           star.centroidPosition.x,
@@ -1685,7 +1690,7 @@ class MyHomePageState extends State<MyHomePage> {
                   }
                 } else {
                   // Aim mode.
-                  var object = _findObjectHit(localPosition, 15);
+                  var object = _findObjectHit(localPosition, hitTolerance);
                   if (object != null && _objectInfoDialog != null) {
                     var selEntry = SelectedCatalogEntry(entry: object.entry);
                     _objectInfoDialog!(this, context, selEntry);
