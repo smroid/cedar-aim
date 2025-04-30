@@ -1230,7 +1230,7 @@ class MyHomePageState extends State<MyHomePage> {
                           : "Adjust focus",
                       maxLines: 8,
                       textAlign: TextAlign.center,
-                      style: TextStyle(color: color, fontSize: 12),
+                      style: TextStyle(color: color),
                       textScaler: textScaler(context),
                     )))
             : (_canAlign && _slewRequest == null
@@ -1245,14 +1245,14 @@ class MyHomePageState extends State<MyHomePage> {
                               "Tap image where telescope is pointed",
                               maxLines: 8,
                               textAlign: TextAlign.center,
-                              style: TextStyle(color: color, fontSize: 12),
+                              style: TextStyle(color: color),
                               textScaler: textScaler(context),
                             )))
                     : _rowOrColumn(portrait, [
                         SizedBox(
                             width: (portrait ? 120 : 80) *
                                 textScaleFactor(context),
-                            height: (portrait ? 60 : 120) *
+                            height: (portrait ? 80 : 120) *
                                 textScaleFactor(context),
                             child: Align(
                                 alignment: Alignment.center,
@@ -1260,7 +1260,7 @@ class MyHomePageState extends State<MyHomePage> {
                                   "Move telescope to center a highlighted object, then tap on it",
                                   maxLines: 8,
                                   textAlign: TextAlign.center,
-                                  style: TextStyle(color: color, fontSize: 12),
+                                  style: TextStyle(color: color),
                                   textScaler: textScaler(context),
                                 ))),
                       ])

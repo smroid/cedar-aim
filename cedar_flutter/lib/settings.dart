@@ -178,13 +178,13 @@ double textScaleFactor(BuildContext context) {
   final provider = Provider.of<SettingsModel>(context, listen: false);
   switch (provider.preferencesProto.textSizeIndex) {
     case -1:
-      return 1.0;
-    case 0:
       return 1.25;
-    case 1:
+    case 0:
       return 1.5;
+    case 1:
+      return 1.75;
   }
-  return 1.25;
+  return 1.5;
 }
 
 TextScaler textScaler(BuildContext context) {
