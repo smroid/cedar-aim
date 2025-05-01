@@ -1952,8 +1952,8 @@ class MyHomePageState extends State<MyHomePage> {
 
     if (!_showedIntroExplainer) {
       return interstitialDialog(
-        "Welcome to Cedar Aim!\n\nThe next few screens will walk you through the "
-        "setup procedure for your $product.",
+        "Welcome to Cedar Aim!\n\nThe next few screens will walk you through "
+        "setting up your $product.",
         context,
         onConfirm: () {
           setState(() {
