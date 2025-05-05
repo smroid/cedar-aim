@@ -200,7 +200,7 @@ void drawSlewDirections(
     }
   }
 
-  final String rotationAxisName = altAz ? "Az " : "RA ";
+  final String rotationAxisName = altAz ? "Az" : "RA";
   final String rotationCue = altAz
       ? (offsetRotationAxis >= 0 ? "right" : "left")
       : (offsetRotationAxis >= 0 ? "towards east" : "towards west");
@@ -232,8 +232,9 @@ void drawSlewDirections(
   while (tiltFormatted.length < width) {
     tiltFormatted = " $tiltFormatted";
   }
-  var smallFont = 16.0 * textScaleFactor(context);
-  var largeFont = 32.0 * textScaleFactor(context);
+  // Don't scale slew directions text with preferences.
+  var smallFont = 24.0;
+  var largeFont = 48.0;
   final textPainter = TextPainter(
       text: TextSpan(
           children: [
@@ -243,16 +244,16 @@ void drawSlewDirections(
                   TextStyle(fontSize: smallFont, fontStyle: FontStyle.italic),
             ),
             TextSpan(
-              text: sprintf("%s ", [rotationAxisName]),
-              style: TextStyle(fontSize: smallFont),
-            ),
-            TextSpan(
               text: rotationFormatted,
               style:
                   TextStyle(fontSize: largeFont, fontWeight: FontWeight.bold),
             ),
             TextSpan(text: "°", style: TextStyle(fontSize: largeFont)),
             const TextSpan(text: "\n"),
+            TextSpan(
+              text: sprintf("%s ", [rotationAxisName]),
+              style: TextStyle(fontSize: smallFont),
+            ),
             TextSpan(
               text: sprintf("%s", [rotationIconChar]),
               style: TextStyle(fontSize: smallFont),
@@ -262,11 +263,7 @@ void drawSlewDirections(
               style:
                   TextStyle(fontSize: smallFont, fontStyle: FontStyle.italic),
             ),
-            const TextSpan(text: "\n"),
-            TextSpan(
-              text: sprintf("%s ", [tiltAxisName]),
-              style: TextStyle(fontSize: smallFont),
-            ),
+            const TextSpan(text: "\n\n"),
             TextSpan(
               text: tiltFormatted,
               style:
@@ -274,6 +271,10 @@ void drawSlewDirections(
             ),
             TextSpan(text: "°", style: TextStyle(fontSize: largeFont)),
             const TextSpan(text: "\n"),
+            TextSpan(
+              text: sprintf("%s ", [tiltAxisName]),
+              style: TextStyle(fontSize: smallFont),
+            ),
             TextSpan(
               text: sprintf("%s", [tiltIconChar]),
               style: TextStyle(fontSize: smallFont),
@@ -289,16 +290,15 @@ void drawSlewDirections(
             color: color,
           )),
       textDirection: TextDirection.ltr,
-      textAlign: TextAlign.left);
+      textAlign: TextAlign.center);
   textPainter.layout();
 
   final pivot = textPainter.size.center(pos);
   if (portrait) {
     canvas.save();
-    canvas.translate(pivot.dx, pivot.dy);
+    canvas.translate(pivot.dy, pivot.dx);
     canvas.rotate(-pi / 2);
-    // The fudge factors are empirical...
-    canvas.translate(-pivot.dx + 10, -pivot.dy + 10);
+    canvas.translate(-pivot.dx, -pivot.dy);
   }
 
   // Our slew directions might overlap with other stuff on the image,
