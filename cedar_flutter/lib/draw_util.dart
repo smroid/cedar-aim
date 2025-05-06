@@ -150,12 +150,9 @@ void drawArrow(
   if (text.isNotEmpty) {
     // Position text some distance beyond the arrowhead. Longer text gets moved
     // out a little further.
-    double dist = 20.0 + 1.0 * text.length;
-    var textPos = Offset(
-        start.dx +
-            (length + dist * textScaleFactor(context)) * math.cos(angleRad),
-        start.dy -
-            (length + dist * textScaleFactor(context)) * math.sin(angleRad));
+    double dist = 30.0 + 1.0 * text.length * textScaleFactor(context);
+    var textPos = Offset(start.dx + (length + dist) * math.cos(angleRad),
+        start.dy - (length + dist) * math.sin(angleRad));
     drawText(context, canvas, color, textPos, text, portrait);
   }
 }
