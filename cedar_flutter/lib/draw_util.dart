@@ -148,8 +148,14 @@ void drawArrow(
   path.close();
   canvas.drawPath(path, paint);
   if (text.isNotEmpty) {
-    var textPos = Offset(start.dx + (length + 20) * math.cos(angleRad) - 10,
-        start.dy - (length + 20) * math.sin(angleRad) - 10);
+    // Position text some distance beyond the arrowhead. Longer text gets moved
+    // out a little further.
+    double dist = 20.0 + 1.0 * text.length;
+    var textPos = Offset(
+        start.dx +
+            (length + dist * textScaleFactor(context)) * math.cos(angleRad),
+        start.dy -
+            (length + dist * textScaleFactor(context)) * math.sin(angleRad));
     drawText(context, canvas, color, textPos, text, portrait);
   }
 }
