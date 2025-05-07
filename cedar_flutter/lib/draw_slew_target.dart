@@ -3,6 +3,7 @@
 
 import 'dart:math' as math;
 import 'package:cedar_flutter/draw_util.dart';
+import 'package:cedar_flutter/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:sprintf/sprintf.dart';
 
@@ -44,15 +45,19 @@ void drawSlewTarget(
     bool drawDistanceText,
     bool portrait) {
   var distanceText = "";
-  if (targetDistance > 1) {
+  if (targetDistance > 10) {
+    distanceText = sprintf("%.0f°", [targetDistance]);
+  } else if (targetDistance > 1) {
     distanceText = sprintf("%.1f°", [targetDistance]);
   } else {
     final distanceMinutes = targetDistance * 60;
-    if (distanceMinutes > 1) {
+    if (distanceMinutes > 10) {
+      distanceText = sprintf("%.0f'", [distanceMinutes]);
+    } else if (distanceMinutes > 1) {
       distanceText = sprintf("%.1f'", [distanceMinutes]);
     } else {
       final distanceSeconds = distanceMinutes * 60;
-      distanceText = sprintf("%.1f''", [distanceSeconds]);
+      distanceText = sprintf("%.0f''", [distanceSeconds]);
     }
   }
   if (slewTarget == null) {
@@ -78,7 +83,8 @@ void drawSlewTarget(
   final bsRadius = boresightDiameterPix / 2;
   drawBullseye(canvas, color, boresight, bsRadius, rollAngleRad);
   if (drawDistanceText) {
-    final textPos = Offset(boresight.dx - bsRadius - 40, boresight.dy);
+    final textPos = Offset(
+        boresight.dx - bsRadius - 20 * textScaleFactor(context), boresight.dy);
     drawText(context, canvas, color, textPos, distanceText, portrait);
   }
 }
