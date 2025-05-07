@@ -462,6 +462,7 @@ const Image$json = {
   '1': 'Image',
   '2': [
     {'1': 'binning_factor', '3': 1, '4': 1, '5': 5, '10': 'binningFactor'},
+    {'1': 'rotation_size_ratio', '3': 4, '4': 1, '5': 1, '10': 'rotationSizeRatio'},
     {'1': 'rectangle', '3': 2, '4': 1, '5': 11, '6': '.cedar.Rectangle', '10': 'rectangle'},
     {'1': 'image_data', '3': 3, '4': 1, '5': 12, '10': 'imageData'},
   ],
@@ -469,9 +470,10 @@ const Image$json = {
 
 /// Descriptor for `Image`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List imageDescriptor = $convert.base64Decode(
-    'CgVJbWFnZRIlCg5iaW5uaW5nX2ZhY3RvchgBIAEoBVINYmlubmluZ0ZhY3RvchIuCglyZWN0YW'
-    '5nbGUYAiABKAsyEC5jZWRhci5SZWN0YW5nbGVSCXJlY3RhbmdsZRIdCgppbWFnZV9kYXRhGAMg'
-    'ASgMUglpbWFnZURhdGE=');
+    'CgVJbWFnZRIlCg5iaW5uaW5nX2ZhY3RvchgBIAEoBVINYmlubmluZ0ZhY3RvchIuChNyb3RhdG'
+    'lvbl9zaXplX3JhdGlvGAQgASgBUhFyb3RhdGlvblNpemVSYXRpbxIuCglyZWN0YW5nbGUYAiAB'
+    'KAsyEC5jZWRhci5SZWN0YW5nbGVSCXJlY3RhbmdsZRIdCgppbWFnZV9kYXRhGAMgASgMUglpbW'
+    'FnZURhdGE=');
 
 @$core.Deprecated('Use rectangleDescriptor instead')
 const Rectangle$json = {

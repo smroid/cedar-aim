@@ -1699,6 +1699,7 @@ class Image extends $pb.GeneratedMessage {
     $core.int? binningFactor,
     Rectangle? rectangle,
     $core.List<$core.int>? imageData,
+    $core.double? rotationSizeRatio,
   }) {
     final $result = create();
     if (binningFactor != null) {
@@ -1710,6 +1711,9 @@ class Image extends $pb.GeneratedMessage {
     if (imageData != null) {
       $result.imageData = imageData;
     }
+    if (rotationSizeRatio != null) {
+      $result.rotationSizeRatio = rotationSizeRatio;
+    }
     return $result;
   }
   Image._() : super();
@@ -1720,6 +1724,7 @@ class Image extends $pb.GeneratedMessage {
     ..a<$core.int>(1, _omitFieldNames ? '' : 'binningFactor', $pb.PbFieldType.O3)
     ..aOM<Rectangle>(2, _omitFieldNames ? '' : 'rectangle', subBuilder: Rectangle.create)
     ..a<$core.List<$core.int>>(3, _omitFieldNames ? '' : 'imageData', $pb.PbFieldType.OY)
+    ..a<$core.double>(4, _omitFieldNames ? '' : 'rotationSizeRatio', $pb.PbFieldType.OD)
     ..hasRequiredFields = false
   ;
 
@@ -1781,6 +1786,17 @@ class Image extends $pb.GeneratedMessage {
   $core.bool hasImageData() => $_has(2);
   @$pb.TagNumber(3)
   void clearImageData() => $_clearField(3);
+
+  /// If image was rotated for display, this is the degree by which the image
+  /// was shrunk to fit. Always >= 1.0.
+  @$pb.TagNumber(4)
+  $core.double get rotationSizeRatio => $_getN(3);
+  @$pb.TagNumber(4)
+  set rotationSizeRatio($core.double v) { $_setDouble(3, v); }
+  @$pb.TagNumber(4)
+  $core.bool hasRotationSizeRatio() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearRotationSizeRatio() => $_clearField(4);
 }
 
 /// Describes the position/size of an region within the camera's sensor. In

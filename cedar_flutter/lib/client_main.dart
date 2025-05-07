@@ -228,7 +228,7 @@ class _MainImagePainter extends CustomPainter {
           canvas,
           color,
           state._boresightPosition,
-          state._scopeFov,
+          state._scopeFov / state._rotationSizeRatio,
           /*rollAngleRad=*/ _deg2rad(state._bullseyeDirectionIndicator()),
           posInImage,
           slew.targetDistance,
@@ -252,8 +252,8 @@ class _MainImagePainter extends CustomPainter {
         !state._calibrating &&
         !state._transitionToSetup) {
       var rollAngleRad = _deg2rad(state._bullseyeDirectionIndicator());
-      drawBullseye(canvas, color, state._boresightPosition, state._scopeFov / 2,
-          rollAngleRad);
+      drawBullseye(canvas, color, state._boresightPosition,
+          state._scopeFov / state._rotationSizeRatio / 2, rollAngleRad);
       if (labeledCatalogEntries.isNotEmpty &&
           state._slewRequest == null &&
           _drawCatalogEntries != null) {
@@ -320,7 +320,7 @@ class _OverlayImagePainter extends CustomPainter {
         canvas,
         color,
         overlayCenter,
-        scopeFov,
+        scopeFov / _state._rotationSizeRatio,
         /*rollAngleRad=*/ _deg2rad(_state._bullseyeDirectionIndicator()),
         posInImage,
         slew.targetDistance,
@@ -376,6 +376,7 @@ class MyHomePageState extends State<MyHomePage> {
   Uint8List _imageBytes = Uint8List(1);
   late Rect _imageRegion; // Scaled by _binFactor.
   int _binFactor = 1;
+  double _rotationSizeRatio = 1.0; // Always >= 1.0.
 
   cedar_rpc.ServerInformation? serverInformation;
   var fixedSettings = cedar_rpc.FixedSettings();
@@ -554,6 +555,7 @@ class MyHomePageState extends State<MyHomePage> {
     if (response.hasImage()) {
       _imageBytes = Uint8List.fromList(response.image.imageData);
       _binFactor = response.image.binningFactor;
+      _rotationSizeRatio = response.image.rotationSizeRatio;
       _imageRegion = Rect.fromLTWH(
           response.image.rectangle.originX.toDouble() / _binFactor,
           response.image.rectangle.originY.toDouble() / _binFactor,
