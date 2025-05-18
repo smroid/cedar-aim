@@ -80,7 +80,7 @@ Future<void> perfStatsDialog(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         scaledText("Exposure time"),
-                        scaledText(sprintf("%.1f ms", [state.exposureTimeMs])),
+                        scaledText(sprintf("%.0f ms", [state.exposureTimeMs])),
                       ]),
                   Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
