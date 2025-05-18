@@ -305,11 +305,16 @@ class _OverlayImagePainter extends CustomPainter {
     // Note that slew.imagePos is in full resolution units.
     Offset? posInImage;
     if (slew!.hasImagePos()) {
+      final correctedScale = _scale *
+          _state._rotationSizeRatio /
+          _state._boresightRotationSizeRatio;
       posInImage = Offset(
           overlayCenter.dx +
-              _scale * (slew.imagePos.x - _state._fullResBoresightPosition.dx),
+              correctedScale *
+                  (slew.imagePos.x - _state._fullResBoresightPosition.dx),
           overlayCenter.dy +
-              _scale * (slew.imagePos.y - _state._fullResBoresightPosition.dy));
+              correctedScale *
+                  (slew.imagePos.y - _state._fullResBoresightPosition.dy));
     }
     // How many display pixels is the telescope FOV?
     final scopeFov = _scale * _binFactor * _state._scopeFov;
@@ -320,7 +325,7 @@ class _OverlayImagePainter extends CustomPainter {
         canvas,
         color,
         overlayCenter,
-        scopeFov / _state._rotationSizeRatio,
+        scopeFov / _state._boresightRotationSizeRatio,
         /*rollAngleRad=*/ _deg2rad(_state._bullseyeDirectionIndicator()),
         posInImage,
         slew.targetDistance,
@@ -377,6 +382,7 @@ class MyHomePageState extends State<MyHomePage> {
   late Rect _imageRegion; // Scaled by _binFactor.
   int _binFactor = 1;
   double _rotationSizeRatio = 1.0; // Always >= 1.0.
+  double _boresightRotationSizeRatio = 1.0; // Always >= 1.0.
 
   cedar_rpc.ServerInformation? serverInformation;
   var fixedSettings = cedar_rpc.FixedSettings();
@@ -609,6 +615,7 @@ class MyHomePageState extends State<MyHomePage> {
           Uint8List.fromList(response.boresightImage.imageData);
       _boresightImageWidth = response.boresightImage.rectangle.width;
       _boresightImageBinFactor = response.boresightImage.binningFactor;
+      _boresightRotationSizeRatio = response.boresightImage.rotationSizeRatio;
     }
     if (response.hasCenterPeakPosition()) {
       var cp = response.centerPeakPosition;
