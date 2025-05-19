@@ -66,8 +66,8 @@ bool diffPreferences(Preferences prev, Preferences curr) {
 
 // Determines if 'prev' and 'curr' have any different fields. Fields that
 // are the same are cleared from 'curr'. Only 'update_interval',
-// 'invert_camera', 'dwell_update_interval', and 'log_dwelled_position' are
-// considered; all other fields are cleared in 'curr'.
+// 'dwell_update_interval', and 'log_dwelled_position' are considered; all other
+// fields are cleared in 'curr'.
 bool diffOperationSettings(OperationSettings prev, OperationSettings curr) {
   // We don't consider these fields.
   curr.clearOperatingMode();
@@ -91,11 +91,6 @@ bool diffOperationSettings(OperationSettings prev, OperationSettings curr) {
     hasDiff = true;
   } else {
     curr.clearLogDwelledPositions();
-  }
-  if (curr.invertCamera != prev.invertCamera) {
-    hasDiff = true;
-  } else {
-    curr.clearInvertCamera();
   }
   return hasDiff;
 }
@@ -143,11 +138,6 @@ class SettingsModel extends ChangeNotifier {
 
   void updateTextSize(int textSizeIndex) {
     preferencesProto.textSizeIndex = textSizeIndex;
-    notifyListeners();
-  }
-
-  void updateInvertCamera(bool ic) {
-    opSettingsProto.invertCamera = ic;
     notifyListeners();
   }
 
@@ -448,21 +438,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             prefsProto.mountType == MountType.EQUATORIAL
                                 ? 'Equatorial mount'
                                 : 'Alt/Az mount'),
-                      ),
-                    if (advanced)
-                      SettingsTile(
-                        leading: Row(children: <Widget>[
-                          Switch(
-                              value: opSettingsProto.invertCamera,
-                              onChanged: (bool value) {
-                                setState(() {
-                                  provider.updateInvertCamera(value);
-                                });
-                              })
-                        ]),
-                        title: scaledText(opSettingsProto.invertCamera
-                            ? 'Inverted'
-                            : 'Upright'),
                       ),
                   ]),
                 ])));
