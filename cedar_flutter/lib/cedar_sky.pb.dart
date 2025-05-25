@@ -2,7 +2,7 @@
 //  Generated code. Do not modify.
 //  source: cedar_sky.proto
 //
-// @dart = 2.12
+// @dart = 3.3
 
 // ignore_for_file: annotate_overrides, camel_case_types, comment_references
 // ignore_for_file: constant_identifier_names, library_prefixes
@@ -13,8 +13,10 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import 'cedar_common.pb.dart' as $2;
+import 'cedar_common.pb.dart' as $4;
 import 'cedar_sky.pbenum.dart';
+
+export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
 export 'cedar_sky.pbenum.dart';
 
@@ -94,11 +96,11 @@ class QueryCatalogRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   CatalogEntryMatch get catalogEntryMatch => $_getN(0);
   @$pb.TagNumber(1)
-  set catalogEntryMatch(CatalogEntryMatch v) { setField(1, v); }
+  set catalogEntryMatch(CatalogEntryMatch v) { $_setField(1, v); }
   @$pb.TagNumber(1)
   $core.bool hasCatalogEntryMatch() => $_has(0);
   @$pb.TagNumber(1)
-  void clearCatalogEntryMatch() => clearField(1);
+  void clearCatalogEntryMatch() => $_clearField(1);
   @$pb.TagNumber(1)
   CatalogEntryMatch ensureCatalogEntryMatch() => $_ensure(0);
 
@@ -111,7 +113,7 @@ class QueryCatalogRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $core.bool hasMaxDistance() => $_has(1);
   @$pb.TagNumber(2)
-  void clearMaxDistance() => clearField(2);
+  void clearMaxDistance() => $_clearField(2);
 
   /// Elevation relative to the current horizon. Ignored if Cedar does not know
   /// the observer location and current time.
@@ -122,7 +124,7 @@ class QueryCatalogRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   $core.bool hasMinElevation() => $_has(2);
   @$pb.TagNumber(3)
-  void clearMinElevation() => clearField(3);
+  void clearMinElevation() => $_clearField(3);
 
   /// If two objects from the same catalog satisfy the criteria, and are
   /// within this angular distance of each other, only one is returned. The
@@ -134,16 +136,16 @@ class QueryCatalogRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(5)
   $core.bool hasDecrowdDistance() => $_has(3);
   @$pb.TagNumber(5)
-  void clearDecrowdDistance() => clearField(5);
+  void clearDecrowdDistance() => $_clearField(5);
 
   @$pb.TagNumber(6)
   Ordering get ordering => $_getN(4);
   @$pb.TagNumber(6)
-  set ordering(Ordering v) { setField(6, v); }
+  set ordering(Ordering v) { $_setField(6, v); }
   @$pb.TagNumber(6)
   $core.bool hasOrdering() => $_has(4);
   @$pb.TagNumber(6)
-  void clearOrdering() => clearField(6);
+  void clearOrdering() => $_clearField(6);
 
   /// If given, caps the number of `entries` in QueryCatalogResponse.
   @$pb.TagNumber(7)
@@ -153,7 +155,7 @@ class QueryCatalogRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(7)
   $core.bool hasLimitResult() => $_has(5);
   @$pb.TagNumber(7)
-  void clearLimitResult() => clearField(7);
+  void clearLimitResult() => $_clearField(7);
 
   /// If given, applies a text match constraint. The server canonicalizes the
   /// given string, removing dangerous characters, tokenizing it, etc. Each token
@@ -169,7 +171,7 @@ class QueryCatalogRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(8)
   $core.bool hasTextSearch() => $_has(6);
   @$pb.TagNumber(8)
-  void clearTextSearch() => clearField(8);
+  void clearTextSearch() => $_clearField(8);
 }
 
 /// Specifies what intrinsic criteria to apply when matching catalog entries.
@@ -242,16 +244,16 @@ class CatalogEntryMatch extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $core.bool hasFaintestMagnitude() => $_has(0);
   @$pb.TagNumber(1)
-  void clearFaintestMagnitude() => clearField(1);
+  void clearFaintestMagnitude() => $_clearField(1);
 
   /// What catalog(s) to search.
   @$pb.TagNumber(2)
-  $core.List<$core.String> get catalogLabel => $_getList(1);
+  $pb.PbList<$core.String> get catalogLabel => $_getList(1);
 
   /// What object type(s) to search. Note: if empty, no filtering on object
   /// type is done.
   @$pb.TagNumber(3)
-  $core.List<$core.String> get objectTypeLabel => $_getList(2);
+  $pb.PbList<$core.String> get objectTypeLabel => $_getList(2);
 
   /// If true, `catalog_label` is used to match catalog(s).
   @$pb.TagNumber(4)
@@ -261,7 +263,7 @@ class CatalogEntryMatch extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   $core.bool hasMatchCatalogLabel() => $_has(3);
   @$pb.TagNumber(4)
-  void clearMatchCatalogLabel() => clearField(4);
+  void clearMatchCatalogLabel() => $_clearField(4);
 
   /// If true, `object_type_label` is used to match object type(s).
   @$pb.TagNumber(5)
@@ -271,7 +273,7 @@ class CatalogEntryMatch extends $pb.GeneratedMessage {
   @$pb.TagNumber(5)
   $core.bool hasMatchObjectTypeLabel() => $_has(4);
   @$pb.TagNumber(5)
-  void clearMatchObjectTypeLabel() => clearField(5);
+  void clearMatchObjectTypeLabel() => $_clearField(5);
 }
 
 class QueryCatalogResponse extends $pb.GeneratedMessage {
@@ -321,7 +323,7 @@ class QueryCatalogResponse extends $pb.GeneratedMessage {
 
   /// The catalog entries that satisfy the QueryCatalogRequest criteria.
   @$pb.TagNumber(1)
-  $core.List<SelectedCatalogEntry> get entries => $_getList(0);
+  $pb.PbList<SelectedCatalogEntry> get entries => $_getList(0);
 
   /// If `limit_result` is specified in QueryCatalogRequest, this will
   /// be the number of entries that were truncated after the limit was
@@ -333,7 +335,7 @@ class QueryCatalogResponse extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $core.bool hasTruncatedCount() => $_has(1);
   @$pb.TagNumber(2)
-  void clearTruncatedCount() => clearField(2);
+  void clearTruncatedCount() => $_clearField(2);
 }
 
 class SelectedCatalogEntry extends $pb.GeneratedMessage {
@@ -399,23 +401,23 @@ class SelectedCatalogEntry extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   CatalogEntry get entry => $_getN(0);
   @$pb.TagNumber(1)
-  set entry(CatalogEntry v) { setField(1, v); }
+  set entry(CatalogEntry v) { $_setField(1, v); }
   @$pb.TagNumber(1)
   $core.bool hasEntry() => $_has(0);
   @$pb.TagNumber(1)
-  void clearEntry() => clearField(1);
+  void clearEntry() => $_clearField(1);
   @$pb.TagNumber(1)
   CatalogEntry ensureEntry() => $_ensure(0);
 
   /// Other entries, if any, that were suppressed due to `dedup_distance` in the
   /// Cedar sky implementation.
   @$pb.TagNumber(2)
-  $core.List<CatalogEntry> get dedupedEntries => $_getList(1);
+  $pb.PbList<CatalogEntry> get dedupedEntries => $_getList(1);
 
   /// Other entries, if any, that were suppressed due to `decrowd_distance` in
   /// the QueryCatalogRequest.
   @$pb.TagNumber(3)
-  $core.List<CatalogEntry> get decrowdedEntries => $_getList(2);
+  $pb.PbList<CatalogEntry> get decrowdedEntries => $_getList(2);
 
   /// Altitude (degrees, relative to the local horizon).
   @$pb.TagNumber(4)
@@ -425,7 +427,7 @@ class SelectedCatalogEntry extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   $core.bool hasAltitude() => $_has(3);
   @$pb.TagNumber(4)
-  void clearAltitude() => clearField(4);
+  void clearAltitude() => $_clearField(4);
 
   /// Azimuth (degrees, positive clockwise from north).
   @$pb.TagNumber(5)
@@ -435,14 +437,14 @@ class SelectedCatalogEntry extends $pb.GeneratedMessage {
   @$pb.TagNumber(5)
   $core.bool hasAzimuth() => $_has(4);
   @$pb.TagNumber(5)
-  void clearAzimuth() => clearField(5);
+  void clearAzimuth() => $_clearField(5);
 }
 
 class CatalogEntry extends $pb.GeneratedMessage {
   factory CatalogEntry({
     $core.String? catalogLabel,
     $core.String? catalogEntry,
-    $2.CelestialCoord? coord,
+    $4.CelestialCoord? coord,
     Constellation? constellation,
     ObjectType? objectType,
     $core.double? magnitude,
@@ -487,7 +489,7 @@ class CatalogEntry extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'CatalogEntry', package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar_sky'), createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'catalogLabel')
     ..aOS(2, _omitFieldNames ? '' : 'catalogEntry')
-    ..aOM<$2.CelestialCoord>(3, _omitFieldNames ? '' : 'coord', subBuilder: $2.CelestialCoord.create)
+    ..aOM<$4.CelestialCoord>(3, _omitFieldNames ? '' : 'coord', subBuilder: $4.CelestialCoord.create)
     ..aOM<Constellation>(4, _omitFieldNames ? '' : 'constellation', subBuilder: Constellation.create)
     ..aOM<ObjectType>(5, _omitFieldNames ? '' : 'objectType', subBuilder: ObjectType.create)
     ..a<$core.double>(6, _omitFieldNames ? '' : 'magnitude', $pb.PbFieldType.OD)
@@ -527,7 +529,7 @@ class CatalogEntry extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $core.bool hasCatalogLabel() => $_has(0);
   @$pb.TagNumber(1)
-  void clearCatalogLabel() => clearField(1);
+  void clearCatalogLabel() => $_clearField(1);
 
   @$pb.TagNumber(2)
   $core.String get catalogEntry => $_getSZ(1);
@@ -536,38 +538,38 @@ class CatalogEntry extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $core.bool hasCatalogEntry() => $_has(1);
   @$pb.TagNumber(2)
-  void clearCatalogEntry() => clearField(2);
+  void clearCatalogEntry() => $_clearField(2);
 
   @$pb.TagNumber(3)
-  $2.CelestialCoord get coord => $_getN(2);
+  $4.CelestialCoord get coord => $_getN(2);
   @$pb.TagNumber(3)
-  set coord($2.CelestialCoord v) { setField(3, v); }
+  set coord($4.CelestialCoord v) { $_setField(3, v); }
   @$pb.TagNumber(3)
   $core.bool hasCoord() => $_has(2);
   @$pb.TagNumber(3)
-  void clearCoord() => clearField(3);
+  void clearCoord() => $_clearField(3);
   @$pb.TagNumber(3)
-  $2.CelestialCoord ensureCoord() => $_ensure(2);
+  $4.CelestialCoord ensureCoord() => $_ensure(2);
 
   @$pb.TagNumber(4)
   Constellation get constellation => $_getN(3);
   @$pb.TagNumber(4)
-  set constellation(Constellation v) { setField(4, v); }
+  set constellation(Constellation v) { $_setField(4, v); }
   @$pb.TagNumber(4)
   $core.bool hasConstellation() => $_has(3);
   @$pb.TagNumber(4)
-  void clearConstellation() => clearField(4);
+  void clearConstellation() => $_clearField(4);
   @$pb.TagNumber(4)
   Constellation ensureConstellation() => $_ensure(3);
 
   @$pb.TagNumber(5)
   ObjectType get objectType => $_getN(4);
   @$pb.TagNumber(5)
-  set objectType(ObjectType v) { setField(5, v); }
+  set objectType(ObjectType v) { $_setField(5, v); }
   @$pb.TagNumber(5)
   $core.bool hasObjectType() => $_has(4);
   @$pb.TagNumber(5)
-  void clearObjectType() => clearField(5);
+  void clearObjectType() => $_clearField(5);
   @$pb.TagNumber(5)
   ObjectType ensureObjectType() => $_ensure(4);
 
@@ -578,7 +580,7 @@ class CatalogEntry extends $pb.GeneratedMessage {
   @$pb.TagNumber(6)
   $core.bool hasMagnitude() => $_has(5);
   @$pb.TagNumber(6)
-  void clearMagnitude() => clearField(6);
+  void clearMagnitude() => $_clearField(6);
 
   @$pb.TagNumber(7)
   $core.String get angularSize => $_getSZ(6);
@@ -587,7 +589,7 @@ class CatalogEntry extends $pb.GeneratedMessage {
   @$pb.TagNumber(7)
   $core.bool hasAngularSize() => $_has(6);
   @$pb.TagNumber(7)
-  void clearAngularSize() => clearField(7);
+  void clearAngularSize() => $_clearField(7);
 
   @$pb.TagNumber(8)
   $core.String get commonName => $_getSZ(7);
@@ -596,7 +598,7 @@ class CatalogEntry extends $pb.GeneratedMessage {
   @$pb.TagNumber(8)
   $core.bool hasCommonName() => $_has(7);
   @$pb.TagNumber(8)
-  void clearCommonName() => clearField(8);
+  void clearCommonName() => $_clearField(8);
 
   @$pb.TagNumber(9)
   $core.String get notes => $_getSZ(8);
@@ -605,7 +607,7 @@ class CatalogEntry extends $pb.GeneratedMessage {
   @$pb.TagNumber(9)
   $core.bool hasNotes() => $_has(8);
   @$pb.TagNumber(9)
-  void clearNotes() => clearField(9);
+  void clearNotes() => $_clearField(9);
 }
 
 class CatalogDescription extends $pb.GeneratedMessage {
@@ -680,7 +682,7 @@ class CatalogDescription extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $core.bool hasLabel() => $_has(0);
   @$pb.TagNumber(1)
-  void clearLabel() => clearField(1);
+  void clearLabel() => $_clearField(1);
 
   @$pb.TagNumber(2)
   $core.String get name => $_getSZ(1);
@@ -689,7 +691,7 @@ class CatalogDescription extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $core.bool hasName() => $_has(1);
   @$pb.TagNumber(2)
-  void clearName() => clearField(2);
+  void clearName() => $_clearField(2);
 
   @$pb.TagNumber(3)
   $core.String get description => $_getSZ(2);
@@ -698,7 +700,7 @@ class CatalogDescription extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   $core.bool hasDescription() => $_has(2);
   @$pb.TagNumber(3)
-  void clearDescription() => clearField(3);
+  void clearDescription() => $_clearField(3);
 
   @$pb.TagNumber(4)
   $core.String get source => $_getSZ(3);
@@ -707,7 +709,7 @@ class CatalogDescription extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   $core.bool hasSource() => $_has(3);
   @$pb.TagNumber(4)
-  void clearSource() => clearField(4);
+  void clearSource() => $_clearField(4);
 
   @$pb.TagNumber(5)
   $core.String get copyright => $_getSZ(4);
@@ -716,7 +718,7 @@ class CatalogDescription extends $pb.GeneratedMessage {
   @$pb.TagNumber(5)
   $core.bool hasCopyright() => $_has(4);
   @$pb.TagNumber(5)
-  void clearCopyright() => clearField(5);
+  void clearCopyright() => $_clearField(5);
 
   @$pb.TagNumber(6)
   $core.String get license => $_getSZ(5);
@@ -725,7 +727,7 @@ class CatalogDescription extends $pb.GeneratedMessage {
   @$pb.TagNumber(6)
   $core.bool hasLicense() => $_has(5);
   @$pb.TagNumber(6)
-  void clearLicense() => clearField(6);
+  void clearLicense() => $_clearField(6);
 }
 
 class CatalogDescriptionResponse extends $pb.GeneratedMessage {
@@ -769,7 +771,7 @@ class CatalogDescriptionResponse extends $pb.GeneratedMessage {
   static CatalogDescriptionResponse? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.List<CatalogDescription> get catalogDescriptions => $_getList(0);
+  $pb.PbList<CatalogDescription> get catalogDescriptions => $_getList(0);
 }
 
 class ObjectType extends $pb.GeneratedMessage {
@@ -824,7 +826,7 @@ class ObjectType extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $core.bool hasLabel() => $_has(0);
   @$pb.TagNumber(1)
-  void clearLabel() => clearField(1);
+  void clearLabel() => $_clearField(1);
 
   @$pb.TagNumber(2)
   $core.String get broadCategory => $_getSZ(1);
@@ -833,7 +835,7 @@ class ObjectType extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $core.bool hasBroadCategory() => $_has(1);
   @$pb.TagNumber(2)
-  void clearBroadCategory() => clearField(2);
+  void clearBroadCategory() => $_clearField(2);
 }
 
 class ObjectTypeResponse extends $pb.GeneratedMessage {
@@ -877,7 +879,7 @@ class ObjectTypeResponse extends $pb.GeneratedMessage {
   static ObjectTypeResponse? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.List<ObjectType> get objectTypes => $_getList(0);
+  $pb.PbList<ObjectType> get objectTypes => $_getList(0);
 }
 
 class Constellation extends $pb.GeneratedMessage {
@@ -932,7 +934,7 @@ class Constellation extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $core.bool hasLabel() => $_has(0);
   @$pb.TagNumber(1)
-  void clearLabel() => clearField(1);
+  void clearLabel() => $_clearField(1);
 
   @$pb.TagNumber(2)
   $core.String get name => $_getSZ(1);
@@ -941,7 +943,7 @@ class Constellation extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $core.bool hasName() => $_has(1);
   @$pb.TagNumber(2)
-  void clearName() => clearField(2);
+  void clearName() => $_clearField(2);
 }
 
 class ConstellationResponse extends $pb.GeneratedMessage {
@@ -985,7 +987,7 @@ class ConstellationResponse extends $pb.GeneratedMessage {
   static ConstellationResponse? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.List<Constellation> get constellations => $_getList(0);
+  $pb.PbList<Constellation> get constellations => $_getList(0);
 }
 
 class CatalogEntryKey extends $pb.GeneratedMessage {
@@ -1040,7 +1042,7 @@ class CatalogEntryKey extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $core.bool hasCatLabel() => $_has(0);
   @$pb.TagNumber(1)
-  void clearCatLabel() => clearField(1);
+  void clearCatLabel() => $_clearField(1);
 
   /// or COM.
   @$pb.TagNumber(2)
@@ -1050,7 +1052,7 @@ class CatalogEntryKey extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $core.bool hasEntry() => $_has(1);
   @$pb.TagNumber(2)
-  void clearEntry() => clearField(2);
+  void clearEntry() => $_clearField(2);
 }
 
 
