@@ -413,7 +413,6 @@ class MyHomePageState extends State<MyHomePage> {
 
   int _boresightImageWidth = 0; // Full resolution units.
   Uint8List? _boresightImageBytes;
-  int _boresightImageBinFactor = 1;
 
   int _prevFrameId = -1;
   late List<cedar_rpc.StarCentroid> _stars;
@@ -614,7 +613,6 @@ class MyHomePageState extends State<MyHomePage> {
       _boresightImageBytes =
           Uint8List.fromList(response.boresightImage.imageData);
       _boresightImageWidth = response.boresightImage.rectangle.width;
-      _boresightImageBinFactor = response.boresightImage.binningFactor;
       _boresightRotationSizeRatio = response.boresightImage.rotationSizeRatio;
     }
     if (response.hasCenterPeakPosition()) {
@@ -1818,11 +1816,8 @@ class MyHomePageState extends State<MyHomePage> {
           gaplessPlayback: true);
       overlayWidget = ClipRect(
           child: CustomPaint(
-              foregroundPainter: _OverlayImagePainter(
-                  this,
-                  context,
-                  (_imageRegion.width / 4) / _boresightImageWidth,
-                  _binFactor ~/ _boresightImageBinFactor),
+              foregroundPainter: _OverlayImagePainter(this, context,
+                  (_imageRegion.width / 4) / _boresightImageWidth, _binFactor),
               child: overlayImage));
     }
     return Stack(alignment: Alignment.topRight, children: <Widget>[
