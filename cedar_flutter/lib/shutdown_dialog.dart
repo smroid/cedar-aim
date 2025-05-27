@@ -14,9 +14,6 @@ Text _scaledText(String str, BuildContext context) {
 void shutdownDialog(MyHomePageState state, BuildContext context) {
   final serverInfo = state.serverInformation!;
   var productName = serverInfo.productName;
-  if (productName != "Hopper") {
-    productName = "Raspberry Pi";
-  }
 
   showDialog(
     context: context,
