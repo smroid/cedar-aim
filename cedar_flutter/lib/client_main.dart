@@ -125,7 +125,6 @@ class _MainImagePainter extends CustomPainter {
   }
 
   void _paint(Canvas canvas, Size size) {
-    const double hairline = 0.5;
     const double thin = 1;
     const double thick = 1.5;
     final Color color = Theme.of(_context).colorScheme.primary;
@@ -143,20 +142,6 @@ class _MainImagePainter extends CustomPainter {
             ..color = color
             ..strokeWidth = thin
             ..style = PaintingStyle.stroke);
-      if (state.advanced) {
-        // Draw circles around the detected stars.
-        for (var star in state._stars) {
-          var offset = Offset(star.centroidPosition.x / state._binFactor,
-              star.centroidPosition.y / state._binFactor);
-          canvas.drawCircle(
-              offset,
-              3,
-              Paint()
-                ..color = color
-                ..strokeWidth = hairline
-                ..style = PaintingStyle.stroke);
-        }
-      }
     }
 
     final portrait =
