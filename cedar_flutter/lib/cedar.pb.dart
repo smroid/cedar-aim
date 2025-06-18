@@ -569,7 +569,6 @@ class OperationSettings extends $pb.GeneratedMessage {
     $core.bool? logDwelledPositions,
     $1.CatalogEntryMatch? catalogEntryMatch,
     $core.String? demoImageFilename,
-    $core.bool? invertCamera,
     $core.bool? focusAssistMode,
   }) {
     final $result = create();
@@ -594,9 +593,6 @@ class OperationSettings extends $pb.GeneratedMessage {
     if (demoImageFilename != null) {
       $result.demoImageFilename = demoImageFilename;
     }
-    if (invertCamera != null) {
-      $result.invertCamera = invertCamera;
-    }
     if (focusAssistMode != null) {
       $result.focusAssistMode = focusAssistMode;
     }
@@ -614,7 +610,6 @@ class OperationSettings extends $pb.GeneratedMessage {
     ..aOB(10, _omitFieldNames ? '' : 'logDwelledPositions')
     ..aOM<$1.CatalogEntryMatch>(11, _omitFieldNames ? '' : 'catalogEntryMatch', subBuilder: $1.CatalogEntryMatch.create)
     ..aOS(12, _omitFieldNames ? '' : 'demoImageFilename')
-    ..aOB(13, _omitFieldNames ? '' : 'invertCamera')
     ..aOB(14, _omitFieldNames ? '' : 'focusAssistMode')
     ..hasRequiredFields = false
   ;
@@ -739,25 +734,15 @@ class OperationSettings extends $pb.GeneratedMessage {
   @$pb.TagNumber(12)
   void clearDemoImageFilename() => $_clearField(12);
 
-  /// Determines whether camera image is inverted (rot180) during readout.
-  @$pb.TagNumber(13)
-  $core.bool get invertCamera => $_getBF(7);
-  @$pb.TagNumber(13)
-  set invertCamera($core.bool v) { $_setBool(7, v); }
-  @$pb.TagNumber(13)
-  $core.bool hasInvertCamera() => $_has(7);
-  @$pb.TagNumber(13)
-  void clearInvertCamera() => $_clearField(13);
-
   /// Relevant only in SETUP mode. Instead of trying to detect and plate solve
   /// stars (for boresight aligning), Cedar server instead exposes the image for
   /// the brightest point in the image.
   @$pb.TagNumber(14)
-  $core.bool get focusAssistMode => $_getBF(8);
+  $core.bool get focusAssistMode => $_getBF(7);
   @$pb.TagNumber(14)
-  set focusAssistMode($core.bool v) { $_setBool(8, v); }
+  set focusAssistMode($core.bool v) { $_setBool(7, v); }
   @$pb.TagNumber(14)
-  $core.bool hasFocusAssistMode() => $_has(8);
+  $core.bool hasFocusAssistMode() => $_has(7);
   @$pb.TagNumber(14)
   void clearFocusAssistMode() => $_clearField(14);
 }
@@ -782,10 +767,13 @@ class Preferences extends $pb.GeneratedMessage {
     $core.bool? advanced,
     $core.int? textSizeIndex,
     ImageCoord? boresightPixel,
-    $core.bool? invertCamera,
     $core.bool? rightHanded,
     CelestialCoordChoice? celestialCoordChoice,
     $core.bool? screenAlwaysOn,
+    $core.bool? dontShowWelcome,
+    $core.bool? dontShowFocusIntro,
+    $core.bool? dontShowAlignIntro,
+    $core.bool? dontShowCalibrationFail,
   }) {
     final $result = create();
     if (celestialCoordFormat != null) {
@@ -836,9 +824,6 @@ class Preferences extends $pb.GeneratedMessage {
     if (boresightPixel != null) {
       $result.boresightPixel = boresightPixel;
     }
-    if (invertCamera != null) {
-      $result.invertCamera = invertCamera;
-    }
     if (rightHanded != null) {
       $result.rightHanded = rightHanded;
     }
@@ -847,6 +832,18 @@ class Preferences extends $pb.GeneratedMessage {
     }
     if (screenAlwaysOn != null) {
       $result.screenAlwaysOn = screenAlwaysOn;
+    }
+    if (dontShowWelcome != null) {
+      $result.dontShowWelcome = dontShowWelcome;
+    }
+    if (dontShowFocusIntro != null) {
+      $result.dontShowFocusIntro = dontShowFocusIntro;
+    }
+    if (dontShowAlignIntro != null) {
+      $result.dontShowAlignIntro = dontShowAlignIntro;
+    }
+    if (dontShowCalibrationFail != null) {
+      $result.dontShowCalibrationFail = dontShowCalibrationFail;
     }
     return $result;
   }
@@ -871,10 +868,13 @@ class Preferences extends $pb.GeneratedMessage {
     ..aOB(17, _omitFieldNames ? '' : 'advanced')
     ..a<$core.int>(18, _omitFieldNames ? '' : 'textSizeIndex', $pb.PbFieldType.O3)
     ..aOM<ImageCoord>(19, _omitFieldNames ? '' : 'boresightPixel', subBuilder: ImageCoord.create)
-    ..aOB(20, _omitFieldNames ? '' : 'invertCamera')
     ..aOB(21, _omitFieldNames ? '' : 'rightHanded')
     ..e<CelestialCoordChoice>(22, _omitFieldNames ? '' : 'celestialCoordChoice', $pb.PbFieldType.OE, defaultOrMaker: CelestialCoordChoice.CHOICE_UNSPECIFIED, valueOf: CelestialCoordChoice.valueOf, enumValues: CelestialCoordChoice.values)
     ..aOB(23, _omitFieldNames ? '' : 'screenAlwaysOn')
+    ..aOB(24, _omitFieldNames ? '' : 'dontShowWelcome')
+    ..aOB(25, _omitFieldNames ? '' : 'dontShowFocusIntro')
+    ..aOB(26, _omitFieldNames ? '' : 'dontShowAlignIntro')
+    ..aOB(27, _omitFieldNames ? '' : 'dontShowCalibrationFail')
     ..hasRequiredFields = false
   ;
 
@@ -1073,46 +1073,71 @@ class Preferences extends $pb.GeneratedMessage {
   @$pb.TagNumber(19)
   ImageCoord ensureBoresightPixel() => $_ensure(15);
 
-  /// Determines whether camera image is inverted (rot180) during readout. Note:
-  /// do not update this via UpdatePreferences().
-  @$pb.TagNumber(20)
-  $core.bool get invertCamera => $_getBF(16);
-  @$pb.TagNumber(20)
-  set invertCamera($core.bool v) { $_setBool(16, v); }
-  @$pb.TagNumber(20)
-  $core.bool hasInvertCamera() => $_has(16);
-  @$pb.TagNumber(20)
-  void clearInvertCamera() => $_clearField(20);
-
   /// Whether UI buttons and such are positioned on right side of screen.
   @$pb.TagNumber(21)
-  $core.bool get rightHanded => $_getBF(17);
+  $core.bool get rightHanded => $_getBF(16);
   @$pb.TagNumber(21)
-  set rightHanded($core.bool v) { $_setBool(17, v); }
+  set rightHanded($core.bool v) { $_setBool(16, v); }
   @$pb.TagNumber(21)
-  $core.bool hasRightHanded() => $_has(17);
+  $core.bool hasRightHanded() => $_has(16);
   @$pb.TagNumber(21)
   void clearRightHanded() => $_clearField(21);
 
   /// Whether main display shows RA/Dec or Az/Alt.
   @$pb.TagNumber(22)
-  CelestialCoordChoice get celestialCoordChoice => $_getN(18);
+  CelestialCoordChoice get celestialCoordChoice => $_getN(17);
   @$pb.TagNumber(22)
   set celestialCoordChoice(CelestialCoordChoice v) { $_setField(22, v); }
   @$pb.TagNumber(22)
-  $core.bool hasCelestialCoordChoice() => $_has(18);
+  $core.bool hasCelestialCoordChoice() => $_has(17);
   @$pb.TagNumber(22)
   void clearCelestialCoordChoice() => $_clearField(22);
 
   /// Whether mobile screen is kept on while in Cedar Aim.
   @$pb.TagNumber(23)
-  $core.bool get screenAlwaysOn => $_getBF(19);
+  $core.bool get screenAlwaysOn => $_getBF(18);
   @$pb.TagNumber(23)
-  set screenAlwaysOn($core.bool v) { $_setBool(19, v); }
+  set screenAlwaysOn($core.bool v) { $_setBool(18, v); }
   @$pb.TagNumber(23)
-  $core.bool hasScreenAlwaysOn() => $_has(19);
+  $core.bool hasScreenAlwaysOn() => $_has(18);
   @$pb.TagNumber(23)
   void clearScreenAlwaysOn() => $_clearField(23);
+
+  @$pb.TagNumber(24)
+  $core.bool get dontShowWelcome => $_getBF(19);
+  @$pb.TagNumber(24)
+  set dontShowWelcome($core.bool v) { $_setBool(19, v); }
+  @$pb.TagNumber(24)
+  $core.bool hasDontShowWelcome() => $_has(19);
+  @$pb.TagNumber(24)
+  void clearDontShowWelcome() => $_clearField(24);
+
+  @$pb.TagNumber(25)
+  $core.bool get dontShowFocusIntro => $_getBF(20);
+  @$pb.TagNumber(25)
+  set dontShowFocusIntro($core.bool v) { $_setBool(20, v); }
+  @$pb.TagNumber(25)
+  $core.bool hasDontShowFocusIntro() => $_has(20);
+  @$pb.TagNumber(25)
+  void clearDontShowFocusIntro() => $_clearField(25);
+
+  @$pb.TagNumber(26)
+  $core.bool get dontShowAlignIntro => $_getBF(21);
+  @$pb.TagNumber(26)
+  set dontShowAlignIntro($core.bool v) { $_setBool(21, v); }
+  @$pb.TagNumber(26)
+  $core.bool hasDontShowAlignIntro() => $_has(21);
+  @$pb.TagNumber(26)
+  void clearDontShowAlignIntro() => $_clearField(26);
+
+  @$pb.TagNumber(27)
+  $core.bool get dontShowCalibrationFail => $_getBF(22);
+  @$pb.TagNumber(27)
+  set dontShowCalibrationFail($core.bool v) { $_setBool(22, v); }
+  @$pb.TagNumber(27)
+  $core.bool hasDontShowCalibrationFail() => $_has(22);
+  @$pb.TagNumber(27)
+  void clearDontShowCalibrationFail() => $_clearField(27);
 }
 
 class FrameRequest extends $pb.GeneratedMessage {
@@ -3414,6 +3439,7 @@ class ActionRequest extends $pb.GeneratedMessage {
     WiFiAccessPoint? updateWifiAccessPoint,
     $core.bool? restartServer,
     $core.bool? cancelCalibration,
+    $core.bool? clearDontShows,
   }) {
     final $result = create();
     if (captureBoresight != null) {
@@ -3443,6 +3469,9 @@ class ActionRequest extends $pb.GeneratedMessage {
     if (cancelCalibration != null) {
       $result.cancelCalibration = cancelCalibration;
     }
+    if (clearDontShows != null) {
+      $result.clearDontShows = clearDontShows;
+    }
     return $result;
   }
   ActionRequest._() : super();
@@ -3459,6 +3488,7 @@ class ActionRequest extends $pb.GeneratedMessage {
     ..aOM<WiFiAccessPoint>(7, _omitFieldNames ? '' : 'updateWifiAccessPoint', subBuilder: WiFiAccessPoint.create)
     ..aOB(8, _omitFieldNames ? '' : 'restartServer')
     ..aOB(9, _omitFieldNames ? '' : 'cancelCalibration')
+    ..aOB(10, _omitFieldNames ? '' : 'clearDontShows')
     ..hasRequiredFields = false
   ;
 
@@ -3592,6 +3622,16 @@ class ActionRequest extends $pb.GeneratedMessage {
   $core.bool hasCancelCalibration() => $_has(8);
   @$pb.TagNumber(9)
   void clearCancelCalibration() => $_clearField(9);
+
+  /// Reset all Preferences.dont_show_xxx fields.
+  @$pb.TagNumber(10)
+  $core.bool get clearDontShows => $_getBF(9);
+  @$pb.TagNumber(10)
+  set clearDontShows($core.bool v) { $_setBool(9, v); }
+  @$pb.TagNumber(10)
+  $core.bool hasClearDontShows() => $_has(9);
+  @$pb.TagNumber(10)
+  void clearClearDontShows() => $_clearField(10);
 }
 
 class ServerLogRequest extends $pb.GeneratedMessage {

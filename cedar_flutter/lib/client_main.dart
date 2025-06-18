@@ -331,9 +331,14 @@ class MyHomePageState extends State<MyHomePage> {
     _refreshStateFromServer();
   }
 
-  bool _showedIntroExplainer = false;
-  bool _showedFocusExplainer = false;
-  bool _showedAlignExplainer = false;
+  bool _showWelcome = false;
+  bool _showedWelcome = false;
+  bool _showFocusIntro = false;
+  bool _showAlignIntro = false;
+
+  bool _dontShowWelcome = false;
+  bool _dontShowFocusIntro = false;
+  bool _dontShowAlignIntro = false;
 
   // Whether we should offer a menu item to set the observer location via a map.
   bool _offerMap = false;
@@ -466,6 +471,10 @@ class MyHomePageState extends State<MyHomePage> {
   Duration get tzOffset => _tzOffset;
 
   void setStateFromFrameResult(cedar_rpc.FrameResult response) {
+    if (_dontShowWelcome) {
+      _showedWelcome = true;
+    }
+    _showWelcome = !_showedWelcome;
     _prevFrameId = response.frameId;
     _stars = response.starCandidates;
     numStars = _stars.length;
@@ -495,9 +504,13 @@ class MyHomePageState extends State<MyHomePage> {
 
     fixedSettings = response.fixedSettings;
     operationSettings = response.operationSettings;
+    bool prevFocusMode = _setupMode && _focusAid;
+    bool prevAlignMode = _setupMode && !_focusAid;
     _setupMode =
         operationSettings.operatingMode == cedar_rpc.OperatingMode.SETUP;
     _focusAid = operationSettings.focusAssistMode;
+    bool newFocusMode = _setupMode && _focusAid;
+    bool newAlignMode = _setupMode && !_focusAid;
     _daylightMode = operationSettings.daylightMode;
     if (_setupMode) {
       _transitionToSetup = false;
@@ -606,6 +619,17 @@ class MyHomePageState extends State<MyHomePage> {
           center: Offset(cp.x / _binFactor, cp.y / _binFactor),
           width: _centerPeakWidth.toDouble() / _binFactor,
           height: _centerPeakHeight.toDouble() / _binFactor);
+    }
+    if (preferences != null) {
+      _dontShowWelcome = preferences!.dontShowWelcome;
+      _dontShowFocusIntro = preferences!.dontShowFocusIntro;
+      _dontShowAlignIntro = preferences!.dontShowAlignIntro;
+    }
+    if (newFocusMode && !prevFocusMode) {
+      _showFocusIntro = !_dontShowFocusIntro;
+    }
+    if (newAlignMode && !prevAlignMode) {
+      _showAlignIntro = !_dontShowAlignIntro;
     }
   }
 
@@ -872,7 +896,8 @@ class MyHomePageState extends State<MyHomePage> {
                         }
                         _setOperatingMode(
                             /*setupMode=*/ true, /*focusAid=*/ true);
-                        _showedFocusExplainer = false;
+                        // _showedFocusIntro = _dontShowFocusIntro;
+                        // _showedAlignIntro = _dontShowAlignIntro;
                       });
                     } else if (newValue == "Align") {
                       setState(() {
@@ -882,7 +907,7 @@ class MyHomePageState extends State<MyHomePage> {
                         }
                         _setOperatingMode(
                             /*setupMode=*/ true, /*focusAid=*/ false);
-                        _showedAlignExplainer = false;
+                        // _showedAlignIntro = _dontShowAlignIntro;
                       });
                     } else {
                       // Aim.
@@ -1076,6 +1101,24 @@ class MyHomePageState extends State<MyHomePage> {
                       icon: const Icon(Icons.wifi),
                       onPressed: () {
                         _wifiAccessPointDialog!(this, context);
+                      }))
+            ])
+          : Container(),
+      advanced
+          ? Column(children: [
+              const SizedBox(height: 10),
+              Align(
+                  alignment: Alignment.topLeft,
+                  child: TextButton.icon(
+                      label: _scaledText("Reset 'Don't show again'"),
+                      icon: const Icon(Icons.undo),
+                      onPressed: () async {
+                        final request =
+                            cedar_rpc.ActionRequest(clearDontShows: true);
+                        await initiateAction(request);
+                        if (context.mounted) {
+                          Navigator.of(context).pop();
+                        }
                       }))
             ])
           : Container(),
@@ -1939,53 +1982,69 @@ class MyHomePageState extends State<MyHomePage> {
     final String product =
         serverInformation != null ? serverInformation!.productName : "e-finder";
 
-    if (!_showedIntroExplainer) {
+    if (_showWelcome && !_dontShowWelcome) {
       return interstitialDialog(
-        "Welcome to Cedar Aim!\n\nThe next few screens will walk you through "
+        "Welcome to Cedar Aim!\nThe next few screens will walk you through "
         "setting up your $product.",
         context,
         onConfirm: () {
           setState(() {
-            _showedIntroExplainer = true;
+            _showedWelcome = true;
+            _showWelcome = false;
           });
+        },
+        onDontShowAgainChanged: (value) async {
+          var prefs = cedar_rpc.Preferences();
+          prefs.dontShowWelcome = value;
+          await updatePreferences(prefs);
         },
       );
     }
-    if (!_showedFocusExplainer && _setupMode && _focusAid) {
+    if (_showFocusIntro && _focusAid && _setupMode) {
       return interstitialDialog(
         product == "Hopper"
             ? "We will verify the focus of your $product, which was set "
-                "at the factory and should not need adjustment.\n\n"
+                "at the factory and should not need adjustment.\n"
                 "Please point your telescope "
                 "towards some stars. At the next screen, one of the stars "
-                "will be magnified; it should be round and compact.\n\n"
+                "will be magnified; it should be round and compact.\n"
                 "You can select 'Day' to check focus using a daylight scene."
-            : "We will check and adjust the focusing of your $product.\n\nPlease point "
+            : "We will check and adjust the focusing of your $product.\nPlease point "
                 "your telescope towards some stars. "
                 "At the next screen, adjust the $product lens to make "
-                "the highlighted star image as compact as possible.\n\n"
+                "the highlighted star image as compact as possible.\n"
                 "You can select 'Day' to adjust focus using a daylight scene.",
         context,
         onConfirm: () {
           setState(() {
-            _showedFocusExplainer = true;
-            _showedAlignExplainer = false;
+            _showFocusIntro = false;
+            // _showedAlignIntro = false;
           });
+        },
+        onDontShowAgainChanged: (value) async {
+          var prefs = cedar_rpc.Preferences();
+          prefs.dontShowFocusIntro = value;
+          await updatePreferences(prefs);
         },
       );
     }
-    if (!_showedAlignExplainer && _setupMode && !_focusAid) {
+    if (_showAlignIntro && !_focusAid && _setupMode) {
       return interstitialDialog(
         "We will set the alignment of your $product "
-        "relative to your telescope.\n\nStart by pointing your telescope at "
+        "relative to your telescope.\nStart by pointing your telescope at "
         "any bright star or planet, preferably one that is the brightest in "
-        "its area of the sky. Then, follow the prompt on the next screen.\n\n"
+        "its area of the sky. Then, follow the prompt on the next screen.\n"
         "You can select 'Day' to set alignment using a daylight scene.",
         context,
         onConfirm: () {
           setState(() {
-            _showedAlignExplainer = true;
+            _showAlignIntro = false;
           });
+        },
+        onDontShowAgainChanged: (value) async {
+          var prefs = cedar_rpc.Preferences();
+          prefs.dontShowAlignIntro = value;
+          await updatePreferences(prefs);
         },
       );
     }
