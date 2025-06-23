@@ -292,6 +292,7 @@ const Preferences$json = {
     {'1': 'dont_show_focus_intro', '3': 25, '4': 1, '5': 8, '9': 20, '10': 'dontShowFocusIntro', '17': true},
     {'1': 'dont_show_align_intro', '3': 26, '4': 1, '5': 8, '9': 21, '10': 'dontShowAlignIntro', '17': true},
     {'1': 'dont_show_calibration_fail', '3': 27, '4': 1, '5': 8, '9': 22, '10': 'dontShowCalibrationFail', '17': true},
+    {'1': 'dont_show_setup_finished', '3': 28, '4': 1, '5': 8, '9': 23, '10': 'dontShowSetupFinished', '17': true},
   ],
   '8': [
     {'1': '_celestial_coord_format'},
@@ -317,6 +318,7 @@ const Preferences$json = {
     {'1': '_dont_show_focus_intro'},
     {'1': '_dont_show_align_intro'},
     {'1': '_dont_show_calibration_fail'},
+    {'1': '_dont_show_setup_finished'},
   ],
   '9': [
     {'1': 4, '2': 5},
@@ -350,16 +352,18 @@ final $typed_data.Uint8List preferencesDescriptor = $convert.base64Decode(
     'bGNvbWWIAQESNgoVZG9udF9zaG93X2ZvY3VzX2ludHJvGBkgASgISBRSEmRvbnRTaG93Rm9jdX'
     'NJbnRyb4gBARI2ChVkb250X3Nob3dfYWxpZ25faW50cm8YGiABKAhIFVISZG9udFNob3dBbGln'
     'bkludHJviAEBEkAKGmRvbnRfc2hvd19jYWxpYnJhdGlvbl9mYWlsGBsgASgISBZSF2RvbnRTaG'
-    '93Q2FsaWJyYXRpb25GYWlsiAEBQhkKF19jZWxlc3RpYWxfY29vcmRfZm9ybWF0Qg8KDV9leWVw'
-    'aWVjZV9mb3ZCFQoTX25pZ2h0X3Zpc2lvbl90aGVtZUIPCg1faGlkZV9hcHBfYmFyQg0KC19tb3'
-    'VudF90eXBlQhQKEl9vYnNlcnZlcl9sb2NhdGlvbkISChBfdXBkYXRlX2ludGVydmFsQhYKFF9j'
-    'YXRhbG9nX2VudHJ5X21hdGNoQhYKFF9tYXhfZGlzdGFuY2VfYWN0aXZlQg8KDV9tYXhfZGlzdG'
-    'FuY2VCFwoVX21pbl9lbGV2YXRpb25fYWN0aXZlQhAKDl9taW5fZWxldmF0aW9uQgsKCV9vcmRl'
-    'cmluZ0ILCglfYWR2YW5jZWRCEgoQX3RleHRfc2l6ZV9pbmRleEISChBfYm9yZXNpZ2h0X3BpeG'
-    'VsQg8KDV9yaWdodF9oYW5kZWRCGQoXX2NlbGVzdGlhbF9jb29yZF9jaG9pY2VCEwoRX3NjcmVl'
-    'bl9hbHdheXNfb25CFAoSX2RvbnRfc2hvd193ZWxjb21lQhgKFl9kb250X3Nob3dfZm9jdXNfaW'
-    '50cm9CGAoWX2RvbnRfc2hvd19hbGlnbl9pbnRyb0IdChtfZG9udF9zaG93X2NhbGlicmF0aW9u'
-    'X2ZhaWxKBAgEEAVKBAgIEAlKBAgUEBU=');
+    '93Q2FsaWJyYXRpb25GYWlsiAEBEjwKGGRvbnRfc2hvd19zZXR1cF9maW5pc2hlZBgcIAEoCEgX'
+    'UhVkb250U2hvd1NldHVwRmluaXNoZWSIAQFCGQoXX2NlbGVzdGlhbF9jb29yZF9mb3JtYXRCDw'
+    'oNX2V5ZXBpZWNlX2ZvdkIVChNfbmlnaHRfdmlzaW9uX3RoZW1lQg8KDV9oaWRlX2FwcF9iYXJC'
+    'DQoLX21vdW50X3R5cGVCFAoSX29ic2VydmVyX2xvY2F0aW9uQhIKEF91cGRhdGVfaW50ZXJ2YW'
+    'xCFgoUX2NhdGFsb2dfZW50cnlfbWF0Y2hCFgoUX21heF9kaXN0YW5jZV9hY3RpdmVCDwoNX21h'
+    'eF9kaXN0YW5jZUIXChVfbWluX2VsZXZhdGlvbl9hY3RpdmVCEAoOX21pbl9lbGV2YXRpb25CCw'
+    'oJX29yZGVyaW5nQgsKCV9hZHZhbmNlZEISChBfdGV4dF9zaXplX2luZGV4QhIKEF9ib3Jlc2ln'
+    'aHRfcGl4ZWxCDwoNX3JpZ2h0X2hhbmRlZEIZChdfY2VsZXN0aWFsX2Nvb3JkX2Nob2ljZUITCh'
+    'Ffc2NyZWVuX2Fsd2F5c19vbkIUChJfZG9udF9zaG93X3dlbGNvbWVCGAoWX2RvbnRfc2hvd19m'
+    'b2N1c19pbnRyb0IYChZfZG9udF9zaG93X2FsaWduX2ludHJvQh0KG19kb250X3Nob3dfY2FsaW'
+    'JyYXRpb25fZmFpbEIbChlfZG9udF9zaG93X3NldHVwX2ZpbmlzaGVkSgQIBBAFSgQICBAJSgQI'
+    'FBAV');
 
 @$core.Deprecated('Use frameRequestDescriptor instead')
 const FrameRequest$json = {
@@ -669,16 +673,20 @@ const CalibrationData$json = {
   '1': 'CalibrationData',
   '2': [
     {'1': 'calibration_time', '3': 1, '4': 1, '5': 11, '6': '.google.protobuf.Timestamp', '9': 0, '10': 'calibrationTime', '17': true},
-    {'1': 'target_exposure_time', '3': 2, '4': 1, '5': 11, '6': '.google.protobuf.Duration', '9': 1, '10': 'targetExposureTime', '17': true},
-    {'1': 'camera_offset', '3': 3, '4': 1, '5': 5, '9': 2, '10': 'cameraOffset', '17': true},
-    {'1': 'fov_horizontal', '3': 4, '4': 1, '5': 1, '9': 3, '10': 'fovHorizontal', '17': true},
-    {'1': 'lens_distortion', '3': 5, '4': 1, '5': 1, '9': 4, '10': 'lensDistortion', '17': true},
-    {'1': 'match_max_error', '3': 8, '4': 1, '5': 1, '9': 5, '10': 'matchMaxError', '17': true},
-    {'1': 'lens_fl_mm', '3': 6, '4': 1, '5': 1, '9': 6, '10': 'lensFlMm', '17': true},
-    {'1': 'pixel_angular_size', '3': 7, '4': 1, '5': 1, '9': 7, '10': 'pixelAngularSize', '17': true},
+    {'1': 'exposure_calibration_failed', '3': 9, '4': 1, '5': 8, '9': 1, '10': 'exposureCalibrationFailed', '17': true},
+    {'1': 'plate_solve_failed', '3': 10, '4': 1, '5': 8, '9': 2, '10': 'plateSolveFailed', '17': true},
+    {'1': 'target_exposure_time', '3': 2, '4': 1, '5': 11, '6': '.google.protobuf.Duration', '9': 3, '10': 'targetExposureTime', '17': true},
+    {'1': 'camera_offset', '3': 3, '4': 1, '5': 5, '9': 4, '10': 'cameraOffset', '17': true},
+    {'1': 'fov_horizontal', '3': 4, '4': 1, '5': 1, '9': 5, '10': 'fovHorizontal', '17': true},
+    {'1': 'lens_distortion', '3': 5, '4': 1, '5': 1, '9': 6, '10': 'lensDistortion', '17': true},
+    {'1': 'match_max_error', '3': 8, '4': 1, '5': 1, '9': 7, '10': 'matchMaxError', '17': true},
+    {'1': 'lens_fl_mm', '3': 6, '4': 1, '5': 1, '9': 8, '10': 'lensFlMm', '17': true},
+    {'1': 'pixel_angular_size', '3': 7, '4': 1, '5': 1, '9': 9, '10': 'pixelAngularSize', '17': true},
   ],
   '8': [
     {'1': '_calibration_time'},
+    {'1': '_exposure_calibration_failed'},
+    {'1': '_plate_solve_failed'},
     {'1': '_target_exposure_time'},
     {'1': '_camera_offset'},
     {'1': '_fov_horizontal'},
@@ -692,16 +700,19 @@ const CalibrationData$json = {
 /// Descriptor for `CalibrationData`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List calibrationDataDescriptor = $convert.base64Decode(
     'Cg9DYWxpYnJhdGlvbkRhdGESSgoQY2FsaWJyYXRpb25fdGltZRgBIAEoCzIaLmdvb2dsZS5wcm'
-    '90b2J1Zi5UaW1lc3RhbXBIAFIPY2FsaWJyYXRpb25UaW1liAEBElAKFHRhcmdldF9leHBvc3Vy'
-    'ZV90aW1lGAIgASgLMhkuZ29vZ2xlLnByb3RvYnVmLkR1cmF0aW9uSAFSEnRhcmdldEV4cG9zdX'
-    'JlVGltZYgBARIoCg1jYW1lcmFfb2Zmc2V0GAMgASgFSAJSDGNhbWVyYU9mZnNldIgBARIqCg5m'
-    'b3ZfaG9yaXpvbnRhbBgEIAEoAUgDUg1mb3ZIb3Jpem9udGFsiAEBEiwKD2xlbnNfZGlzdG9ydG'
-    'lvbhgFIAEoAUgEUg5sZW5zRGlzdG9ydGlvbogBARIrCg9tYXRjaF9tYXhfZXJyb3IYCCABKAFI'
-    'BVINbWF0Y2hNYXhFcnJvcogBARIhCgpsZW5zX2ZsX21tGAYgASgBSAZSCGxlbnNGbE1tiAEBEj'
-    'EKEnBpeGVsX2FuZ3VsYXJfc2l6ZRgHIAEoAUgHUhBwaXhlbEFuZ3VsYXJTaXpliAEBQhMKEV9j'
-    'YWxpYnJhdGlvbl90aW1lQhcKFV90YXJnZXRfZXhwb3N1cmVfdGltZUIQCg5fY2FtZXJhX29mZn'
-    'NldEIRCg9fZm92X2hvcml6b250YWxCEgoQX2xlbnNfZGlzdG9ydGlvbkISChBfbWF0Y2hfbWF4'
-    'X2Vycm9yQg0KC19sZW5zX2ZsX21tQhUKE19waXhlbF9hbmd1bGFyX3NpemU=');
+    '90b2J1Zi5UaW1lc3RhbXBIAFIPY2FsaWJyYXRpb25UaW1liAEBEkMKG2V4cG9zdXJlX2NhbGli'
+    'cmF0aW9uX2ZhaWxlZBgJIAEoCEgBUhlleHBvc3VyZUNhbGlicmF0aW9uRmFpbGVkiAEBEjEKEn'
+    'BsYXRlX3NvbHZlX2ZhaWxlZBgKIAEoCEgCUhBwbGF0ZVNvbHZlRmFpbGVkiAEBElAKFHRhcmdl'
+    'dF9leHBvc3VyZV90aW1lGAIgASgLMhkuZ29vZ2xlLnByb3RvYnVmLkR1cmF0aW9uSANSEnRhcm'
+    'dldEV4cG9zdXJlVGltZYgBARIoCg1jYW1lcmFfb2Zmc2V0GAMgASgFSARSDGNhbWVyYU9mZnNl'
+    'dIgBARIqCg5mb3ZfaG9yaXpvbnRhbBgEIAEoAUgFUg1mb3ZIb3Jpem9udGFsiAEBEiwKD2xlbn'
+    'NfZGlzdG9ydGlvbhgFIAEoAUgGUg5sZW5zRGlzdG9ydGlvbogBARIrCg9tYXRjaF9tYXhfZXJy'
+    'b3IYCCABKAFIB1INbWF0Y2hNYXhFcnJvcogBARIhCgpsZW5zX2ZsX21tGAYgASgBSAhSCGxlbn'
+    'NGbE1tiAEBEjEKEnBpeGVsX2FuZ3VsYXJfc2l6ZRgHIAEoAUgJUhBwaXhlbEFuZ3VsYXJTaXpl'
+    'iAEBQhMKEV9jYWxpYnJhdGlvbl90aW1lQh4KHF9leHBvc3VyZV9jYWxpYnJhdGlvbl9mYWlsZW'
+    'RCFQoTX3BsYXRlX3NvbHZlX2ZhaWxlZEIXChVfdGFyZ2V0X2V4cG9zdXJlX3RpbWVCEAoOX2Nh'
+    'bWVyYV9vZmZzZXRCEQoPX2Zvdl9ob3Jpem9udGFsQhIKEF9sZW5zX2Rpc3RvcnRpb25CEgoQX2'
+    '1hdGNoX21heF9lcnJvckINCgtfbGVuc19mbF9tbUIVChNfcGl4ZWxfYW5ndWxhcl9zaXpl');
 
 @$core.Deprecated('Use locationBasedInfoDescriptor instead')
 const LocationBasedInfo$json = {

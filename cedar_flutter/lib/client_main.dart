@@ -335,10 +335,14 @@ class MyHomePageState extends State<MyHomePage> {
   bool _showedWelcome = false;
   bool _showFocusIntro = false;
   bool _showAlignIntro = false;
+  bool _showCalibrationFail = false;
+  bool _showSetupFinished = false;
 
   bool _dontShowWelcome = false;
   bool _dontShowFocusIntro = false;
   bool _dontShowAlignIntro = false;
+  bool _dontShowCalibrationFail = false;
+  bool _dontShowSetupFinished = false;
 
   // Whether we should offer a menu item to set the observer location via a map.
   bool _offerMap = false;
@@ -484,6 +488,7 @@ class MyHomePageState extends State<MyHomePage> {
       _northernHemisphere = _mapPosition!.latitude > 0.0;
     }
     _hasSolution = false;
+    bool prevCalibrating = _calibrating;
     _calibrating = response.calibrating;
     if (response.calibrating) {
       _calibrationProgress = response.calibrationProgress;
@@ -506,6 +511,7 @@ class MyHomePageState extends State<MyHomePage> {
     operationSettings = response.operationSettings;
     bool prevFocusMode = _setupMode && _focusAid;
     bool prevAlignMode = _setupMode && !_focusAid;
+    bool prevSetupMode = _setupMode;
     _setupMode =
         operationSettings.operatingMode == cedar_rpc.OperatingMode.SETUP;
     _focusAid = operationSettings.focusAssistMode;
@@ -549,6 +555,18 @@ class MyHomePageState extends State<MyHomePage> {
     _rightHanded = preferences!.rightHanded;
     calibrationData =
         response.hasCalibrationData() ? response.calibrationData : null;
+    bool calibrationFailed = false;
+    if (calibrationData != null) {
+      calibrationFailed = calibrationData!.exposureCalibrationFailed ||
+          calibrationData!.plateSolveFailed;
+    }
+    if (prevCalibrating &&
+        !_calibrating &&
+        calibrationFailed &&
+        !_dontShowCalibrationFail) {
+      _showCalibrationFail = true;
+    }
+
     processingStats =
         response.hasProcessingStats() ? response.processingStats : null;
     _slewRequest = response.hasSlewRequest() ? response.slewRequest : null;
@@ -624,12 +642,17 @@ class MyHomePageState extends State<MyHomePage> {
       _dontShowWelcome = preferences!.dontShowWelcome;
       _dontShowFocusIntro = preferences!.dontShowFocusIntro;
       _dontShowAlignIntro = preferences!.dontShowAlignIntro;
+      _dontShowCalibrationFail = preferences!.dontShowCalibrationFail;
+      _dontShowSetupFinished = preferences!.dontShowSetupFinished;
     }
     if (newFocusMode && !prevFocusMode) {
       _showFocusIntro = !_dontShowFocusIntro;
     }
     if (newAlignMode && !prevAlignMode) {
       _showAlignIntro = !_dontShowAlignIntro;
+    }
+    if (!_setupMode && prevSetupMode) {
+      _showSetupFinished = !_dontShowSetupFinished;
     }
   }
 
@@ -896,8 +919,6 @@ class MyHomePageState extends State<MyHomePage> {
                         }
                         _setOperatingMode(
                             /*setupMode=*/ true, /*focusAid=*/ true);
-                        // _showedFocusIntro = _dontShowFocusIntro;
-                        // _showedAlignIntro = _dontShowAlignIntro;
                       });
                     } else if (newValue == "Align") {
                       setState(() {
@@ -907,7 +928,6 @@ class MyHomePageState extends State<MyHomePage> {
                         }
                         _setOperatingMode(
                             /*setupMode=*/ true, /*focusAid=*/ false);
-                        // _showedAlignIntro = _dontShowAlignIntro;
                       });
                     } else {
                       // Aim.
@@ -2044,6 +2064,50 @@ class MyHomePageState extends State<MyHomePage> {
         onDontShowAgainChanged: (value) async {
           var prefs = cedar_rpc.Preferences();
           prefs.dontShowAlignIntro = value;
+          await updatePreferences(prefs);
+        },
+      );
+    }
+    if (_showCalibrationFail) {
+      String reason = calibrationData!.exposureCalibrationFailed
+          ? "too few stars are visible"
+          : "the star field is not recognized";
+      String action = product == "Hopper"
+          ? " and verify the lens cap is removed"
+          : ", verify the lens cap is removed, and check focus";
+      return interstitialDialog(
+        "Calibration of $product failed because $reason.\n"
+        "Please point $product at stars$action.",
+        context,
+        onConfirm: () {
+          setState(() {
+            _showCalibrationFail = false;
+          });
+        },
+        onDontShowAgainChanged: (value) async {
+          var prefs = cedar_rpc.Preferences();
+          prefs.dontShowCalibrationFail = value;
+          await updatePreferences(prefs);
+        },
+      );
+    }
+    if (_showSetupFinished) {
+      String useCatalog = product == "Hopper"
+          ? "\nUse the 'Catalog' button to access the Cedar Sky database"
+              " of celestial objects."
+          : "";
+      return interstitialDialog(
+        "All set!\nYour $product is ready to help you explore the night sky "
+        "with your telescope.$useCatalog",
+        context,
+        onConfirm: () {
+          setState(() {
+            _showSetupFinished = false;
+          });
+        },
+        onDontShowAgainChanged: (value) async {
+          var prefs = cedar_rpc.Preferences();
+          prefs.dontShowSetupFinished = value;
           await updatePreferences(prefs);
         },
       );

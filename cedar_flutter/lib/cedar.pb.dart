@@ -774,6 +774,7 @@ class Preferences extends $pb.GeneratedMessage {
     $core.bool? dontShowFocusIntro,
     $core.bool? dontShowAlignIntro,
     $core.bool? dontShowCalibrationFail,
+    $core.bool? dontShowSetupFinished,
   }) {
     final $result = create();
     if (celestialCoordFormat != null) {
@@ -845,6 +846,9 @@ class Preferences extends $pb.GeneratedMessage {
     if (dontShowCalibrationFail != null) {
       $result.dontShowCalibrationFail = dontShowCalibrationFail;
     }
+    if (dontShowSetupFinished != null) {
+      $result.dontShowSetupFinished = dontShowSetupFinished;
+    }
     return $result;
   }
   Preferences._() : super();
@@ -875,6 +879,7 @@ class Preferences extends $pb.GeneratedMessage {
     ..aOB(25, _omitFieldNames ? '' : 'dontShowFocusIntro')
     ..aOB(26, _omitFieldNames ? '' : 'dontShowAlignIntro')
     ..aOB(27, _omitFieldNames ? '' : 'dontShowCalibrationFail')
+    ..aOB(28, _omitFieldNames ? '' : 'dontShowSetupFinished')
     ..hasRequiredFields = false
   ;
 
@@ -1138,6 +1143,15 @@ class Preferences extends $pb.GeneratedMessage {
   $core.bool hasDontShowCalibrationFail() => $_has(22);
   @$pb.TagNumber(27)
   void clearDontShowCalibrationFail() => $_clearField(27);
+
+  @$pb.TagNumber(28)
+  $core.bool get dontShowSetupFinished => $_getBF(23);
+  @$pb.TagNumber(28)
+  set dontShowSetupFinished($core.bool v) { $_setBool(23, v); }
+  @$pb.TagNumber(28)
+  $core.bool hasDontShowSetupFinished() => $_has(23);
+  @$pb.TagNumber(28)
+  void clearDontShowSetupFinished() => $_clearField(28);
 }
 
 class FrameRequest extends $pb.GeneratedMessage {
@@ -2763,6 +2777,8 @@ class CalibrationData extends $pb.GeneratedMessage {
     $core.double? lensFlMm,
     $core.double? pixelAngularSize,
     $core.double? matchMaxError,
+    $core.bool? exposureCalibrationFailed,
+    $core.bool? plateSolveFailed,
   }) {
     final $result = create();
     if (calibrationTime != null) {
@@ -2789,6 +2805,12 @@ class CalibrationData extends $pb.GeneratedMessage {
     if (matchMaxError != null) {
       $result.matchMaxError = matchMaxError;
     }
+    if (exposureCalibrationFailed != null) {
+      $result.exposureCalibrationFailed = exposureCalibrationFailed;
+    }
+    if (plateSolveFailed != null) {
+      $result.plateSolveFailed = plateSolveFailed;
+    }
     return $result;
   }
   CalibrationData._() : super();
@@ -2804,6 +2826,8 @@ class CalibrationData extends $pb.GeneratedMessage {
     ..a<$core.double>(6, _omitFieldNames ? '' : 'lensFlMm', $pb.PbFieldType.OD)
     ..a<$core.double>(7, _omitFieldNames ? '' : 'pixelAngularSize', $pb.PbFieldType.OD)
     ..a<$core.double>(8, _omitFieldNames ? '' : 'matchMaxError', $pb.PbFieldType.OD)
+    ..aOB(9, _omitFieldNames ? '' : 'exposureCalibrationFailed')
+    ..aOB(10, _omitFieldNames ? '' : 'plateSolveFailed')
     ..hasRequiredFields = false
   ;
 
@@ -2925,6 +2949,25 @@ class CalibrationData extends $pb.GeneratedMessage {
   $core.bool hasMatchMaxError() => $_has(7);
   @$pb.TagNumber(8)
   void clearMatchMaxError() => $_clearField(8);
+
+  /// Indicates reason, if any, that the calibration failed.
+  @$pb.TagNumber(9)
+  $core.bool get exposureCalibrationFailed => $_getBF(8);
+  @$pb.TagNumber(9)
+  set exposureCalibrationFailed($core.bool v) { $_setBool(8, v); }
+  @$pb.TagNumber(9)
+  $core.bool hasExposureCalibrationFailed() => $_has(8);
+  @$pb.TagNumber(9)
+  void clearExposureCalibrationFailed() => $_clearField(9);
+
+  @$pb.TagNumber(10)
+  $core.bool get plateSolveFailed => $_getBF(9);
+  @$pb.TagNumber(10)
+  set plateSolveFailed($core.bool v) { $_setBool(9, v); }
+  @$pb.TagNumber(10)
+  $core.bool hasPlateSolveFailed() => $_has(9);
+  @$pb.TagNumber(10)
+  void clearPlateSolveFailed() => $_clearField(10);
 }
 
 /// When the observer's geographic location is known, the

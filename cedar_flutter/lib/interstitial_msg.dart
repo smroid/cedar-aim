@@ -6,11 +6,13 @@
 import 'package:cedar_flutter/settings.dart';
 import 'package:flutter/material.dart';
 
-Future<bool?> showInterstitial(String message, BuildContext context) async {
+Future<bool?> showInterstitial(String message, BuildContext context,
+    {bool showDontShowAgain = true}) async {
   return await showDialog<bool>(
       context: context,
       builder: (BuildContext context) {
-        return interstitialDialog(message, context, popContext: true);
+        return interstitialDialog(message, context,
+            popContext: true, showDontShowAgain: showDontShowAgain);
       });
 }
 
