@@ -1237,6 +1237,7 @@ class MyHomePageState extends State<MyHomePage> {
   }
 
   List<Widget> _controls() {
+    var settingsModel = Provider.of<SettingsModel>(context, listen: false);
     final portrait = MediaQuery.of(context).orientation == Orientation.portrait;
     final color = Theme.of(context).colorScheme.primary;
     return <Widget>[
@@ -1338,6 +1339,7 @@ class MyHomePageState extends State<MyHomePage> {
                             : Container()))
                     : (_slewRequest == null &&
                             !_setupMode &&
+                            !settingsModel.isDIY &&
                             _showCatalogBrowser != null
                         ? catalogButton()
                         : Container())),
