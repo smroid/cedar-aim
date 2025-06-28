@@ -1826,8 +1826,7 @@ class Image extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   void clearImageData() => $_clearField(3);
 
-  /// If image was rotated for display, this is the degree by which the image
-  /// was shrunk to fit. Always >= 1.0.
+  /// Deprecated. Always 1.0.
   @$pb.TagNumber(4)
   $core.double get rotationSizeRatio => $_getN(3);
   @$pb.TagNumber(4)
@@ -2779,6 +2778,7 @@ class CalibrationData extends $pb.GeneratedMessage {
     $core.double? matchMaxError,
     $core.bool? exposureCalibrationFailed,
     $core.bool? plateSolveFailed,
+    $core.double? fovVertical,
   }) {
     final $result = create();
     if (calibrationTime != null) {
@@ -2811,6 +2811,9 @@ class CalibrationData extends $pb.GeneratedMessage {
     if (plateSolveFailed != null) {
       $result.plateSolveFailed = plateSolveFailed;
     }
+    if (fovVertical != null) {
+      $result.fovVertical = fovVertical;
+    }
     return $result;
   }
   CalibrationData._() : super();
@@ -2828,6 +2831,7 @@ class CalibrationData extends $pb.GeneratedMessage {
     ..a<$core.double>(8, _omitFieldNames ? '' : 'matchMaxError', $pb.PbFieldType.OD)
     ..aOB(9, _omitFieldNames ? '' : 'exposureCalibrationFailed')
     ..aOB(10, _omitFieldNames ? '' : 'plateSolveFailed')
+    ..a<$core.double>(11, _omitFieldNames ? '' : 'fovVertical', $pb.PbFieldType.OD)
     ..hasRequiredFields = false
   ;
 
@@ -2893,7 +2897,7 @@ class CalibrationData extends $pb.GeneratedMessage {
   void clearCameraOffset() => $_clearField(3);
 
   /// The angular size (degrees) of the camera's width (longer dimension)
-  /// projected onto the sky.
+  /// and height projected onto the sky.
   /// Omitted if a sky/camera calibration has not succeeded.
   @$pb.TagNumber(4)
   $core.double get fovHorizontal => $_getN(3);
@@ -2968,6 +2972,15 @@ class CalibrationData extends $pb.GeneratedMessage {
   $core.bool hasPlateSolveFailed() => $_has(9);
   @$pb.TagNumber(10)
   void clearPlateSolveFailed() => $_clearField(10);
+
+  @$pb.TagNumber(11)
+  $core.double get fovVertical => $_getN(10);
+  @$pb.TagNumber(11)
+  set fovVertical($core.double v) { $_setDouble(10, v); }
+  @$pb.TagNumber(11)
+  $core.bool hasFovVertical() => $_has(10);
+  @$pb.TagNumber(11)
+  void clearFovVertical() => $_clearField(11);
 }
 
 /// When the observer's geographic location is known, the

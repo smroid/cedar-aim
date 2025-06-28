@@ -200,7 +200,6 @@ class _MainImagePainter extends CustomPainter {
       labeledCatalogEntries = state._labeledFovCatalogEntries;
     }
 
-    // How many display pixels is the telescope FOV?
     if (state._slewRequest != null && !state._setupMode && state._hasSolution) {
       final slew = state._slewRequest;
       Offset? posInImage;
@@ -353,6 +352,7 @@ class MyHomePageState extends State<MyHomePage> {
 
   Duration _tzOffset = const Duration();
   bool _hasCamera = false;
+  int _cameraWidth = 0;
   bool isDIY = false;
   bool isBasic = false;
   bool isPlus = false;
@@ -405,7 +405,7 @@ class MyHomePageState extends State<MyHomePage> {
   int _centerPeakHeight = 0;
   Uint8List? _centerPeakImageBytes;
 
-  int _boresightImageWidth = 0; // Full resolution units.
+  int _boresightImageHeight = 0; // Full resolution units.
   Uint8List? _boresightImageBytes;
 
   int _prevFrameId = -1;
@@ -502,6 +502,9 @@ class MyHomePageState extends State<MyHomePage> {
     _hasWifiControl =
         serverInformation!.featureLevel != cedar_rpc.FeatureLevel.DIY;
     _hasCamera = serverInformation!.hasCamera();
+    if (_hasCamera) {
+      _cameraWidth = serverInformation!.camera.imageWidth;
+    }
     isDIY = serverInformation!.featureLevel == cedar_rpc.FeatureLevel.DIY;
     isBasic = serverInformation!.featureLevel == cedar_rpc.FeatureLevel.BASIC;
     isPlus = serverInformation!.featureLevel == cedar_rpc.FeatureLevel.PLUS;
@@ -603,11 +606,11 @@ class MyHomePageState extends State<MyHomePage> {
       if (response.hasLocationBasedInfo()) {
         locationBasedInfo = response.locationBasedInfo;
       }
-      _scopeFov = preferences!.eyepieceFov * _imageRegion.width / _solutionFOV;
+      _scopeFov = preferences!.eyepieceFov * (_cameraWidth / _binFactor) / _solutionFOV;
     } else if (_scopeFov == 0) {
       // No plate solution yet, so we don't know the image scale. For now,
-      // assume the eyepiece FOV is 1/10 the image width.
-      _scopeFov = _imageRegion.width / 10;
+      // assume the eyepiece FOV is 1/10 the image height.
+      _scopeFov = _imageRegion.height / 10;
     }
     noiseEstimate = response.noiseEstimate;
     _boresightPosition = Offset(response.boresightPosition.x / _binFactor,
@@ -628,7 +631,7 @@ class MyHomePageState extends State<MyHomePage> {
     if (response.hasBoresightImage()) {
       _boresightImageBytes =
           Uint8List.fromList(response.boresightImage.imageData);
-      _boresightImageWidth = response.boresightImage.rectangle.width;
+      _boresightImageHeight = response.boresightImage.rectangle.height;
       _boresightRotationSizeRatio = response.boresightImage.rotationSizeRatio;
     }
     if (response.hasCenterPeakPosition()) {
@@ -1854,20 +1857,20 @@ class MyHomePageState extends State<MyHomePage> {
     Widget? overlayWidget;
     if (_setupMode && _focusAid && _centerPeakImageBytes != null) {
       overlayWidget = dart_widgets.Image.memory(_centerPeakImageBytes!,
-          height: _imageRegion.width / 6,
-          width: _imageRegion.width / 6,
+          height: _imageRegion.height / 4,
+          width: _imageRegion.height / 4,
           fit: BoxFit.fill,
           gaplessPlayback: true);
     } else if (!_setupMode && _boresightImageBytes != null) {
       var overlayImage = dart_widgets.Image.memory(_boresightImageBytes!,
-          width: _imageRegion.width / 4,
-          height: _imageRegion.width / 4,
+          width: _imageRegion.height / 3,
+          height: _imageRegion.height / 3,
           fit: BoxFit.fill,
           gaplessPlayback: true);
       overlayWidget = ClipRect(
           child: CustomPaint(
               foregroundPainter: _OverlayImagePainter(this, context,
-                  (_imageRegion.width / 4) / _boresightImageWidth, _binFactor),
+                  (_imageRegion.height / 3) / _boresightImageHeight, _binFactor),
               child: overlayImage));
     }
     return Stack(alignment: Alignment.topRight, children: <Widget>[

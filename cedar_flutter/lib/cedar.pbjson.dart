@@ -678,10 +678,11 @@ const CalibrationData$json = {
     {'1': 'target_exposure_time', '3': 2, '4': 1, '5': 11, '6': '.google.protobuf.Duration', '9': 3, '10': 'targetExposureTime', '17': true},
     {'1': 'camera_offset', '3': 3, '4': 1, '5': 5, '9': 4, '10': 'cameraOffset', '17': true},
     {'1': 'fov_horizontal', '3': 4, '4': 1, '5': 1, '9': 5, '10': 'fovHorizontal', '17': true},
-    {'1': 'lens_distortion', '3': 5, '4': 1, '5': 1, '9': 6, '10': 'lensDistortion', '17': true},
-    {'1': 'match_max_error', '3': 8, '4': 1, '5': 1, '9': 7, '10': 'matchMaxError', '17': true},
-    {'1': 'lens_fl_mm', '3': 6, '4': 1, '5': 1, '9': 8, '10': 'lensFlMm', '17': true},
-    {'1': 'pixel_angular_size', '3': 7, '4': 1, '5': 1, '9': 9, '10': 'pixelAngularSize', '17': true},
+    {'1': 'fov_vertical', '3': 11, '4': 1, '5': 1, '9': 6, '10': 'fovVertical', '17': true},
+    {'1': 'lens_distortion', '3': 5, '4': 1, '5': 1, '9': 7, '10': 'lensDistortion', '17': true},
+    {'1': 'match_max_error', '3': 8, '4': 1, '5': 1, '9': 8, '10': 'matchMaxError', '17': true},
+    {'1': 'lens_fl_mm', '3': 6, '4': 1, '5': 1, '9': 9, '10': 'lensFlMm', '17': true},
+    {'1': 'pixel_angular_size', '3': 7, '4': 1, '5': 1, '9': 10, '10': 'pixelAngularSize', '17': true},
   ],
   '8': [
     {'1': '_calibration_time'},
@@ -690,6 +691,7 @@ const CalibrationData$json = {
     {'1': '_target_exposure_time'},
     {'1': '_camera_offset'},
     {'1': '_fov_horizontal'},
+    {'1': '_fov_vertical'},
     {'1': '_lens_distortion'},
     {'1': '_match_max_error'},
     {'1': '_lens_fl_mm'},
@@ -705,14 +707,15 @@ final $typed_data.Uint8List calibrationDataDescriptor = $convert.base64Decode(
     'BsYXRlX3NvbHZlX2ZhaWxlZBgKIAEoCEgCUhBwbGF0ZVNvbHZlRmFpbGVkiAEBElAKFHRhcmdl'
     'dF9leHBvc3VyZV90aW1lGAIgASgLMhkuZ29vZ2xlLnByb3RvYnVmLkR1cmF0aW9uSANSEnRhcm'
     'dldEV4cG9zdXJlVGltZYgBARIoCg1jYW1lcmFfb2Zmc2V0GAMgASgFSARSDGNhbWVyYU9mZnNl'
-    'dIgBARIqCg5mb3ZfaG9yaXpvbnRhbBgEIAEoAUgFUg1mb3ZIb3Jpem9udGFsiAEBEiwKD2xlbn'
-    'NfZGlzdG9ydGlvbhgFIAEoAUgGUg5sZW5zRGlzdG9ydGlvbogBARIrCg9tYXRjaF9tYXhfZXJy'
-    'b3IYCCABKAFIB1INbWF0Y2hNYXhFcnJvcogBARIhCgpsZW5zX2ZsX21tGAYgASgBSAhSCGxlbn'
-    'NGbE1tiAEBEjEKEnBpeGVsX2FuZ3VsYXJfc2l6ZRgHIAEoAUgJUhBwaXhlbEFuZ3VsYXJTaXpl'
-    'iAEBQhMKEV9jYWxpYnJhdGlvbl90aW1lQh4KHF9leHBvc3VyZV9jYWxpYnJhdGlvbl9mYWlsZW'
-    'RCFQoTX3BsYXRlX3NvbHZlX2ZhaWxlZEIXChVfdGFyZ2V0X2V4cG9zdXJlX3RpbWVCEAoOX2Nh'
-    'bWVyYV9vZmZzZXRCEQoPX2Zvdl9ob3Jpem9udGFsQhIKEF9sZW5zX2Rpc3RvcnRpb25CEgoQX2'
-    '1hdGNoX21heF9lcnJvckINCgtfbGVuc19mbF9tbUIVChNfcGl4ZWxfYW5ndWxhcl9zaXpl');
+    'dIgBARIqCg5mb3ZfaG9yaXpvbnRhbBgEIAEoAUgFUg1mb3ZIb3Jpem9udGFsiAEBEiYKDGZvdl'
+    '92ZXJ0aWNhbBgLIAEoAUgGUgtmb3ZWZXJ0aWNhbIgBARIsCg9sZW5zX2Rpc3RvcnRpb24YBSAB'
+    'KAFIB1IObGVuc0Rpc3RvcnRpb26IAQESKwoPbWF0Y2hfbWF4X2Vycm9yGAggASgBSAhSDW1hdG'
+    'NoTWF4RXJyb3KIAQESIQoKbGVuc19mbF9tbRgGIAEoAUgJUghsZW5zRmxNbYgBARIxChJwaXhl'
+    'bF9hbmd1bGFyX3NpemUYByABKAFIClIQcGl4ZWxBbmd1bGFyU2l6ZYgBAUITChFfY2FsaWJyYX'
+    'Rpb25fdGltZUIeChxfZXhwb3N1cmVfY2FsaWJyYXRpb25fZmFpbGVkQhUKE19wbGF0ZV9zb2x2'
+    'ZV9mYWlsZWRCFwoVX3RhcmdldF9leHBvc3VyZV90aW1lQhAKDl9jYW1lcmFfb2Zmc2V0QhEKD1'
+    '9mb3ZfaG9yaXpvbnRhbEIPCg1fZm92X3ZlcnRpY2FsQhIKEF9sZW5zX2Rpc3RvcnRpb25CEgoQ'
+    'X21hdGNoX21heF9lcnJvckINCgtfbGVuc19mbF9tbUIVChNfcGl4ZWxfYW5ndWxhcl9zaXpl');
 
 @$core.Deprecated('Use locationBasedInfoDescriptor instead')
 const LocationBasedInfo$json = {

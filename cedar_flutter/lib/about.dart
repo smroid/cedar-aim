@@ -244,7 +244,7 @@ Widget calibrationInfo(MyHomePageState state) {
           Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
             _scaledText("Resolution"),
             _scaledText(serverInfo.hasCamera()
-                ? sprintf("%dx%d", [
+                ? sprintf("%d x %d", [
                     serverInfo.camera.imageWidth,
                     serverInfo.camera.imageHeight
                   ])
@@ -257,9 +257,10 @@ Widget calibrationInfo(MyHomePageState state) {
                 : "unknown"),
           ]),
           Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-            _scaledText("FOV (horiz)"),
+            _scaledText("FOV"),
             _scaledText(calData.hasFovHorizontal()
-                ? sprintf("%.1f°", [calData.fovHorizontal])
+                ? sprintf("%.1f° x %.1f°",
+                          [calData.fovHorizontal, calData.fovVertical])
                 : "unknown"),
           ]),
           Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
