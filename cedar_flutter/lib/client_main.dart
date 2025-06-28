@@ -1376,49 +1376,61 @@ class MyHomePageState extends State<MyHomePage> {
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                         color: color,
-                                        fontSize: 10 * panelScaleFactor),
+                                        fontSize: 11 * panelScaleFactor),
                                     textScaler: textScaler(context),
                                   ))),
                         ])
                   : Container())),
-      const SizedBox(height: 5),
+      const SizedBox(height: 10),
       RotatedBox(
           quarterTurns: portrait ? 3 : 0,
-          child: SizedBox(
-            width: buttonWidth,
-            height: buttonHeight,
-            child: _focusAid
-                ? focusDoneButton(fontSize: buttonFont)
-                : (_canAlign
-                    ? (_slewRequest == null
-                        ? setupAlignSkipOrDoneButton(fontSize: buttonFont)
-                        : (_boresightImageBytes != null
-                            ? slewReAlignButton(fontSize: buttonFont)
-                            : Container()))
-                    : (_slewRequest == null &&
-                            !_setupMode &&
-                            !settingsModel.isDIY &&
-                            _showCatalogBrowser != null
-                        ? catalogButton(fontSize: buttonFont)
-                        : Container())),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Done/Skip button
+              SizedBox(
+                width: buttonWidth,
+                height: buttonHeight,
+                child: _focusAid
+                    ? focusDoneButton(fontSize: buttonFont)
+                    : (_canAlign
+                        ? (_slewRequest == null
+                            ? setupAlignSkipOrDoneButton(fontSize: buttonFont)
+                            : (_boresightImageBytes != null
+                                ? slewReAlignButton(fontSize: buttonFont)
+                                : Container()))
+                        : (_slewRequest == null &&
+                                !_setupMode &&
+                                !settingsModel.isDIY &&
+                                _showCatalogBrowser != null
+                            ? catalogButton()
+                            : Container())),
+              ),
+
+              // Day checkbox (only in setup mode)
+              _setupMode
+                  ? Column(
+                      children: [
+                        SizedBox(height: 10 * panelScaleFactor),
+                        Transform.scale(
+                          scale: panelScaleFactor,
+                          child: TextButton.icon(
+                              label: _scaledText("Day"),
+                              icon: _daylightMode
+                                  ? const Icon(Icons.check)
+                                  : const Icon(Icons.check_box_outline_blank),
+                              onPressed: () async {
+                                setState(() {
+                                  _setDaylightMode(!_daylightMode);
+                                });
+                              }),
+                        ),
+                      ],
+                    )
+                  : Container(),
+            ],
           )),
       const SizedBox(height: 10),
-      _setupMode
-          ? RotatedBox(
-              quarterTurns: portrait ? 3 : 0,
-              child: Transform.scale(
-                  scale: panelScaleFactor,
-                  child: TextButton.icon(
-                      label: _scaledText("Day"),
-                      icon: _daylightMode
-                          ? const Icon(Icons.check)
-                          : const Icon(Icons.check_box_outline_blank),
-                      onPressed: () async {
-                        setState(() {
-                          _setDaylightMode(!_daylightMode);
-                        });
-                      })))
-          : Container(),
       _slewRequest != null && !_setupMode && _showCatalogBrowser != null
           ? RotatedBox(
               quarterTurns: portrait ? 3 : 0,
@@ -2027,8 +2039,7 @@ class MyHomePageState extends State<MyHomePage> {
     } else {
       // Space is constrained - calculate based on available space
       final remainingWidth = totalWidth - naturalImageSize - spacingWidth;
-      final minPanelsWidth = 2 * minPanelWidth;
-
+      const minPanelsWidth = 2 * minPanelWidth;
       if (remainingWidth >= minPanelsWidth) {
         // We can fit minimum panels with natural image size
         actualImageSize = naturalImageSize;
