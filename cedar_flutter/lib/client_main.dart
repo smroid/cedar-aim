@@ -124,6 +124,20 @@ class _MainImagePainter extends CustomPainter {
     return distanceSq < 4;
   }
 
+  List<cedar_rpc.FovCatalogEntry> _createScaledCatalogEntries(
+      List<cedar_rpc.FovCatalogEntry> entries, double displayScale) {
+    return entries.map((entry) {
+      // Create a new catalog entry with scaled image position
+      final scaledEntry = cedar_rpc.FovCatalogEntry();
+      scaledEntry.entry = entry.entry; // Copy the catalog entry data
+      scaledEntry.imagePos = cedar_rpc.ImageCoord(
+        x: entry.imagePos.x * displayScale,
+        y: entry.imagePos.y * displayScale,
+      );
+      return scaledEntry;
+    }).toList();
+  }
+
   void _paint(Canvas canvas, Size size) {
     const double thin = 1;
     const double thick = 1.5;
@@ -131,13 +145,21 @@ class _MainImagePainter extends CustomPainter {
     final Color opaqueColor =
         Color.fromARGB(128, color.red, color.green, color.blue);
 
+    final displayScale = state._getDisplayScale();
+
     if (state._setupMode &&
         state._centerPeakRegion != null &&
         state._focusAid &&
         !state._daylightMode) {
       // Draw box around location of the brightest star.
+      final scaledRect = Rect.fromLTWH(
+        state._centerPeakRegion!.left * displayScale,
+        state._centerPeakRegion!.top * displayScale,
+        state._centerPeakRegion!.width * displayScale,
+        state._centerPeakRegion!.height * displayScale,
+      );
       canvas.drawRect(
-          state._centerPeakRegion as Rect,
+          scaledRect,
           Paint()
             ..color = color
             ..strokeWidth = thin
@@ -172,12 +194,15 @@ class _MainImagePainter extends CustomPainter {
           break;
         }
         targetCoords.add(star.centroidPosition);
+        // Scale the star position and rectangle size
+        final scaledCenter = Offset(
+          (star.centroidPosition.x / state._binFactor) * displayScale,
+          (star.centroidPosition.y / state._binFactor) * displayScale,
+        );
+        final scaledSize = 16 * displayScale;
         canvas.drawRect(
             Rect.fromCenter(
-                center: Offset(star.centroidPosition.x / state._binFactor,
-                    star.centroidPosition.y / state._binFactor),
-                width: 16,
-                height: 16),
+                center: scaledCenter, width: scaledSize, height: scaledSize),
             paint);
       }
       // Partition state._labeledFovCatalogEntries to labeledCatalogEntries or
@@ -204,15 +229,25 @@ class _MainImagePainter extends CustomPainter {
       final slew = state._slewRequest;
       Offset? posInImage;
       if (slew!.hasImagePos()) {
-        posInImage = Offset(slew.imagePos.x / state._binFactor,
-            slew.imagePos.y / state._binFactor);
+        // Scale the slew position
+        posInImage = Offset(
+          (slew.imagePos.x / state._binFactor) * displayScale,
+          (slew.imagePos.y / state._binFactor) * displayScale,
+        );
       }
+      // Scale the boresight position and scope FOV
+      final scaledBoresightPosition = Offset(
+        state._boresightPosition.dx * displayScale,
+        state._boresightPosition.dy * displayScale,
+      );
+      final scaledScopeFov =
+          (state._scopeFov / state._rotationSizeRatio) * displayScale;
       drawSlewTarget(
           _context,
           canvas,
           color,
-          state._boresightPosition,
-          state._scopeFov / state._rotationSizeRatio,
+          scaledBoresightPosition,
+          scaledScopeFov,
           /*rollAngleRad=*/ _deg2rad(state._bullseyeDirectionIndicator()),
           posInImage,
           slew.targetDistance,
@@ -226,41 +261,46 @@ class _MainImagePainter extends CustomPainter {
           slew.targetCatalogEntry,
           canvas,
           color,
-          const Offset(15, 15),
+          const Offset(5, 5),
           state.preferences?.mountType == cedar_rpc.MountType.ALT_AZ,
           state._northernHemisphere,
           slew.offsetRotationAxis,
           slew.offsetTiltAxis,
-          portrait);
+          portrait,
+          displayScale);
     } else if (!state._focusAid &&
         !state._calibrating &&
         !state._transitionToSetup) {
       var rollAngleRad = _deg2rad(state._bullseyeDirectionIndicator());
-      drawBullseye(canvas, color, state._boresightPosition,
-          state._scopeFov / state._rotationSizeRatio / 2, rollAngleRad);
+      final scaledBoresightPosition = Offset(
+        state._boresightPosition.dx * displayScale,
+        state._boresightPosition.dy * displayScale,
+      );
+      final scaledScopeFov =
+          (state._scopeFov / state._rotationSizeRatio / 2) * displayScale;
+
+      drawBullseye(
+          canvas, color, scaledBoresightPosition, scaledScopeFov, rollAngleRad);
+
       if (labeledCatalogEntries.isNotEmpty &&
           state._slewRequest == null &&
           _drawCatalogEntries != null) {
-        _drawCatalogEntries!(_context, canvas, color, labeledCatalogEntries,
+        // Create scaled catalog entries for display
+        final scaledLabeledEntries =
+            _createScaledCatalogEntries(labeledCatalogEntries, displayScale);
+        final scaledDimEntries =
+            _createScaledCatalogEntries(dimLabeledCatalogEntries, displayScale);
+        final scaledUnlabeledEntries = _createScaledCatalogEntries(
+            state._unlabeledFovCatalogEntries, displayScale);
+
+        _drawCatalogEntries!(_context, canvas, color, scaledLabeledEntries,
             /*drawLabel=*/ true, state._binFactor, portrait);
         if (dimLabeledCatalogEntries.isNotEmpty) {
-          _drawCatalogEntries!(
-              _context,
-              canvas,
-              opaqueColor,
-              dimLabeledCatalogEntries,
-              /*drawLabel=*/ true,
-              state._binFactor,
-              portrait);
+          _drawCatalogEntries!(_context, canvas, opaqueColor, scaledDimEntries,
+              /*drawLabel=*/ true, state._binFactor, portrait);
         }
-        _drawCatalogEntries!(
-            _context,
-            canvas,
-            color,
-            state._unlabeledFovCatalogEntries,
-            /*drawLabel=*/ false,
-            state._binFactor,
-            portrait);
+        _drawCatalogEntries!(_context, canvas, color, scaledUnlabeledEntries,
+            /*drawLabel=*/ false, state._binFactor, portrait);
       }
     }
   }
@@ -606,7 +646,8 @@ class MyHomePageState extends State<MyHomePage> {
       if (response.hasLocationBasedInfo()) {
         locationBasedInfo = response.locationBasedInfo;
       }
-      _scopeFov = preferences!.eyepieceFov * (_cameraWidth / _binFactor) / _solutionFOV;
+      _scopeFov =
+          preferences!.eyepieceFov * (_cameraWidth / _binFactor) / _solutionFOV;
     } else if (_scopeFov == 0) {
       // No plate solution yet, so we don't know the image scale. For now,
       // assume the eyepiece FOV is 1/10 the image height.
@@ -1153,13 +1194,13 @@ class MyHomePageState extends State<MyHomePage> {
     return row ? Row(children: children) : Column(children: children);
   }
 
-  Widget focusDoneButton() {
+  Widget focusDoneButton({fontSize = 14.0}) {
     return OutlinedButton(
         style: OutlinedButton.styleFrom(
             padding: const EdgeInsets.symmetric(horizontal: 0)),
         child: Text(
           textAlign: TextAlign.center,
-          style: const TextStyle(fontSize: 14),
+          style: TextStyle(fontSize: fontSize),
           "Done",
           textScaler: textScaler(context),
         ),
@@ -1175,13 +1216,13 @@ class MyHomePageState extends State<MyHomePage> {
         });
   }
 
-  Widget setupAlignSkipOrDoneButton() {
+  Widget setupAlignSkipOrDoneButton({fontSize = 14.0}) {
     return OutlinedButton(
         style: OutlinedButton.styleFrom(
             padding: const EdgeInsets.symmetric(horizontal: 0)),
         child: Text(
           textAlign: TextAlign.center,
-          style: const TextStyle(fontSize: 14),
+          style: TextStyle(fontSize: fontSize),
           textScaler: textScaler(context),
           _alignTargetTapped ? "Done" : "Skip",
         ),
@@ -1193,13 +1234,13 @@ class MyHomePageState extends State<MyHomePage> {
         });
   }
 
-  Widget slewReAlignButton() {
+  Widget slewReAlignButton({fontSize = 14.0}) {
     return OutlinedButton(
         style: OutlinedButton.styleFrom(
             padding: const EdgeInsets.symmetric(horizontal: 0)),
         child: Text(
           textAlign: TextAlign.center,
-          style: const TextStyle(fontSize: 14),
+          style: TextStyle(fontSize: fontSize),
           textScaler: textScaler(context),
           "Re-align",
         ),
@@ -1208,12 +1249,12 @@ class MyHomePageState extends State<MyHomePage> {
         });
   }
 
-  Widget catalogButton() {
+  Widget catalogButton({fontSize = 14.0}) {
     return OutlinedButton(
         style: OutlinedButton.styleFrom(
             padding: const EdgeInsets.symmetric(horizontal: 0)),
         child: Text(
-          style: const TextStyle(fontSize: 14),
+          style: TextStyle(fontSize: fontSize),
           "Catalog",
           textScaler: textScaler(context),
         ),
@@ -1225,12 +1266,12 @@ class MyHomePageState extends State<MyHomePage> {
         });
   }
 
-  Widget endGotoButton() {
+  Widget endGotoButton({fontSize = 14.0}) {
     return OutlinedButton(
         style: OutlinedButton.styleFrom(
             padding: const EdgeInsets.symmetric(horizontal: 0)),
         child: Text(
-          style: const TextStyle(fontSize: 14),
+          style: TextStyle(fontSize: fontSize),
           "End goto",
           textScaler: textScaler(context),
         ),
@@ -1243,6 +1284,20 @@ class MyHomePageState extends State<MyHomePage> {
     var settingsModel = Provider.of<SettingsModel>(context, listen: false);
     final portrait = MediaQuery.of(context).orientation == Orientation.portrait;
     final color = Theme.of(context).colorScheme.primary;
+
+    // Get the current panel scale from layout calculations
+    final calculations = _getLayoutCalculations();
+    final panelScale = calculations['panelScale']!;
+    final panelScaleFactor = panelScale.clamp(1.0, 1.5);
+    final textScale = textScaleFactor(context);
+
+    // Calculate responsive sizes based on panel scale and text scale
+    final textBoxWidth = 90 * panelScaleFactor * textScale;
+    final textBoxHeight = 100 * panelScaleFactor * textScale;
+    final buttonWidth = 55 * panelScaleFactor * textScale;
+    final buttonHeight = 20 * panelScaleFactor * textScale;
+    final buttonFont = 11.0 * panelScaleFactor;
+
     return <Widget>[
       // Fake widget to consume changes to preferences and issue RPC to the
       // server.
@@ -1276,109 +1331,111 @@ class MyHomePageState extends State<MyHomePage> {
         },
       ),
       RotatedBox(
-        quarterTurns: portrait ? 3 : 0,
-        child: _focusAid
-            ? SizedBox(
-                width: (portrait ? 120 : 80) * textScaleFactor(context),
-                height: 60 * textScaleFactor(context),
-                child: Align(
-                    alignment: Alignment.center,
-                    child: Text(
-                      _daylightMode
-                          ? "Aim at distant object and adjust focus"
-                          : "Adjust focus",
-                      maxLines: 8,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(color: color),
-                      textScaler: textScaler(context),
-                    )))
-            : (_canAlign && _slewRequest == null
-                ? _daylightMode
-                    ? SizedBox(
-                        width: (portrait ? 120 : 80) * textScaleFactor(context),
-                        height:
-                            (portrait ? 60 : 100) * textScaleFactor(context),
-                        child: Align(
-                            alignment: Alignment.center,
-                            child: Text(
-                              "Tap image where telescope is pointed",
-                              maxLines: 8,
-                              textAlign: TextAlign.center,
-                              style: TextStyle(color: color),
-                              textScaler: textScaler(context),
-                            )))
-                    : _rowOrColumn(portrait, [
-                        SizedBox(
-                            width: (portrait ? 120 : 80) *
-                                textScaleFactor(context),
-                            height: (portrait ? 80 : 120) *
-                                textScaleFactor(context),
-                            child: Align(
-                                alignment: Alignment.center,
-                                child: Text(
-                                  "Move telescope to center a highlighted object, then tap on it",
-                                  maxLines: 8,
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(color: color),
-                                  textScaler: textScaler(context),
-                                ))),
-                      ])
-                : SizedBox(
-                    height: (portrait ? 60 : 0) * textScaleFactor(context))),
-      ),
-      const SizedBox(height: 25),
+          quarterTurns: portrait ? 3 : 0,
+          child: _focusAid
+              ? SizedBox(
+                  width: textBoxWidth,
+                  height: textBoxHeight,
+                  child: Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        _daylightMode
+                            ? "Adjust focus on distant object"
+                            : "Adjust focus",
+                        maxLines: 8,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            color: color, fontSize: 11 * panelScaleFactor),
+                        textScaler: textScaler(context),
+                      )))
+              : (_canAlign && _slewRequest == null
+                  ? _daylightMode
+                      ? SizedBox(
+                          width: textBoxWidth,
+                          height: textBoxHeight,
+                          child: Align(
+                              alignment: Alignment.center,
+                              child: Text(
+                                "Tap image where scope is pointed",
+                                maxLines: 8,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    color: color,
+                                    fontSize: 12 * panelScaleFactor),
+                                textScaler: textScaler(context),
+                              )))
+                      : _rowOrColumn(portrait, [
+                          SizedBox(
+                              width: textBoxWidth,
+                              height: textBoxHeight,
+                              child: Align(
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                    "Move scope to center a highlighted object, then tap object",
+                                    maxLines: 8,
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        color: color,
+                                        fontSize: 10 * panelScaleFactor),
+                                    textScaler: textScaler(context),
+                                  ))),
+                        ])
+                  : Container())),
+      const SizedBox(height: 5),
       RotatedBox(
           quarterTurns: portrait ? 3 : 0,
           child: SizedBox(
-            width: 70 * textScaleFactor(context),
-            height: 25 * textScaleFactor(context),
+            width: buttonWidth,
+            height: buttonHeight,
             child: _focusAid
-                ? focusDoneButton()
+                ? focusDoneButton(fontSize: buttonFont)
                 : (_canAlign
                     ? (_slewRequest == null
-                        ? setupAlignSkipOrDoneButton()
+                        ? setupAlignSkipOrDoneButton(fontSize: buttonFont)
                         : (_boresightImageBytes != null
-                            ? slewReAlignButton()
+                            ? slewReAlignButton(fontSize: buttonFont)
                             : Container()))
                     : (_slewRequest == null &&
                             !_setupMode &&
                             !settingsModel.isDIY &&
                             _showCatalogBrowser != null
-                        ? catalogButton()
+                        ? catalogButton(fontSize: buttonFont)
                         : Container())),
           )),
-      const SizedBox(height: 25),
+      const SizedBox(height: 10),
       _setupMode
           ? RotatedBox(
               quarterTurns: portrait ? 3 : 0,
-              child: TextButton.icon(
-                  label: _scaledText("Day"),
-                  icon: _daylightMode
-                      ? const Icon(Icons.check)
-                      : const Icon(Icons.check_box_outline_blank),
-                  onPressed: () async {
-                    setState(() {
-                      _setDaylightMode(!_daylightMode);
-                    });
-                  }))
+              child: Transform.scale(
+                  scale: panelScaleFactor,
+                  child: TextButton.icon(
+                      label: _scaledText("Day"),
+                      icon: _daylightMode
+                          ? const Icon(Icons.check)
+                          : const Icon(Icons.check_box_outline_blank),
+                      onPressed: () async {
+                        setState(() {
+                          _setDaylightMode(!_daylightMode);
+                        });
+                      })))
           : Container(),
       _slewRequest != null && !_setupMode && _showCatalogBrowser != null
           ? RotatedBox(
               quarterTurns: portrait ? 3 : 0,
               child: SizedBox(
-                  width: 70 * textScaleFactor(context),
-                  height: 25 * textScaleFactor(context),
-                  child: catalogButton()))
+                  width: buttonWidth,
+                  height: buttonHeight,
+                  child: catalogButton(fontSize: buttonFont)))
           : Container(),
-      const SizedBox(height: 25),
+      const SizedBox(height: 10),
       _slewRequest != null
           ? RotatedBox(
               quarterTurns: portrait ? 3 : 0,
               child: SizedBox(
-                  width: 70 * textScaleFactor(context),
-                  height: 25 * textScaleFactor(context),
+                  width: buttonWidth,
+                  height: buttonHeight,
                   child: _slewRequest != null && !_setupMode
-                      ? endGotoButton()
+                      ? endGotoButton(fontSize: buttonFont)
                       : Container()))
           : Container(),
     ];
@@ -1548,8 +1605,8 @@ class MyHomePageState extends State<MyHomePage> {
         _polarAlignAdvice!.hasAzimuthCorrection();
   }
 
-  List<Widget> _raDec() {
-    const size = 11.0;
+  List<Widget> _raDec(double gaugeTextFactor) {
+    final size = 11.0 * gaugeTextFactor;
     return [
       Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -1563,8 +1620,8 @@ class MyHomePageState extends State<MyHomePage> {
     ];
   }
 
-  List<Widget> _azAlt() {
-    const size = 10.0;
+  List<Widget> _azAlt(double gaugeTextFactor) {
+    final size = 10.0 * gaugeTextFactor;
     return [
       Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -1582,13 +1639,13 @@ class MyHomePageState extends State<MyHomePage> {
     ];
   }
 
-  List<Widget> _coordInfo() {
+  List<Widget> _coordInfo(double gaugeTextFactor) {
     if (preferences?.celestialCoordChoice ==
             cedar_rpc.CelestialCoordChoice.RA_DEC ||
         locationBasedInfo == null) {
-      return _raDec();
+      return _raDec(gaugeTextFactor);
     } else {
-      return _azAlt();
+      return _azAlt(gaugeTextFactor);
     }
   }
 
@@ -1599,76 +1656,93 @@ class MyHomePageState extends State<MyHomePage> {
 
   List<Widget> _dataItems(BuildContext context) {
     final portrait = MediaQuery.of(context).orientation == Orientation.portrait;
+
+    // Get the current panel width from layout calculations
+    final calculations = _getLayoutCalculations();
+    final panelScale = calculations['panelScale']!;
+    final panelScaleFactor = panelScale.clamp(1.0, 2.0);
+    final textScale = textScaleFactor(context);
+
+    var gaugeSize = 40 * panelScaleFactor * textScale;
+    var gaugeThicknessFactor = panelScaleFactor;
+    var gaugeTextFactor = panelScaleFactor;
+
     return <Widget>[
       RotatedBox(
           quarterTurns: portrait ? 3 : 0,
           child: _setupMode && !(_focusAid && advanced && !_daylightMode)
               ? SizedBox(
-                  width: 50 * textScaleFactor(context),
-                  height: 50 * textScaleFactor(context),
+                  width: gaugeSize,
+                  height: gaugeSize,
                 )
-              : Column(children: <Widget>[
-                  SizedBox(
-                    width: 50 * textScaleFactor(context),
-                    height: 50 * textScaleFactor(context),
-                    child: GestureDetector(
-                        onTap: () {
-                          perfStatsDialog(this, context);
-                        },
-                        child: SfRadialGauge(
-                          axes: <RadialAxis>[
-                            RadialAxis(
-                              onAxisTapped: (double value) {
-                                perfStatsDialog(this, context);
-                              },
-                              startAngle: 150,
-                              endAngle: 30,
-                              showLabels: false,
-                              showTicks: false,
-                              showAxisLine: false,
-                              minimum: 0,
-                              maximum: 10,
-                              annotations: <GaugeAnnotation>[
-                                GaugeAnnotation(
-                                  positionFactor: 0.3,
-                                  angle: 270,
-                                  widget: solveText(sprintf("%d", [numStars])),
-                                ),
-                                GaugeAnnotation(
-                                  positionFactor: 0.4,
-                                  angle: 90,
-                                  widget: solveText("stars", size: 10),
-                                ),
+              : Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                      SizedBox(
+                        width: gaugeSize,
+                        height: gaugeSize,
+                        child: GestureDetector(
+                            onTap: () {
+                              perfStatsDialog(this, context);
+                            },
+                            child: SfRadialGauge(
+                              axes: <RadialAxis>[
+                                RadialAxis(
+                                  onAxisTapped: (double value) {
+                                    perfStatsDialog(this, context);
+                                  },
+                                  startAngle: 150,
+                                  endAngle: 30,
+                                  showLabels: false,
+                                  showTicks: false,
+                                  showAxisLine: false,
+                                  minimum: 0,
+                                  maximum: 10,
+                                  annotations: <GaugeAnnotation>[
+                                    GaugeAnnotation(
+                                      positionFactor: 0.3,
+                                      angle: 270,
+                                      widget: solveText(
+                                          sprintf("%d", [numStars]),
+                                          size: 12 * gaugeTextFactor),
+                                    ),
+                                    GaugeAnnotation(
+                                      positionFactor: 0.4,
+                                      angle: 90,
+                                      widget: solveText("stars",
+                                          size: 10 * gaugeTextFactor),
+                                    ),
+                                  ],
+                                  ranges: <GaugeRange>[
+                                    GaugeRange(
+                                        startWidth: 3 * gaugeThicknessFactor,
+                                        endWidth: 3 * gaugeThicknessFactor,
+                                        startValue: 0,
+                                        endValue: 10,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onPrimary),
+                                    GaugeRange(
+                                        startWidth: 3 * gaugeThicknessFactor,
+                                        endWidth: 3 * gaugeThicknessFactor,
+                                        startValue: 0,
+                                        endValue:
+                                            math.min(10, math.sqrt(numStars)),
+                                        color: _solveColor()),
+                                  ],
+                                )
                               ],
-                              ranges: <GaugeRange>[
-                                GaugeRange(
-                                    startWidth: 3,
-                                    endWidth: 3,
-                                    startValue: 0,
-                                    endValue: 10,
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onPrimary),
-                                GaugeRange(
-                                    startWidth: 3,
-                                    endWidth: 3,
-                                    startValue: 0,
-                                    endValue: math.min(10, math.sqrt(numStars)),
-                                    color: _solveColor()),
-                              ],
-                            )
-                          ],
-                        )),
-                  ),
-                ])),
+                            )),
+                      ),
+                    ])),
       const SizedBox(width: 10, height: 10),
       RotatedBox(
           quarterTurns: portrait ? 3 : 0,
           child: _setupMode
               ? Container()
               : SizedBox(
-                  width: 60 * textScaleFactor(context),
-                  height: 60 * textScaleFactor(context),
+                  width: 60 * panelScaleFactor * textScaleFactor(context),
+                  height: 60 * panelScaleFactor * textScaleFactor(context),
                   child: GestureDetector(
                     onTap: () {
                       skyCoordsDialog(this, context);
@@ -1676,7 +1750,7 @@ class MyHomePageState extends State<MyHomePage> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       // RA/Dec, Alt/Az, etc.
-                      children: _coordInfo(),
+                      children: _coordInfo(gaugeTextFactor),
                     ),
                   ))),
       const SizedBox(width: 10, height: 10),
@@ -1684,19 +1758,20 @@ class MyHomePageState extends State<MyHomePage> {
           quarterTurns: portrait ? 3 : 0,
           child: _hasPolarAdvice() && !_setupMode && (isPlus || isDIY)
               ? SizedBox(
-                  width: 70 * textScaleFactor(context),
-                  height: 60 * textScaleFactor(context),
+                  width: 70 * panelScaleFactor * textScaleFactor(context),
+                  height: 60 * panelScaleFactor * textScaleFactor(context),
                   child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
-                        _primaryText("Eq. Mount", size: 10, underline: true),
+                        _primaryText("Eq. Mount",
+                            size: 10 * panelScaleFactor, underline: true),
                         solveText(
                             _formatAdvice(
                                 _polarAlignAdvice!.hasAltitudeCorrection()
                                     ? _polarAlignAdvice!.altitudeCorrection
                                     : _polarAlignAdvice!.azimuthCorrection),
-                            size: 10),
+                            size: 10 * panelScaleFactor),
                         _polarAlignAdvice!.hasAltitudeCorrection()
                             ? _selectIcon(
                                 _polarAlignAdvice!.altitudeCorrection.value,
@@ -1728,9 +1803,11 @@ class MyHomePageState extends State<MyHomePage> {
             child: GestureDetector(
               child: _loadImage(),
               onTapDown: (TapDownDetails details) async {
+                final displayScale = _getDisplayScale();
                 Offset localPosition = Offset(
-                    details.localPosition.dx * _binFactor,
-                    details.localPosition.dy * _binFactor);
+                    details.localPosition.dx * _binFactor / displayScale,
+                    details.localPosition.dy * _binFactor / displayScale);
+
                 if (_setupMode) {
                   if (!_focusAid) {
                     // Align mode.
@@ -1855,22 +1932,27 @@ class MyHomePageState extends State<MyHomePage> {
 
   Widget _imageStack(BuildContext context) {
     Widget? overlayWidget;
+    // Scale the overlay size with the display scale
+    final displayScale = _getDisplayScale();
+
     if (_setupMode && _focusAid && _centerPeakImageBytes != null) {
+      final overlaySize = (_imageRegion.height / 4) * displayScale;
       overlayWidget = dart_widgets.Image.memory(_centerPeakImageBytes!,
-          height: _imageRegion.height / 4,
-          width: _imageRegion.height / 4,
+          height: overlaySize,
+          width: overlaySize,
           fit: BoxFit.fill,
           gaplessPlayback: true);
     } else if (!_setupMode && _boresightImageBytes != null) {
+      final overlaySize = (_imageRegion.height / 3) * displayScale;
       var overlayImage = dart_widgets.Image.memory(_boresightImageBytes!,
-          width: _imageRegion.height / 3,
-          height: _imageRegion.height / 3,
+          width: overlaySize,
+          height: overlaySize,
           fit: BoxFit.fill,
           gaplessPlayback: true);
       overlayWidget = ClipRect(
           child: CustomPaint(
               foregroundPainter: _OverlayImagePainter(this, context,
-                  (_imageRegion.height / 3) / _boresightImageHeight, _binFactor),
+                  overlaySize / _boresightImageHeight, _binFactor),
               child: overlayImage));
     }
     return Stack(alignment: Alignment.topRight, children: <Widget>[
@@ -1914,6 +1996,65 @@ class MyHomePageState extends State<MyHomePage> {
 
   int _initialTextSizeIndex = 0;
 
+  // Helper method to calculate display scale and image size
+  Map<String, double> _getLayoutCalculations() {
+    final constraints = MediaQuery.of(context).size;
+    final portrait = MediaQuery.of(context).orientation == Orientation.portrait;
+
+    // Calculate layout dimensions
+    const minPanelWidth = 120.0;
+    final totalWidth = portrait ? constraints.height : constraints.width;
+    final totalHeight = portrait ? constraints.width : constraints.height;
+    const spacingWidth = 20.0;
+
+    // Determine the natural/preferred image size using actual image dimensions
+    final actualImageHeight = _imageRegion.height;
+    final naturalImageSize = math.min(totalHeight, actualImageHeight);
+
+    // Calculate what we'd need for natural size + minimum panels
+    final naturalLayoutWidth =
+        naturalImageSize + 2 * minPanelWidth + spacingWidth;
+
+    final double actualImageSize;
+    final double panelWidth;
+
+    if (totalWidth >= naturalLayoutWidth) {
+      // We have plenty of space - use natural image size and let panels expand
+      actualImageSize = naturalImageSize;
+      // Calculate how much extra space we have and distribute it to panels
+      final extraSpace = totalWidth - naturalLayoutWidth;
+      panelWidth = minPanelWidth + (extraSpace / 2);
+    } else {
+      // Space is constrained - calculate based on available space
+      final remainingWidth = totalWidth - naturalImageSize - spacingWidth;
+      final minPanelsWidth = 2 * minPanelWidth;
+
+      if (remainingWidth >= minPanelsWidth) {
+        // We can fit minimum panels with natural image size
+        actualImageSize = naturalImageSize;
+        panelWidth = remainingWidth / 2;
+      } else {
+        // Must shrink image to fit minimum panels
+        actualImageSize =
+            math.max(50.0, totalWidth - minPanelsWidth - spacingWidth);
+        panelWidth = minPanelWidth;
+      }
+    }
+
+    final displayScale = actualImageSize / _imageRegion.width;
+
+    return {
+      'actualImageSize': actualImageSize,
+      'panelWidth': panelWidth,
+      'panelScale': panelWidth / minPanelWidth,
+      'displayScale': displayScale,
+    };
+  }
+
+  double _getDisplayScale() {
+    return _getLayoutCalculations()['displayScale']!;
+  }
+
   Widget _orientationLayout(BuildContext context) {
     final portrait = MediaQuery.of(context).orientation == Orientation.portrait;
     final controlsColumn = Column(
@@ -1921,7 +2062,9 @@ class MyHomePageState extends State<MyHomePage> {
         children: portrait ? _controls().reversed.toList() : _controls());
 
     final controls = controlsColumn;
-    final data = Column(children: _dataItems(context));
+    final data = Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: _dataItems(context));
 
     return GestureDetector(
         // On Android, sometimes the system and navigation bars become visible.
@@ -1961,16 +2104,50 @@ class MyHomePageState extends State<MyHomePage> {
         },
         child: RotatedBox(
           quarterTurns: portrait ? 1 : 0,
-          child: Row(
-            children: <Widget>[
-              const SizedBox(width: 5, height: 0),
-              (portrait || _rightHanded) ? data : controls,
-              const SizedBox(width: 5, height: 0),
-              _imageStack(context),
-              const SizedBox(width: 5, height: 0),
-              (portrait || _rightHanded) ? controls : data,
-              const SizedBox(width: 5, height: 0),
-            ],
+          child: Builder(
+            builder: (context) {
+              // Get layout calculations
+              final calculations = _getLayoutCalculations();
+              final actualImageSize = calculations['actualImageSize']!;
+              final panelWidth = calculations['panelWidth']!;
+
+              return Center(
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    // Left panel
+                    SizedBox(
+                      width: panelWidth,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 5),
+                        child: Center(
+                          child: (portrait || _rightHanded) ? data : controls,
+                        ),
+                      ),
+                    ),
+                    // Center image
+                    const SizedBox(width: 2, height: 0),
+                    SizedBox(
+                      width: actualImageSize,
+                      height: actualImageSize,
+                      child: _imageStack(context),
+                    ),
+                    const SizedBox(width: 2, height: 0),
+                    // Right panel
+                    SizedBox(
+                      width: panelWidth,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 5),
+                        child: Center(
+                          child: (portrait || _rightHanded) ? controls : data,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
           ),
         ));
   }
@@ -2133,9 +2310,7 @@ class MyHomePageState extends State<MyHomePage> {
                   child: Stack(
                     fit: StackFit.expand,
                     children: [
-                      healthy
-                          ? FittedBox(child: _orientationLayout(context))
-                          : _badServerState(),
+                      healthy ? _orientationLayout(context) : _badServerState(),
                       Positioned(
                           left: _rightHanded ? null : 0,
                           right: _rightHanded ? 0 : null,

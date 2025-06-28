@@ -190,6 +190,7 @@ void drawSlewDirections(
   double offsetRotationAxis, // degrees, az or ra movement
   double offsetTiltAxis,
   bool portrait, // degrees, alt or dec movement
+  double displayScale,
 ) {
   final targetRA = sprintf("RA %s", [state.formatRightAscension(target.ra)]);
   final targetDec = sprintf("Dec %s", [state.formatDeclination(target.dec)]);
@@ -235,10 +236,12 @@ void drawSlewDirections(
   while (tiltFormatted.length < width) {
     tiltFormatted = " $tiltFormatted";
   }
-  // Don't scale slew directions text with preferences.
   var smallFont = 24.0;
   var largeFont = 48.0;
   final textPainter = TextPainter(
+      // Don't scale slew directions text with preferences, but do scale with
+      // displayScale.
+      textScaler: TextScaler.linear(displayScale),
       text: TextSpan(
           children: [
             TextSpan(
