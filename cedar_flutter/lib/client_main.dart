@@ -409,6 +409,7 @@ class MyHomePageState extends State<MyHomePage> {
   final _numTargets = 3;
   final _faintLimit = 2.512 * 2.512; // Two magnitudes.
   bool _alignTargetTapped = false;
+  bool _wantAlignFeedback = false;
 
   // Information from most recent FrameResult.
 
@@ -664,8 +665,9 @@ class MyHomePageState extends State<MyHomePage> {
             _fullResBoresightPosition.dx.toInt() ||
         prevFullResBoresightPosition.dy.toInt() !=
             _fullResBoresightPosition.dy.toInt()) {
-      if (newAlignMode && _alignTargetTapped) {
+      if (_wantAlignFeedback) {
         HapticFeedback.mediumImpact();
+        _wantAlignFeedback = false;
       }
     }
     if (response.hasExposureTime()) {
@@ -1836,6 +1838,7 @@ class MyHomePageState extends State<MyHomePage> {
                     if (_daylightMode) {
                       await _designateBoresight(localPosition);
                       _alignTargetTapped = true;
+                      _wantAlignFeedback = true;
                     } else {
                       var star = _findStarHit(localPosition, hitTolerance);
                       if (star != null) {
@@ -1844,6 +1847,7 @@ class MyHomePageState extends State<MyHomePage> {
                           star.centroidPosition.y,
                         ));
                         _alignTargetTapped = true;
+                        _wantAlignFeedback = true;
                       }
                     }
                   }
