@@ -664,7 +664,7 @@ class MyHomePageState extends State<MyHomePage> {
             _fullResBoresightPosition.dx.toInt() ||
         prevFullResBoresightPosition.dy.toInt() !=
             _fullResBoresightPosition.dy.toInt()) {
-      if (newAlignMode) {
+      if (newAlignMode && _alignTargetTapped) {
         HapticFeedback.mediumImpact();
       }
     }
