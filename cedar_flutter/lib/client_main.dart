@@ -657,8 +657,17 @@ class MyHomePageState extends State<MyHomePage> {
     noiseEstimate = response.noiseEstimate;
     _boresightPosition = Offset(response.boresightPosition.x / _binFactor,
         response.boresightPosition.y / _binFactor);
+    var prevFullResBoresightPosition = _fullResBoresightPosition;
     _fullResBoresightPosition =
         Offset(response.boresightPosition.x, response.boresightPosition.y);
+    if (prevFullResBoresightPosition.dx.toInt() !=
+            _fullResBoresightPosition.dx.toInt() ||
+        prevFullResBoresightPosition.dy.toInt() !=
+            _fullResBoresightPosition.dy.toInt()) {
+      if (newAlignMode) {
+        HapticFeedback.mediumImpact();
+      }
+    }
     if (response.hasExposureTime()) {
       exposureTimeMs = durationToMs(response.exposureTime).toDouble();
     }
