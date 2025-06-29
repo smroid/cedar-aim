@@ -1376,7 +1376,7 @@ class MyHomePageState extends State<MyHomePage> {
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                         color: color,
-                                        fontSize: 11 * panelScaleFactor),
+                                        fontSize: 10 * panelScaleFactor),
                                     textScaler: textScaler(context),
                                   ))),
                         ])
@@ -2138,13 +2138,11 @@ class MyHomePageState extends State<MyHomePage> {
                       ),
                     ),
                     // Center image
-                    const SizedBox(width: 2, height: 0),
                     SizedBox(
                       width: actualImageSize,
                       height: actualImageSize,
                       child: _imageStack(context),
                     ),
-                    const SizedBox(width: 2, height: 0),
                     // Right panel
                     SizedBox(
                       width: panelWidth,
