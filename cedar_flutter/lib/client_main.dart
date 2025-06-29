@@ -280,7 +280,8 @@ class _MainImagePainter extends CustomPainter {
           (state._scopeFov / state._rotationSizeRatio / 2) * displayScale;
 
       drawBullseye(
-          canvas, color, scaledBoresightPosition, scaledScopeFov, rollAngleRad);
+          canvas, color, scaledBoresightPosition, scaledScopeFov, rollAngleRad,
+          daylightMode: state._daylightMode);
 
       if (labeledCatalogEntries.isNotEmpty &&
           state._slewRequest == null &&

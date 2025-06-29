@@ -19,8 +19,20 @@ double _deg2rad(double deg) {
 // increases downward. The angle typically corresponds to north (equatorial
 // mount) or zenith (alt-az mount).
 void drawBullseye(Canvas canvas, Color color, Offset boresight, double radius,
-    double rollAngleRad) {
-  // Draw center bullseye.
+    double rollAngleRad,
+    {daylightMode = false}) {
+  if (daylightMode) {
+    // Draw black outline for visibility against bright image.
+    canvas.drawCircle(
+        boresight,
+        radius,
+        Paint()
+          ..color = Colors.black
+          ..strokeWidth = 4 * _thin
+          ..style = PaintingStyle.stroke);
+    drawGapCross(canvas, Colors.black, boresight, radius, radius / 2,
+        rollAngleRad, 3 * _thin, 3 * _thin);
+  }
   canvas.drawCircle(
       boresight,
       radius,
@@ -29,7 +41,7 @@ void drawBullseye(Canvas canvas, Color color, Offset boresight, double radius,
         ..strokeWidth = _thin
         ..style = PaintingStyle.stroke);
   drawGapCross(canvas, color, boresight, radius, radius / 2, rollAngleRad,
-      _hairline, _hairline + 1);
+      _hairline, _hairline + (daylightMode ? 0 : 1));
 }
 
 void drawSlewTarget(
