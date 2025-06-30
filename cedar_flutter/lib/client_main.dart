@@ -1257,6 +1257,7 @@ class MyHomePageState extends State<MyHomePage> {
           "Re-align",
         ),
         onPressed: () {
+          _wantAlignFeedback = true;
           _captureBoresight(); // Re-align.
         });
   }
