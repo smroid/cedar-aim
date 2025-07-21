@@ -1244,7 +1244,7 @@ class FrameRequest extends $pb.GeneratedMessage {
   void clearDisplayOrientation() => $_clearField(3);
 }
 
-/// Next tag: 35.
+/// Next tag: 37.
 class FrameResult extends $pb.GeneratedMessage {
   factory FrameResult({
     $core.int? frameId,
@@ -1273,6 +1273,8 @@ class FrameResult extends $pb.GeneratedMessage {
     ServerInformation? serverInformation,
     $core.Iterable<FovCatalogEntry>? unlabeledCatalogEntries,
     $core.bool? hasResult,
+    $core.double? starCountMovingAverage,
+    $core.double? contrastRatio,
   }) {
     final $result = create();
     if (frameId != null) {
@@ -1353,6 +1355,12 @@ class FrameResult extends $pb.GeneratedMessage {
     if (hasResult != null) {
       $result.hasResult = hasResult;
     }
+    if (starCountMovingAverage != null) {
+      $result.starCountMovingAverage = starCountMovingAverage;
+    }
+    if (contrastRatio != null) {
+      $result.contrastRatio = contrastRatio;
+    }
     return $result;
   }
   FrameResult._() : super();
@@ -1386,6 +1394,8 @@ class FrameResult extends $pb.GeneratedMessage {
     ..aOM<ServerInformation>(32, _omitFieldNames ? '' : 'serverInformation', subBuilder: ServerInformation.create)
     ..pc<FovCatalogEntry>(33, _omitFieldNames ? '' : 'unlabeledCatalogEntries', $pb.PbFieldType.PM, subBuilder: FovCatalogEntry.create)
     ..aOB(34, _omitFieldNames ? '' : 'hasResult')
+    ..a<$core.double>(35, _omitFieldNames ? '' : 'starCountMovingAverage', $pb.PbFieldType.OD)
+    ..a<$core.double>(36, _omitFieldNames ? '' : 'contrastRatio', $pb.PbFieldType.OD)
     ..hasRequiredFields = false
   ;
 
@@ -1433,8 +1443,9 @@ class FrameResult extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   OperationSettings ensureOperationSettings() => $_ensure(1);
 
-  /// The image from which information in this FrameResult is derived. This image
-  /// is from the entire sensor, typically with some amount of binning.
+  /// A portion of the image from which information in this FrameResult is
+  /// derived. This image is cropped to be the center square portion of the
+  /// sensor (full height), typically with some amount of binning.
   /// Note that this image has stretch/gamma applied for better visibility of
   /// dark features (unless OperationSettings.daylight_mode is in effect, in
   /// which case a more natural rendering is used).
@@ -1731,6 +1742,30 @@ class FrameResult extends $pb.GeneratedMessage {
   $core.bool hasHasResult() => $_has(25);
   @$pb.TagNumber(34)
   void clearHasResult() => $_clearField(34);
+
+  /// The number of detected stars as a moving average of recent processing
+  /// cycles.
+  @$pb.TagNumber(35)
+  $core.double get starCountMovingAverage => $_getN(26);
+  @$pb.TagNumber(35)
+  set starCountMovingAverage($core.double v) { $_setDouble(26, v); }
+  @$pb.TagNumber(35)
+  $core.bool hasStarCountMovingAverage() => $_has(26);
+  @$pb.TagNumber(35)
+  void clearStarCountMovingAverage() => $_clearField(35);
+
+  /// A measure of the image contrast in focus mode. 0 means no contrast, uniform
+  /// brightness over image. 1 means high contrast (range of bright - dark equals
+  /// bright level; in other words dark == 0). Only present in
+  /// `focus_assist_mode`.
+  @$pb.TagNumber(36)
+  $core.double get contrastRatio => $_getN(27);
+  @$pb.TagNumber(36)
+  set contrastRatio($core.double v) { $_setDouble(27, v); }
+  @$pb.TagNumber(36)
+  $core.bool hasContrastRatio() => $_has(27);
+  @$pb.TagNumber(36)
+  void clearContrastRatio() => $_clearField(36);
 }
 
 class Image extends $pb.GeneratedMessage {
@@ -1826,7 +1861,6 @@ class Image extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   void clearImageData() => $_clearField(3);
 
-  /// Deprecated. Always 1.0.
   @$pb.TagNumber(4)
   $core.double get rotationSizeRatio => $_getN(3);
   @$pb.TagNumber(4)

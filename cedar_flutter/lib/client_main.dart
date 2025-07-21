@@ -523,7 +523,7 @@ class MyHomePageState extends State<MyHomePage> {
     _showWelcome = !_showedWelcome;
     _prevFrameId = response.frameId;
     _stars = response.starCandidates;
-    numStars = _stars.length;
+    numStars = response.starCountMovingAverage.round();
     if (response.fixedSettings.hasObserverLocation()) {
       _mapPosition = LatLng(response.fixedSettings.observerLocation.latitude,
           response.fixedSettings.observerLocation.longitude);

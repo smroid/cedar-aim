@@ -403,6 +403,7 @@ const FrameResult$json = {
     {'1': 'exposure_time', '3': 7, '4': 1, '5': 11, '6': '.google.protobuf.Duration', '10': 'exposureTime'},
     {'1': 'capture_time', '3': 9, '4': 1, '5': 11, '6': '.google.protobuf.Timestamp', '10': 'captureTime'},
     {'1': 'star_candidates', '3': 4, '4': 3, '5': 11, '6': '.cedar.StarCentroid', '10': 'starCandidates'},
+    {'1': 'star_count_moving_average', '3': 35, '4': 1, '5': 1, '10': 'starCountMovingAverage'},
     {'1': 'plate_solution', '3': 17, '4': 1, '5': 11, '6': '.cedar.PlateSolution', '9': 1, '10': 'plateSolution', '17': true},
     {'1': 'noise_estimate', '3': 26, '4': 1, '5': 1, '10': 'noiseEstimate'},
     {'1': 'processing_stats', '3': 8, '4': 1, '5': 11, '6': '.cedar.ProcessingStats', '10': 'processingStats'},
@@ -412,9 +413,10 @@ const FrameResult$json = {
     {'1': 'center_peak_position', '3': 12, '4': 1, '5': 11, '6': '.cedar.ImageCoord', '9': 3, '10': 'centerPeakPosition', '17': true},
     {'1': 'center_peak_value', '3': 6, '4': 1, '5': 5, '9': 4, '10': 'centerPeakValue', '17': true},
     {'1': 'center_peak_image', '3': 13, '4': 1, '5': 11, '6': '.cedar.Image', '9': 5, '10': 'centerPeakImage', '17': true},
-    {'1': 'location_based_info', '3': 29, '4': 1, '5': 11, '6': '.cedar.LocationBasedInfo', '9': 6, '10': 'locationBasedInfo', '17': true},
-    {'1': 'slew_request', '3': 24, '4': 1, '5': 11, '6': '.cedar.SlewRequest', '9': 7, '10': 'slewRequest', '17': true},
-    {'1': 'boresight_image', '3': 28, '4': 1, '5': 11, '6': '.cedar.Image', '9': 8, '10': 'boresightImage', '17': true},
+    {'1': 'contrast_ratio', '3': 36, '4': 1, '5': 1, '9': 6, '10': 'contrastRatio', '17': true},
+    {'1': 'location_based_info', '3': 29, '4': 1, '5': 11, '6': '.cedar.LocationBasedInfo', '9': 7, '10': 'locationBasedInfo', '17': true},
+    {'1': 'slew_request', '3': 24, '4': 1, '5': 11, '6': '.cedar.SlewRequest', '9': 8, '10': 'slewRequest', '17': true},
+    {'1': 'boresight_image', '3': 28, '4': 1, '5': 11, '6': '.cedar.Image', '9': 9, '10': 'boresightImage', '17': true},
     {'1': 'polar_align_advice', '3': 30, '4': 1, '5': 11, '6': '.cedar.PolarAlignAdvice', '10': 'polarAlignAdvice'},
     {'1': 'labeled_catalog_entries', '3': 31, '4': 3, '5': 11, '6': '.cedar.FovCatalogEntry', '10': 'labeledCatalogEntries'},
     {'1': 'unlabeled_catalog_entries', '3': 33, '4': 3, '5': 11, '6': '.cedar.FovCatalogEntry', '10': 'unlabeledCatalogEntries'},
@@ -426,6 +428,7 @@ const FrameResult$json = {
     {'1': '_center_peak_position'},
     {'1': '_center_peak_value'},
     {'1': '_center_peak_image'},
+    {'1': '_contrast_ratio'},
     {'1': '_location_based_info'},
     {'1': '_slew_request'},
     {'1': '_boresight_image'},
@@ -449,46 +452,48 @@ final $typed_data.Uint8List frameResultDescriptor = $convert.base64Decode(
     'ZXhwb3N1cmVfdGltZRgHIAEoCzIZLmdvb2dsZS5wcm90b2J1Zi5EdXJhdGlvblIMZXhwb3N1cm'
     'VUaW1lEj0KDGNhcHR1cmVfdGltZRgJIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXBS'
     'C2NhcHR1cmVUaW1lEjwKD3N0YXJfY2FuZGlkYXRlcxgEIAMoCzITLmNlZGFyLlN0YXJDZW50cm'
-    '9pZFIOc3RhckNhbmRpZGF0ZXMSQAoOcGxhdGVfc29sdXRpb24YESABKAsyFC5jZWRhci5QbGF0'
-    'ZVNvbHV0aW9uSAFSDXBsYXRlU29sdXRpb26IAQESJQoObm9pc2VfZXN0aW1hdGUYGiABKAFSDW'
-    '5vaXNlRXN0aW1hdGUSQQoQcHJvY2Vzc2luZ19zdGF0cxgIIAEoCzIWLmNlZGFyLlByb2Nlc3Np'
-    'bmdTdGF0c1IPcHJvY2Vzc2luZ1N0YXRzEkAKEmJvcmVzaWdodF9wb3NpdGlvbhgVIAEoCzIRLm'
-    'NlZGFyLkltYWdlQ29vcmRSEWJvcmVzaWdodFBvc2l0aW9uEiAKC2NhbGlicmF0aW5nGBYgASgI'
-    'UgtjYWxpYnJhdGluZxI2ChRjYWxpYnJhdGlvbl9wcm9ncmVzcxgXIAEoAUgCUhNjYWxpYnJhdG'
-    'lvblByb2dyZXNziAEBEkgKFGNlbnRlcl9wZWFrX3Bvc2l0aW9uGAwgASgLMhEuY2VkYXIuSW1h'
-    'Z2VDb29yZEgDUhJjZW50ZXJQZWFrUG9zaXRpb26IAQESLwoRY2VudGVyX3BlYWtfdmFsdWUYBi'
-    'ABKAVIBFIPY2VudGVyUGVha1ZhbHVliAEBEj0KEWNlbnRlcl9wZWFrX2ltYWdlGA0gASgLMgwu'
-    'Y2VkYXIuSW1hZ2VIBVIPY2VudGVyUGVha0ltYWdliAEBEk0KE2xvY2F0aW9uX2Jhc2VkX2luZm'
-    '8YHSABKAsyGC5jZWRhci5Mb2NhdGlvbkJhc2VkSW5mb0gGUhFsb2NhdGlvbkJhc2VkSW5mb4gB'
-    'ARI6CgxzbGV3X3JlcXVlc3QYGCABKAsyEi5jZWRhci5TbGV3UmVxdWVzdEgHUgtzbGV3UmVxdW'
-    'VzdIgBARI6Cg9ib3Jlc2lnaHRfaW1hZ2UYHCABKAsyDC5jZWRhci5JbWFnZUgIUg5ib3Jlc2ln'
-    'aHRJbWFnZYgBARJFChJwb2xhcl9hbGlnbl9hZHZpY2UYHiABKAsyFy5jZWRhci5Qb2xhckFsaW'
-    'duQWR2aWNlUhBwb2xhckFsaWduQWR2aWNlEk4KF2xhYmVsZWRfY2F0YWxvZ19lbnRyaWVzGB8g'
-    'AygLMhYuY2VkYXIuRm92Q2F0YWxvZ0VudHJ5UhVsYWJlbGVkQ2F0YWxvZ0VudHJpZXMSUgoZdW'
-    '5sYWJlbGVkX2NhdGFsb2dfZW50cmllcxghIAMoCzIWLmNlZGFyLkZvdkNhdGFsb2dFbnRyeVIX'
-    'dW5sYWJlbGVkQ2F0YWxvZ0VudHJpZXNCDQoLX2hhc19yZXN1bHRCEQoPX3BsYXRlX3NvbHV0aW'
-    '9uQhcKFV9jYWxpYnJhdGlvbl9wcm9ncmVzc0IXChVfY2VudGVyX3BlYWtfcG9zaXRpb25CFAoS'
-    'X2NlbnRlcl9wZWFrX3ZhbHVlQhQKEl9jZW50ZXJfcGVha19pbWFnZUIWChRfbG9jYXRpb25fYm'
-    'FzZWRfaW5mb0IPCg1fc2xld19yZXF1ZXN0QhIKEF9ib3Jlc2lnaHRfaW1hZ2VKBAgKEAtKBAgL'
-    'EAw=');
+    '9pZFIOc3RhckNhbmRpZGF0ZXMSOQoZc3Rhcl9jb3VudF9tb3ZpbmdfYXZlcmFnZRgjIAEoAVIW'
+    'c3RhckNvdW50TW92aW5nQXZlcmFnZRJACg5wbGF0ZV9zb2x1dGlvbhgRIAEoCzIULmNlZGFyLl'
+    'BsYXRlU29sdXRpb25IAVINcGxhdGVTb2x1dGlvbogBARIlCg5ub2lzZV9lc3RpbWF0ZRgaIAEo'
+    'AVINbm9pc2VFc3RpbWF0ZRJBChBwcm9jZXNzaW5nX3N0YXRzGAggASgLMhYuY2VkYXIuUHJvY2'
+    'Vzc2luZ1N0YXRzUg9wcm9jZXNzaW5nU3RhdHMSQAoSYm9yZXNpZ2h0X3Bvc2l0aW9uGBUgASgL'
+    'MhEuY2VkYXIuSW1hZ2VDb29yZFIRYm9yZXNpZ2h0UG9zaXRpb24SIAoLY2FsaWJyYXRpbmcYFi'
+    'ABKAhSC2NhbGlicmF0aW5nEjYKFGNhbGlicmF0aW9uX3Byb2dyZXNzGBcgASgBSAJSE2NhbGli'
+    'cmF0aW9uUHJvZ3Jlc3OIAQESSAoUY2VudGVyX3BlYWtfcG9zaXRpb24YDCABKAsyES5jZWRhci'
+    '5JbWFnZUNvb3JkSANSEmNlbnRlclBlYWtQb3NpdGlvbogBARIvChFjZW50ZXJfcGVha192YWx1'
+    'ZRgGIAEoBUgEUg9jZW50ZXJQZWFrVmFsdWWIAQESPQoRY2VudGVyX3BlYWtfaW1hZ2UYDSABKA'
+    'syDC5jZWRhci5JbWFnZUgFUg9jZW50ZXJQZWFrSW1hZ2WIAQESKgoOY29udHJhc3RfcmF0aW8Y'
+    'JCABKAFIBlINY29udHJhc3RSYXRpb4gBARJNChNsb2NhdGlvbl9iYXNlZF9pbmZvGB0gASgLMh'
+    'guY2VkYXIuTG9jYXRpb25CYXNlZEluZm9IB1IRbG9jYXRpb25CYXNlZEluZm+IAQESOgoMc2xl'
+    'd19yZXF1ZXN0GBggASgLMhIuY2VkYXIuU2xld1JlcXVlc3RICFILc2xld1JlcXVlc3SIAQESOg'
+    'oPYm9yZXNpZ2h0X2ltYWdlGBwgASgLMgwuY2VkYXIuSW1hZ2VICVIOYm9yZXNpZ2h0SW1hZ2WI'
+    'AQESRQoScG9sYXJfYWxpZ25fYWR2aWNlGB4gASgLMhcuY2VkYXIuUG9sYXJBbGlnbkFkdmljZV'
+    'IQcG9sYXJBbGlnbkFkdmljZRJOChdsYWJlbGVkX2NhdGFsb2dfZW50cmllcxgfIAMoCzIWLmNl'
+    'ZGFyLkZvdkNhdGFsb2dFbnRyeVIVbGFiZWxlZENhdGFsb2dFbnRyaWVzElIKGXVubGFiZWxlZF'
+    '9jYXRhbG9nX2VudHJpZXMYISADKAsyFi5jZWRhci5Gb3ZDYXRhbG9nRW50cnlSF3VubGFiZWxl'
+    'ZENhdGFsb2dFbnRyaWVzQg0KC19oYXNfcmVzdWx0QhEKD19wbGF0ZV9zb2x1dGlvbkIXChVfY2'
+    'FsaWJyYXRpb25fcHJvZ3Jlc3NCFwoVX2NlbnRlcl9wZWFrX3Bvc2l0aW9uQhQKEl9jZW50ZXJf'
+    'cGVha192YWx1ZUIUChJfY2VudGVyX3BlYWtfaW1hZ2VCEQoPX2NvbnRyYXN0X3JhdGlvQhYKFF'
+    '9sb2NhdGlvbl9iYXNlZF9pbmZvQg8KDV9zbGV3X3JlcXVlc3RCEgoQX2JvcmVzaWdodF9pbWFn'
+    'ZUoECAoQC0oECAsQDA==');
 
 @$core.Deprecated('Use imageDescriptor instead')
 const Image$json = {
   '1': 'Image',
   '2': [
     {'1': 'binning_factor', '3': 1, '4': 1, '5': 5, '10': 'binningFactor'},
-    {'1': 'rotation_size_ratio', '3': 4, '4': 1, '5': 1, '10': 'rotationSizeRatio'},
     {'1': 'rectangle', '3': 2, '4': 1, '5': 11, '6': '.cedar.Rectangle', '10': 'rectangle'},
     {'1': 'image_data', '3': 3, '4': 1, '5': 12, '10': 'imageData'},
+    {'1': 'rotation_size_ratio', '3': 4, '4': 1, '5': 1, '10': 'rotationSizeRatio'},
   ],
 };
 
 /// Descriptor for `Image`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List imageDescriptor = $convert.base64Decode(
-    'CgVJbWFnZRIlCg5iaW5uaW5nX2ZhY3RvchgBIAEoBVINYmlubmluZ0ZhY3RvchIuChNyb3RhdG'
-    'lvbl9zaXplX3JhdGlvGAQgASgBUhFyb3RhdGlvblNpemVSYXRpbxIuCglyZWN0YW5nbGUYAiAB'
-    'KAsyEC5jZWRhci5SZWN0YW5nbGVSCXJlY3RhbmdsZRIdCgppbWFnZV9kYXRhGAMgASgMUglpbW'
-    'FnZURhdGE=');
+    'CgVJbWFnZRIlCg5iaW5uaW5nX2ZhY3RvchgBIAEoBVINYmlubmluZ0ZhY3RvchIuCglyZWN0YW'
+    '5nbGUYAiABKAsyEC5jZWRhci5SZWN0YW5nbGVSCXJlY3RhbmdsZRIdCgppbWFnZV9kYXRhGAMg'
+    'ASgMUglpbWFnZURhdGESLgoTcm90YXRpb25fc2l6ZV9yYXRpbxgEIAEoAVIRcm90YXRpb25TaX'
+    'plUmF0aW8=');
 
 @$core.Deprecated('Use rectangleDescriptor instead')
 const Rectangle$json = {
