@@ -38,6 +38,7 @@ class ServerInformation extends $pb.GeneratedMessage {
     WiFiAccessPoint? wifiAccessPoint,
     $core.Iterable<$core.String>? demoImageNames,
     $core.String? serialNumber,
+    ImuState? imu,
   }) {
     final $result = create();
     if (productName != null) {
@@ -76,6 +77,9 @@ class ServerInformation extends $pb.GeneratedMessage {
     if (serialNumber != null) {
       $result.serialNumber = serialNumber;
     }
+    if (imu != null) {
+      $result.imu = imu;
+    }
     return $result;
   }
   ServerInformation._() : super();
@@ -95,6 +99,7 @@ class ServerInformation extends $pb.GeneratedMessage {
     ..aOM<WiFiAccessPoint>(10, _omitFieldNames ? '' : 'wifiAccessPoint', subBuilder: WiFiAccessPoint.create)
     ..pPS(11, _omitFieldNames ? '' : 'demoImageNames')
     ..aOS(12, _omitFieldNames ? '' : 'serialNumber')
+    ..aOM<ImuState>(13, _omitFieldNames ? '' : 'imu', subBuilder: ImuState.create)
     ..hasRequiredFields = false
   ;
 
@@ -229,6 +234,18 @@ class ServerInformation extends $pb.GeneratedMessage {
   $core.bool hasSerialNumber() => $_has(11);
   @$pb.TagNumber(12)
   void clearSerialNumber() => $_clearField(12);
+
+  /// Omitted if no IMU detected.
+  @$pb.TagNumber(13)
+  ImuState get imu => $_getN(12);
+  @$pb.TagNumber(13)
+  set imu(ImuState v) { $_setField(13, v); }
+  @$pb.TagNumber(13)
+  $core.bool hasImu() => $_has(12);
+  @$pb.TagNumber(13)
+  void clearImu() => $_clearField(13);
+  @$pb.TagNumber(13)
+  ImuState ensureImu() => $_ensure(12);
 }
 
 class CameraModel extends $pb.GeneratedMessage {
@@ -236,6 +253,7 @@ class CameraModel extends $pb.GeneratedMessage {
     $core.String? model,
     $core.int? imageWidth,
     $core.int? imageHeight,
+    $core.String? modelDetail,
   }) {
     final $result = create();
     if (model != null) {
@@ -247,6 +265,9 @@ class CameraModel extends $pb.GeneratedMessage {
     if (imageHeight != null) {
       $result.imageHeight = imageHeight;
     }
+    if (modelDetail != null) {
+      $result.modelDetail = modelDetail;
+    }
     return $result;
   }
   CameraModel._() : super();
@@ -257,6 +278,7 @@ class CameraModel extends $pb.GeneratedMessage {
     ..aOS(1, _omitFieldNames ? '' : 'model')
     ..a<$core.int>(2, _omitFieldNames ? '' : 'imageWidth', $pb.PbFieldType.O3)
     ..a<$core.int>(3, _omitFieldNames ? '' : 'imageHeight', $pb.PbFieldType.O3)
+    ..aOS(4, _omitFieldNames ? '' : 'modelDetail')
     ..hasRequiredFields = false
   ;
 
@@ -307,6 +329,137 @@ class CameraModel extends $pb.GeneratedMessage {
   $core.bool hasImageHeight() => $_has(2);
   @$pb.TagNumber(3)
   void clearImageHeight() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.String get modelDetail => $_getSZ(3);
+  @$pb.TagNumber(4)
+  set modelDetail($core.String v) { $_setString(3, v); }
+  @$pb.TagNumber(4)
+  $core.bool hasModelDetail() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearModelDetail() => $_clearField(4);
+}
+
+class ImuState extends $pb.GeneratedMessage {
+  factory ImuState({
+    $core.double? accelX,
+    $core.double? accelY,
+    $core.double? accelZ,
+    $core.double? angleRateX,
+    $core.double? angleRateY,
+    $core.double? angleRateZ,
+  }) {
+    final $result = create();
+    if (accelX != null) {
+      $result.accelX = accelX;
+    }
+    if (accelY != null) {
+      $result.accelY = accelY;
+    }
+    if (accelZ != null) {
+      $result.accelZ = accelZ;
+    }
+    if (angleRateX != null) {
+      $result.angleRateX = angleRateX;
+    }
+    if (angleRateY != null) {
+      $result.angleRateY = angleRateY;
+    }
+    if (angleRateZ != null) {
+      $result.angleRateZ = angleRateZ;
+    }
+    return $result;
+  }
+  ImuState._() : super();
+  factory ImuState.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory ImuState.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'ImuState', package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'), createEmptyInstance: create)
+    ..a<$core.double>(1, _omitFieldNames ? '' : 'accelX', $pb.PbFieldType.OD)
+    ..a<$core.double>(2, _omitFieldNames ? '' : 'accelY', $pb.PbFieldType.OD)
+    ..a<$core.double>(3, _omitFieldNames ? '' : 'accelZ', $pb.PbFieldType.OD)
+    ..a<$core.double>(4, _omitFieldNames ? '' : 'angleRateX', $pb.PbFieldType.OD)
+    ..a<$core.double>(5, _omitFieldNames ? '' : 'angleRateY', $pb.PbFieldType.OD)
+    ..a<$core.double>(6, _omitFieldNames ? '' : 'angleRateZ', $pb.PbFieldType.OD)
+    ..hasRequiredFields = false
+  ;
+
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  ImuState clone() => ImuState()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  ImuState copyWith(void Function(ImuState) updates) => super.copyWith((message) => updates(message as ImuState)) as ImuState;
+
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ImuState create() => ImuState._();
+  ImuState createEmptyInstance() => create();
+  static $pb.PbList<ImuState> createRepeated() => $pb.PbList<ImuState>();
+  @$core.pragma('dart2js:noInline')
+  static ImuState getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<ImuState>(create);
+  static ImuState? _defaultInstance;
+
+  /// Meters per second squared.
+  @$pb.TagNumber(1)
+  $core.double get accelX => $_getN(0);
+  @$pb.TagNumber(1)
+  set accelX($core.double v) { $_setDouble(0, v); }
+  @$pb.TagNumber(1)
+  $core.bool hasAccelX() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearAccelX() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.double get accelY => $_getN(1);
+  @$pb.TagNumber(2)
+  set accelY($core.double v) { $_setDouble(1, v); }
+  @$pb.TagNumber(2)
+  $core.bool hasAccelY() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearAccelY() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.double get accelZ => $_getN(2);
+  @$pb.TagNumber(3)
+  set accelZ($core.double v) { $_setDouble(2, v); }
+  @$pb.TagNumber(3)
+  $core.bool hasAccelZ() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearAccelZ() => $_clearField(3);
+
+  /// Degrees per second.
+  @$pb.TagNumber(4)
+  $core.double get angleRateX => $_getN(3);
+  @$pb.TagNumber(4)
+  set angleRateX($core.double v) { $_setDouble(3, v); }
+  @$pb.TagNumber(4)
+  $core.bool hasAngleRateX() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearAngleRateX() => $_clearField(4);
+
+  @$pb.TagNumber(5)
+  $core.double get angleRateY => $_getN(4);
+  @$pb.TagNumber(5)
+  set angleRateY($core.double v) { $_setDouble(4, v); }
+  @$pb.TagNumber(5)
+  $core.bool hasAngleRateY() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearAngleRateY() => $_clearField(5);
+
+  @$pb.TagNumber(6)
+  $core.double get angleRateZ => $_getN(5);
+  @$pb.TagNumber(6)
+  set angleRateZ($core.double v) { $_setDouble(5, v); }
+  @$pb.TagNumber(6)
+  $core.bool hasAngleRateZ() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearAngleRateZ() => $_clearField(6);
 }
 
 /// Information about the WiFi access point that Cedar server puts
@@ -773,8 +926,10 @@ class Preferences extends $pb.GeneratedMessage {
     $core.bool? dontShowWelcome,
     $core.bool? dontShowFocusIntro,
     $core.bool? dontShowAlignIntro,
-    $core.bool? dontShowCalibrationFail,
     $core.bool? dontShowSetupFinished,
+    $core.bool? dontShowTooFewStars,
+    $core.bool? dontShowBrightSky,
+    $core.bool? dontShowSolverFailed,
   }) {
     final $result = create();
     if (celestialCoordFormat != null) {
@@ -843,11 +998,17 @@ class Preferences extends $pb.GeneratedMessage {
     if (dontShowAlignIntro != null) {
       $result.dontShowAlignIntro = dontShowAlignIntro;
     }
-    if (dontShowCalibrationFail != null) {
-      $result.dontShowCalibrationFail = dontShowCalibrationFail;
-    }
     if (dontShowSetupFinished != null) {
       $result.dontShowSetupFinished = dontShowSetupFinished;
+    }
+    if (dontShowTooFewStars != null) {
+      $result.dontShowTooFewStars = dontShowTooFewStars;
+    }
+    if (dontShowBrightSky != null) {
+      $result.dontShowBrightSky = dontShowBrightSky;
+    }
+    if (dontShowSolverFailed != null) {
+      $result.dontShowSolverFailed = dontShowSolverFailed;
     }
     return $result;
   }
@@ -878,8 +1039,10 @@ class Preferences extends $pb.GeneratedMessage {
     ..aOB(24, _omitFieldNames ? '' : 'dontShowWelcome')
     ..aOB(25, _omitFieldNames ? '' : 'dontShowFocusIntro')
     ..aOB(26, _omitFieldNames ? '' : 'dontShowAlignIntro')
-    ..aOB(27, _omitFieldNames ? '' : 'dontShowCalibrationFail')
     ..aOB(28, _omitFieldNames ? '' : 'dontShowSetupFinished')
+    ..aOB(29, _omitFieldNames ? '' : 'dontShowTooFewStars')
+    ..aOB(30, _omitFieldNames ? '' : 'dontShowBrightSky')
+    ..aOB(31, _omitFieldNames ? '' : 'dontShowSolverFailed')
     ..hasRequiredFields = false
   ;
 
@@ -1135,23 +1298,41 @@ class Preferences extends $pb.GeneratedMessage {
   @$pb.TagNumber(26)
   void clearDontShowAlignIntro() => $_clearField(26);
 
-  @$pb.TagNumber(27)
-  $core.bool get dontShowCalibrationFail => $_getBF(22);
-  @$pb.TagNumber(27)
-  set dontShowCalibrationFail($core.bool v) { $_setBool(22, v); }
-  @$pb.TagNumber(27)
-  $core.bool hasDontShowCalibrationFail() => $_has(22);
-  @$pb.TagNumber(27)
-  void clearDontShowCalibrationFail() => $_clearField(27);
-
   @$pb.TagNumber(28)
-  $core.bool get dontShowSetupFinished => $_getBF(23);
+  $core.bool get dontShowSetupFinished => $_getBF(22);
   @$pb.TagNumber(28)
-  set dontShowSetupFinished($core.bool v) { $_setBool(23, v); }
+  set dontShowSetupFinished($core.bool v) { $_setBool(22, v); }
   @$pb.TagNumber(28)
-  $core.bool hasDontShowSetupFinished() => $_has(23);
+  $core.bool hasDontShowSetupFinished() => $_has(22);
   @$pb.TagNumber(28)
   void clearDontShowSetupFinished() => $_clearField(28);
+
+  @$pb.TagNumber(29)
+  $core.bool get dontShowTooFewStars => $_getBF(23);
+  @$pb.TagNumber(29)
+  set dontShowTooFewStars($core.bool v) { $_setBool(23, v); }
+  @$pb.TagNumber(29)
+  $core.bool hasDontShowTooFewStars() => $_has(23);
+  @$pb.TagNumber(29)
+  void clearDontShowTooFewStars() => $_clearField(29);
+
+  @$pb.TagNumber(30)
+  $core.bool get dontShowBrightSky => $_getBF(24);
+  @$pb.TagNumber(30)
+  set dontShowBrightSky($core.bool v) { $_setBool(24, v); }
+  @$pb.TagNumber(30)
+  $core.bool hasDontShowBrightSky() => $_has(24);
+  @$pb.TagNumber(30)
+  void clearDontShowBrightSky() => $_clearField(30);
+
+  @$pb.TagNumber(31)
+  $core.bool get dontShowSolverFailed => $_getBF(25);
+  @$pb.TagNumber(31)
+  set dontShowSolverFailed($core.bool v) { $_setBool(25, v); }
+  @$pb.TagNumber(31)
+  $core.bool hasDontShowSolverFailed() => $_has(25);
+  @$pb.TagNumber(31)
+  void clearDontShowSolverFailed() => $_clearField(31);
 }
 
 class FrameRequest extends $pb.GeneratedMessage {
@@ -2810,9 +2991,8 @@ class CalibrationData extends $pb.GeneratedMessage {
     $core.double? lensFlMm,
     $core.double? pixelAngularSize,
     $core.double? matchMaxError,
-    $core.bool? exposureCalibrationFailed,
-    $core.bool? plateSolveFailed,
     $core.double? fovVertical,
+    CalibrationFailureReason? calibrationFailureReason,
   }) {
     final $result = create();
     if (calibrationTime != null) {
@@ -2839,14 +3019,11 @@ class CalibrationData extends $pb.GeneratedMessage {
     if (matchMaxError != null) {
       $result.matchMaxError = matchMaxError;
     }
-    if (exposureCalibrationFailed != null) {
-      $result.exposureCalibrationFailed = exposureCalibrationFailed;
-    }
-    if (plateSolveFailed != null) {
-      $result.plateSolveFailed = plateSolveFailed;
-    }
     if (fovVertical != null) {
       $result.fovVertical = fovVertical;
+    }
+    if (calibrationFailureReason != null) {
+      $result.calibrationFailureReason = calibrationFailureReason;
     }
     return $result;
   }
@@ -2863,9 +3040,8 @@ class CalibrationData extends $pb.GeneratedMessage {
     ..a<$core.double>(6, _omitFieldNames ? '' : 'lensFlMm', $pb.PbFieldType.OD)
     ..a<$core.double>(7, _omitFieldNames ? '' : 'pixelAngularSize', $pb.PbFieldType.OD)
     ..a<$core.double>(8, _omitFieldNames ? '' : 'matchMaxError', $pb.PbFieldType.OD)
-    ..aOB(9, _omitFieldNames ? '' : 'exposureCalibrationFailed')
-    ..aOB(10, _omitFieldNames ? '' : 'plateSolveFailed')
     ..a<$core.double>(11, _omitFieldNames ? '' : 'fovVertical', $pb.PbFieldType.OD)
+    ..e<CalibrationFailureReason>(12, _omitFieldNames ? '' : 'calibrationFailureReason', $pb.PbFieldType.OE, defaultOrMaker: CalibrationFailureReason.REASON_UNSPECIFIED, valueOf: CalibrationFailureReason.valueOf, enumValues: CalibrationFailureReason.values)
     ..hasRequiredFields = false
   ;
 
@@ -2906,8 +3082,6 @@ class CalibrationData extends $pb.GeneratedMessage {
   /// during calibration.
   /// Operation mode varies the exposure duration around this value based on
   /// the current detected star count.
-  /// If no calibration has succeeded, this will have reasonable default value
-  /// based on setup mode's auto exposure.
   @$pb.TagNumber(2)
   $3.Duration get targetExposureTime => $_getN(1);
   @$pb.TagNumber(2)
@@ -2988,33 +3162,24 @@ class CalibrationData extends $pb.GeneratedMessage {
   @$pb.TagNumber(8)
   void clearMatchMaxError() => $_clearField(8);
 
-  /// Indicates reason, if any, that the calibration failed.
-  @$pb.TagNumber(9)
-  $core.bool get exposureCalibrationFailed => $_getBF(8);
-  @$pb.TagNumber(9)
-  set exposureCalibrationFailed($core.bool v) { $_setBool(8, v); }
-  @$pb.TagNumber(9)
-  $core.bool hasExposureCalibrationFailed() => $_has(8);
-  @$pb.TagNumber(9)
-  void clearExposureCalibrationFailed() => $_clearField(9);
-
-  @$pb.TagNumber(10)
-  $core.bool get plateSolveFailed => $_getBF(9);
-  @$pb.TagNumber(10)
-  set plateSolveFailed($core.bool v) { $_setBool(9, v); }
-  @$pb.TagNumber(10)
-  $core.bool hasPlateSolveFailed() => $_has(9);
-  @$pb.TagNumber(10)
-  void clearPlateSolveFailed() => $_clearField(10);
-
   @$pb.TagNumber(11)
-  $core.double get fovVertical => $_getN(10);
+  $core.double get fovVertical => $_getN(8);
   @$pb.TagNumber(11)
-  set fovVertical($core.double v) { $_setDouble(10, v); }
+  set fovVertical($core.double v) { $_setDouble(8, v); }
   @$pb.TagNumber(11)
-  $core.bool hasFovVertical() => $_has(10);
+  $core.bool hasFovVertical() => $_has(8);
   @$pb.TagNumber(11)
   void clearFovVertical() => $_clearField(11);
+
+  /// Indicates reason, if any, that the calibration failed.
+  @$pb.TagNumber(12)
+  CalibrationFailureReason get calibrationFailureReason => $_getN(9);
+  @$pb.TagNumber(12)
+  set calibrationFailureReason(CalibrationFailureReason v) { $_setField(12, v); }
+  @$pb.TagNumber(12)
+  $core.bool hasCalibrationFailureReason() => $_has(9);
+  @$pb.TagNumber(12)
+  void clearCalibrationFailureReason() => $_clearField(12);
 }
 
 /// When the observer's geographic location is known, the
@@ -3680,8 +3845,7 @@ class ActionRequest extends $pb.GeneratedMessage {
   $4.CelestialCoord ensureInitiateSlew() => $_ensure(5);
 
   /// Update ssid, psk, and/or channel setting for Cedar server's
-  /// WiFi access point. TODO: Switches to access point mode if currently
-  /// in client mode.
+  /// WiFi access point.
   @$pb.TagNumber(7)
   WiFiAccessPoint get updateWifiAccessPoint => $_getN(6);
   @$pb.TagNumber(7)

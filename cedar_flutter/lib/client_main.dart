@@ -375,13 +375,17 @@ class MyHomePageState extends State<MyHomePage> {
   bool _showedWelcome = false;
   bool _showFocusIntro = false;
   bool _showAlignIntro = false;
-  bool _showCalibrationFail = false;
+  bool _showTooFewStars = false;
+  bool _showBrightSky = false;
+  bool _showSolverFailed = false;
   bool _showSetupFinished = false;
 
   bool _dontShowWelcome = false;
   bool _dontShowFocusIntro = false;
   bool _dontShowAlignIntro = false;
-  bool _dontShowCalibrationFail = false;
+  bool _dontShowTooFewStars = false;
+  bool _dontShowBrightSky = false;
+  bool _dontShowSolverFailed = false;
   bool _dontShowSetupFinished = false;
 
   // Whether we should offer a menu item to set the observer location via a map.
@@ -600,16 +604,27 @@ class MyHomePageState extends State<MyHomePage> {
     _rightHanded = preferences!.rightHanded;
     calibrationData =
         response.hasCalibrationData() ? response.calibrationData : null;
-    bool calibrationFailed = false;
+    bool tooFewStars = false;
+    bool brightSky = false;
+    bool solverFail = false;
     if (calibrationData != null) {
-      calibrationFailed = calibrationData!.exposureCalibrationFailed ||
-          calibrationData!.plateSolveFailed;
+      tooFewStars = calibrationData!.calibrationFailureReason ==
+          CalibrationFailureReason.TOO_FEW_STARS;
+      brightSky = calibrationData!.calibrationFailureReason ==
+          CalibrationFailureReason.BRIGHT_SKY;
+      solverFail = calibrationData!.calibrationFailureReason ==
+          CalibrationFailureReason.SOLVER_FAILED;
     }
-    if (prevCalibrating &&
-        !_calibrating &&
-        calibrationFailed &&
-        !_dontShowCalibrationFail) {
-      _showCalibrationFail = true;
+    if (prevCalibrating && !_calibrating) {
+      if (tooFewStars && !_dontShowTooFewStars) {
+        _showTooFewStars = true;
+      }
+      if (brightSky && !_dontShowBrightSky) {
+        _showBrightSky = true;
+      }
+      if (solverFail && !_dontShowSolverFailed) {
+        _showSolverFailed = true;
+      }
     }
 
     processingStats =
@@ -698,7 +713,9 @@ class MyHomePageState extends State<MyHomePage> {
       _dontShowWelcome = preferences!.dontShowWelcome;
       _dontShowFocusIntro = preferences!.dontShowFocusIntro;
       _dontShowAlignIntro = preferences!.dontShowAlignIntro;
-      _dontShowCalibrationFail = preferences!.dontShowCalibrationFail;
+      _dontShowTooFewStars = preferences!.dontShowTooFewStars;
+      _dontShowBrightSky = preferences!.dontShowBrightSky;
+      _dontShowSolverFailed = preferences!.dontShowSolverFailed;
       _dontShowSetupFinished = preferences!.dontShowSetupFinished;
     }
     if (newFocusMode && !prevFocusMode) {
@@ -2274,29 +2291,59 @@ class MyHomePageState extends State<MyHomePage> {
         },
       );
     }
-    if (_showCalibrationFail) {
-      String reason = calibrationData!.exposureCalibrationFailed
-          ? "too few stars are visible"
-          : "the star field is not recognized";
+    if (_showTooFewStars) {
       String action = product == "Hopper"
-          ? " and verify the lens cap is removed"
-          : ", verify the lens cap is removed, and check focus";
+          ? " and verify the lens cap is open"
+          : ", verify the lens cap is open, and check focus";
       return interstitialDialog(
-        "Calibration of $product failed because $reason.\n"
+        "Calibration of $product failed because too few stars are visible.\n"
         "Please point $product at stars$action.",
         context,
         onConfirm: () {
           setState(() {
-            _showCalibrationFail = false;
+            _showTooFewStars = false;
           });
         },
         onDontShowAgainChanged: (value) async {
           var prefs = cedar_rpc.Preferences();
-          prefs.dontShowCalibrationFail = value;
+          prefs.dontShowTooFewStars = value;
           await updatePreferences(prefs);
         },
       );
     }
+    if (_showBrightSky) {
+      return interstitialDialog(
+        "Calibration of $product failed because the sky is too bright.\n",
+        context,
+        onConfirm: () {
+          setState(() {
+            _showBrightSky = false;
+          });
+        },
+        onDontShowAgainChanged: (value) async {
+          var prefs = cedar_rpc.Preferences();
+          prefs.dontShowBrightSky = value;
+          await updatePreferences(prefs);
+        },
+      );
+    }
+    if (_showSolverFailed) {
+      return interstitialDialog(
+        "Calibration of $product failed because the star field is not recgonized.\n",
+        context,
+        onConfirm: () {
+          setState(() {
+            _showSolverFailed = false;
+          });
+        },
+        onDontShowAgainChanged: (value) async {
+          var prefs = cedar_rpc.Preferences();
+          prefs.dontShowSolverFailed = value;
+          await updatePreferences(prefs);
+        },
+      );
+    }
+
     if (_showSetupFinished) {
       String useCatalog = product == "Hopper"
           ? "\nUse the 'Catalog' button to access the Cedar Sky database"

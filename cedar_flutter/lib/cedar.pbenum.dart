@@ -143,5 +143,31 @@ class DisplayOrientation extends $pb.ProtobufEnum {
   const DisplayOrientation._(super.v, super.n);
 }
 
+class CalibrationFailureReason extends $pb.ProtobufEnum {
+  static const CalibrationFailureReason REASON_UNSPECIFIED = CalibrationFailureReason._(0, _omitEnumNames ? '' : 'REASON_UNSPECIFIED');
+  /// Exposure calibration failed to find stars at maximum exposure duration.
+  /// Likely causes: lens cover is closed; dark clouds.
+  static const CalibrationFailureReason TOO_FEW_STARS = CalibrationFailureReason._(1, _omitEnumNames ? '' : 'TOO_FEW_STARS');
+  /// Exposure calibration reached its mean scene brightness limit before
+  /// detecting the desired number of stars. Likely causes: not pointed at sky;
+  /// bright clouds; twilight too bright; extreme light pollution.
+  static const CalibrationFailureReason BRIGHT_SKY = CalibrationFailureReason._(2, _omitEnumNames ? '' : 'BRIGHT_SKY');
+  /// Cedar Solve could not find a solution. If exposure calibration succeeds
+  /// a solver failure is unusual.
+  static const CalibrationFailureReason SOLVER_FAILED = CalibrationFailureReason._(3, _omitEnumNames ? '' : 'SOLVER_FAILED');
+
+  static const $core.List<CalibrationFailureReason> values = <CalibrationFailureReason> [
+    REASON_UNSPECIFIED,
+    TOO_FEW_STARS,
+    BRIGHT_SKY,
+    SOLVER_FAILED,
+  ];
+
+  static final $core.Map<$core.int, CalibrationFailureReason> _byValue = $pb.ProtobufEnum.initByValue(values);
+  static CalibrationFailureReason? valueOf($core.int value) => _byValue[value];
+
+  const CalibrationFailureReason._(super.v, super.n);
+}
+
 
 const _omitEnumNames = $core.bool.fromEnvironment('protobuf.omit_enum_names');
