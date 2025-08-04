@@ -4,7 +4,11 @@
 import 'package:cedar_flutter/client_main.dart';
 
 void main() {
-  clientMain(/*drawCatalogEntries=*/ null, /*showCatalogBrowser=*/ null,
-      /*objectInfoDialog=*/ null, /*wifiAccessPointDialog=*/ null,
-      /*wifiClientDiaglog=*/null);
+  clientMain(
+      /*drawCatalogEntries=*/ null,
+      /*showCatalogBrowser=*/ null,
+      /*objectInfoDialog=*/ null,
+      /*wifiAccessPointDialog=*/ null,
+      /*wifiClientDiaglog=*/ null,
+      /*updateServerSoftwareDialogFunction=*/ null);
 }

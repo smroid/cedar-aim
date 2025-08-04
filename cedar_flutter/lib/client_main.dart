@@ -48,23 +48,29 @@ typedef WifiAccessPointDialogFunction = void Function(
 typedef WifiClientDialogFunction = void Function(
     bool, MyHomePageState, BuildContext);
 
+typedef UpdateServerSoftwareDialogFunction = void Function(
+    MyHomePageState, BuildContext);
+
 DrawCatalogEntriesFunction? _drawCatalogEntries;
 ShowCatalogBrowserFunction? _showCatalogBrowser;
 ObjectInfoDialogFunction? _objectInfoDialog;
 WifiAccessPointDialogFunction? _wifiAccessPointDialog;
 WifiClientDialogFunction? _wifiClientDialog;
+UpdateServerSoftwareDialogFunction? _updateServerSoftwareDialogFunction;
 
 void clientMain(
     DrawCatalogEntriesFunction? drawCatalogEntries,
     ShowCatalogBrowserFunction? showCatalogBrowser,
     ObjectInfoDialogFunction? objectInfoDialog,
     WifiAccessPointDialogFunction? wifiAccessPointDialog,
-    WifiClientDialogFunction? wifiClientDialog) {
+    WifiClientDialogFunction? wifiClientDialog,
+    UpdateServerSoftwareDialogFunction? updateServerSoftwareDialogFunction) {
   _drawCatalogEntries = drawCatalogEntries;
   _showCatalogBrowser = showCatalogBrowser;
   _objectInfoDialog = objectInfoDialog;
   _wifiAccessPointDialog = wifiAccessPointDialog;
   _wifiClientDialog = wifiClientDialog;
+  _updateServerSoftwareDialogFunction = updateServerSoftwareDialogFunction;
 
   WidgetsFlutterBinding.ensureInitialized();
   runApp(MultiProvider(
@@ -1153,6 +1159,19 @@ class MyHomePageState extends State<MyHomePage> {
               onPressed: () {
                 shutdownDialog(this, context);
               })),
+      advanced && _updateServerSoftwareDialogFunction != null
+          ? Column(children: [
+              const SizedBox(height: 10),
+              Align(
+                  alignment: Alignment.topLeft,
+                  child: TextButton.icon(
+                      label: _scaledText("Check for Update"),
+                      icon: const Icon(Icons.system_update_alt),
+                      onPressed: () {
+                        _updateServerSoftwareDialogFunction!(this, context);
+                      }))
+            ])
+          : Container(),
       advanced
           ? Column(children: [
               const SizedBox(height: 10),
