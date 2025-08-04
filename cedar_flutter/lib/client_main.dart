@@ -1871,10 +1871,12 @@ class MyHomePageState extends State<MyHomePage> {
                   }
                 } else {
                   // Aim mode.
-                  var object = _findObjectHit(localPosition, hitTolerance);
-                  if (object != null && _objectInfoDialog != null) {
-                    var selEntry = SelectedCatalogEntry(entry: object.entry);
-                    _objectInfoDialog!(this, context, selEntry);
+                  if (_objectInfoDialog != null) {
+                    var object = _findObjectHit(localPosition, hitTolerance);
+                    if (object != null) {
+                      var selEntry = SelectedCatalogEntry(entry: object.entry);
+                      _objectInfoDialog!(this, context, selEntry);
+                    }
                   }
                 }
               },
