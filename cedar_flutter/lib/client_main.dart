@@ -1035,24 +1035,22 @@ class MyHomePageState extends State<MyHomePage> {
                 });
               })),
       SizedBox(height: _offerMap ? 15 : 0),
-      _offerMap
-          ? Align(
-              alignment: Alignment.topLeft,
-              child: TextButton.icon(
-                  label: _mapPosition == null
-                      ? _scaledText("Location unknown")
-                      : _scaledText(sprintf("Location %.1f %.1f",
-                          [_mapPosition!.latitude, _mapPosition!.longitude])),
-                  icon: Icon(_mapPosition == null
-                      ? Icons.not_listed_location
-                      : Icons.edit_location_alt),
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => MapScreen(this)));
-                  }))
-          : Container(),
+      if (_offerMap) ...[
+        Align(
+            alignment: Alignment.topLeft,
+            child: TextButton.icon(
+                label: _mapPosition == null
+                    ? _scaledText("Location unknown")
+                    : _scaledText(sprintf("Location %.1f %.1f",
+                        [_mapPosition!.latitude, _mapPosition!.longitude])),
+                icon: Icon(_mapPosition == null
+                    ? Icons.not_listed_location
+                    : Icons.edit_location_alt),
+                onPressed: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => MapScreen(this)));
+                })),
+      ],
       const SizedBox(height: 15),
       Align(
           alignment: Alignment.topLeft,
@@ -1070,86 +1068,84 @@ class MyHomePageState extends State<MyHomePage> {
                 prefs.advanced = advanced;
                 await updatePreferences(prefs);
               })),
-      (advanced || _demoMode) && _demoFiles.isNotEmpty
-          ? Column(children: <Widget>[
-              const SizedBox(height: 15),
-              Align(
-                  alignment: Alignment.topLeft,
-                  child: TextButton.icon(
-                    label: _scaledText("Demo mode"),
-                    icon: _demoMode
-                        ? const Icon(Icons.check)
-                        : const Icon(Icons.check_box_outline_blank),
-                    onPressed: () {
-                      setState(() {
-                        _demoMode = !_demoMode;
-                        if (_demoMode) {
-                          if (_demoFile.isNotEmpty) {
-                            _setDemoImage(_demoFile);
-                          }
-                        } else {
-                          _setDemoImage(""); // Turn off.
-                        }
-                      });
-                    },
-                  )),
-              const SizedBox(height: 10)
-            ])
-          : Container(),
-      _demoMode && _demoFiles.isNotEmpty
-          ? Column(children: [
-              Row(children: [
-                Container(width: 15),
-                DropdownMenu<String>(
-                    menuHeight: 200,
-                    inputDecorationTheme: InputDecorationTheme(
-                      contentPadding:
-                          const EdgeInsets.symmetric(horizontal: 12),
-                      constraints:
-                          BoxConstraints.tight(const Size.fromHeight(40)),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                    ),
-                    width: 200 * textScaleFactor(context),
-                    requestFocusOnTap: false,
-                    initialSelection: _demoFile.isEmpty ? "" : _demoFile,
-                    label: _primaryText("Image file", size: 12),
-                    dropdownMenuEntries:
-                        _demoFiles.map<DropdownMenuEntry<String>>((String s) {
-                      return DropdownMenuEntry<String>(
-                        value: s,
-                        label: _removeExtension(s),
-                        labelWidget: _primaryText(_removeExtension(s)),
-                        enabled: true,
-                      );
-                    }).toList(),
-                    textStyle: TextStyle(
-                        fontSize: 12 * textScaleFactor(context),
-                        color: Theme.of(context).colorScheme.primary),
-                    onSelected: (String? newValue) async {
-                      setState(() {
-                        _demoFile = newValue!;
-                        _setDemoImage(_demoFile);
-                      });
-                      Navigator.of(context).pop();
-                    })
-              ]),
-              const SizedBox(height: 15),
-            ])
-          : Container(),
-      const SizedBox(height: 5),
-      advanced
-          ? Align(
+      if ((advanced || _demoMode) && _demoFiles.isNotEmpty) ...[
+        Column(children: <Widget>[
+          const SizedBox(height: 15),
+          Align(
               alignment: Alignment.topLeft,
               child: TextButton.icon(
-                  label: _scaledText("About"),
-                  icon: const Icon(Icons.info_outline),
-                  onPressed: () {
-                    aboutScreen(this, context);
-                  }),
-            )
-          : Container(),
+                label: _scaledText("Demo mode"),
+                icon: _demoMode
+                    ? const Icon(Icons.check)
+                    : const Icon(Icons.check_box_outline_blank),
+                onPressed: () {
+                  setState(() {
+                    _demoMode = !_demoMode;
+                    if (_demoMode) {
+                      if (_demoFile.isNotEmpty) {
+                        _setDemoImage(_demoFile);
+                      }
+                    } else {
+                      _setDemoImage(""); // Turn off.
+                    }
+                  });
+                },
+              )),
+          const SizedBox(height: 10)
+        ]),
+      ],
+      if (_demoMode && _demoFiles.isNotEmpty) ...[
+        Column(children: [
+          Row(children: [
+            Container(width: 15),
+            DropdownMenu<String>(
+                menuHeight: 200,
+                inputDecorationTheme: InputDecorationTheme(
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 12),
+                  constraints: BoxConstraints.tight(const Size.fromHeight(40)),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                ),
+                width: 200 * textScaleFactor(context),
+                requestFocusOnTap: false,
+                initialSelection: _demoFile.isEmpty ? "" : _demoFile,
+                label: _primaryText("Image file", size: 12),
+                dropdownMenuEntries:
+                    _demoFiles.map<DropdownMenuEntry<String>>((String s) {
+                  return DropdownMenuEntry<String>(
+                    value: s,
+                    label: _removeExtension(s),
+                    labelWidget: _primaryText(_removeExtension(s)),
+                    enabled: true,
+                  );
+                }).toList(),
+                textStyle: TextStyle(
+                    fontSize: 12 * textScaleFactor(context),
+                    color: Theme.of(context).colorScheme.primary),
+                onSelected: (String? newValue) async {
+                  setState(() {
+                    _demoFile = newValue!;
+                    _setDemoImage(_demoFile);
+                  });
+                  Navigator.of(context).pop();
+                })
+          ]),
+          const SizedBox(height: 15),
+        ]),
+      ],
+      const SizedBox(height: 5),
+      if (advanced) ...[
+        Align(
+          alignment: Alignment.topLeft,
+          child: TextButton.icon(
+              label: _scaledText("About"),
+              icon: const Icon(Icons.info_outline),
+              onPressed: () {
+                aboutScreen(this, context);
+              }),
+        ),
+      ],
       const SizedBox(height: 10),
       Align(
           alignment: Alignment.topLeft,
@@ -1159,81 +1155,81 @@ class MyHomePageState extends State<MyHomePage> {
               onPressed: () {
                 shutdownDialog(this, context);
               })),
-      advanced && _updateServerSoftwareDialogFunction != null
-          ? Column(children: [
-              const SizedBox(height: 10),
-              Align(
-                  alignment: Alignment.topLeft,
-                  child: TextButton.icon(
-                      label: _scaledText("Check for Update"),
-                      icon: const Icon(Icons.system_update_alt),
-                      onPressed: () {
-                        _updateServerSoftwareDialogFunction!(this, context);
-                      }))
-            ])
-          : Container(),
-      advanced
-          ? Column(children: [
-              const SizedBox(height: 10),
-              Align(
-                  alignment: Alignment.topLeft,
-                  child: TextButton.icon(
-                      label: _scaledText("Save image"),
-                      icon: const Icon(Icons.add_a_photo_outlined),
-                      onPressed: () {
-                        _saveImage();
-                      }))
-            ])
-          : Container(),
-      advanced
-          ? Column(children: [
-              const SizedBox(height: 10),
-              Align(
-                  alignment: Alignment.topLeft,
-                  child: TextButton.icon(
-                      label: _scaledText("Show server log"),
-                      icon: const Icon(Icons.text_snippet_outlined),
-                      onPressed: () async {
-                        var logs = await _getServerLogs();
-                        if (context.mounted) {
-                          showDialog(
-                              context: context,
-                              builder: (context) => ServerLogPopUp(this, logs));
-                        }
-                      })),
-            ])
-          : Container(),
-      advanced && _hasWifiControl && _wifiAccessPointDialog != null
-          ? Column(children: [
-              const SizedBox(height: 10),
-              Align(
-                  alignment: Alignment.topLeft,
-                  child: TextButton.icon(
-                      label: _scaledText("Wifi"),
-                      icon: const Icon(Icons.wifi),
-                      onPressed: () {
-                        _wifiAccessPointDialog!(this, context);
-                      }))
-            ])
-          : Container(),
-      advanced
-          ? Column(children: [
-              const SizedBox(height: 10),
-              Align(
-                  alignment: Alignment.topLeft,
-                  child: TextButton.icon(
-                      label: _scaledText("Reset 'Don't show again'"),
-                      icon: const Icon(Icons.undo),
-                      onPressed: () async {
-                        final request =
-                            cedar_rpc.ActionRequest(clearDontShows: true);
-                        await initiateAction(request);
-                        if (context.mounted) {
-                          Navigator.of(context).pop();
-                        }
-                      }))
-            ])
-          : Container(),
+      if (advanced && _updateServerSoftwareDialogFunction != null) ...[
+        Column(children: [
+          const SizedBox(height: 10),
+          Align(
+              alignment: Alignment.topLeft,
+              child: TextButton.icon(
+                  label: _scaledText("Check for Update"),
+                  icon: const Icon(Icons.system_update_alt),
+                  onPressed: () {
+                    _updateServerSoftwareDialogFunction!(this, context);
+                  }))
+        ]),
+      ],
+      if (advanced) ...[
+        Column(children: [
+          const SizedBox(height: 10),
+          Align(
+              alignment: Alignment.topLeft,
+              child: TextButton.icon(
+                  label: _scaledText("Save image"),
+                  icon: const Icon(Icons.add_a_photo_outlined),
+                  onPressed: () {
+                    _saveImage();
+                  }))
+        ]),
+      ],
+      if (advanced) ...[
+        Column(children: [
+          const SizedBox(height: 10),
+          Align(
+              alignment: Alignment.topLeft,
+              child: TextButton.icon(
+                  label: _scaledText("Show server log"),
+                  icon: const Icon(Icons.text_snippet_outlined),
+                  onPressed: () async {
+                    var logs = await _getServerLogs();
+                    if (context.mounted) {
+                      showDialog(
+                          context: context,
+                          builder: (context) => ServerLogPopUp(this, logs));
+                    }
+                  })),
+        ]),
+      ],
+      if (advanced && _hasWifiControl && _wifiAccessPointDialog != null) ...[
+        Column(children: [
+          const SizedBox(height: 10),
+          Align(
+              alignment: Alignment.topLeft,
+              child: TextButton.icon(
+                  label: _scaledText("Wifi"),
+                  icon: const Icon(Icons.wifi),
+                  onPressed: () {
+                    _wifiAccessPointDialog!(this, context);
+                  }))
+        ]),
+      ],
+      if (advanced) ...[
+        Column(children: [
+          const SizedBox(height: 10),
+          Align(
+              alignment: Alignment.topLeft,
+              child: TextButton.icon(
+                  label: _scaledText("Reset 'Don't show again'"),
+                  icon: const Icon(Icons.undo),
+                  onPressed: () async {
+                    final request =
+                        cedar_rpc.ActionRequest(clearDontShows: true);
+                    await initiateAction(request);
+                    if (context.mounted) {
+                      Navigator.of(context).pop();
+                    }
+                  }))
+        ]),
+      ],
       const SizedBox(height: 15),
     ];
   }
@@ -1456,49 +1452,49 @@ class MyHomePageState extends State<MyHomePage> {
                             : Container())),
               ),
 
-              // Day checkbox (only in setup mode)
-              _setupMode
-                  ? Column(
-                      children: [
-                        SizedBox(height: 10 * panelScaleFactor),
-                        Transform.scale(
-                          scale: panelScaleFactor,
-                          child: TextButton.icon(
-                              label: _scaledText("Day"),
-                              icon: _daylightMode
-                                  ? const Icon(Icons.check)
-                                  : const Icon(Icons.check_box_outline_blank),
-                              onPressed: () async {
-                                setState(() {
-                                  _setDaylightMode(!_daylightMode);
-                                });
-                              }),
-                        ),
-                      ],
-                    )
-                  : Container(),
+              // Day checkbox (only in setup mode).
+              if (_setupMode) ...[
+                Column(
+                  children: [
+                    SizedBox(height: 10 * panelScaleFactor),
+                    Transform.scale(
+                      scale: panelScaleFactor,
+                      child: TextButton.icon(
+                          label: _scaledText("Day"),
+                          icon: _daylightMode
+                              ? const Icon(Icons.check)
+                              : const Icon(Icons.check_box_outline_blank),
+                          onPressed: () async {
+                            setState(() {
+                              _setDaylightMode(!_daylightMode);
+                            });
+                          }),
+                    ),
+                  ],
+                ),
+              ],
             ],
           )),
       const SizedBox(height: 10),
-      _slewRequest != null && !_setupMode && _showCatalogBrowser != null
-          ? RotatedBox(
-              quarterTurns: portrait ? 3 : 0,
-              child: SizedBox(
-                  width: buttonWidth,
-                  height: buttonHeight,
-                  child: catalogButton(fontSize: buttonFont)))
-          : Container(),
+      if (_slewRequest != null &&
+          !_setupMode &&
+          _showCatalogBrowser != null) ...[
+        RotatedBox(
+            quarterTurns: portrait ? 3 : 0,
+            child: SizedBox(
+                width: buttonWidth,
+                height: buttonHeight,
+                child: catalogButton(fontSize: buttonFont))),
+      ],
       const SizedBox(height: 10),
-      _slewRequest != null
-          ? RotatedBox(
-              quarterTurns: portrait ? 3 : 0,
-              child: SizedBox(
-                  width: buttonWidth,
-                  height: buttonHeight,
-                  child: _slewRequest != null && !_setupMode
-                      ? endGotoButton(fontSize: buttonFont)
-                      : Container()))
-          : Container(),
+      if (_slewRequest != null && !_setupMode) ...[
+        RotatedBox(
+            quarterTurns: portrait ? 3 : 0,
+            child: SizedBox(
+                width: buttonWidth,
+                height: buttonHeight,
+                child: endGotoButton(fontSize: buttonFont))),
+      ],
     ];
   }
 
@@ -1797,54 +1793,53 @@ class MyHomePageState extends State<MyHomePage> {
                       ),
                     ])),
       const SizedBox(width: 10, height: 10),
-      RotatedBox(
-          quarterTurns: portrait ? 3 : 0,
-          child: _setupMode
-              ? Container()
-              : SizedBox(
-                  width: 60 * panelScaleFactor * textScaleFactor(context),
-                  height: 60 * panelScaleFactor * textScaleFactor(context),
-                  child: GestureDetector(
-                    onTap: () {
-                      skyCoordsDialog(this, context);
-                    },
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      // RA/Dec, Alt/Az, etc.
-                      children: _coordInfo(gaugeTextFactor),
-                    ),
-                  ))),
-      const SizedBox(width: 10, height: 10),
-      RotatedBox(
-          quarterTurns: portrait ? 3 : 0,
-          child: _hasPolarAdvice() && !_setupMode && (isPlus || isDIY)
-              ? SizedBox(
-                  width: 70 * panelScaleFactor * textScaleFactor(context),
-                  height: 60 * panelScaleFactor * textScaleFactor(context),
+      if (!_setupMode) ...[
+        RotatedBox(
+            quarterTurns: portrait ? 3 : 0,
+            child: SizedBox(
+                width: 60 * panelScaleFactor * textScaleFactor(context),
+                height: 60 * panelScaleFactor * textScaleFactor(context),
+                child: GestureDetector(
+                  onTap: () {
+                    skyCoordsDialog(this, context);
+                  },
                   child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        _primaryText("Eq. Mount",
-                            size: 10 * panelScaleFactor, underline: true),
-                        solveText(
-                            _formatAdvice(
-                                _polarAlignAdvice!.hasAltitudeCorrection()
-                                    ? _polarAlignAdvice!.altitudeCorrection
-                                    : _polarAlignAdvice!.azimuthCorrection),
-                            size: 10 * panelScaleFactor),
-                        _polarAlignAdvice!.hasAltitudeCorrection()
-                            ? _selectIcon(
-                                _polarAlignAdvice!.altitudeCorrection.value,
-                                Icons.north,
-                                Icons.south)
-                            : _selectIcon(
-                                _polarAlignAdvice!.azimuthCorrection.value,
-                                Icons.rotate_right,
-                                Icons.rotate_left),
-                      ]),
-                )
-              : Container()),
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    // RA/Dec, Alt/Az, etc.
+                    children: _coordInfo(gaugeTextFactor),
+                  ),
+                ))),
+      ],
+      const SizedBox(width: 10, height: 10),
+      if (_hasPolarAdvice() && !_setupMode && (isPlus || isDIY)) ...[
+        RotatedBox(
+            quarterTurns: portrait ? 3 : 0,
+            child: SizedBox(
+              width: 70 * panelScaleFactor * textScaleFactor(context),
+              height: 60 * panelScaleFactor * textScaleFactor(context),
+              child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    _primaryText("Eq. Mount",
+                        size: 10 * panelScaleFactor, underline: true),
+                    solveText(
+                        _formatAdvice(_polarAlignAdvice!.hasAltitudeCorrection()
+                            ? _polarAlignAdvice!.altitudeCorrection
+                            : _polarAlignAdvice!.azimuthCorrection),
+                        size: 10 * panelScaleFactor),
+                    _polarAlignAdvice!.hasAltitudeCorrection()
+                        ? _selectIcon(
+                            _polarAlignAdvice!.altitudeCorrection.value,
+                            Icons.north,
+                            Icons.south)
+                        : _selectIcon(
+                            _polarAlignAdvice!.azimuthCorrection.value,
+                            Icons.rotate_right,
+                            Icons.rotate_left),
+                  ]),
+            )),
+      ],
     ];
   }
 
@@ -1967,31 +1962,30 @@ class MyHomePageState extends State<MyHomePage> {
         child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              calibrating
-                  ? Text("Calibrating",
-                      textScaler: textScaler(context),
-                      style: TextStyle(
-                          fontSize: 20,
-                          backgroundColor: Colors.black,
-                          color: Theme.of(context).colorScheme.primary))
-                  : Container(),
+              if (calibrating) ...[
+                Text("Calibrating",
+                    textScaler: textScaler(context),
+                    style: TextStyle(
+                        fontSize: 20,
+                        backgroundColor: Colors.black,
+                        color: Theme.of(context).colorScheme.primary)),
+              ],
               const SizedBox(height: 15),
               CircularProgressIndicator(
                   value: calibrating ? _calibrationProgress : null,
                   color: Theme.of(context).colorScheme.primary),
               const SizedBox(height: 15),
-              calibrating
-                  ? TextButton(
-                      onPressed: () {
-                        _cancelCalibration();
-                      },
-                      style: TextButton.styleFrom(
-                          backgroundColor: Colors.black,
-                          foregroundColor:
-                              Theme.of(context).colorScheme.primary),
-                      child: _scaledText("Cancel"),
-                    )
-                  : Container(),
+              if (calibrating) ...[
+                TextButton(
+                  onPressed: () {
+                    _cancelCalibration();
+                  },
+                  style: TextButton.styleFrom(
+                      backgroundColor: Colors.black,
+                      foregroundColor: Theme.of(context).colorScheme.primary),
+                  child: _scaledText("Cancel"),
+                ),
+              ],
             ]));
   }
 
@@ -2024,20 +2018,19 @@ class MyHomePageState extends State<MyHomePage> {
       _prevFrameId != -1
           ? _mainImage()
           : const SizedBox(width: 500, height: 500),
-      _prevFrameId != -1 && overlayWidget != null
-          ? Container(
-              decoration: BoxDecoration(
-                  border: Border.all(
-                      width: 0.5,
-                      color: Theme.of(context).colorScheme.primary)),
-              child: overlayWidget)
-          : Container(),
-      _calibrating || _transitionToSetup
-          ? Positioned.fill(
-              child: Align(
-                  alignment: Alignment.center,
-                  child: _pacifier(context, _calibrating)))
-          : Container(),
+      if (_prevFrameId != -1 && overlayWidget != null) ...[
+        Container(
+            decoration: BoxDecoration(
+                border: Border.all(
+                    width: 0.5, color: Theme.of(context).colorScheme.primary)),
+            child: overlayWidget),
+      ],
+      if (_calibrating || _transitionToSetup) ...[
+        Positioned.fill(
+            child: Align(
+                alignment: Alignment.center,
+                child: _pacifier(context, _calibrating))),
+      ],
     ]);
   }
 
@@ -2222,14 +2215,15 @@ class MyHomePageState extends State<MyHomePage> {
   }
 
   Widget _drawer() {
-    return _serverConnected
-        ? SafeArea(
-            child: Drawer(
-                width: 240 * textScaleFactor(context),
-                child: ListView(
-                    padding: EdgeInsets.zero,
-                    children: _drawerControls(context))))
-        : Container();
+    if (_serverConnected) {
+      return SafeArea(
+          child: Drawer(
+              width: 240 * textScaleFactor(context),
+              child: ListView(
+                  padding: EdgeInsets.zero,
+                  children: _drawerControls(context))));
+    }
+    return Container();
   }
 
   @override
@@ -2403,22 +2397,21 @@ class MyHomePageState extends State<MyHomePage> {
                     fit: StackFit.expand,
                     children: [
                       healthy ? _orientationLayout(context) : _badServerState(),
-                      Positioned(
-                          left: _rightHanded ? null : 0,
-                          right: _rightHanded ? 0 : null,
-                          top: 0,
-                          child: hideAppBar
-                              ? IconButton(
-                                  icon: const Icon(Icons.menu),
-                                  onPressed: () {
-                                    if (_rightHanded) {
-                                      _scaffoldKey.currentState!
-                                          .openEndDrawer();
-                                    } else {
-                                      _scaffoldKey.currentState!.openDrawer();
-                                    }
-                                  })
-                              : Container()),
+                      if (hideAppBar) ...[
+                        Positioned(
+                            left: _rightHanded ? null : 0,
+                            right: _rightHanded ? 0 : null,
+                            top: 0,
+                            child: IconButton(
+                                icon: const Icon(Icons.menu),
+                                onPressed: () {
+                                  if (_rightHanded) {
+                                    _scaffoldKey.currentState!.openEndDrawer();
+                                  } else {
+                                    _scaffoldKey.currentState!.openDrawer();
+                                  }
+                                })),
+                      ],
                     ],
                   )))),
       // Prevent jank in demo mode image file selector.
