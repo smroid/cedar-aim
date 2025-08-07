@@ -51,7 +51,7 @@ class ServerLogPopUp extends StatelessWidget {
             Text(
               _content,
               style: TextStyle(
-                fontSize: 12,
+                fontSize: 10,
                 color: Theme.of(context).colorScheme.primary,
               ),
               textScaler: textScaler(context),
