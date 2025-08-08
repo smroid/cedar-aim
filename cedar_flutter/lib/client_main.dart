@@ -2,18 +2,15 @@
 // See LICENSE file in root directory for license terms.
 
 import 'dart:math' as math;
-import 'package:cedar_flutter/about.dart';
 import 'package:cedar_flutter/cedar.pb.dart';
 import 'package:cedar_flutter/cedar_sky.pb.dart';
 import 'package:cedar_flutter/draw_slew_target.dart';
 import 'package:cedar_flutter/draw_util.dart';
-import 'package:cedar_flutter/geolocation.dart';
+import 'package:cedar_flutter/drawer.dart';
 import 'package:cedar_flutter/google/protobuf/timestamp.pb.dart';
 import 'package:cedar_flutter/interstitial_msg.dart';
 import 'package:cedar_flutter/perf_stats_dialog.dart';
-import 'package:cedar_flutter/server_log.dart';
 import 'package:cedar_flutter/settings.dart';
-import 'package:cedar_flutter/shutdown_dialog.dart';
 import 'package:cedar_flutter/sky_coords_dialog.dart';
 import 'package:cedar_flutter/themes.dart';
 import 'package:fixnum/fixnum.dart';
@@ -23,7 +20,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart' as dart_widgets;
 import 'package:grpc/grpc.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:path/path.dart' as path;
 import 'package:provider/provider.dart';
 import 'package:sprintf/sprintf.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
@@ -945,293 +941,6 @@ class MyHomePageState extends State<MyHomePage> {
     } catch (e) {
       debugPrint("updatePreferences error: $e");
     }
-  }
-
-  String _removeExtension(String filename) {
-    return path.basenameWithoutExtension(filename);
-  }
-
-  List<Widget> _drawerControls(BuildContext context) {
-    return <Widget>[
-      const SizedBox(height: 15),
-      const CloseButton(
-          style: ButtonStyle(
-              backgroundColor: WidgetStatePropertyAll<Color>(Colors.white10),
-              alignment: Alignment.center)),
-      const SizedBox(height: 15),
-      Align(
-          alignment: Alignment.topLeft,
-          child: Row(
-            children: [
-              Container(width: 15),
-              DropdownMenu<String>(
-                  inputDecorationTheme: InputDecorationTheme(
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 10),
-                    constraints:
-                        BoxConstraints.tight(const Size.fromHeight(40)),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                  ),
-                  width: 120 * textScaleFactor(context),
-                  requestFocusOnTap: false,
-                  initialSelection:
-                      _setupMode ? (_focusAid ? "Focus" : "Align") : "Aim",
-                  label: _primaryText("Mode", size: 12),
-                  dropdownMenuEntries: ["Focus", "Align", "Aim"]
-                      .map<DropdownMenuEntry<String>>((String s) {
-                    return DropdownMenuEntry<String>(
-                      value: s,
-                      label: s,
-                      labelWidget: _primaryText(s),
-                      enabled: true,
-                    );
-                  }).toList(),
-                  textStyle: TextStyle(
-                      fontSize: 12 * textScaleFactor(context),
-                      color: Theme.of(context).colorScheme.primary),
-                  onSelected: (String? newValue) async {
-                    if (newValue == "Focus") {
-                      setState(() {
-                        if (!_setupMode) {
-                          _transitionToSetup = true;
-                        }
-                        _setOperatingMode(
-                            /*setupMode=*/ true, /*focusAid=*/ true);
-                      });
-                    } else if (newValue == "Align") {
-                      setState(() {
-                        _alignTargetTapped = false;
-                        if (!_setupMode) {
-                          _transitionToSetup = true;
-                        }
-                        _setOperatingMode(
-                            /*setupMode=*/ true, /*focusAid=*/ false);
-                      });
-                    } else {
-                      // Aim.
-                      setState(() {
-                        _setOperatingMode(
-                            /*setupMode=*/ false, /*focusAid*/ false);
-                      });
-                    }
-                    Navigator.of(context).pop();
-                  }),
-            ],
-          )),
-      const SizedBox(height: 15),
-      Align(
-          alignment: Alignment.topLeft,
-          child: TextButton.icon(
-              label: _scaledText("Preferences"),
-              icon: const Icon(Icons.settings),
-              onPressed: () {
-                Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => SettingsScreen(this)))
-                    .then((value) {
-                  setState(() {}); // Force rebuild of the drawer.
-                });
-              })),
-      SizedBox(height: _offerMap ? 15 : 0),
-      if (_offerMap) ...[
-        Align(
-            alignment: Alignment.topLeft,
-            child: TextButton.icon(
-                label: _mapPosition == null
-                    ? _scaledText("Location unknown")
-                    : _scaledText(sprintf("Location %.1f %.1f",
-                        [_mapPosition!.latitude, _mapPosition!.longitude])),
-                icon: Icon(_mapPosition == null
-                    ? Icons.not_listed_location
-                    : Icons.edit_location_alt),
-                onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => MapScreen(this)));
-                })),
-      ],
-      const SizedBox(height: 15),
-      Align(
-          alignment: Alignment.topLeft,
-          child: TextButton.icon(
-              label: _scaledText("Advanced"),
-              icon: advanced
-                  ? const Icon(Icons.check)
-                  : const Icon(Icons.check_box_outline_blank),
-              onPressed: () async {
-                advanced = !advanced;
-                var settingsModel =
-                    Provider.of<SettingsModel>(context, listen: false);
-                settingsModel.preferencesProto.advanced = advanced;
-                var prefs = cedar_rpc.Preferences();
-                prefs.advanced = advanced;
-                await updatePreferences(prefs);
-              })),
-      if ((advanced || _demoMode) && _demoFiles.isNotEmpty) ...[
-        Column(children: <Widget>[
-          const SizedBox(height: 15),
-          Align(
-              alignment: Alignment.topLeft,
-              child: TextButton.icon(
-                label: _scaledText("Demo mode"),
-                icon: _demoMode
-                    ? const Icon(Icons.check)
-                    : const Icon(Icons.check_box_outline_blank),
-                onPressed: () {
-                  setState(() {
-                    _demoMode = !_demoMode;
-                    if (_demoMode) {
-                      if (_demoFile.isNotEmpty) {
-                        _setDemoImage(_demoFile);
-                      }
-                    } else {
-                      _setDemoImage(""); // Turn off.
-                    }
-                  });
-                },
-              )),
-          const SizedBox(height: 10)
-        ]),
-      ],
-      if (_demoMode && _demoFiles.isNotEmpty) ...[
-        Column(children: [
-          Row(children: [
-            Container(width: 15),
-            DropdownMenu<String>(
-                menuHeight: 200,
-                inputDecorationTheme: InputDecorationTheme(
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 12),
-                  constraints: BoxConstraints.tight(const Size.fromHeight(40)),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(6),
-                  ),
-                ),
-                width: 200 * textScaleFactor(context),
-                requestFocusOnTap: false,
-                initialSelection: _demoFile.isEmpty ? "" : _demoFile,
-                label: _primaryText("Image file", size: 12),
-                dropdownMenuEntries:
-                    _demoFiles.map<DropdownMenuEntry<String>>((String s) {
-                  return DropdownMenuEntry<String>(
-                    value: s,
-                    label: _removeExtension(s),
-                    labelWidget: _primaryText(_removeExtension(s)),
-                    enabled: true,
-                  );
-                }).toList(),
-                textStyle: TextStyle(
-                    fontSize: 12 * textScaleFactor(context),
-                    color: Theme.of(context).colorScheme.primary),
-                onSelected: (String? newValue) async {
-                  setState(() {
-                    _demoFile = newValue!;
-                    _setDemoImage(_demoFile);
-                  });
-                  Navigator.of(context).pop();
-                })
-          ]),
-          const SizedBox(height: 15),
-        ]),
-      ],
-      const SizedBox(height: 5),
-      if (advanced) ...[
-        Align(
-          alignment: Alignment.topLeft,
-          child: TextButton.icon(
-              label: _scaledText("About"),
-              icon: const Icon(Icons.info_outline),
-              onPressed: () {
-                aboutScreen(this, context);
-              }),
-        ),
-      ],
-      const SizedBox(height: 10),
-      Align(
-          alignment: Alignment.topLeft,
-          child: TextButton.icon(
-              label: _scaledText("Shutdown"),
-              icon: const Icon(Icons.power_settings_new_outlined),
-              onPressed: () {
-                shutdownDialog(this, context);
-              })),
-      if (advanced && _updateServerSoftwareDialogFunction != null) ...[
-        Column(children: [
-          const SizedBox(height: 10),
-          Align(
-              alignment: Alignment.topLeft,
-              child: TextButton.icon(
-                  label: _scaledText("Check for Update"),
-                  icon: const Icon(Icons.system_update_alt),
-                  onPressed: () {
-                    _updateServerSoftwareDialogFunction!(this, context);
-                  }))
-        ]),
-      ],
-      if (advanced) ...[
-        Column(children: [
-          const SizedBox(height: 10),
-          Align(
-              alignment: Alignment.topLeft,
-              child: TextButton.icon(
-                  label: _scaledText("Save image"),
-                  icon: const Icon(Icons.add_a_photo_outlined),
-                  onPressed: () {
-                    _saveImage();
-                  }))
-        ]),
-      ],
-      if (advanced) ...[
-        Column(children: [
-          const SizedBox(height: 10),
-          Align(
-              alignment: Alignment.topLeft,
-              child: TextButton.icon(
-                  label: _scaledText("Show server log"),
-                  icon: const Icon(Icons.text_snippet_outlined),
-                  onPressed: () async {
-                    var logs = await _getServerLogs();
-                    if (context.mounted) {
-                      showDialog(
-                          context: context,
-                          builder: (context) => ServerLogPopUp(this, logs));
-                    }
-                  })),
-        ]),
-      ],
-      if (advanced && _hasWifiControl && _wifiAccessPointDialog != null) ...[
-        Column(children: [
-          const SizedBox(height: 10),
-          Align(
-              alignment: Alignment.topLeft,
-              child: TextButton.icon(
-                  label: _scaledText("Wifi"),
-                  icon: const Icon(Icons.wifi),
-                  onPressed: () {
-                    _wifiAccessPointDialog!(this, context);
-                  }))
-        ]),
-      ],
-      if (advanced) ...[
-        Column(children: [
-          const SizedBox(height: 10),
-          Align(
-              alignment: Alignment.topLeft,
-              child: TextButton.icon(
-                  label: _scaledText("Reset 'Don't show again'"),
-                  icon: const Icon(Icons.undo),
-                  onPressed: () async {
-                    final request =
-                        cedar_rpc.ActionRequest(clearDontShows: true);
-                    await initiateAction(request);
-                    if (context.mounted) {
-                      Navigator.of(context).pop();
-                    }
-                  }))
-        ]),
-      ],
-      const SizedBox(height: 15),
-    ];
   }
 
   Widget _rowOrColumn(bool row, List<Widget> children) {
@@ -2216,12 +1925,79 @@ class MyHomePageState extends State<MyHomePage> {
 
   Widget _drawer() {
     if (_serverConnected) {
-      return SafeArea(
-          child: Drawer(
-              width: 240 * textScaleFactor(context),
-              child: ListView(
-                  padding: EdgeInsets.zero,
-                  children: _drawerControls(context))));
+      return CedarDrawer(
+        controller: CedarDrawerController(
+          setupMode: _setupMode,
+          focusAid: _focusAid,
+          offerMap: _offerMap,
+          mapPosition: _mapPosition,
+          advanced: advanced,
+          demoMode: _demoMode,
+          demoFiles: _demoFiles,
+          demoFile: _demoFile,
+          hasWifiControl: _hasWifiControl,
+          updateServerSoftwareDialogFunction:
+              _updateServerSoftwareDialogFunction,
+          wifiAccessPointDialog: _wifiAccessPointDialog,
+          setOperatingMode: (setupMode, focusAid) async {
+            if (!_setupMode && setupMode) {
+              setState(() {
+                _transitionToSetup = true;
+              });
+            }
+            if (setupMode && focusAid) {
+              // Focus mode specific setup
+              setState(() {
+                _alignTargetTapped = false;
+              });
+            } else if (setupMode && !focusAid) {
+              // Align mode specific setup
+              setState(() {
+                _alignTargetTapped = false;
+              });
+            }
+            await _setOperatingMode(setupMode, focusAid);
+          },
+          setDemoImage: (imageFile) async {
+            setState(() {
+              _demoFile = imageFile;
+              _demoMode = imageFile.isNotEmpty;
+            });
+            await _setDemoImage(imageFile);
+          },
+          saveImage: _saveImage,
+          getServerLogs: _getServerLogs,
+          initiateAction: initiateAction,
+          updatePreferences: updatePreferences,
+          setAdvanced: (value) async {
+            setState(() {
+              advanced = value;
+            });
+            var settingsModel =
+                Provider.of<SettingsModel>(context, listen: false);
+            settingsModel.preferencesProto.advanced = value;
+            var prefs = cedar_rpc.Preferences();
+            prefs.advanced = value;
+            await updatePreferences(prefs);
+          },
+          setDemoMode: (value) async {
+            setState(() {
+              _demoMode = value;
+              if (value && _demoFile.isNotEmpty) {
+                // Turn on demo mode with current file
+                _setDemoImage(_demoFile);
+              } else {
+                // Turn off demo mode
+                _setDemoImage("");
+              }
+            });
+          },
+          onStateChanged: () => setState(() {}),
+          closeDrawer: closeDrawer,
+          context: context,
+          homePageState: this,
+        ),
+      );
     }
     return Container();
   }
