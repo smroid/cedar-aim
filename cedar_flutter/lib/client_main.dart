@@ -436,6 +436,7 @@ class MyHomePageState extends State<MyHomePage> {
   List<String> _demoFiles = [];
   String _demoFile = "";
   bool advanced = false;
+  bool _systemMenuExpanded = false;
   bool _rightHanded = true;
   bool _canAlign = false;
   bool _hasWifiControl = false;
@@ -1934,6 +1935,7 @@ class MyHomePageState extends State<MyHomePage> {
           advanced: advanced,
           demoMode: _demoMode,
           demoFiles: _demoFiles,
+          systemMenuExpanded: _systemMenuExpanded,
           demoFile: _demoFile,
           hasWifiControl: _hasWifiControl,
           updateServerSoftwareDialogFunction:
@@ -1990,6 +1992,11 @@ class MyHomePageState extends State<MyHomePage> {
                 // Turn off demo mode
                 _setDemoImage("");
               }
+            });
+          },
+          setSystemMenuExpanded: (value) {
+            setState(() {
+              _systemMenuExpanded = value;
             });
           },
           onStateChanged: () => setState(() {}),

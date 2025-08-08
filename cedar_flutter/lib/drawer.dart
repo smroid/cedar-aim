@@ -26,6 +26,7 @@ class CedarDrawerController {
   final bool advanced;
   final bool demoMode;
   final List<String> demoFiles;
+  final bool systemMenuExpanded;
   final String demoFile;
   final bool hasWifiControl;
   final UpdateServerSoftwareDialogFunction? updateServerSoftwareDialogFunction;
@@ -40,6 +41,7 @@ class CedarDrawerController {
   final Future<void> Function(cedar_rpc.Preferences) updatePreferences;
   final Future<void> Function(bool) setAdvanced;
   final Future<void> Function(bool) setDemoMode;
+  final Function(bool) setSystemMenuExpanded;
   final VoidCallback onStateChanged;
   final VoidCallback closeDrawer;
   
@@ -55,6 +57,7 @@ class CedarDrawerController {
     required this.advanced,
     required this.demoMode,
     required this.demoFiles,
+    required this.systemMenuExpanded,
     required this.demoFile,
     required this.hasWifiControl,
     required this.updateServerSoftwareDialogFunction,
@@ -67,6 +70,7 @@ class CedarDrawerController {
     required this.updatePreferences,
     required this.setAdvanced,
     required this.setDemoMode,
+    required this.setSystemMenuExpanded,
     required this.onStateChanged,
     required this.closeDrawer,
     required this.context,
@@ -235,10 +239,23 @@ class CedarDrawer extends StatelessWidget {
                 await controller.setAdvanced(!controller.advanced);
               })),
       
+      const SizedBox(height: 15),
+      
+      // Shutdown button
+      Align(
+          alignment: Alignment.topLeft,
+          child: TextButton.icon(
+              label: _scaledText("Shutdown"),
+              icon: const Icon(Icons.power_settings_new_outlined),
+              onPressed: () {
+                controller.closeDrawer();
+                shutdownDialog(controller.homePageState, controller.context);
+              })),
+      
       // Demo mode section (conditional)
       if ((controller.advanced || controller.demoMode) && controller.demoFiles.isNotEmpty) ...[
         Column(children: <Widget>[
-          const SizedBox(height: 15),
+          const SizedBox(height: 10),
           Align(
               alignment: Alignment.topLeft,
               child: TextButton.icon(
@@ -292,53 +309,103 @@ class CedarDrawer extends StatelessWidget {
                   }
                 })
           ]),
-          const SizedBox(height: 15),
+          const SizedBox(height: 8),
         ]),
       ],
       
-      const SizedBox(height: 5),
-      
-      // About button (conditional)
+      // System submenu (conditional)
       if (controller.advanced) ...[
+        const SizedBox(height: 10),
         Align(
           alignment: Alignment.topLeft,
           child: TextButton.icon(
-              label: _scaledText("About"),
-              icon: const Icon(Icons.info_outline),
+              label: _scaledText("System"),
+              icon: controller.systemMenuExpanded
+                  ? const Icon(Icons.expand_less)
+                  : const Icon(Icons.expand_more),
               onPressed: () {
-                controller.closeDrawer();
-                aboutScreen(controller.homePageState, controller.context);
+                controller.setSystemMenuExpanded(!controller.systemMenuExpanded);
               }),
         ),
-      ],
-      
-      const SizedBox(height: 10),
-      
-      // Shutdown button
-      Align(
-          alignment: Alignment.topLeft,
-          child: TextButton.icon(
-              label: _scaledText("Shutdown"),
-              icon: const Icon(Icons.power_settings_new_outlined),
-              onPressed: () {
-                controller.closeDrawer();
-                shutdownDialog(controller.homePageState, controller.context);
-              })),
-      
-      // Update check button (conditional)
-      if (controller.advanced && controller.updateServerSoftwareDialogFunction != null) ...[
-        Column(children: [
-          const SizedBox(height: 10),
-          Align(
+        
+        // System submenu items (conditional)
+        if (controller.systemMenuExpanded) ...[
+          const SizedBox(height: 5),
+          
+          // About button
+          Padding(
+            padding: const EdgeInsets.only(left: 16),
+            child: Align(
               alignment: Alignment.topLeft,
               child: TextButton.icon(
-                  label: _scaledText("Check for Update"),
-                  icon: const Icon(Icons.system_update_alt),
+                  label: _scaledText("About"),
+                  icon: const Icon(Icons.info_outline),
                   onPressed: () {
                     controller.closeDrawer();
-                    controller.updateServerSoftwareDialogFunction!(controller.homePageState, controller.context);
-                  }))
-        ]),
+                    aboutScreen(controller.homePageState, controller.context);
+                  }),
+            ),
+          ),
+          
+          const SizedBox(height: 5),
+          
+          // Check for Update button (conditional)
+          if (controller.updateServerSoftwareDialogFunction != null) ...[
+            Padding(
+              padding: const EdgeInsets.only(left: 16),
+              child: Align(
+                alignment: Alignment.topLeft,
+                child: TextButton.icon(
+                    label: _scaledText("Check for Update"),
+                    icon: const Icon(Icons.system_update_alt),
+                    onPressed: () {
+                      controller.closeDrawer();
+                      controller.updateServerSoftwareDialogFunction!(controller.homePageState, controller.context);
+                    }),
+              ),
+            ),
+            const SizedBox(height: 5),
+          ],
+          
+          // Server log button
+          Padding(
+            padding: const EdgeInsets.only(left: 16),
+            child: Align(
+              alignment: Alignment.topLeft,
+              child: TextButton.icon(
+                  label: _scaledText("Show server log"),
+                  icon: const Icon(Icons.text_snippet_outlined),
+                  onPressed: () async {
+                    var logs = await controller.getServerLogs();
+                    if (controller.context.mounted) {
+                      showDialog(
+                          context: controller.context,
+                          builder: (context) => ServerLogPopUp(controller.homePageState, logs));
+                    }
+                  }),
+            ),
+          ),
+          
+          const SizedBox(height: 5),
+          
+          // WiFi button (conditional)
+          if (controller.hasWifiControl && controller.wifiAccessPointDialog != null) ...[
+            Padding(
+              padding: const EdgeInsets.only(left: 16),
+              child: Align(
+                alignment: Alignment.topLeft,
+                child: TextButton.icon(
+                    label: _scaledText("WiFi"),
+                    icon: const Icon(Icons.wifi),
+                    onPressed: () {
+                      controller.closeDrawer();
+                      controller.wifiAccessPointDialog!(controller.homePageState, controller.context);
+                    }),
+              ),
+            ),
+            const SizedBox(height: 5),
+          ],
+        ],
       ],
       
       // Save image button (conditional)
@@ -357,42 +424,6 @@ class CedarDrawer extends StatelessWidget {
                     if (controller.context.mounted) {
                       controller.closeDrawer();
                     }
-                  }))
-        ]),
-      ],
-      
-      // Server log button (conditional)
-      if (controller.advanced) ...[
-        Column(children: [
-          const SizedBox(height: 10),
-          Align(
-              alignment: Alignment.topLeft,
-              child: TextButton.icon(
-                  label: _scaledText("Show server log"),
-                  icon: const Icon(Icons.text_snippet_outlined),
-                  onPressed: () async {
-                    var logs = await controller.getServerLogs();
-                    if (controller.context.mounted) {
-                      showDialog(
-                          context: controller.context,
-                          builder: (context) => ServerLogPopUp(controller.homePageState, logs));
-                    }
-                  })),
-        ]),
-      ],
-      
-      // WiFi button (conditional)
-      if (controller.advanced && controller.hasWifiControl && controller.wifiAccessPointDialog != null) ...[
-        Column(children: [
-          const SizedBox(height: 10),
-          Align(
-              alignment: Alignment.topLeft,
-              child: TextButton.icon(
-                  label: _scaledText("Wifi"),
-                  icon: const Icon(Icons.wifi),
-                  onPressed: () {
-                    controller.closeDrawer();
-                    controller.wifiAccessPointDialog!(controller.homePageState, controller.context);
                   }))
         ]),
       ],
