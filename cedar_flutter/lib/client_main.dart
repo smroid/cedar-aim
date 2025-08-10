@@ -713,13 +713,14 @@ class MyHomePageState extends State<MyHomePage> {
           height: _centerPeakHeight.toDouble() / _binFactor);
     }
     if (preferences != null) {
-      _dontShowWelcome = preferences!.dontShowWelcome;
-      _dontShowFocusIntro = preferences!.dontShowFocusIntro;
-      _dontShowAlignIntro = preferences!.dontShowAlignIntro;
-      _dontShowTooFewStars = preferences!.dontShowTooFewStars;
-      _dontShowBrightSky = preferences!.dontShowBrightSky;
-      _dontShowSolverFailed = preferences!.dontShowSolverFailed;
-      _dontShowSetupFinished = preferences!.dontShowSetupFinished;
+      final dontShowItems = preferences!.dontShowItems;
+      _dontShowWelcome = dontShowItems.contains('welcome');
+      _dontShowFocusIntro = dontShowItems.contains('focus_intro');
+      _dontShowAlignIntro = dontShowItems.contains('align_intro');
+      _dontShowTooFewStars = dontShowItems.contains('too_few_stars');
+      _dontShowBrightSky = dontShowItems.contains('bright_sky');
+      _dontShowSolverFailed = dontShowItems.contains('solver_failed');
+      _dontShowSetupFinished = dontShowItems.contains('setup_finished');
     }
     if (newFocusMode && !prevFocusMode) {
       _showFocusIntro = !_dontShowFocusIntro;
@@ -2036,7 +2037,9 @@ class MyHomePageState extends State<MyHomePage> {
         },
         onDontShowAgainChanged: (value) async {
           var prefs = cedar_rpc.Preferences();
-          prefs.dontShowWelcome = value;
+          if (value) {
+            prefs.dontShowItems.add('welcome');
+          }
           await updatePreferences(prefs);
         },
       );
@@ -2064,7 +2067,9 @@ class MyHomePageState extends State<MyHomePage> {
         },
         onDontShowAgainChanged: (value) async {
           var prefs = cedar_rpc.Preferences();
-          prefs.dontShowFocusIntro = value;
+          if (value) {
+            prefs.dontShowItems.add('focus_intro');
+          }
           await updatePreferences(prefs);
         },
       );
@@ -2084,7 +2089,9 @@ class MyHomePageState extends State<MyHomePage> {
         },
         onDontShowAgainChanged: (value) async {
           var prefs = cedar_rpc.Preferences();
-          prefs.dontShowAlignIntro = value;
+          if (value) {
+            prefs.dontShowItems.add('align_intro');
+          }
           await updatePreferences(prefs);
         },
       );
@@ -2104,7 +2111,9 @@ class MyHomePageState extends State<MyHomePage> {
         },
         onDontShowAgainChanged: (value) async {
           var prefs = cedar_rpc.Preferences();
-          prefs.dontShowTooFewStars = value;
+          if (value) {
+            prefs.dontShowItems.add('too_few_stars');
+          }
           await updatePreferences(prefs);
         },
       );
@@ -2120,7 +2129,9 @@ class MyHomePageState extends State<MyHomePage> {
         },
         onDontShowAgainChanged: (value) async {
           var prefs = cedar_rpc.Preferences();
-          prefs.dontShowBrightSky = value;
+          if (value) {
+            prefs.dontShowItems.add('bright_sky');
+          }
           await updatePreferences(prefs);
         },
       );
@@ -2136,7 +2147,9 @@ class MyHomePageState extends State<MyHomePage> {
         },
         onDontShowAgainChanged: (value) async {
           var prefs = cedar_rpc.Preferences();
-          prefs.dontShowSolverFailed = value;
+          if (value) {
+            prefs.dontShowItems.add('solver_failed');
+          }
           await updatePreferences(prefs);
         },
       );
@@ -2158,7 +2171,9 @@ class MyHomePageState extends State<MyHomePage> {
         },
         onDontShowAgainChanged: (value) async {
           var prefs = cedar_rpc.Preferences();
-          prefs.dontShowSetupFinished = value;
+          if (value) {
+            prefs.dontShowItems.add('setup_finished');
+          }
           await updatePreferences(prefs);
         },
       );

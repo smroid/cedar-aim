@@ -332,13 +332,7 @@ const Preferences$json = {
     {'1': 'right_handed', '3': 21, '4': 1, '5': 8, '9': 16, '10': 'rightHanded', '17': true},
     {'1': 'celestial_coord_choice', '3': 22, '4': 1, '5': 14, '6': '.cedar.CelestialCoordChoice', '9': 17, '10': 'celestialCoordChoice', '17': true},
     {'1': 'screen_always_on', '3': 23, '4': 1, '5': 8, '9': 18, '10': 'screenAlwaysOn', '17': true},
-    {'1': 'dont_show_welcome', '3': 24, '4': 1, '5': 8, '9': 19, '10': 'dontShowWelcome', '17': true},
-    {'1': 'dont_show_focus_intro', '3': 25, '4': 1, '5': 8, '9': 20, '10': 'dontShowFocusIntro', '17': true},
-    {'1': 'dont_show_align_intro', '3': 26, '4': 1, '5': 8, '9': 21, '10': 'dontShowAlignIntro', '17': true},
-    {'1': 'dont_show_too_few_stars', '3': 29, '4': 1, '5': 8, '9': 22, '10': 'dontShowTooFewStars', '17': true},
-    {'1': 'dont_show_bright_sky', '3': 30, '4': 1, '5': 8, '9': 23, '10': 'dontShowBrightSky', '17': true},
-    {'1': 'dont_show_solver_failed', '3': 31, '4': 1, '5': 8, '9': 24, '10': 'dontShowSolverFailed', '17': true},
-    {'1': 'dont_show_setup_finished', '3': 28, '4': 1, '5': 8, '9': 25, '10': 'dontShowSetupFinished', '17': true},
+    {'1': 'dont_show_items', '3': 32, '4': 3, '5': 9, '10': 'dontShowItems'},
   ],
   '8': [
     {'1': '_celestial_coord_format'},
@@ -360,19 +354,19 @@ const Preferences$json = {
     {'1': '_right_handed'},
     {'1': '_celestial_coord_choice'},
     {'1': '_screen_always_on'},
-    {'1': '_dont_show_welcome'},
-    {'1': '_dont_show_focus_intro'},
-    {'1': '_dont_show_align_intro'},
-    {'1': '_dont_show_too_few_stars'},
-    {'1': '_dont_show_bright_sky'},
-    {'1': '_dont_show_solver_failed'},
-    {'1': '_dont_show_setup_finished'},
   ],
   '9': [
     {'1': 4, '2': 5},
     {'1': 8, '2': 9},
     {'1': 20, '2': 21},
+    {'1': 24, '2': 25},
+    {'1': 25, '2': 26},
+    {'1': 26, '2': 27},
     {'1': 27, '2': 28},
+    {'1': 28, '2': 29},
+    {'1': 29, '2': 30},
+    {'1': 30, '2': 31},
+    {'1': 31, '2': 32},
   ],
 };
 
@@ -397,25 +391,16 @@ final $typed_data.Uint8List preferencesDescriptor = $convert.base64Decode(
     'eGVsiAEBEiYKDHJpZ2h0X2hhbmRlZBgVIAEoCEgQUgtyaWdodEhhbmRlZIgBARJWChZjZWxlc3'
     'RpYWxfY29vcmRfY2hvaWNlGBYgASgOMhsuY2VkYXIuQ2VsZXN0aWFsQ29vcmRDaG9pY2VIEVIU'
     'Y2VsZXN0aWFsQ29vcmRDaG9pY2WIAQESLQoQc2NyZWVuX2Fsd2F5c19vbhgXIAEoCEgSUg5zY3'
-    'JlZW5BbHdheXNPbogBARIvChFkb250X3Nob3dfd2VsY29tZRgYIAEoCEgTUg9kb250U2hvd1dl'
-    'bGNvbWWIAQESNgoVZG9udF9zaG93X2ZvY3VzX2ludHJvGBkgASgISBRSEmRvbnRTaG93Rm9jdX'
-    'NJbnRyb4gBARI2ChVkb250X3Nob3dfYWxpZ25faW50cm8YGiABKAhIFVISZG9udFNob3dBbGln'
-    'bkludHJviAEBEjkKF2RvbnRfc2hvd190b29fZmV3X3N0YXJzGB0gASgISBZSE2RvbnRTaG93VG'
-    '9vRmV3U3RhcnOIAQESNAoUZG9udF9zaG93X2JyaWdodF9za3kYHiABKAhIF1IRZG9udFNob3dC'
-    'cmlnaHRTa3mIAQESOgoXZG9udF9zaG93X3NvbHZlcl9mYWlsZWQYHyABKAhIGFIUZG9udFNob3'
-    'dTb2x2ZXJGYWlsZWSIAQESPAoYZG9udF9zaG93X3NldHVwX2ZpbmlzaGVkGBwgASgISBlSFWRv'
-    'bnRTaG93U2V0dXBGaW5pc2hlZIgBAUIZChdfY2VsZXN0aWFsX2Nvb3JkX2Zvcm1hdEIPCg1fZX'
-    'llcGllY2VfZm92QhUKE19uaWdodF92aXNpb25fdGhlbWVCDwoNX2hpZGVfYXBwX2JhckINCgtf'
-    'bW91bnRfdHlwZUIUChJfb2JzZXJ2ZXJfbG9jYXRpb25CEgoQX3VwZGF0ZV9pbnRlcnZhbEIWCh'
-    'RfY2F0YWxvZ19lbnRyeV9tYXRjaEIWChRfbWF4X2Rpc3RhbmNlX2FjdGl2ZUIPCg1fbWF4X2Rp'
-    'c3RhbmNlQhcKFV9taW5fZWxldmF0aW9uX2FjdGl2ZUIQCg5fbWluX2VsZXZhdGlvbkILCglfb3'
-    'JkZXJpbmdCCwoJX2FkdmFuY2VkQhIKEF90ZXh0X3NpemVfaW5kZXhCEgoQX2JvcmVzaWdodF9w'
-    'aXhlbEIPCg1fcmlnaHRfaGFuZGVkQhkKF19jZWxlc3RpYWxfY29vcmRfY2hvaWNlQhMKEV9zY3'
-    'JlZW5fYWx3YXlzX29uQhQKEl9kb250X3Nob3dfd2VsY29tZUIYChZfZG9udF9zaG93X2ZvY3Vz'
-    'X2ludHJvQhgKFl9kb250X3Nob3dfYWxpZ25faW50cm9CGgoYX2RvbnRfc2hvd190b29fZmV3X3'
-    'N0YXJzQhcKFV9kb250X3Nob3dfYnJpZ2h0X3NreUIaChhfZG9udF9zaG93X3NvbHZlcl9mYWls'
-    'ZWRCGwoZX2RvbnRfc2hvd19zZXR1cF9maW5pc2hlZEoECAQQBUoECAgQCUoECBQQFUoECBsQHA'
-    '==');
+    'JlZW5BbHdheXNPbogBARImCg9kb250X3Nob3dfaXRlbXMYICADKAlSDWRvbnRTaG93SXRlbXNC'
+    'GQoXX2NlbGVzdGlhbF9jb29yZF9mb3JtYXRCDwoNX2V5ZXBpZWNlX2ZvdkIVChNfbmlnaHRfdm'
+    'lzaW9uX3RoZW1lQg8KDV9oaWRlX2FwcF9iYXJCDQoLX21vdW50X3R5cGVCFAoSX29ic2VydmVy'
+    'X2xvY2F0aW9uQhIKEF91cGRhdGVfaW50ZXJ2YWxCFgoUX2NhdGFsb2dfZW50cnlfbWF0Y2hCFg'
+    'oUX21heF9kaXN0YW5jZV9hY3RpdmVCDwoNX21heF9kaXN0YW5jZUIXChVfbWluX2VsZXZhdGlv'
+    'bl9hY3RpdmVCEAoOX21pbl9lbGV2YXRpb25CCwoJX29yZGVyaW5nQgsKCV9hZHZhbmNlZEISCh'
+    'BfdGV4dF9zaXplX2luZGV4QhIKEF9ib3Jlc2lnaHRfcGl4ZWxCDwoNX3JpZ2h0X2hhbmRlZEIZ'
+    'ChdfY2VsZXN0aWFsX2Nvb3JkX2Nob2ljZUITChFfc2NyZWVuX2Fsd2F5c19vbkoECAQQBUoECA'
+    'gQCUoECBQQFUoECBgQGUoECBkQGkoECBoQG0oECBsQHEoECBwQHUoECB0QHkoECB4QH0oECB8Q'
+    'IA==');
 
 @$core.Deprecated('Use frameRequestDescriptor instead')
 const FrameRequest$json = {
@@ -898,7 +883,7 @@ const ActionRequest$json = {
     {'1': 'stop_slew', '3': 4, '4': 1, '5': 8, '9': 6, '10': 'stopSlew', '17': true},
     {'1': 'save_image', '3': 5, '4': 1, '5': 8, '9': 7, '10': 'saveImage', '17': true},
     {'1': 'update_wifi_access_point', '3': 7, '4': 1, '5': 11, '6': '.cedar.WiFiAccessPoint', '9': 8, '10': 'updateWifiAccessPoint', '17': true},
-    {'1': 'clear_dont_shows', '3': 10, '4': 1, '5': 8, '9': 9, '10': 'clearDontShows', '17': true},
+    {'1': 'clear_dont_show_items', '3': 10, '4': 1, '5': 8, '9': 9, '10': 'clearDontShowItems', '17': true},
   ],
   '8': [
     {'1': '_cancel_calibration'},
@@ -910,7 +895,7 @@ const ActionRequest$json = {
     {'1': '_stop_slew'},
     {'1': '_save_image'},
     {'1': '_update_wifi_access_point'},
-    {'1': '_clear_dont_shows'},
+    {'1': '_clear_dont_show_items'},
   ],
 };
 
@@ -925,11 +910,11 @@ final $typed_data.Uint8List actionRequestDescriptor = $convert.base64Decode(
     'SAVSDGluaXRpYXRlU2xld4gBARIgCglzdG9wX3NsZXcYBCABKAhIBlIIc3RvcFNsZXeIAQESIg'
     'oKc2F2ZV9pbWFnZRgFIAEoCEgHUglzYXZlSW1hZ2WIAQESVAoYdXBkYXRlX3dpZmlfYWNjZXNz'
     'X3BvaW50GAcgASgLMhYuY2VkYXIuV2lGaUFjY2Vzc1BvaW50SAhSFXVwZGF0ZVdpZmlBY2Nlc3'
-    'NQb2ludIgBARItChBjbGVhcl9kb250X3Nob3dzGAogASgISAlSDmNsZWFyRG9udFNob3dziAEB'
-    'QhUKE19jYW5jZWxfY2FsaWJyYXRpb25CFAoSX2NhcHR1cmVfYm9yZXNpZ2h0QhYKFF9kZXNpZ2'
-    '5hdGVfYm9yZXNpZ2h0QhIKEF9zaHV0ZG93bl9zZXJ2ZXJCEQoPX3Jlc3RhcnRfc2VydmVyQhAK'
-    'Dl9pbml0aWF0ZV9zbGV3QgwKCl9zdG9wX3NsZXdCDQoLX3NhdmVfaW1hZ2VCGwoZX3VwZGF0ZV'
-    '93aWZpX2FjY2Vzc19wb2ludEITChFfY2xlYXJfZG9udF9zaG93cw==');
+    'NQb2ludIgBARI2ChVjbGVhcl9kb250X3Nob3dfaXRlbXMYCiABKAhICVISY2xlYXJEb250U2hv'
+    'd0l0ZW1ziAEBQhUKE19jYW5jZWxfY2FsaWJyYXRpb25CFAoSX2NhcHR1cmVfYm9yZXNpZ2h0Qh'
+    'YKFF9kZXNpZ25hdGVfYm9yZXNpZ2h0QhIKEF9zaHV0ZG93bl9zZXJ2ZXJCEQoPX3Jlc3RhcnRf'
+    'c2VydmVyQhAKDl9pbml0aWF0ZV9zbGV3QgwKCl9zdG9wX3NsZXdCDQoLX3NhdmVfaW1hZ2VCGw'
+    'oZX3VwZGF0ZV93aWZpX2FjY2Vzc19wb2ludEIYChZfY2xlYXJfZG9udF9zaG93X2l0ZW1z');
 
 @$core.Deprecated('Use serverLogRequestDescriptor instead')
 const ServerLogRequest$json = {

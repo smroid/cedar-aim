@@ -439,7 +439,7 @@ class CedarDrawer extends StatelessWidget {
                   icon: const Icon(Icons.undo),
                   onPressed: () async {
                     final request =
-                        cedar_rpc.ActionRequest(clearDontShows: true);
+                        cedar_rpc.ActionRequest(clearDontShowItems: true);
                     await controller.initiateAction(request);
                     if (controller.context.mounted) {
                       Navigator.of(controller.context).pop();

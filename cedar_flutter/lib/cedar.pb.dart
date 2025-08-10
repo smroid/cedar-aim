@@ -923,13 +923,7 @@ class Preferences extends $pb.GeneratedMessage {
     $core.bool? rightHanded,
     CelestialCoordChoice? celestialCoordChoice,
     $core.bool? screenAlwaysOn,
-    $core.bool? dontShowWelcome,
-    $core.bool? dontShowFocusIntro,
-    $core.bool? dontShowAlignIntro,
-    $core.bool? dontShowSetupFinished,
-    $core.bool? dontShowTooFewStars,
-    $core.bool? dontShowBrightSky,
-    $core.bool? dontShowSolverFailed,
+    $core.Iterable<$core.String>? dontShowItems,
   }) {
     final $result = create();
     if (celestialCoordFormat != null) {
@@ -989,26 +983,8 @@ class Preferences extends $pb.GeneratedMessage {
     if (screenAlwaysOn != null) {
       $result.screenAlwaysOn = screenAlwaysOn;
     }
-    if (dontShowWelcome != null) {
-      $result.dontShowWelcome = dontShowWelcome;
-    }
-    if (dontShowFocusIntro != null) {
-      $result.dontShowFocusIntro = dontShowFocusIntro;
-    }
-    if (dontShowAlignIntro != null) {
-      $result.dontShowAlignIntro = dontShowAlignIntro;
-    }
-    if (dontShowSetupFinished != null) {
-      $result.dontShowSetupFinished = dontShowSetupFinished;
-    }
-    if (dontShowTooFewStars != null) {
-      $result.dontShowTooFewStars = dontShowTooFewStars;
-    }
-    if (dontShowBrightSky != null) {
-      $result.dontShowBrightSky = dontShowBrightSky;
-    }
-    if (dontShowSolverFailed != null) {
-      $result.dontShowSolverFailed = dontShowSolverFailed;
+    if (dontShowItems != null) {
+      $result.dontShowItems.addAll(dontShowItems);
     }
     return $result;
   }
@@ -1036,13 +1012,7 @@ class Preferences extends $pb.GeneratedMessage {
     ..aOB(21, _omitFieldNames ? '' : 'rightHanded')
     ..e<CelestialCoordChoice>(22, _omitFieldNames ? '' : 'celestialCoordChoice', $pb.PbFieldType.OE, defaultOrMaker: CelestialCoordChoice.CHOICE_UNSPECIFIED, valueOf: CelestialCoordChoice.valueOf, enumValues: CelestialCoordChoice.values)
     ..aOB(23, _omitFieldNames ? '' : 'screenAlwaysOn')
-    ..aOB(24, _omitFieldNames ? '' : 'dontShowWelcome')
-    ..aOB(25, _omitFieldNames ? '' : 'dontShowFocusIntro')
-    ..aOB(26, _omitFieldNames ? '' : 'dontShowAlignIntro')
-    ..aOB(28, _omitFieldNames ? '' : 'dontShowSetupFinished')
-    ..aOB(29, _omitFieldNames ? '' : 'dontShowTooFewStars')
-    ..aOB(30, _omitFieldNames ? '' : 'dontShowBrightSky')
-    ..aOB(31, _omitFieldNames ? '' : 'dontShowSolverFailed')
+    ..pPS(32, _omitFieldNames ? '' : 'dontShowItems')
     ..hasRequiredFields = false
   ;
 
@@ -1271,68 +1241,12 @@ class Preferences extends $pb.GeneratedMessage {
   @$pb.TagNumber(23)
   void clearScreenAlwaysOn() => $_clearField(23);
 
-  @$pb.TagNumber(24)
-  $core.bool get dontShowWelcome => $_getBF(19);
-  @$pb.TagNumber(24)
-  set dontShowWelcome($core.bool v) { $_setBool(19, v); }
-  @$pb.TagNumber(24)
-  $core.bool hasDontShowWelcome() => $_has(19);
-  @$pb.TagNumber(24)
-  void clearDontShowWelcome() => $_clearField(24);
-
-  @$pb.TagNumber(25)
-  $core.bool get dontShowFocusIntro => $_getBF(20);
-  @$pb.TagNumber(25)
-  set dontShowFocusIntro($core.bool v) { $_setBool(20, v); }
-  @$pb.TagNumber(25)
-  $core.bool hasDontShowFocusIntro() => $_has(20);
-  @$pb.TagNumber(25)
-  void clearDontShowFocusIntro() => $_clearField(25);
-
-  @$pb.TagNumber(26)
-  $core.bool get dontShowAlignIntro => $_getBF(21);
-  @$pb.TagNumber(26)
-  set dontShowAlignIntro($core.bool v) { $_setBool(21, v); }
-  @$pb.TagNumber(26)
-  $core.bool hasDontShowAlignIntro() => $_has(21);
-  @$pb.TagNumber(26)
-  void clearDontShowAlignIntro() => $_clearField(26);
-
-  @$pb.TagNumber(28)
-  $core.bool get dontShowSetupFinished => $_getBF(22);
-  @$pb.TagNumber(28)
-  set dontShowSetupFinished($core.bool v) { $_setBool(22, v); }
-  @$pb.TagNumber(28)
-  $core.bool hasDontShowSetupFinished() => $_has(22);
-  @$pb.TagNumber(28)
-  void clearDontShowSetupFinished() => $_clearField(28);
-
-  @$pb.TagNumber(29)
-  $core.bool get dontShowTooFewStars => $_getBF(23);
-  @$pb.TagNumber(29)
-  set dontShowTooFewStars($core.bool v) { $_setBool(23, v); }
-  @$pb.TagNumber(29)
-  $core.bool hasDontShowTooFewStars() => $_has(23);
-  @$pb.TagNumber(29)
-  void clearDontShowTooFewStars() => $_clearField(29);
-
-  @$pb.TagNumber(30)
-  $core.bool get dontShowBrightSky => $_getBF(24);
-  @$pb.TagNumber(30)
-  set dontShowBrightSky($core.bool v) { $_setBool(24, v); }
-  @$pb.TagNumber(30)
-  $core.bool hasDontShowBrightSky() => $_has(24);
-  @$pb.TagNumber(30)
-  void clearDontShowBrightSky() => $_clearField(30);
-
-  @$pb.TagNumber(31)
-  $core.bool get dontShowSolverFailed => $_getBF(25);
-  @$pb.TagNumber(31)
-  set dontShowSolverFailed($core.bool v) { $_setBool(25, v); }
-  @$pb.TagNumber(31)
-  $core.bool hasDontShowSolverFailed() => $_has(25);
-  @$pb.TagNumber(31)
-  void clearDontShowSolverFailed() => $_clearField(31);
+  /// Set of UI information items that should not be shown. Each string
+  /// identifies a specific piece of information (e.g., "welcome", "focus_intro",
+  /// "align_intro", "too_few_stars", "bright_sky", "solver_failed",
+  /// "setup_finished").
+  @$pb.TagNumber(32)
+  $pb.PbList<$core.String> get dontShowItems => $_getList(19);
 }
 
 class FrameRequest extends $pb.GeneratedMessage {
@@ -3694,7 +3608,7 @@ class ActionRequest extends $pb.GeneratedMessage {
     WiFiAccessPoint? updateWifiAccessPoint,
     $core.bool? restartServer,
     $core.bool? cancelCalibration,
-    $core.bool? clearDontShows,
+    $core.bool? clearDontShowItems,
   }) {
     final $result = create();
     if (captureBoresight != null) {
@@ -3724,8 +3638,8 @@ class ActionRequest extends $pb.GeneratedMessage {
     if (cancelCalibration != null) {
       $result.cancelCalibration = cancelCalibration;
     }
-    if (clearDontShows != null) {
-      $result.clearDontShows = clearDontShows;
+    if (clearDontShowItems != null) {
+      $result.clearDontShowItems = clearDontShowItems;
     }
     return $result;
   }
@@ -3743,7 +3657,7 @@ class ActionRequest extends $pb.GeneratedMessage {
     ..aOM<WiFiAccessPoint>(7, _omitFieldNames ? '' : 'updateWifiAccessPoint', subBuilder: WiFiAccessPoint.create)
     ..aOB(8, _omitFieldNames ? '' : 'restartServer')
     ..aOB(9, _omitFieldNames ? '' : 'cancelCalibration')
-    ..aOB(10, _omitFieldNames ? '' : 'clearDontShows')
+    ..aOB(10, _omitFieldNames ? '' : 'clearDontShowItems')
     ..hasRequiredFields = false
   ;
 
@@ -3877,15 +3791,15 @@ class ActionRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(9)
   void clearCancelCalibration() => $_clearField(9);
 
-  /// Reset all Preferences.dont_show_xxx fields.
+  /// Clear all items from Preferences.dont_show_items.
   @$pb.TagNumber(10)
-  $core.bool get clearDontShows => $_getBF(9);
+  $core.bool get clearDontShowItems => $_getBF(9);
   @$pb.TagNumber(10)
-  set clearDontShows($core.bool v) { $_setBool(9, v); }
+  set clearDontShowItems($core.bool v) { $_setBool(9, v); }
   @$pb.TagNumber(10)
-  $core.bool hasClearDontShows() => $_has(9);
+  $core.bool hasClearDontShowItems() => $_has(9);
   @$pb.TagNumber(10)
-  void clearClearDontShows() => $_clearField(10);
+  void clearClearDontShowItems() => $_clearField(10);
 }
 
 class ServerLogRequest extends $pb.GeneratedMessage {
