@@ -139,6 +139,19 @@ Future<void> perfStatsDialog(
                                       .toInt()
                                 ])),
                               ]),
+                          state.advanced
+                              ? Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                      scaledText("Solve interval"),
+                                      scaledText(sprintf("%.0f ms", [
+                                        state.processingStats!.solveInterval
+                                                .recent.mean *
+                                            1000
+                                      ])),
+                                    ])
+                              : Container(),
                         ])
                       : Container(),
                   const SizedBox(height: 10),

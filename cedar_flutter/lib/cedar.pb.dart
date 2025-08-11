@@ -1245,6 +1245,8 @@ class Preferences extends $pb.GeneratedMessage {
   /// identifies a specific piece of information (e.g., "welcome", "focus_intro",
   /// "align_intro", "too_few_stars", "bright_sky", "solver_failed",
   /// "setup_finished").
+  /// Note that this field is used solely by the UI and are not used by server
+  /// logic.
   @$pb.TagNumber(32)
   $pb.PbList<$core.String> get dontShowItems => $_getList(19);
 }
@@ -2564,6 +2566,7 @@ class ProcessingStats extends $pb.GeneratedMessage {
     ValueStats? solveAttemptFraction,
     ValueStats? solveSuccessFraction,
     ValueStats? serveLatency,
+    ValueStats? solveInterval,
   }) {
     final $result = create();
     if (overallLatency != null) {
@@ -2584,6 +2587,9 @@ class ProcessingStats extends $pb.GeneratedMessage {
     if (serveLatency != null) {
       $result.serveLatency = serveLatency;
     }
+    if (solveInterval != null) {
+      $result.solveInterval = solveInterval;
+    }
     return $result;
   }
   ProcessingStats._() : super();
@@ -2597,6 +2603,7 @@ class ProcessingStats extends $pb.GeneratedMessage {
     ..aOM<ValueStats>(5, _omitFieldNames ? '' : 'solveAttemptFraction', subBuilder: ValueStats.create)
     ..aOM<ValueStats>(6, _omitFieldNames ? '' : 'solveSuccessFraction', subBuilder: ValueStats.create)
     ..aOM<ValueStats>(7, _omitFieldNames ? '' : 'serveLatency', subBuilder: ValueStats.create)
+    ..aOM<ValueStats>(8, _omitFieldNames ? '' : 'solveInterval', subBuilder: ValueStats.create)
     ..hasRequiredFields = false
   ;
 
@@ -2698,6 +2705,18 @@ class ProcessingStats extends $pb.GeneratedMessage {
   void clearServeLatency() => $_clearField(7);
   @$pb.TagNumber(7)
   ValueStats ensureServeLatency() => $_ensure(5);
+
+  /// Time interval (in seconds) between successive plate solve attempts.
+  @$pb.TagNumber(8)
+  ValueStats get solveInterval => $_getN(6);
+  @$pb.TagNumber(8)
+  set solveInterval(ValueStats v) { $_setField(8, v); }
+  @$pb.TagNumber(8)
+  $core.bool hasSolveInterval() => $_has(6);
+  @$pb.TagNumber(8)
+  void clearSolveInterval() => $_clearField(8);
+  @$pb.TagNumber(8)
+  ValueStats ensureSolveInterval() => $_ensure(6);
 }
 
 class ValueStats extends $pb.GeneratedMessage {

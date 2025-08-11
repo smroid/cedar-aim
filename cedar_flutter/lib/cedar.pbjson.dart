@@ -649,6 +649,7 @@ const ProcessingStats$json = {
     {'1': 'solve_attempt_fraction', '3': 5, '4': 1, '5': 11, '6': '.cedar.ValueStats', '10': 'solveAttemptFraction'},
     {'1': 'solve_success_fraction', '3': 6, '4': 1, '5': 11, '6': '.cedar.ValueStats', '10': 'solveSuccessFraction'},
     {'1': 'serve_latency', '3': 7, '4': 1, '5': 11, '6': '.cedar.ValueStats', '10': 'serveLatency'},
+    {'1': 'solve_interval', '3': 8, '4': 1, '5': 11, '6': '.cedar.ValueStats', '10': 'solveInterval'},
   ],
   '9': [
     {'1': 1, '2': 2},
@@ -664,7 +665,8 @@ final $typed_data.Uint8List processingStatsDescriptor = $convert.base64Decode(
     'CzIRLmNlZGFyLlZhbHVlU3RhdHNSFHNvbHZlQXR0ZW1wdEZyYWN0aW9uEkcKFnNvbHZlX3N1Y2'
     'Nlc3NfZnJhY3Rpb24YBiABKAsyES5jZWRhci5WYWx1ZVN0YXRzUhRzb2x2ZVN1Y2Nlc3NGcmFj'
     'dGlvbhI2Cg1zZXJ2ZV9sYXRlbmN5GAcgASgLMhEuY2VkYXIuVmFsdWVTdGF0c1IMc2VydmVMYX'
-    'RlbmN5SgQIARAC');
+    'RlbmN5EjgKDnNvbHZlX2ludGVydmFsGAggASgLMhEuY2VkYXIuVmFsdWVTdGF0c1INc29sdmVJ'
+    'bnRlcnZhbEoECAEQAg==');
 
 @$core.Deprecated('Use valueStatsDescriptor instead')
 const ValueStats$json = {
