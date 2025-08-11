@@ -9,6 +9,14 @@ import 'package:cedar_flutter/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:sprintf/sprintf.dart';
 
+const double _kStrokeWidthMultiplier = 3.0;
+const double _kStartAngleDegrees = 150.0;
+const double _kSweepAngleDegrees = 240.0;
+const double _kMaxValue = 10.0;
+const double _kValueTopRatio = 0.22;
+const double _kLabelBottomRatio = -0.05;
+const Color _kNoSolutionColor = Color(0xff606060);
+
 class PerfGauge extends StatelessWidget {
   final MyHomePageState state;
   final double size;
@@ -38,7 +46,7 @@ class PerfGauge extends StatelessWidget {
   Color _solveColor() {
     return state.hasSolution
         ? Theme.of(state.context).colorScheme.primary
-        : const Color(0xff606060);
+        : _kNoSolutionColor;
   }
 
   @override
@@ -50,18 +58,18 @@ class PerfGauge extends StatelessWidget {
         onTap: () => _showPerfStats(context),
         child: CustomPaint(
           painter: _CircularGaugePainter(
-            backgroundStrokeWidth: 3 * thicknessFactor,
-            foregroundStrokeWidth: 3 * thicknessFactor,
+            backgroundStrokeWidth: _kStrokeWidthMultiplier * thicknessFactor,
+            foregroundStrokeWidth: _kStrokeWidthMultiplier * thicknessFactor,
             backgroundColor: Theme.of(context).colorScheme.onPrimary,
             foregroundColor: _solveColor(),
-            value: math.min(10, math.sqrt(state.numStars)),
-            maxValue: 10,
+            value: math.min(_kMaxValue, math.sqrt(state.numStars)),
+            maxValue: _kMaxValue,
           ),
           child: Stack(
             children: [
               // Value - positioned higher up in the arc opening.
               Positioned(
-                top: size * 0.22,
+                top: size * _kValueTopRatio,
                 left: 0,
                 right: 0,
                 child: Center(
@@ -73,7 +81,7 @@ class PerfGauge extends StatelessWidget {
               ),
               // Label - positioned below the bottom edge.
               Positioned(
-                bottom: -size * 0.05,
+                bottom: size * _kLabelBottomRatio,
                 left: 0,
                 right: 0,
                 child: Center(
@@ -113,7 +121,7 @@ class _CircularGaugePainter extends CustomPainter {
     final center = Offset(size.width / 2, size.height / 2);
     final radius = (size.width / 2) - (backgroundStrokeWidth / 2);
     
-    // Draw background arc from 150° to 30° (240° total)
+    // Draw background arc.
     final backgroundPaint = Paint()
       ..color = backgroundColor
       ..strokeWidth = backgroundStrokeWidth
@@ -122,23 +130,23 @@ class _CircularGaugePainter extends CustomPainter {
     
     canvas.drawArc(
       Rect.fromCircle(center: center, radius: radius),
-      _degreesToRadians(150),
-      _degreesToRadians(240),
+      _degreesToRadians(_kStartAngleDegrees),
+      _degreesToRadians(_kSweepAngleDegrees),
       false,
       backgroundPaint,
     );
     
-    // Draw foreground arc based on value
+    // Draw foreground arc based on value.
     final foregroundPaint = Paint()
       ..color = foregroundColor
       ..strokeWidth = foregroundStrokeWidth
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.round;
     
-    final sweepAngle = _degreesToRadians(240 * (value / maxValue));
+    final sweepAngle = _degreesToRadians(_kSweepAngleDegrees * (value / maxValue));
     canvas.drawArc(
       Rect.fromCircle(center: center, radius: radius),
-      _degreesToRadians(150),
+      _degreesToRadians(_kStartAngleDegrees),
       sweepAngle,
       false,
       foregroundPaint,
@@ -150,5 +158,9 @@ class _CircularGaugePainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
+  bool shouldRepaint(covariant _CircularGaugePainter oldDelegate) {
+    return value != oldDelegate.value ||
+           foregroundColor != oldDelegate.foregroundColor ||
+           backgroundColor != oldDelegate.backgroundColor;
+  }
 }
