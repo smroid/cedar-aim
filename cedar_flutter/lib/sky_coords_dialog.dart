@@ -34,8 +34,7 @@ Future<void> skyCoordsDialog(
     bool preferRaDec = false;
     bool preferAzAlt = false;
     if (state.preferences != null && displayAltAz) {
-      if (state.preferences!.celestialCoordChoice == "RA_DEC" ||
-          state.preferences!.celestialCoordChoice == null) {
+      if (state.preferences!.celestialCoordChoice == "RA_DEC") {
         preferRaDec = true;
       } else {
         preferAzAlt = true;
