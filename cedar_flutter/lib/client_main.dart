@@ -9,7 +9,7 @@ import 'package:cedar_flutter/draw_util.dart';
 import 'package:cedar_flutter/drawer.dart';
 import 'package:cedar_flutter/google/protobuf/timestamp.pb.dart';
 import 'package:cedar_flutter/interstitial_msg.dart';
-import 'package:cedar_flutter/perf_stats_dialog.dart';
+import 'package:cedar_flutter/perf_gauge.dart';
 import 'package:cedar_flutter/settings.dart';
 import 'package:cedar_flutter/sky_coords_dialog.dart';
 import 'package:cedar_flutter/themes.dart';
@@ -22,7 +22,6 @@ import 'package:grpc/grpc.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
 import 'package:sprintf/sprintf.dart';
-import 'package:syncfusion_flutter_gauges/gauges.dart';
 import 'cedar.pbgrpc.dart' as cedar_rpc;
 import 'platform.dart';
 
@@ -1336,6 +1335,8 @@ class MyHomePageState extends State<MyHomePage> {
         "%s°±%s", [_format2places(ebv.value), _format2places(ebv.error)]);
   }
 
+  bool get hasSolution => _hasSolution;
+
   Color _solveColor() {
     return _hasSolution
         ? Theme.of(context).colorScheme.primary
@@ -1446,61 +1447,11 @@ class MyHomePageState extends State<MyHomePage> {
               : Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                      SizedBox(
-                        width: gaugeSize,
-                        height: gaugeSize,
-                        child: GestureDetector(
-                            onTap: () {
-                              perfStatsDialog(this, context);
-                            },
-                            child: SfRadialGauge(
-                              axes: <RadialAxis>[
-                                RadialAxis(
-                                  onAxisTapped: (double value) {
-                                    perfStatsDialog(this, context);
-                                  },
-                                  startAngle: 150,
-                                  endAngle: 30,
-                                  showLabels: false,
-                                  showTicks: false,
-                                  showAxisLine: false,
-                                  minimum: 0,
-                                  maximum: 10,
-                                  annotations: <GaugeAnnotation>[
-                                    GaugeAnnotation(
-                                      positionFactor: 0.3,
-                                      angle: 270,
-                                      widget: solveText(
-                                          sprintf("%d", [numStars]),
-                                          size: 12 * gaugeTextFactor),
-                                    ),
-                                    GaugeAnnotation(
-                                      positionFactor: 0.4,
-                                      angle: 90,
-                                      widget: solveText("stars",
-                                          size: 10 * gaugeTextFactor),
-                                    ),
-                                  ],
-                                  ranges: <GaugeRange>[
-                                    GaugeRange(
-                                        startWidth: 3 * gaugeThicknessFactor,
-                                        endWidth: 3 * gaugeThicknessFactor,
-                                        startValue: 0,
-                                        endValue: 10,
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .onPrimary),
-                                    GaugeRange(
-                                        startWidth: 3 * gaugeThicknessFactor,
-                                        endWidth: 3 * gaugeThicknessFactor,
-                                        startValue: 0,
-                                        endValue:
-                                            math.min(10, math.sqrt(numStars)),
-                                        color: _solveColor()),
-                                  ],
-                                )
-                              ],
-                            )),
+                      PerfGauge(
+                        state: this,
+                        size: gaugeSize,
+                        textFactor: gaugeTextFactor,
+                        thicknessFactor: gaugeThicknessFactor,
                       ),
                     ])),
       const SizedBox(width: 10, height: 10),
