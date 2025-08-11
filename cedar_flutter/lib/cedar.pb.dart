@@ -921,9 +921,10 @@ class Preferences extends $pb.GeneratedMessage {
     $core.int? textSizeIndex,
     ImageCoord? boresightPixel,
     $core.bool? rightHanded,
-    CelestialCoordChoice? celestialCoordChoice,
+    $core.String? celestialCoordChoice,
     $core.bool? screenAlwaysOn,
     $core.Iterable<$core.String>? dontShowItems,
+    $core.String? perfGaugeChoice,
   }) {
     final $result = create();
     if (celestialCoordFormat != null) {
@@ -986,6 +987,9 @@ class Preferences extends $pb.GeneratedMessage {
     if (dontShowItems != null) {
       $result.dontShowItems.addAll(dontShowItems);
     }
+    if (perfGaugeChoice != null) {
+      $result.perfGaugeChoice = perfGaugeChoice;
+    }
     return $result;
   }
   Preferences._() : super();
@@ -1010,9 +1014,10 @@ class Preferences extends $pb.GeneratedMessage {
     ..a<$core.int>(18, _omitFieldNames ? '' : 'textSizeIndex', $pb.PbFieldType.O3)
     ..aOM<ImageCoord>(19, _omitFieldNames ? '' : 'boresightPixel', subBuilder: ImageCoord.create)
     ..aOB(21, _omitFieldNames ? '' : 'rightHanded')
-    ..e<CelestialCoordChoice>(22, _omitFieldNames ? '' : 'celestialCoordChoice', $pb.PbFieldType.OE, defaultOrMaker: CelestialCoordChoice.CHOICE_UNSPECIFIED, valueOf: CelestialCoordChoice.valueOf, enumValues: CelestialCoordChoice.values)
+    ..aOS(22, _omitFieldNames ? '' : 'celestialCoordChoice')
     ..aOB(23, _omitFieldNames ? '' : 'screenAlwaysOn')
     ..pPS(32, _omitFieldNames ? '' : 'dontShowItems')
+    ..aOS(33, _omitFieldNames ? '' : 'perfGaugeChoice')
     ..hasRequiredFields = false
   ;
 
@@ -1221,11 +1226,13 @@ class Preferences extends $pb.GeneratedMessage {
   @$pb.TagNumber(21)
   void clearRightHanded() => $_clearField(21);
 
-  /// Whether main display shows RA/Dec or Az/Alt.
+  /// What the celestial coord display shows. E.g. RA/Dec vs Alt/Az/HA.
+  /// Note that this field is used solely by the UI and are not used by server
+  /// logic.
   @$pb.TagNumber(22)
-  CelestialCoordChoice get celestialCoordChoice => $_getN(17);
+  $core.String get celestialCoordChoice => $_getSZ(17);
   @$pb.TagNumber(22)
-  set celestialCoordChoice(CelestialCoordChoice v) { $_setField(22, v); }
+  set celestialCoordChoice($core.String v) { $_setString(17, v); }
   @$pb.TagNumber(22)
   $core.bool hasCelestialCoordChoice() => $_has(17);
   @$pb.TagNumber(22)
@@ -1249,6 +1256,18 @@ class Preferences extends $pb.GeneratedMessage {
   /// logic.
   @$pb.TagNumber(32)
   $pb.PbList<$core.String> get dontShowItems => $_getList(19);
+
+  /// What value to display in the performance gauge. E.g. star count, exposure
+  /// time, etc. Note that this field is used solely by the UI and are not used
+  /// by server logic.
+  @$pb.TagNumber(33)
+  $core.String get perfGaugeChoice => $_getSZ(20);
+  @$pb.TagNumber(33)
+  set perfGaugeChoice($core.String v) { $_setString(20, v); }
+  @$pb.TagNumber(33)
+  $core.bool hasPerfGaugeChoice() => $_has(20);
+  @$pb.TagNumber(33)
+  void clearPerfGaugeChoice() => $_clearField(33);
 }
 
 class FrameRequest extends $pb.GeneratedMessage {

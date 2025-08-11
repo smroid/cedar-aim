@@ -23,6 +23,7 @@ AlertDialog interstitialDialog(String message, BuildContext context,
     ValueChanged<bool>? onDontShowAgainChanged}) {
   return AlertDialog(
     content: _InterstitialDialogContent(
+      key: ValueKey(message), // Unique key per dialog message
       message: message,
       showDontShowAgain: showDontShowAgain,
       onDontShowAgainChanged: onDontShowAgainChanged,
@@ -40,6 +41,7 @@ class _InterstitialDialogContent extends StatefulWidget {
   final bool popContext;
 
   const _InterstitialDialogContent({
+    super.key,
     required this.message,
     this.showDontShowAgain = false,
     this.onDontShowAgainChanged,

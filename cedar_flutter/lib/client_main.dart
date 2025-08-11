@@ -1409,8 +1409,8 @@ class MyHomePageState extends State<MyHomePage> {
   }
 
   List<Widget> _coordInfo(double gaugeTextFactor) {
-    if (preferences?.celestialCoordChoice ==
-            cedar_rpc.CelestialCoordChoice.RA_DEC ||
+    if (preferences?.celestialCoordChoice == "RA_DEC" ||
+        preferences?.celestialCoordChoice == null ||
         locationBasedInfo == null) {
       return _raDec(gaugeTextFactor);
     } else {
@@ -2013,7 +2013,6 @@ class MyHomePageState extends State<MyHomePage> {
         onConfirm: () {
           setState(() {
             _showFocusIntro = false;
-            // _showedAlignIntro = false;
           });
         },
         onDontShowAgainChanged: (value) async {

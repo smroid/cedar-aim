@@ -34,8 +34,8 @@ Future<void> skyCoordsDialog(
     bool preferRaDec = false;
     bool preferAzAlt = false;
     if (state.preferences != null && displayAltAz) {
-      if (state.preferences!.celestialCoordChoice ==
-          cedar_rpc.CelestialCoordChoice.RA_DEC) {
+      if (state.preferences!.celestialCoordChoice == "RA_DEC" ||
+          state.preferences!.celestialCoordChoice == null) {
         preferRaDec = true;
       } else {
         preferAzAlt = true;
@@ -91,8 +91,7 @@ Future<void> skyCoordsDialog(
                   GestureDetector(
                       onTap: () async {
                         var prefs = cedar_rpc.Preferences();
-                        prefs.celestialCoordChoice =
-                            cedar_rpc.CelestialCoordChoice.RA_DEC;
+                        prefs.celestialCoordChoice = "RA_DEC";
                         await state.updatePreferences(prefs);
                         dialogOverlayEntry!.markNeedsBuild();
                       },
@@ -118,8 +117,7 @@ Future<void> skyCoordsDialog(
                       ? GestureDetector(
                           onTap: () async {
                             var prefs = cedar_rpc.Preferences();
-                            prefs.celestialCoordChoice =
-                                cedar_rpc.CelestialCoordChoice.ALT_AZ_HA;
+                            prefs.celestialCoordChoice = "ALT_AZ_HA";
                             await state.updatePreferences(prefs);
                             dialogOverlayEntry!.markNeedsBuild();
                           },

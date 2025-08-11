@@ -59,21 +59,6 @@ final $typed_data.Uint8List celestialCoordFormatDescriptor = $convert.base64Deco
     'ChRDZWxlc3RpYWxDb29yZEZvcm1hdBIWChJGT1JNQVRfVU5TUEVDSUZJRUQQABILCgdERUNJTU'
     'FMEAESCwoHSE1TX0RNUxAC');
 
-@$core.Deprecated('Use celestialCoordChoiceDescriptor instead')
-const CelestialCoordChoice$json = {
-  '1': 'CelestialCoordChoice',
-  '2': [
-    {'1': 'CHOICE_UNSPECIFIED', '2': 0},
-    {'1': 'RA_DEC', '2': 1},
-    {'1': 'ALT_AZ_HA', '2': 2},
-  ],
-};
-
-/// Descriptor for `CelestialCoordChoice`. Decode as a `google.protobuf.EnumDescriptorProto`.
-final $typed_data.Uint8List celestialCoordChoiceDescriptor = $convert.base64Decode(
-    'ChRDZWxlc3RpYWxDb29yZENob2ljZRIWChJDSE9JQ0VfVU5TUEVDSUZJRUQQABIKCgZSQV9ERU'
-    'MQARINCglBTFRfQVpfSEEQAg==');
-
 @$core.Deprecated('Use mountTypeDescriptor instead')
 const MountType$json = {
   '1': 'MountType',
@@ -330,8 +315,9 @@ const Preferences$json = {
     {'1': 'text_size_index', '3': 18, '4': 1, '5': 5, '9': 14, '10': 'textSizeIndex', '17': true},
     {'1': 'boresight_pixel', '3': 19, '4': 1, '5': 11, '6': '.cedar.ImageCoord', '9': 15, '10': 'boresightPixel', '17': true},
     {'1': 'right_handed', '3': 21, '4': 1, '5': 8, '9': 16, '10': 'rightHanded', '17': true},
-    {'1': 'celestial_coord_choice', '3': 22, '4': 1, '5': 14, '6': '.cedar.CelestialCoordChoice', '9': 17, '10': 'celestialCoordChoice', '17': true},
-    {'1': 'screen_always_on', '3': 23, '4': 1, '5': 8, '9': 18, '10': 'screenAlwaysOn', '17': true},
+    {'1': 'celestial_coord_choice', '3': 22, '4': 1, '5': 9, '9': 17, '10': 'celestialCoordChoice', '17': true},
+    {'1': 'perf_gauge_choice', '3': 33, '4': 1, '5': 9, '9': 18, '10': 'perfGaugeChoice', '17': true},
+    {'1': 'screen_always_on', '3': 23, '4': 1, '5': 8, '9': 19, '10': 'screenAlwaysOn', '17': true},
     {'1': 'dont_show_items', '3': 32, '4': 3, '5': 9, '10': 'dontShowItems'},
   ],
   '8': [
@@ -353,6 +339,7 @@ const Preferences$json = {
     {'1': '_boresight_pixel'},
     {'1': '_right_handed'},
     {'1': '_celestial_coord_choice'},
+    {'1': '_perf_gauge_choice'},
     {'1': '_screen_always_on'},
   ],
   '9': [
@@ -388,19 +375,19 @@ final $typed_data.Uint8List preferencesDescriptor = $convert.base64Decode(
     'FyX3NreS5PcmRlcmluZ0gMUghvcmRlcmluZ4gBARIfCghhZHZhbmNlZBgRIAEoCEgNUghhZHZh'
     'bmNlZIgBARIrCg90ZXh0X3NpemVfaW5kZXgYEiABKAVIDlINdGV4dFNpemVJbmRleIgBARI/Cg'
     '9ib3Jlc2lnaHRfcGl4ZWwYEyABKAsyES5jZWRhci5JbWFnZUNvb3JkSA9SDmJvcmVzaWdodFBp'
-    'eGVsiAEBEiYKDHJpZ2h0X2hhbmRlZBgVIAEoCEgQUgtyaWdodEhhbmRlZIgBARJWChZjZWxlc3'
-    'RpYWxfY29vcmRfY2hvaWNlGBYgASgOMhsuY2VkYXIuQ2VsZXN0aWFsQ29vcmRDaG9pY2VIEVIU'
-    'Y2VsZXN0aWFsQ29vcmRDaG9pY2WIAQESLQoQc2NyZWVuX2Fsd2F5c19vbhgXIAEoCEgSUg5zY3'
-    'JlZW5BbHdheXNPbogBARImCg9kb250X3Nob3dfaXRlbXMYICADKAlSDWRvbnRTaG93SXRlbXNC'
-    'GQoXX2NlbGVzdGlhbF9jb29yZF9mb3JtYXRCDwoNX2V5ZXBpZWNlX2ZvdkIVChNfbmlnaHRfdm'
-    'lzaW9uX3RoZW1lQg8KDV9oaWRlX2FwcF9iYXJCDQoLX21vdW50X3R5cGVCFAoSX29ic2VydmVy'
-    'X2xvY2F0aW9uQhIKEF91cGRhdGVfaW50ZXJ2YWxCFgoUX2NhdGFsb2dfZW50cnlfbWF0Y2hCFg'
-    'oUX21heF9kaXN0YW5jZV9hY3RpdmVCDwoNX21heF9kaXN0YW5jZUIXChVfbWluX2VsZXZhdGlv'
-    'bl9hY3RpdmVCEAoOX21pbl9lbGV2YXRpb25CCwoJX29yZGVyaW5nQgsKCV9hZHZhbmNlZEISCh'
-    'BfdGV4dF9zaXplX2luZGV4QhIKEF9ib3Jlc2lnaHRfcGl4ZWxCDwoNX3JpZ2h0X2hhbmRlZEIZ'
-    'ChdfY2VsZXN0aWFsX2Nvb3JkX2Nob2ljZUITChFfc2NyZWVuX2Fsd2F5c19vbkoECAQQBUoECA'
-    'gQCUoECBQQFUoECBgQGUoECBkQGkoECBoQG0oECBsQHEoECBwQHUoECB0QHkoECB4QH0oECB8Q'
-    'IA==');
+    'eGVsiAEBEiYKDHJpZ2h0X2hhbmRlZBgVIAEoCEgQUgtyaWdodEhhbmRlZIgBARI5ChZjZWxlc3'
+    'RpYWxfY29vcmRfY2hvaWNlGBYgASgJSBFSFGNlbGVzdGlhbENvb3JkQ2hvaWNliAEBEi8KEXBl'
+    'cmZfZ2F1Z2VfY2hvaWNlGCEgASgJSBJSD3BlcmZHYXVnZUNob2ljZYgBARItChBzY3JlZW5fYW'
+    'x3YXlzX29uGBcgASgISBNSDnNjcmVlbkFsd2F5c09uiAEBEiYKD2RvbnRfc2hvd19pdGVtcxgg'
+    'IAMoCVINZG9udFNob3dJdGVtc0IZChdfY2VsZXN0aWFsX2Nvb3JkX2Zvcm1hdEIPCg1fZXllcG'
+    'llY2VfZm92QhUKE19uaWdodF92aXNpb25fdGhlbWVCDwoNX2hpZGVfYXBwX2JhckINCgtfbW91'
+    'bnRfdHlwZUIUChJfb2JzZXJ2ZXJfbG9jYXRpb25CEgoQX3VwZGF0ZV9pbnRlcnZhbEIWChRfY2'
+    'F0YWxvZ19lbnRyeV9tYXRjaEIWChRfbWF4X2Rpc3RhbmNlX2FjdGl2ZUIPCg1fbWF4X2Rpc3Rh'
+    'bmNlQhcKFV9taW5fZWxldmF0aW9uX2FjdGl2ZUIQCg5fbWluX2VsZXZhdGlvbkILCglfb3JkZX'
+    'JpbmdCCwoJX2FkdmFuY2VkQhIKEF90ZXh0X3NpemVfaW5kZXhCEgoQX2JvcmVzaWdodF9waXhl'
+    'bEIPCg1fcmlnaHRfaGFuZGVkQhkKF19jZWxlc3RpYWxfY29vcmRfY2hvaWNlQhQKEl9wZXJmX2'
+    'dhdWdlX2Nob2ljZUITChFfc2NyZWVuX2Fsd2F5c19vbkoECAQQBUoECAgQCUoECBQQFUoECBgQ'
+    'GUoECBkQGkoECBoQG0oECBsQHEoECBwQHUoECB0QHkoECB4QH0oECB8QIA==');
 
 @$core.Deprecated('Use frameRequestDescriptor instead')
 const FrameRequest$json = {
