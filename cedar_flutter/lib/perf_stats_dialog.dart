@@ -3,72 +3,137 @@
 
 import 'dart:async';
 
+import 'package:cedar_flutter/cedar.pb.dart' as cedar_rpc;
 import 'package:cedar_flutter/client_main.dart';
 import 'package:cedar_flutter/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:sprintf/sprintf.dart';
 
+// Dialog layout constants
+const double _kDialogWidth = 200.0;
+const double _kBorderRadius = 10.0;
+const EdgeInsets _kDialogPadding = EdgeInsets.fromLTRB(10, 5, 10, 10);
+const Duration _kUpdateInterval = Duration(seconds: 1);
+
+Text _scaledText(String str, BuildContext context) {
+  return Text(str,
+      style: TextStyle(color: Theme.of(context).colorScheme.primary),
+      textScaler: textScaler(context));
+}
+
+String _formatPercentage(double value) {
+  return sprintf("%2d%%", [(value * 100).toInt()]);
+}
+
+String _formatMilliseconds(double seconds) {
+  return sprintf("%.1f ms", [seconds * 1000]);
+}
+
+String _formatHz(double seconds) {
+  if (seconds > 0.0) {
+    return sprintf("%.1f Hz", [1.0 / seconds]);
+  }
+  return "0.0 Hz";
+}
+
+/// A row widget that displays a label and value with optional bold styling and tap handling.
+/// 
+/// Used in the performance stats dialog to show metrics. Supports:
+/// - Bold text styling for selected metrics
+/// - Tap callbacks for interactive rows
+/// - Consistent styling with theme colors and text scaling
 class StatRow extends StatelessWidget {
   final String label;
   final String value;
   final BuildContext context;
+  final bool bold;
+  final VoidCallback? onTap;
 
   const StatRow({
     super.key,
     required this.label,
     required this.value,
     required this.context,
+    this.bold = false,
+    this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    final textStyle = TextStyle(
+      color: Theme.of(context).colorScheme.primary,
+      fontWeight: bold ? FontWeight.bold : FontWeight.normal,
+    );
+
+    final row = Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
           label,
-          style: TextStyle(color: Theme.of(context).colorScheme.primary),
+          style: textStyle,
           textScaler: textScaler(context),
         ),
         Text(
           value,
-          style: TextStyle(color: Theme.of(context).colorScheme.primary),
+          style: textStyle,
           textScaler: textScaler(context),
         ),
       ],
     );
+
+    if (onTap != null) {
+      return GestureDetector(
+        onTap: onTap,
+        child: Container(
+          margin: const EdgeInsets.symmetric(vertical: 1),
+          decoration: BoxDecoration(
+            color: Colors.white.withOpacity(0.05),
+            borderRadius: BorderRadius.circular(4),
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+          child: row,
+        ),
+      );
+    }
+    return row;
   }
 }
 
+/// Displays a performance statistics overlay dialog with clickable metric selection.
+/// 
+/// Shows various performance metrics including exposure time, star count, solve rates,
+/// and timing statistics. Users can click on exposure time, stars, or solve interval
+/// to select which metric is displayed in the main UI gauge.
+/// 
+/// The dialog updates every second and closes when tapping outside the dialog area.
 Future<void> perfStatsDialog(
     MyHomePageState state, BuildContext context) async {
-  Text scaledText(String str) {
-    return Text(str,
-        style: TextStyle(color: Theme.of(context).colorScheme.primary),
-        textScaler: textScaler(context));
-  }
-
-  String formatPercentage(double value) {
-    return sprintf("%2d%%", [(value * 100).toInt()]);
-  }
-
-  String formatMilliseconds(double seconds) {
-    return sprintf("%.1f ms", [seconds * 1000]);
+  
+  // Helper function to update gauge choice
+  Future<void> updateGaugeChoice(String choice) async {
+    // Copy existing preferences and update only the specific field
+    var prefs = state.preferences?.deepCopy() ?? cedar_rpc.Preferences();
+    prefs.perfGaugeChoice = choice;
+    await state.updatePreferences(prefs);
   }
 
   OverlayEntry? dialogOverlayEntry;
   GlobalKey dialogOverlayKey = GlobalKey();
 
-  Timer timer = Timer.periodic(const Duration(seconds: 1), (_) async {
+  Timer timer = Timer.periodic(_kUpdateInterval, (_) async {
     dialogOverlayEntry?.markNeedsBuild();
   });
 
   Color color = Theme.of(context).colorScheme.primary;
-  final width = 200.0 * textScaleFactor(context);
+  final width = _kDialogWidth * textScaleFactor(context);
 
   bool tapInsideOverlay = false;
 
   dialogOverlayEntry = OverlayEntry(builder: (BuildContext context) {
+    // Get current gauge choice preference (recalculated on each rebuild)
+    String currentChoice = (state.preferences?.perfGaugeChoice.isEmpty ?? true) 
+        ? "stars" 
+        : state.preferences!.perfGaugeChoice;
     return GestureDetector(
       onTapDown: (details) {
         RenderBox? renderBox =
@@ -98,33 +163,38 @@ Future<void> perfStatsDialog(
                 child: Container(
               key: dialogOverlayKey,
               width: width,
-              padding: const EdgeInsets.fromLTRB(10, 5, 10, 10),
+              padding: _kDialogPadding,
               decoration: BoxDecoration(
-                border: Border(
-                  top: BorderSide(color: color),
-                  bottom: BorderSide(color: color),
-                  left: BorderSide(color: color),
-                  right: BorderSide(color: color),
-                ),
+                border: Border.all(color: color),
                 color: Colors.black,
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(_kBorderRadius),
               ),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                    scaledText("Performance"),
+                    _scaledText("Performance", context),
                   ]),
                   const SizedBox(height: 5),
                   StatRow(
                     context: context,
                     label: "Exposure time",
                     value: sprintf("%.0f ms", [state.exposureTimeMs]),
+                    bold: currentChoice == "exposure_time",
+                    onTap: () async {
+                      await updateGaugeChoice("exposure_time");
+                      dialogOverlayEntry!.markNeedsBuild();
+                    },
                   ),
                   StatRow(
                     context: context,
                     label: "Stars",
                     value: sprintf("%d", [state.numStars]),
+                    bold: currentChoice == "stars",
+                    onTap: () async {
+                      await updateGaugeChoice("stars");
+                      dialogOverlayEntry!.markNeedsBuild();
+                    },
                   ),
                   ...[ if (state.processingStats != null)
                     Column(children: [
@@ -132,7 +202,7 @@ Future<void> perfStatsDialog(
                         StatRow(
                           context: context,
                           label: "Detect",
-                          value: formatMilliseconds(
+                          value: _formatMilliseconds(
                             state.processingStats!.detectLatency.recent.mean
                           ),
                         ),
@@ -141,7 +211,7 @@ Future<void> perfStatsDialog(
                         StatRow(
                           context: context,
                           label: "Solve",
-                          value: formatMilliseconds(
+                          value: _formatMilliseconds(
                             state.processingStats!.solveLatency.recent.mean
                           ),
                         ),
@@ -150,24 +220,29 @@ Future<void> perfStatsDialog(
                       StatRow(
                         context: context,
                         label: "Solve attempt",
-                        value: formatPercentage(
+                        value: _formatPercentage(
                           state.processingStats!.solveAttemptFraction.recent.mean
                         ),
                       ),
                       StatRow(
                         context: context,
                         label: "Solve success",
-                        value: formatPercentage(
+                        value: _formatPercentage(
                           state.processingStats!.solveSuccessFraction.recent.mean
                         ),
                       ),
                       ...[ if (state.advanced)
                         StatRow(
                           context: context,
-                          label: "Solve interval",
-                          value: formatMilliseconds(
+                          label: "Solve rate",
+                          value: _formatHz(
                             state.processingStats!.solveInterval.recent.mean
                           ),
+                          bold: currentChoice == "solve_interval",
+                          onTap: () async {
+                            await updateGaugeChoice("solve_interval");
+                            dialogOverlayEntry!.markNeedsBuild();
+                          },
                         ),
                       ],
                     ])
