@@ -1,4 +1,4 @@
-// Copyright (c) 2024 Steven Rosenthal smr@dt3.org
+// Copyright (c) 2025 Steven Rosenthal smr@dt3.org
 // See LICENSE file in root directory for license terms.
 
 import 'dart:math' as math;
@@ -158,6 +158,26 @@ class _MainImagePainter extends CustomPainter {
         state._centerPeakRegion!.top * displayScale,
         state._centerPeakRegion!.width * displayScale,
         state._centerPeakRegion!.height * displayScale,
+      );
+      canvas.drawRect(
+          scaledRect,
+          Paint()
+            ..color = color
+            ..strokeWidth = thin
+            ..style = PaintingStyle.stroke);
+    }
+
+    if (state._setupMode &&
+        state._daylightFocusZoomRegion != null &&
+        state._focusAid &&
+        state._daylightMode) {
+      // Draw box around daylight focus zoom region.
+      // Adjust coordinates relative to the displayed image region
+      final scaledRect = Rect.fromLTWH(
+        (state._daylightFocusZoomRegion!.left - state._imageRegion.left) * displayScale,
+        (state._daylightFocusZoomRegion!.top - state._imageRegion.top) * displayScale,
+        state._daylightFocusZoomRegion!.width * displayScale,
+        state._daylightFocusZoomRegion!.height * displayScale,
       );
       canvas.drawRect(
           scaledRect,
@@ -448,6 +468,7 @@ class MyHomePageState extends State<MyHomePage> {
   Offset _fullResBoresightPosition = const Offset(0, 0);
 
   Rect? _centerPeakRegion; // Scaled by binning.
+  Rect? _daylightFocusZoomRegion; // Scaled by binning.
 
   int _centerPeakWidth = 0;
   int _centerPeakHeight = 0;
@@ -455,6 +476,8 @@ class MyHomePageState extends State<MyHomePage> {
 
   int _boresightImageHeight = 0; // Full resolution units.
   Uint8List? _boresightImageBytes;
+
+  Uint8List? _daylightFocusZoomImageBytes;
 
   int _prevFrameId = -1;
   late List<cedar_rpc.StarCentroid> _stars;
@@ -704,6 +727,19 @@ class MyHomePageState extends State<MyHomePage> {
       _boresightImageHeight = response.boresightImage.rectangle.height;
       _boresightRotationSizeRatio = response.boresightImage.rotationSizeRatio;
     }
+    _daylightFocusZoomImageBytes = null;
+    _daylightFocusZoomRegion = null;
+    if (response.hasDaylightFocusZoomImage()) {
+      _daylightFocusZoomImageBytes =
+          Uint8List.fromList(response.daylightFocusZoomImage.imageData);
+      
+      // The rectangle gives us the region in full resolution coordinates.
+      _daylightFocusZoomRegion = Rect.fromLTWH(
+          response.daylightFocusZoomImage.rectangle.originX.toDouble() / _binFactor,
+          response.daylightFocusZoomImage.rectangle.originY.toDouble() / _binFactor,
+          response.daylightFocusZoomImage.rectangle.width.toDouble() / _binFactor,
+          response.daylightFocusZoomImage.rectangle.height.toDouble() / _binFactor);
+    }
     if (response.hasCenterPeakPosition()) {
       var cp = response.centerPeakPosition;
       _centerPeakRegion = Rect.fromCenter(
@@ -855,6 +891,12 @@ class MyHomePageState extends State<MyHomePage> {
   Future<void> _designateBoresight(Offset pos) async {
     final coord = cedar_rpc.ImageCoord(x: pos.dx, y: pos.dy);
     final request = cedar_rpc.ActionRequest(designateBoresight: coord);
+    await initiateAction(request);
+  }
+
+  Future<void> _designateDaylightFocusRegion(Offset pos) async {
+    final coord = cedar_rpc.ImageCoord(x: pos.dx, y: pos.dy);
+    final request = cedar_rpc.ActionRequest(designateDaylightFocusRegion: coord);
     await initiateAction(request);
   }
 
@@ -1095,7 +1137,7 @@ class MyHomePageState extends State<MyHomePage> {
                       alignment: Alignment.center,
                       child: Text(
                         _daylightMode
-                            ? "Adjust focus on distant object"
+                            ? "Tap to select focus area"
                             : "Adjust focus",
                         maxLines: 8,
                         textAlign: TextAlign.center,
@@ -1527,7 +1569,10 @@ class MyHomePageState extends State<MyHomePage> {
                     details.localPosition.dy * _binFactor / displayScale);
 
                 if (_setupMode) {
-                  if (!_focusAid) {
+                  if (_focusAid && _daylightMode) {
+                    // Daylight focus mode - designate focus region.
+                    await _designateDaylightFocusRegion(localPosition);
+                  } else if (!_focusAid) {
                     // Align mode.
                     if (_daylightMode) {
                       await _designateBoresight(localPosition);
@@ -1656,7 +1701,14 @@ class MyHomePageState extends State<MyHomePage> {
     // Scale the overlay size with the display scale
     final displayScale = _getDisplayScale();
 
-    if (_setupMode && _focusAid && _centerPeakImageBytes != null) {
+    if (_setupMode && _focusAid && _daylightMode && _daylightFocusZoomImageBytes != null) {
+      final overlaySize = (_imageRegion.height / 4) * displayScale;
+      overlayWidget = dart_widgets.Image.memory(_daylightFocusZoomImageBytes!,
+          height: overlaySize,
+          width: overlaySize,
+          fit: BoxFit.fill,
+          gaplessPlayback: true);
+    } else if (_setupMode && _focusAid && _centerPeakImageBytes != null) {
       final overlaySize = (_imageRegion.height / 4) * displayScale;
       overlayWidget = dart_widgets.Image.memory(_centerPeakImageBytes!,
           height: overlaySize,

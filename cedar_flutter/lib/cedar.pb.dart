@@ -462,8 +462,7 @@ class ImuState extends $pb.GeneratedMessage {
   void clearAngleRateZ() => $_clearField(6);
 }
 
-/// Information about the WiFi access point that Cedar server puts
-/// up.
+/// Information about the WiFi access point that Cedar server puts up.
 class WiFiAccessPoint extends $pb.GeneratedMessage {
   factory WiFiAccessPoint({
     $core.String? ssid,
@@ -1346,9 +1345,9 @@ class FrameRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   void clearNonBlocking() => $_clearField(2);
 
-  /// In SETUP align mode, Cedar adjusts the returned image rotation so that the
-  /// zenith is towards the top of the image. When doing so, the server needs to
-  /// know the client's orientation for the displayed image.
+  /// In most modes, Cedar adjusts the returned image rotation so that the zenith
+  /// is towards the top of the image. When doing so, the server needs to know
+  /// the client's orientation for the displayed image.
   /// If omitted, LANDSCAPE is assumed.
   @$pb.TagNumber(3)
   DisplayOrientation get displayOrientation => $_getN(2);
@@ -1360,7 +1359,7 @@ class FrameRequest extends $pb.GeneratedMessage {
   void clearDisplayOrientation() => $_clearField(3);
 }
 
-/// Next tag: 37.
+/// Next tag: 38.
 class FrameResult extends $pb.GeneratedMessage {
   factory FrameResult({
     $core.int? frameId,
@@ -1391,6 +1390,7 @@ class FrameResult extends $pb.GeneratedMessage {
     $core.bool? hasResult,
     $core.double? starCountMovingAverage,
     $core.double? contrastRatio,
+    Image? daylightFocusZoomImage,
   }) {
     final $result = create();
     if (frameId != null) {
@@ -1477,6 +1477,9 @@ class FrameResult extends $pb.GeneratedMessage {
     if (contrastRatio != null) {
       $result.contrastRatio = contrastRatio;
     }
+    if (daylightFocusZoomImage != null) {
+      $result.daylightFocusZoomImage = daylightFocusZoomImage;
+    }
     return $result;
   }
   FrameResult._() : super();
@@ -1512,6 +1515,7 @@ class FrameResult extends $pb.GeneratedMessage {
     ..aOB(34, _omitFieldNames ? '' : 'hasResult')
     ..a<$core.double>(35, _omitFieldNames ? '' : 'starCountMovingAverage', $pb.PbFieldType.OD)
     ..a<$core.double>(36, _omitFieldNames ? '' : 'contrastRatio', $pb.PbFieldType.OD)
+    ..aOM<Image>(37, _omitFieldNames ? '' : 'daylightFocusZoomImage', subBuilder: Image.create)
     ..hasRequiredFields = false
   ;
 
@@ -1882,6 +1886,21 @@ class FrameResult extends $pb.GeneratedMessage {
   $core.bool hasContrastRatio() => $_has(27);
   @$pb.TagNumber(36)
   void clearContrastRatio() => $_clearField(36);
+
+  /// A small full resolution (usually; 2x binned for color cameras) crop of
+  /// `image` centered at a user-designated position (see
+  /// ActionRequest.designate_daylight_focus_region).
+  /// Only present in `focus_assist_mode` with `daylight_mode`.
+  @$pb.TagNumber(37)
+  Image get daylightFocusZoomImage => $_getN(28);
+  @$pb.TagNumber(37)
+  set daylightFocusZoomImage(Image v) { $_setField(37, v); }
+  @$pb.TagNumber(37)
+  $core.bool hasDaylightFocusZoomImage() => $_has(28);
+  @$pb.TagNumber(37)
+  void clearDaylightFocusZoomImage() => $_clearField(37);
+  @$pb.TagNumber(37)
+  Image ensureDaylightFocusZoomImage() => $_ensure(28);
 }
 
 class Image extends $pb.GeneratedMessage {
@@ -3647,6 +3666,7 @@ class ActionRequest extends $pb.GeneratedMessage {
     $core.bool? restartServer,
     $core.bool? cancelCalibration,
     $core.bool? clearDontShowItems,
+    ImageCoord? designateDaylightFocusRegion,
   }) {
     final $result = create();
     if (captureBoresight != null) {
@@ -3679,6 +3699,9 @@ class ActionRequest extends $pb.GeneratedMessage {
     if (clearDontShowItems != null) {
       $result.clearDontShowItems = clearDontShowItems;
     }
+    if (designateDaylightFocusRegion != null) {
+      $result.designateDaylightFocusRegion = designateDaylightFocusRegion;
+    }
     return $result;
   }
   ActionRequest._() : super();
@@ -3696,6 +3719,7 @@ class ActionRequest extends $pb.GeneratedMessage {
     ..aOB(8, _omitFieldNames ? '' : 'restartServer')
     ..aOB(9, _omitFieldNames ? '' : 'cancelCalibration')
     ..aOB(10, _omitFieldNames ? '' : 'clearDontShowItems')
+    ..aOM<ImageCoord>(11, _omitFieldNames ? '' : 'designateDaylightFocusRegion', subBuilder: ImageCoord.create)
     ..hasRequiredFields = false
   ;
 
@@ -3838,6 +3862,20 @@ class ActionRequest extends $pb.GeneratedMessage {
   $core.bool hasClearDontShowItems() => $_has(9);
   @$pb.TagNumber(10)
   void clearClearDontShowItems() => $_clearField(10);
+
+  /// In SETUP daylight focus mode, conveys which part of the image the user
+  /// wants magnified for focusing. The image coordinates are in full resolution
+  /// within FrameResult.image.
+  @$pb.TagNumber(11)
+  ImageCoord get designateDaylightFocusRegion => $_getN(10);
+  @$pb.TagNumber(11)
+  set designateDaylightFocusRegion(ImageCoord v) { $_setField(11, v); }
+  @$pb.TagNumber(11)
+  $core.bool hasDesignateDaylightFocusRegion() => $_has(10);
+  @$pb.TagNumber(11)
+  void clearDesignateDaylightFocusRegion() => $_clearField(11);
+  @$pb.TagNumber(11)
+  ImageCoord ensureDesignateDaylightFocusRegion() => $_ensure(10);
 }
 
 class ServerLogRequest extends $pb.GeneratedMessage {
