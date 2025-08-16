@@ -4,6 +4,7 @@
 import 'dart:math' as math;
 import 'package:cedar_flutter/cedar.pb.dart';
 import 'package:cedar_flutter/cedar_sky.pb.dart';
+import 'package:cedar_flutter/controls_widget.dart';
 import 'package:cedar_flutter/draw_slew_target.dart';
 import 'package:cedar_flutter/draw_util.dart';
 import 'package:cedar_flutter/drawer.dart';
@@ -1077,177 +1078,34 @@ class MyHomePageState extends State<MyHomePage> {
         });
   }
 
-  List<Widget> _controls() {
-    var settingsModel = Provider.of<SettingsModel>(context, listen: false);
-    final portrait = MediaQuery.of(context).orientation == Orientation.portrait;
-    final color = Theme.of(context).colorScheme.primary;
-
-    // Get the current panel scale from layout calculations
-    final calculations = _getLayoutCalculations();
-    final panelScale = calculations['panelScale']!;
-    final panelScaleFactor = panelScale.clamp(1.0, 1.5);
-    final textScale = textScaleFactor(context);
-
-    // Calculate responsive sizes based on panel scale and text scale
-    final textBoxWidth = 90 * panelScaleFactor * textScale;
-    final textBoxHeight = 100 * panelScaleFactor * textScale;
-    final buttonWidth = 55 * panelScaleFactor * textScale;
-    final buttonHeight = 20 * panelScaleFactor * textScale;
-    final buttonFont = 11.0 * panelScaleFactor;
-
-    return <Widget>[
-      // Fake widget to consume changes to preferences and issue RPC to the
-      // server.
-      Consumer<SettingsModel>(
-        builder: (context, settings, child) {
-          final newPrefs = settings.preferencesProto;
-          var prefsDiff = newPrefs.deepCopy();
-          if (preferences != null && diffPreferences(preferences!, prefsDiff)) {
-            updatePreferences(prefsDiff);
-            if (prefsDiff.hasHideAppBar()) {
-              if (prefsDiff.hideAppBar) {
-                goFullScreen();
-              } else {
-                cancelFullScreen();
-              }
-            }
-            if (prefsDiff.hasScreenAlwaysOn()) {
-              if (prefsDiff.screenAlwaysOn) {
-                setWakeLock(true);
-              } else {
-                setWakeLock(false);
-              }
-            }
-          }
-          final newOpSettings = settings.opSettingsProto;
-          var opSettingsDiff = newOpSettings.deepCopy();
-          if (diffOperationSettings(operationSettings, opSettingsDiff)) {
-            updateOperationSettings(opSettingsDiff);
-          }
-          return Container();
-        },
-      ),
-      RotatedBox(
-          quarterTurns: portrait ? 3 : 0,
-          child: _focusAid
-              ? SizedBox(
-                  width: textBoxWidth,
-                  height: textBoxHeight,
-                  child: Align(
-                      alignment: Alignment.center,
-                      child: Text(
-                        _daylightMode
-                            ? "Tap to select focus area"
-                            : "Adjust focus",
-                        maxLines: 8,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            color: color, fontSize: 11 * panelScaleFactor),
-                        textScaler: textScaler(context),
-                      )))
-              : (_canAlign && _slewRequest == null
-                  ? _daylightMode
-                      ? SizedBox(
-                          width: textBoxWidth,
-                          height: textBoxHeight,
-                          child: Align(
-                              alignment: Alignment.center,
-                              child: Text(
-                                "Tap image where scope is pointed",
-                                maxLines: 8,
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                    color: color,
-                                    fontSize: 12 * panelScaleFactor),
-                                textScaler: textScaler(context),
-                              )))
-                      : _rowOrColumn(portrait, [
-                          SizedBox(
-                              width: textBoxWidth,
-                              height: textBoxHeight,
-                              child: Align(
-                                  alignment: Alignment.center,
-                                  child: Text(
-                                    "Move scope to center a highlighted object, then tap object",
-                                    maxLines: 8,
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                        color: color,
-                                        fontSize: 10 * panelScaleFactor),
-                                    textScaler: textScaler(context),
-                                  ))),
-                        ])
-                  : Container())),
-      const SizedBox(height: 10),
-      RotatedBox(
-          quarterTurns: portrait ? 3 : 0,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // Done/Skip button
-              SizedBox(
-                width: buttonWidth,
-                height: buttonHeight,
-                child: _focusAid
-                    ? focusDoneButton(fontSize: buttonFont)
-                    : (_canAlign
-                        ? (_slewRequest == null
-                            ? setupAlignSkipOrDoneButton(fontSize: buttonFont)
-                            : (_boresightImageBytes != null
-                                ? slewReAlignButton(fontSize: buttonFont)
-                                : Container()))
-                        : (_slewRequest == null &&
-                                !_setupMode &&
-                                !settingsModel.isDIY &&
-                                _showCatalogBrowser != null
-                            ? catalogButton()
-                            : Container())),
-              ),
-
-              // Day checkbox (only in setup mode).
-              if (_setupMode) ...[
-                Column(
-                  children: [
-                    SizedBox(height: 10 * panelScaleFactor),
-                    Transform.scale(
-                      scale: panelScaleFactor,
-                      child: TextButton.icon(
-                          label: _scaledText("Day"),
-                          icon: _daylightMode
-                              ? const Icon(Icons.check)
-                              : const Icon(Icons.check_box_outline_blank),
-                          onPressed: () async {
-                            setState(() {
-                              _setDaylightMode(!_daylightMode);
-                            });
-                          }),
-                    ),
-                  ],
-                ),
-              ],
-            ],
-          )),
-      const SizedBox(height: 10),
-      if (_slewRequest != null &&
-          !_setupMode &&
-          _showCatalogBrowser != null) ...[
-        RotatedBox(
-            quarterTurns: portrait ? 3 : 0,
-            child: SizedBox(
-                width: buttonWidth,
-                height: buttonHeight,
-                child: catalogButton(fontSize: buttonFont))),
-      ],
-      const SizedBox(height: 10),
-      if (_slewRequest != null && !_setupMode) ...[
-        RotatedBox(
-            quarterTurns: portrait ? 3 : 0,
-            child: SizedBox(
-                width: buttonWidth,
-                height: buttonHeight,
-                child: endGotoButton(fontSize: buttonFont))),
-      ],
-    ];
+  Widget _buildControlsWidget() {
+    return ControlsWidget(
+      layoutCalculations: _getLayoutCalculations(),
+      focusAid: _focusAid,
+      daylightMode: _daylightMode,
+      canAlign: _canAlign,
+      setupMode: _setupMode,
+      slewRequest: _slewRequest,
+      boresightImageBytes: _boresightImageBytes,
+      preferences: preferences,
+      operationSettings: operationSettings,
+      showCatalogBrowser: _showCatalogBrowser != null,
+      onPreferencesUpdate: (prefsDiff) => updatePreferences(prefsDiff),
+      onOperationSettingsUpdate: (opSettingsDiff) => updateOperationSettings(opSettingsDiff),
+      onGoFullScreen: goFullScreen,
+      onCancelFullScreen: cancelFullScreen,
+      onSetWakeLock: (enabled) => setWakeLock(enabled),
+      onSetDaylightMode: (enabled) => setState(() {
+        _setDaylightMode(enabled);
+      }),
+      focusDoneButton: ({double? fontSize}) => focusDoneButton(fontSize: fontSize),
+      setupAlignSkipOrDoneButton: ({double? fontSize}) => setupAlignSkipOrDoneButton(fontSize: fontSize),
+      slewReAlignButton: ({double? fontSize}) => slewReAlignButton(fontSize: fontSize),
+      catalogButton: ({double? fontSize}) => catalogButton(fontSize: fontSize),
+      endGotoButton: ({double? fontSize}) => endGotoButton(fontSize: fontSize),
+      scaledText: (String text) => _scaledText(text),
+      rowOrColumn: (bool portrait, List<Widget> children) => _rowOrColumn(portrait, children),
+    );
   }
 
   // ra: 0..360.
@@ -1828,9 +1686,10 @@ class MyHomePageState extends State<MyHomePage> {
 
   Widget _orientationLayout(BuildContext context) {
     final portrait = MediaQuery.of(context).orientation == Orientation.portrait;
+    final controlsWidget = _buildControlsWidget();
     final controlsColumn = Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: portrait ? _controls().reversed.toList() : _controls());
+        children: portrait ? [controlsWidget] : [controlsWidget]);
 
     final controls = controlsColumn;
     final data = Column(
