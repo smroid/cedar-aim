@@ -65,9 +65,8 @@ bool diffPreferences(Preferences prev, Preferences curr) {
 }
 
 // Determines if 'prev' and 'curr' have any different fields. Fields that
-// are the same are cleared from 'curr'. Only 'update_interval',
-// 'dwell_update_interval', and 'log_dwelled_position' are considered; all other
-// fields are cleared in 'curr'.
+// are the same are cleared from 'curr'. Only 'log_dwelled_position' are 
+// considered; all other fields are cleared in 'curr'.
 bool diffOperationSettings(OperationSettings prev, OperationSettings curr) {
   // We don't consider these fields.
   curr.clearOperatingMode();
@@ -77,16 +76,6 @@ bool diffOperationSettings(OperationSettings prev, OperationSettings curr) {
   curr.clearDemoImageFilename();
 
   bool hasDiff = false;
-  if (curr.updateInterval != prev.updateInterval) {
-    hasDiff = true;
-  } else {
-    curr.clearUpdateInterval();
-  }
-  if (curr.dwellUpdateInterval != prev.dwellUpdateInterval) {
-    hasDiff = true;
-  } else {
-    curr.clearDwellUpdateInterval();
-  }
   if (curr.logDwelledPositions != prev.logDwelledPositions) {
     hasDiff = true;
   } else {
@@ -128,11 +117,6 @@ class SettingsModel extends ChangeNotifier {
 
   void updateHideAppBar(bool hide) {
     preferencesProto.hideAppBar = hide;
-    notifyListeners();
-  }
-
-  void updateUpdateInterval(int intervalMs) {
-    opSettingsProto.updateInterval = durationFromMs(intervalMs);
     notifyListeners();
   }
 
@@ -208,20 +192,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
     final provider = Provider.of<SettingsModel>(context, listen: false);
     final prefsProto = provider.preferencesProto;
-    final opSettingsProto = provider.opSettingsProto;
+    // final opSettingsProto = provider.opSettingsProto;
     final advanced = provider.preferencesProto.advanced;
-    final isBasic = provider.isBasic;
+    // final isBasic = provider.isBasic;
     final isPlus = provider.isPlus;
     final isDIY = provider.isDIY;
-    final updateIntervalMs = durationToMs(opSettingsProto.updateInterval);
     final rightHanded = prefsProto.rightHanded;
-
-    int updateMax = 6; // DIY: Unlimited.
-    if (isBasic) {
-      updateMax = 4; // 5Hz.
-    } else if (isPlus) {
-      updateMax = 5; // 10Hz.
-    }
 
     final backButton = BackButton(
       style: const ButtonStyle(iconSize: WidgetStatePropertyAll(30)),
@@ -347,58 +323,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       title: scaledText(
                           rightHanded ? 'Right handed' : 'Left handed'),
                     ),
-                    if (advanced)
-                      SettingsTile(
-                        leading: SizedBox(
-                            width: 100,
-                            child: SliderTheme(
-                                data: sliderThemeData,
-                                child: Slider(
-                                  // Slider positions represent:
-                                  // 1000ms (1Hz), 500ms (2Hz), 333ms (3Hz),
-                                  // 200ms (5Hz), 100ms (10Hz), and 0ms (fast as
-                                  // possible).
-                                  min: 1,
-                                  max: updateMax.toDouble(),
-                                  divisions: updateMax - 1,
-                                  value: min(
-                                      updateMax.toDouble(),
-                                      switch (updateIntervalMs) {
-                                        1000 => 1,
-                                        500 => 2,
-                                        333 => 3,
-                                        200 => 4,
-                                        100 => 5,
-                                        0 => 6,
-                                        _ => 6,
-                                      }),
-                                  onChanged: (double value) {
-                                    int intervalMs = switch (value.toInt()) {
-                                      1 => 1000,
-                                      2 => 500,
-                                      3 => 333,
-                                      4 => 200,
-                                      5 => 100,
-                                      6 => 0,
-                                      _ => 0,
-                                    };
-                                    setState(() {
-                                      provider.updateUpdateInterval(intervalMs);
-                                    });
-                                  },
-                                ))),
-                        title: scaledText(sprintf('Update frequency %s', [
-                          switch (updateIntervalMs) {
-                            1000 => "1Hz",
-                            500 => "2Hz",
-                            333 => "3Hz",
-                            200 => "5Hz",
-                            100 => "10Hz",
-                            0 => "unlimited",
-                            _ => "unknown $updateIntervalMs",
-                          },
-                        ])),
-                      ),
                   ]),
                   SettingsSection(title: scaledText('Telescope'), tiles: [
                     SettingsTile(
