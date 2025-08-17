@@ -30,12 +30,35 @@ void shutdownDialog(MyHomePageState state, BuildContext context) {
             child: _scaledText("Cancel", context),
           ),
           ElevatedButton(
-            onPressed: () {
+            onPressed: () async {
+              // Show restart progress dialog.
+              showDialog(
+                context: context,
+                barrierDismissible: false,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    content: Column(mainAxisSize: MainAxisSize.min, children: [
+                      _scaledText('Restarting $productName', context),
+                      const SizedBox(height: 10),
+                      _scaledText('You will likely need to reconnect to $productName\'s WiFi', context),
+                      const SizedBox(height: 10),
+                      const CircularProgressIndicator()
+                    ]),
+                  );
+                },
+              );
+              // Initiate server restart.
               state.restart();
-              // Go back to main screen. It will complain about loss of
-              // connectivity while the server restarts.
-              Navigator.of(context).pop();
-              state.closeDrawer();
+              // Wait for the server to restart.
+              await Future.delayed(const Duration(seconds: 15));
+              if (context.mounted) {
+                // Close progress dialog and main dialog, then exit app.
+                Navigator.of(context).pop(); // Close progress dialog.
+                Navigator.of(context).pop(); // Close main shutdown dialog.
+                state.closeDrawer();
+                // Exit the app since the server has restarted and user needs to reconnect
+                exitApp();
+              }
             },
             style: ElevatedButton.styleFrom(backgroundColor: Colors.white10),
             child: _scaledText("Restart", context),
@@ -58,7 +81,6 @@ void shutdownDialog(MyHomePageState state, BuildContext context) {
               // Initiate server shutdown.
               state.shutdown();
               // Wait for the server to have shut down.
-              // TODO: time shutdown of Rpi Zero 2W.
               await Future.delayed(const Duration(seconds: 15));
               if (context.mounted) {
                 Navigator.of(context).pop();

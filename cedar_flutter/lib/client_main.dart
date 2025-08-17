@@ -461,6 +461,7 @@ class MyHomePageState extends State<MyHomePage> {
   bool _canAlign = false;
   bool _hasWifiControl = false;
   bool updateInProgress = false;
+  bool shutdownInProgress = false;
 
   // Telescope eyepiece field of view (diameter), in scaled image pixels.
   double _scopeFov = 0.0;
@@ -852,7 +853,7 @@ class MyHomePageState extends State<MyHomePage> {
   Future<void> _refreshStateFromServer() async {
     await Future.doWhile(() async {
       await Future.delayed(const Duration(milliseconds: 100));
-      if (!_paintPending && !updateInProgress) {
+      if (!_paintPending && !updateInProgress && !shutdownInProgress) {
         await _getFrameFromServer();
       }
       return true; // Forever!
@@ -944,11 +945,13 @@ class MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> shutdown() async {
+    shutdownInProgress = true;
     final request = cedar_rpc.ActionRequest(shutdownServer: true);
     await initiateAction(request);
   }
 
   Future<void> restart() async {
+    shutdownInProgress = true;
     final request = cedar_rpc.ActionRequest(restartServer: true);
     await initiateAction(request);
   }

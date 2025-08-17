@@ -117,5 +117,5 @@ Future<Position?> getLocationImpl() async {
 }
 
 void exitAppImpl() {
-  exit(0);
+  SystemNavigator.pop();
 }
