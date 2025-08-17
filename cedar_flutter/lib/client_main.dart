@@ -460,6 +460,7 @@ class MyHomePageState extends State<MyHomePage> {
   bool _rightHanded = true;
   bool _canAlign = false;
   bool _hasWifiControl = false;
+  bool updateInProgress = false;
 
   // Telescope eyepiece field of view (diameter), in scaled image pixels.
   double _scopeFov = 0.0;
@@ -851,7 +852,7 @@ class MyHomePageState extends State<MyHomePage> {
   Future<void> _refreshStateFromServer() async {
     await Future.doWhile(() async {
       await Future.delayed(const Duration(milliseconds: 100));
-      if (!_paintPending) {
+      if (!_paintPending && !updateInProgress) {
         await _getFrameFromServer();
       }
       return true; // Forever!
