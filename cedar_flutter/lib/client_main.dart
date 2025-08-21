@@ -276,6 +276,7 @@ class _MainImagePainter extends CustomPainter {
           slew.targetAngle,
           /*drawDistanceText=*/ true,
           portrait);
+      final margin = 5 * displayScale;
       drawSlewDirections(
           _context,
           state,
@@ -283,7 +284,7 @@ class _MainImagePainter extends CustomPainter {
           slew.targetCatalogEntry,
           canvas,
           color,
-          const Offset(5, 5),
+          Offset(margin, margin),
           state.preferences?.mountType == cedar_rpc.MountType.ALT_AZ,
           state._northernHemisphere,
           slew.offsetRotationAxis,
@@ -735,7 +736,7 @@ class MyHomePageState extends State<MyHomePage> {
     if (response.hasDaylightFocusZoomImage()) {
       _daylightFocusZoomImageBytes =
           Uint8List.fromList(response.daylightFocusZoomImage.imageData);
-      
+
       // The rectangle gives us the region in full resolution coordinates.
       _daylightFocusZoomRegion = Rect.fromLTWH(
           response.daylightFocusZoomImage.rectangle.originX.toDouble() / _binFactor,
