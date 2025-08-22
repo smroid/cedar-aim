@@ -6,13 +6,13 @@ import 'package:cedar_flutter/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-/// Widget that builds the controls interface for the Cedar Aim app. The 
+/// Widget that builds the controls interface for the Cedar Aim app. The
 /// controls are grouped together in a "pane" that is below the main image or
 /// to its left or right in landscape mode.
 class ControlsWidget extends StatelessWidget {
   // Layout state.
   final Map<String, double> layoutCalculations;
-  
+
   // App state.
   final bool focusAid;
   final bool daylightMode;
@@ -23,7 +23,7 @@ class ControlsWidget extends StatelessWidget {
   final Preferences? preferences;
   final OperationSettings operationSettings;
   final bool showCatalogBrowser;
-  
+
   // Callbacks.
   final Function(Preferences) onPreferencesUpdate;
   final Function(OperationSettings) onOperationSettingsUpdate;
@@ -31,14 +31,14 @@ class ControlsWidget extends StatelessWidget {
   final VoidCallback onCancelFullScreen;
   final Function(bool) onSetWakeLock;
   final Function(bool) onSetDaylightMode;
-  
+
   // Button factories.
   final Widget Function({double? fontSize}) focusDoneButton;
   final Widget Function({double? fontSize}) setupAlignSkipOrDoneButton;
   final Widget Function({double? fontSize}) slewReAlignButton;
   final Widget Function({double? fontSize}) catalogButton;
   final Widget Function({double? fontSize}) endGotoButton;
-  
+
   // Helper functions.
   final Widget Function(String) scaledText;
   final Widget Function(bool portrait, List<Widget> children) rowOrColumn;
@@ -76,9 +76,13 @@ class ControlsWidget extends StatelessWidget {
     final portrait = MediaQuery.of(context).orientation == Orientation.portrait;
     final color = Theme.of(context).colorScheme.primary;
 
-    // Get the current panel scale from layout calculations.
-    final panelScale = layoutCalculations['panelScale']!;
-    final panelScaleFactor = panelScale.clamp(1.0, 1.5);
+    // Scale widgets based on constraining dimension
+    final constraints = MediaQuery.of(context).size;
+    final constrainingDimension = portrait ? constraints.width : constraints.height;
+    const referenceSize = 400.0;
+    final dimensionBasedScale = (constrainingDimension / referenceSize).clamp(0.5, 1.0);
+
+    final panelScaleFactor = dimensionBasedScale;
     final textScale = textScaleFactor(context);
 
     // Calculate responsive sizes based on panel scale and text scale.
@@ -125,7 +129,7 @@ class ControlsWidget extends StatelessWidget {
             return Container();
           },
         ),
-        
+
         // Main instruction text
         RotatedBox(
           quarterTurns: portrait ? 3 : 0,
@@ -179,9 +183,9 @@ class ControlsWidget extends StatelessWidget {
                         ])
                   : Container()),
         ),
-        
+
         const SizedBox(height: 10),
-        
+
         // Main control buttons.
         RotatedBox(
           quarterTurns: portrait ? 3 : 0,
@@ -230,9 +234,9 @@ class ControlsWidget extends StatelessWidget {
             ],
           ),
         ),
-        
+
         const SizedBox(height: 10),
-        
+
         // Catalog button during slew.
         if (slewRequest != null && !setupMode && showCatalogBrowser) ...[
           RotatedBox(
@@ -242,9 +246,9 @@ class ControlsWidget extends StatelessWidget {
                   height: buttonHeight,
                   child: catalogButton(fontSize: buttonFont))),
         ],
-        
+
         const SizedBox(height: 10),
-        
+
         // End goto button.
         if (slewRequest != null && !setupMode) ...[
           RotatedBox(

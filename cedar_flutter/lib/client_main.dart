@@ -3,6 +3,7 @@
 
 import 'dart:math' as math;
 import 'package:cedar_flutter/cedar.pb.dart';
+import 'package:cedar_flutter/cedar_common.pb.dart';
 import 'package:cedar_flutter/cedar_sky.pb.dart';
 import 'package:cedar_flutter/controls_widget.dart';
 import 'package:cedar_flutter/draw_slew_target.dart';
@@ -276,21 +277,6 @@ class _MainImagePainter extends CustomPainter {
           slew.targetAngle,
           /*drawDistanceText=*/ true,
           portrait);
-      final margin = 5 * displayScale;
-      drawSlewDirections(
-          _context,
-          state,
-          slew.target,
-          slew.targetCatalogEntry,
-          canvas,
-          color,
-          Offset(margin, margin),
-          state.preferences?.mountType == cedar_rpc.MountType.ALT_AZ,
-          state._northernHemisphere,
-          slew.offsetRotationAxis,
-          slew.offsetTiltAxis,
-          portrait,
-          displayScale);
     } else if (!state._focusAid &&
         !state._calibrating &&
         !state._transitionToSetup) {
@@ -1331,15 +1317,65 @@ class MyHomePageState extends State<MyHomePage> {
   List<Widget> _dataItems(BuildContext context) {
     final portrait = MediaQuery.of(context).orientation == Orientation.portrait;
 
-    // Get the current panel width from layout calculations
-    final calculations = _getLayoutCalculations();
-    final panelScale = calculations['panelScale']!;
-    final panelScaleFactor = panelScale.clamp(1.0, 2.0);
+    // Scale widgets based on constraining dimension.
+    final constraints = MediaQuery.of(context).size;
+    final constrainingDimension = portrait ? constraints.width : constraints.height;
+    const referenceSize = 400.0;
+    final dimensionBasedScale = (constrainingDimension / referenceSize).clamp(0.5, 1.0);
+
+    final panelScaleFactor = dimensionBasedScale;
     final textScale = textScaleFactor(context);
 
     var gaugeSize = 40 * panelScaleFactor * textScale;
     var gaugeThicknessFactor = panelScaleFactor;
     var gaugeTextFactor = panelScaleFactor;
+    const coordInfoSize = 80.0;
+    const objectLabelSize = 60.0;
+
+    // When goto is active, show movement instructions
+    if (_slewRequest != null) {
+      final slew = _slewRequest!;
+      final isAltAz = preferences?.mountType == cedar_rpc.MountType.ALT_AZ;
+
+      return <Widget>[
+        // Rotation axis guidance
+        RotatedBox(
+            quarterTurns: portrait ? 3 : 0,
+            child: _buildAxisGuidance(
+              context,
+              isAltAz ? "Az" : "RA",
+              slew.offsetRotationAxis,
+              isAltAz,
+              true, // isRotationAxis
+              panelScaleFactor,
+              coordInfoSize * panelScaleFactor * textScaleFactor(context),
+            )),
+        // const SizedBox(width: 2, height: 2),
+        // Object label
+        RotatedBox(
+            quarterTurns: portrait ? 3 : 0,
+            child: _buildObjectLabel(
+              context,
+              slew.target,
+              slew.targetCatalogEntry,
+              panelScaleFactor,
+              objectLabelSize * panelScaleFactor * textScaleFactor(context),
+            )),
+        // const SizedBox(width: 2, height: 2),
+        // Tilt axis guidance
+        RotatedBox(
+            quarterTurns: portrait ? 3 : 0,
+            child: _buildAxisGuidance(
+              context,
+              isAltAz ? "Alt" : "Dec",
+              slew.offsetTiltAxis,
+              isAltAz,
+              false, // isRotationAxis
+              panelScaleFactor,
+              coordInfoSize * panelScaleFactor * textScaleFactor(context),
+            )),
+      ];
+    }
 
     return <Widget>[
       RotatedBox(
@@ -1408,6 +1444,134 @@ class MyHomePageState extends State<MyHomePage> {
             )),
       ],
     ];
+  }
+
+  Widget _buildAxisGuidance(BuildContext context, String axisName, double offset,
+      bool isAltAz, bool isRotationAxis, double scaleFactor, double size) {
+    final color = Theme.of(context).colorScheme.primary;
+
+    // Format offset with appropriate precision
+    int precision = 0;
+    if (offset.abs() < 10.0) precision = 1;
+    if (offset.abs() < 1.0) precision = 2;
+    String offsetFormatted = sprintf("%+.*f", [precision, offset]);
+
+    // Get direction cue and icon
+    String directionCue;
+    String iconChar;
+
+    if (isAltAz) {
+      if (isRotationAxis) {
+        directionCue = offset >= 0 ? "right" : "left";
+        iconChar = offset >= 0 ? "▶" : "◀";
+      } else {
+        directionCue = offset > 0 ? "up" : "down";
+        iconChar = offset > 0 ? "▲" : "▼";
+      }
+    } else {
+      if (isRotationAxis) {
+        directionCue = offset >= 0 ? "towards east" : "towards west";
+        iconChar = "";
+      } else {
+        final towardsPole = _northernHemisphere ? offset >= 0 : offset <= 0;
+        directionCue = towardsPole ? "towards pole" : "away from pole";
+        iconChar = "";
+      }
+    }
+
+    return SizedBox(
+      width: size,
+      height: size,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.baseline,
+            textBaseline: TextBaseline.alphabetic,
+            children: [
+              Text(axisName,
+                   style: TextStyle(color: color, fontSize: 10 * scaleFactor),
+                   textScaler: textScaler(context)),
+              const SizedBox(width: 4),
+              Text("$offsetFormatted°",
+                   style: TextStyle(color: color, fontSize: 20 * scaleFactor, fontWeight: FontWeight.bold),
+                   textScaler: textScaler(context)),
+            ],
+          ),
+          if (iconChar.isNotEmpty)
+            Transform.translate(
+              offset: const Offset(0, -4),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(iconChar,
+                       style: TextStyle(color: color, fontSize: 24 * scaleFactor),
+                       textScaler: textScaler(context)),
+                  const SizedBox(width: 4),
+                  Text(directionCue,
+                       style: TextStyle(color: color, fontSize: 10 * scaleFactor, fontStyle: FontStyle.italic),
+                       textScaler: textScaler(context)),
+                ],
+              ),
+            )
+          else
+            Transform.translate(
+              offset: const Offset(0, 0),
+              child: Text(directionCue,
+                   style: TextStyle(color: color, fontSize: 8 * scaleFactor, fontStyle: FontStyle.italic),
+                   textScaler: textScaler(context)),
+            ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildObjectLabel(BuildContext context, CelestialCoord target,
+      CatalogEntry catalogEntry, double scaleFactor, double size) {
+    final color = Theme.of(context).colorScheme.primary;
+
+    List<Widget> children = [
+      Text("Target",
+           style: TextStyle(color: color, fontSize: 10 * scaleFactor),
+           textScaler: textScaler(context)),
+    ];
+
+    if (catalogEntry.catalogLabel.isNotEmpty) {
+      // Show catalog name and object type
+      final objectLabel = labelForEntry(catalogEntry);
+      children.add(Text(objectLabel,
+                        style: TextStyle(color: color, fontSize: 14 * scaleFactor, fontStyle: FontStyle.italic,),
+                        textScaler: textScaler(context)));
+
+      if (catalogEntry.objectType.label.isNotEmpty) {
+        final label = catalogEntry.objectType.label;
+        children.add(Text("($label)",
+                          style: TextStyle(color: color, fontSize: 10 * scaleFactor,),
+                          textScaler: textScaler(context)));
+      }
+    } else {
+      // Show RA and Dec
+      final ra = formatRightAscension(target.ra, short: true);
+      final dec = formatDeclination(target.dec, short: true);
+
+      children.add(Text("RA $ra",
+                        style: TextStyle(color: color, fontSize: 11 * scaleFactor),
+                        textScaler: textScaler(context)));
+      children.add(Text("Dec $dec",
+                        style: TextStyle(color: color, fontSize: 11 * scaleFactor),
+                        textScaler: textScaler(context)));
+    }
+
+    return SizedBox(
+      width: size,
+      height: size,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: children,
+      ),
+    );
   }
 
   Widget _loadImage() {
@@ -1680,7 +1844,6 @@ class MyHomePageState extends State<MyHomePage> {
     return {
       'actualImageSize': actualImageSize,
       'panelWidth': panelWidth,
-      'panelScale': panelWidth / minPanelWidth,
       'displayScale': displayScale,
     };
   }
