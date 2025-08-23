@@ -144,7 +144,8 @@ class _MainImagePainter extends CustomPainter {
   void _paint(Canvas canvas, Size size) {
     const double thin = 1;
     const double thick = 1.5;
-    final Color color = Theme.of(_context).colorScheme.primary;
+    final Color primaryColor = Theme.of(_context).colorScheme.primary;
+    final Color color = state._solveColor();
     final Color opaqueColor =
         Color.fromARGB(128, color.red, color.green, color.blue);
 
@@ -164,7 +165,7 @@ class _MainImagePainter extends CustomPainter {
       canvas.drawRect(
           scaledRect,
           Paint()
-            ..color = color
+            ..color = primaryColor
             ..strokeWidth = thin
             ..style = PaintingStyle.stroke);
     }
@@ -184,7 +185,7 @@ class _MainImagePainter extends CustomPainter {
       canvas.drawRect(
           scaledRect,
           Paint()
-            ..color = color
+            ..color = primaryColor
             ..strokeWidth = thin
             ..style = PaintingStyle.stroke);
     }
@@ -273,7 +274,6 @@ class _MainImagePainter extends CustomPainter {
           scaledScopeFov,
           /*rollAngleRad=*/ _deg2rad(state._bullseyeDirectionIndicator()),
           posInImage,
-          slew.targetDistance,
           slew.targetAngle,
           portrait,
           Size(state._imageRegion.width * displayScale, state._imageRegion.height * displayScale));
@@ -289,7 +289,7 @@ class _MainImagePainter extends CustomPainter {
           (state._scopeFov / state._rotationSizeRatio / 2) * displayScale;
 
       drawBullseye(
-          canvas, color, scaledBoresightPosition, scaledScopeFov, rollAngleRad,
+          canvas, primaryColor, scaledBoresightPosition, scaledScopeFov, rollAngleRad,
           daylightMode: state._daylightMode);
 
       if (labeledCatalogEntries.isNotEmpty &&
@@ -364,7 +364,6 @@ class _OverlayImagePainter extends CustomPainter {
         scopeFov / _state._boresightRotationSizeRatio,
         /*rollAngleRad=*/ _deg2rad(_state._bullseyeDirectionIndicator()),
         posInImage,
-        slew.targetDistance,
         slew.targetAngle,
         portrait,
         size);

@@ -50,7 +50,6 @@ void drawSlewTarget(
     double boresightDiameterPix,
     double rollAngleRad,
     Offset? slewTarget,
-    double targetDistance,
     double targetAngle,
     bool portrait,
     Size imageSize) {
@@ -61,7 +60,7 @@ void drawSlewTarget(
     final angleRad = _deg2rad(targetAngle);
     final direction = Offset(-math.sin(angleRad), -math.cos(angleRad));
 
-    // Calculate intersection with image bounds, leaving margin for distance text
+    // Calculate intersection with image bounds, leaving margin.
     const margin = 20.0;
     final maxX = imageSize.width - margin;
     final maxY = imageSize.height - margin;
@@ -92,8 +91,7 @@ void drawSlewTarget(
     drawGapCross(
         canvas, color, slewTarget, 11, 5, rollAngleRad, _thick, _thick);
   }
-  // Draw a bullseye at the boresight position, maybe annotated with the target
-  // distance.
+  // Draw a bullseye at the boresight position.
   final bsRadius = boresightDiameterPix / 2;
   drawBullseye(canvas, primaryColor, boresight, bsRadius, rollAngleRad);
 }
