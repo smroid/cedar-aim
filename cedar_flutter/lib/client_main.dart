@@ -1249,12 +1249,14 @@ class MyHomePageState extends State<MyHomePage> {
   }
 
   Text solveText(String val, {double? size = 14, bool underline = false}) {
+    final color = _solveColor();
     return Text(
       val,
       style: TextStyle(
-          color: _solveColor(),
+          color: color,
           fontSize: size,
-          decoration: underline ? TextDecoration.underline : null),
+          decoration: underline ? TextDecoration.underline : null,
+          decorationColor: underline ? color : null),
       textScaler: textScaler(context),
     );
   }
