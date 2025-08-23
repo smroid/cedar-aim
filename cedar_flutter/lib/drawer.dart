@@ -4,7 +4,6 @@
 import 'package:flutter/material.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:path/path.dart' as path;
-import 'package:provider/provider.dart';
 import 'package:sprintf/sprintf.dart';
 
 import 'package:cedar_flutter/about.dart';
@@ -31,7 +30,7 @@ class CedarDrawerController {
   final bool hasWifiControl;
   final UpdateServerSoftwareDialogFunction? updateServerSoftwareDialogFunction;
   final WifiAccessPointDialogFunction? wifiAccessPointDialog;
-  
+
   // Callbacks
   final Future<void> Function(bool setupMode, bool focusAid) setOperatingMode;
   final Future<void> Function(String) setDemoImage;
@@ -44,7 +43,7 @@ class CedarDrawerController {
   final Function(bool) setSystemMenuExpanded;
   final VoidCallback onStateChanged;
   final VoidCallback closeDrawer;
-  
+
   // Context and styling
   final BuildContext context;
   final MyHomePageState homePageState;
@@ -81,7 +80,7 @@ class CedarDrawerController {
 /// Custom drawer widget for the Cedar Aim app
 class CedarDrawer extends StatelessWidget {
   final CedarDrawerController controller;
-  
+
   const CedarDrawer({
     super.key,
     required this.controller,
@@ -133,7 +132,7 @@ class CedarDrawer extends StatelessWidget {
               backgroundColor: WidgetStatePropertyAll<Color>(Colors.white10),
               alignment: Alignment.center)),
       const SizedBox(height: 15),
-      
+
       // Mode selection dropdown
       Align(
           alignment: Alignment.topLeft,
@@ -151,8 +150,8 @@ class CedarDrawer extends StatelessWidget {
                   ),
                   width: 120 * textScaleFactor(controller.context),
                   requestFocusOnTap: false,
-                  initialSelection: controller.setupMode 
-                      ? (controller.focusAid ? "Focus" : "Align") 
+                  initialSelection: controller.setupMode
+                      ? (controller.focusAid ? "Focus" : "Align")
                       : "Aim",
                   label: _primaryText("Mode", size: 12),
                   dropdownMenuEntries: ["Focus", "Align", "Aim"]
@@ -185,9 +184,9 @@ class CedarDrawer extends StatelessWidget {
                   }),
             ],
           )),
-      
+
       const SizedBox(height: 15),
-      
+
       // Preferences button
       Align(
           alignment: Alignment.topLeft,
@@ -204,7 +203,7 @@ class CedarDrawer extends StatelessWidget {
                   controller.onStateChanged();
                 });
               })),
-      
+
       // Map location (conditional)
       SizedBox(height: controller.offerMap ? 15 : 0),
       if (controller.offerMap) ...[
@@ -224,9 +223,9 @@ class CedarDrawer extends StatelessWidget {
                       MaterialPageRoute(builder: (context) => MapScreen(controller.homePageState)));
                 })),
       ],
-      
+
       const SizedBox(height: 15),
-      
+
       // Advanced toggle
       Align(
           alignment: Alignment.topLeft,
@@ -238,9 +237,9 @@ class CedarDrawer extends StatelessWidget {
               onPressed: () async {
                 await controller.setAdvanced(!controller.advanced);
               })),
-      
+
       const SizedBox(height: 15),
-      
+
       // Shutdown button
       Align(
           alignment: Alignment.topLeft,
@@ -251,7 +250,7 @@ class CedarDrawer extends StatelessWidget {
                 controller.closeDrawer();
                 shutdownDialog(controller.homePageState, controller.context);
               })),
-      
+
       // Demo mode section (conditional)
       if ((controller.advanced || controller.demoMode) && controller.demoFiles.isNotEmpty) ...[
         Column(children: <Widget>[
@@ -270,7 +269,7 @@ class CedarDrawer extends StatelessWidget {
           const SizedBox(height: 10)
         ]),
       ],
-      
+
       // Demo file selector (conditional)
       if (controller.demoMode && controller.demoFiles.isNotEmpty) ...[
         Column(children: [
@@ -312,7 +311,7 @@ class CedarDrawer extends StatelessWidget {
           const SizedBox(height: 8),
         ]),
       ],
-      
+
       // System submenu (conditional)
       if (controller.advanced) ...[
         const SizedBox(height: 10),
@@ -327,11 +326,11 @@ class CedarDrawer extends StatelessWidget {
                 controller.setSystemMenuExpanded(!controller.systemMenuExpanded);
               }),
         ),
-        
+
         // System submenu items (conditional)
         if (controller.systemMenuExpanded) ...[
           const SizedBox(height: 5),
-          
+
           // About button
           Padding(
             padding: const EdgeInsets.only(left: 16),
@@ -346,9 +345,9 @@ class CedarDrawer extends StatelessWidget {
                   }),
             ),
           ),
-          
+
           const SizedBox(height: 5),
-          
+
           // Check for Update button (conditional)
           if (controller.updateServerSoftwareDialogFunction != null) ...[
             Padding(
@@ -366,7 +365,7 @@ class CedarDrawer extends StatelessWidget {
             ),
             const SizedBox(height: 5),
           ],
-          
+
           // Server log button
           Padding(
             padding: const EdgeInsets.only(left: 16),
@@ -385,9 +384,9 @@ class CedarDrawer extends StatelessWidget {
                   }),
             ),
           ),
-          
+
           const SizedBox(height: 5),
-          
+
           // WiFi button (conditional)
           if (controller.hasWifiControl && controller.wifiAccessPointDialog != null) ...[
             Padding(
@@ -407,7 +406,7 @@ class CedarDrawer extends StatelessWidget {
           ],
         ],
       ],
-      
+
       // Save image button (conditional)
       if (controller.advanced) ...[
         Column(children: [
@@ -427,7 +426,7 @@ class CedarDrawer extends StatelessWidget {
                   }))
         ]),
       ],
-      
+
       // Reset "Don't show again" button (conditional)
       if (controller.advanced) ...[
         Column(children: [
@@ -447,7 +446,7 @@ class CedarDrawer extends StatelessWidget {
                   }))
         ]),
       ],
-      
+
       const SizedBox(height: 15),
     ];
   }
