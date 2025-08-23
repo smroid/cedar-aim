@@ -3,9 +3,7 @@
 
 import 'dart:math' as math;
 import 'package:cedar_flutter/draw_util.dart';
-import 'package:cedar_flutter/settings.dart';
 import 'package:flutter/material.dart';
-import 'package:sprintf/sprintf.dart';
 
 const double _hairline = 0.5;
 const double _thin = 1;
@@ -54,36 +52,39 @@ void drawSlewTarget(
     Offset? slewTarget,
     double targetDistance,
     double targetAngle,
-    bool drawDistanceText,
-    bool portrait) {
-  var distanceText = "";
-  if (targetDistance > 10) {
-    distanceText = sprintf("%.0f°", [targetDistance]);
-  } else if (targetDistance > 1) {
-    distanceText = sprintf("%.1f°", [targetDistance]);
-  } else {
-    final distanceMinutes = targetDistance * 60;
-    if (distanceMinutes > 10) {
-      distanceText = sprintf("%.0f'", [distanceMinutes]);
-    } else if (distanceMinutes > 1) {
-      distanceText = sprintf("%.1f'", [distanceMinutes]);
-    } else {
-      final distanceSeconds = distanceMinutes * 60;
-      distanceText = sprintf("%.0f''", [distanceSeconds]);
-    }
-  }
+    bool portrait,
+    Size imageSize) {
   if (slewTarget == null) {
     // Slew target is not in field of view. Draw an arrow pointing to it.
-    // Make arrow length proportional to targetDistance (degrees, up to 180).
-    final arrowLength =
-        math.min(100, 100 * math.sqrt(targetDistance / 180.0)).toDouble();
-    final arrowRoot = boresightDiameterPix;
+    // Calculate arrow length to reach near the image edge (with margin for text).
     final angleRad = _deg2rad(targetAngle);
-    final arrowStart = Offset(boresight.dx - arrowRoot * math.sin(angleRad),
-        boresight.dy - arrowRoot * math.cos(angleRad));
+    final direction = Offset(-math.sin(angleRad), -math.cos(angleRad));
+
+    // Calculate intersection with image bounds, leaving margin for distance text
+    const margin = 20.0;
+    final maxX = imageSize.width - margin;
+    final maxY = imageSize.height - margin;
+
+    // Find which edge the arrow direction intersects
+    double tToEdge = double.infinity;
+
+    if (direction.dx > 0) {
+      tToEdge = math.min(tToEdge, (maxX - boresight.dx) / direction.dx);
+    } else if (direction.dx < 0) {
+      tToEdge = math.min(tToEdge, (margin - boresight.dx) / direction.dx);
+    }
+
+    if (direction.dy > 0) {
+      tToEdge = math.min(tToEdge, (maxY - boresight.dy) / direction.dy);
+    } else if (direction.dy < 0) {
+      tToEdge = math.min(tToEdge, (margin - boresight.dy) / direction.dy);
+    }
+
+    final arrowLength = math.max(40.0, tToEdge - boresightDiameterPix);
+    final arrowStart = Offset(boresight.dx - boresightDiameterPix * math.sin(angleRad),
+        boresight.dy - boresightDiameterPix * math.cos(angleRad));
     drawArrow(context, canvas, color, arrowStart, arrowLength, angleRad,
-        distanceText, portrait, _thin);
-    drawDistanceText = false;
+              portrait, _thin);
   } else {
     // Slew target is in the field of view.
     // Draw the slew target.
@@ -94,9 +95,4 @@ void drawSlewTarget(
   // distance.
   final bsRadius = boresightDiameterPix / 2;
   drawBullseye(canvas, color, boresight, bsRadius, rollAngleRad);
-  if (drawDistanceText) {
-    final textPos = Offset(
-        boresight.dx - bsRadius - 20 * textScaleFactor(context), boresight.dy);
-    drawText(context, canvas, color, textPos, distanceText, portrait);
-  }
 }

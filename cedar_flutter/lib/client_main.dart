@@ -275,8 +275,8 @@ class _MainImagePainter extends CustomPainter {
           posInImage,
           slew.targetDistance,
           slew.targetAngle,
-          /*drawDistanceText=*/ true,
-          portrait);
+          portrait,
+          Size(state._imageRegion.width * displayScale, state._imageRegion.height * displayScale));
     } else if (!state._focusAid &&
         !state._calibrating &&
         !state._transitionToSetup) {
@@ -336,9 +336,11 @@ class _OverlayImagePainter extends CustomPainter {
     Offset overlayCenter = Offset(size.width / 2, size.height / 2);
 
     var slew = _state._slewRequest;
+    if (slew == null) return;
+
     // Note that slew.imagePos is in full resolution units.
     Offset? posInImage;
-    if (slew!.hasImagePos()) {
+    if (slew.hasImagePos()) {
       final correctedScale = _scale *
           _state._rotationSizeRatio /
           _state._boresightRotationSizeRatio;
@@ -364,8 +366,8 @@ class _OverlayImagePainter extends CustomPainter {
         posInImage,
         slew.targetDistance,
         slew.targetAngle,
-        /*drawDistanceText=*/ false,
-        portrait);
+        portrait,
+        size);
   }
 
   @override
@@ -1448,15 +1450,19 @@ class MyHomePageState extends State<MyHomePage> {
 
   Widget _buildAxisGuidance(BuildContext context, String axisName, double offset,
       bool isAltAz, bool isRotationAxis, double scaleFactor, double size) {
-    final color = Theme.of(context).colorScheme.primary;
+    final color = _solveColor();
 
-    // Format offset with appropriate precision
+    // Format offset with appropriate precision.
     int precision = 0;
-    if (offset.abs() < 10.0) precision = 1;
-    if (offset.abs() < 1.0) precision = 2;
+    if (offset.abs() < 10.0) {
+      precision = 1;
+    }
+    if (offset.abs() < 1.0) {
+      precision = 2;
+    }
     String offsetFormatted = sprintf("%+.*f", [precision, offset]);
 
-    // Get direction cue and icon
+    // Get direction cue and icon.
     String directionCue;
     String iconChar;
 
@@ -1539,13 +1545,55 @@ class MyHomePageState extends State<MyHomePage> {
     ];
 
     if (catalogEntry.catalogLabel.isNotEmpty) {
-      // Show catalog name and object type
-      final objectLabel = labelForEntry(catalogEntry);
-      children.add(Text(objectLabel,
-                        style: TextStyle(color: color, fontSize: 14 * scaleFactor, fontStyle: FontStyle.italic,),
-                        textScaler: textScaler(context)));
+      // Show catalog name and object type.
+      final commonName = commonNameForEntry(catalogEntry);
+      final objectLabel = commonName.isEmpty ? labelForEntry(catalogEntry) : commonName;
 
-      if (catalogEntry.objectType.label.isNotEmpty) {
+      bool usedTwoLines = false;
+
+      // Handle short vs long names differently.
+      if (objectLabel.length <= 12) {
+        // Short name: single line with scaling.
+        children.add(FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Text(objectLabel,
+                      maxLines: 1,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: color, fontSize: 14 * scaleFactor, fontStyle: FontStyle.italic),
+                      textScaler: textScaler(context))));
+      } else {
+        // Long name: try to break at a space for better line breaks.
+        String displayLabel = objectLabel;
+        final midPoint = objectLabel.length ~/ 2;
+
+        // Look for a space near the middle to break on.
+        for (int i = 1; i <= midPoint; i++) {
+          final checkBefore = midPoint - i;
+          final checkAfter = midPoint + i;
+
+          if (checkBefore >= 0 && checkBefore < objectLabel.length && objectLabel[checkBefore] == ' ') {
+            displayLabel = objectLabel.replaceFirst(' ', '\n', checkBefore);
+            break;
+          }
+          if (checkAfter < objectLabel.length && objectLabel[checkAfter] == ' ') {
+            displayLabel = objectLabel.replaceFirst(' ', '\n', checkAfter);
+            break;
+          }
+        }
+
+        // Two lines with scaling.
+        children.add(FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Text(displayLabel,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: color, fontSize: 12 * scaleFactor, fontStyle: FontStyle.italic),
+                      textScaler: textScaler(context))));
+        usedTwoLines = true;
+      }
+
+      if (!usedTwoLines && catalogEntry.objectType.label.isNotEmpty) {
         final label = catalogEntry.objectType.label;
         children.add(Text("($label)",
                           style: TextStyle(color: color, fontSize: 10 * scaleFactor,),

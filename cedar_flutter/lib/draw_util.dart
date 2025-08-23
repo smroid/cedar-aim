@@ -9,8 +9,6 @@ import 'package:flutter/material.dart';
 const double _textFontSize = 18.0;
 const double _arrowSize = 12.0;
 const double _arrowAngleDegrees = 25.0;
-const double _textDistanceBase = 30.0;
-const double _textDistancePerChar = 1.0;
 const List<String> _specialCatalogLabels = ['IAU', 'AST', 'COM', 'PL'];
 
 // angleRad is counter-clockwise starting from up direction, where y increases
@@ -125,7 +123,6 @@ void drawArrow(
     Offset start,
     double length,
     double angleRad,
-    String text,
     bool portrait,
     double thickness) {
   angleRad +=
@@ -150,14 +147,6 @@ void drawArrow(
       end.dy + arrowSize * math.sin(angleRad + arrowAngle));
   path.close();
   canvas.drawPath(path, paint);
-  if (text.isNotEmpty) {
-    // Position text some distance beyond the arrowhead. Longer text gets moved
-    // out a little further.
-    double dist = _textDistanceBase + _textDistancePerChar * text.length * textScaleFactor(context);
-    var textPos = Offset(start.dx + (length + dist) * math.cos(angleRad),
-        start.dy - (length + dist) * math.sin(angleRad));
-    drawText(context, canvas, color, textPos, text, portrait);
-  }
 }
 
 String labelForEntry(CatalogEntry entry) {
