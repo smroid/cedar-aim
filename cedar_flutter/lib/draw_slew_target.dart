@@ -54,6 +54,7 @@ void drawSlewTarget(
     double targetAngle,
     bool portrait,
     Size imageSize) {
+  final Color primaryColor = Theme.of(context).colorScheme.primary;
   if (slewTarget == null) {
     // Slew target is not in field of view. Draw an arrow pointing to it.
     // Calculate arrow length to reach near the image edge (with margin for text).
@@ -94,5 +95,5 @@ void drawSlewTarget(
   // Draw a bullseye at the boresight position, maybe annotated with the target
   // distance.
   final bsRadius = boresightDiameterPix / 2;
-  drawBullseye(canvas, color, boresight, bsRadius, rollAngleRad);
+  drawBullseye(canvas, primaryColor, boresight, bsRadius, rollAngleRad);
 }
