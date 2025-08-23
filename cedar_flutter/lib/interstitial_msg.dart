@@ -6,6 +6,10 @@
 import 'package:cedar_flutter/settings.dart';
 import 'package:flutter/material.dart';
 
+const double _fontSize = 12.0;
+const double _paragraphSpacing = 12.0;
+const double _lineHeight = 1.2;
+
 Future<bool?> showInterstitial(String message, BuildContext context,
     {bool showDontShowAgain = true}) async {
   return await showDialog<bool>(
@@ -23,7 +27,6 @@ AlertDialog interstitialDialog(String message, BuildContext context,
     ValueChanged<bool>? onDontShowAgainChanged}) {
   return AlertDialog(
     content: _InterstitialDialogContent(
-      key: ValueKey(message), // Unique key per dialog message
       message: message,
       showDontShowAgain: showDontShowAgain,
       onDontShowAgainChanged: onDontShowAgainChanged,
@@ -58,6 +61,14 @@ class _InterstitialDialogContentState
     extends State<_InterstitialDialogContent> {
   bool _dontShowAgain = false;
 
+  void _toggleDontShowAgain() {
+    if (!mounted) return;
+    setState(() {
+      _dontShowAgain = !_dontShowAgain;
+    });
+    widget.onDontShowAgainChanged?.call(_dontShowAgain);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -69,21 +80,21 @@ class _InterstitialDialogContentState
               .split('\n')
               .map((paragraph) => Padding(
                     padding: const EdgeInsets.only(
-                        bottom: 12.0), // Space between paragraphs
+                        bottom: _paragraphSpacing),
                     child: Text(
                       paragraph,
                       textScaler: textScaler(context),
                       textAlign: TextAlign.left,
                       style: TextStyle(
-                        fontSize: 12.0,
+                        fontSize: _fontSize,
                         color: Theme.of(context).colorScheme.primary,
-                        height: 1.2, // Tight line spacing within paragraph
+                        height: _lineHeight,
                       ),
                     ),
                   ))
               .toList(),
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: _paragraphSpacing),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -94,30 +105,16 @@ class _InterstitialDialogContentState
                   children: [
                     Checkbox(
                       value: _dontShowAgain,
-                      onChanged: (bool? value) {
-                        setState(() {
-                          _dontShowAgain = value ?? false;
-                        });
-                        if (widget.onDontShowAgainChanged != null) {
-                          widget.onDontShowAgainChanged!(_dontShowAgain);
-                        }
-                      },
+                      onChanged: (bool? value) => _toggleDontShowAgain(),
                     ),
                     Flexible(
                       child: GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            _dontShowAgain = !_dontShowAgain;
-                          });
-                          if (widget.onDontShowAgainChanged != null) {
-                            widget.onDontShowAgainChanged!(_dontShowAgain);
-                          }
-                        },
+                        onTap: _toggleDontShowAgain,
                         child: Text(
                           "Don't show again",
                           textScaler: textScaler(context),
                           style: TextStyle(
-                            fontSize: 12.0,
+                            fontSize: _fontSize,
                             color: Theme.of(context).colorScheme.primary,
                           ),
                         ),
@@ -130,11 +127,11 @@ class _InterstitialDialogContentState
               const Spacer(),
             ElevatedButton(
               onPressed: () {
+                // Call onConfirm first in case it needs to do cleanup
+                widget.onConfirm?.call();
+                
                 if (widget.popContext) {
                   Navigator.of(context).pop(_dontShowAgain);
-                }
-                if (widget.onConfirm != null) {
-                  widget.onConfirm!();
                 }
               },
               style: ElevatedButton.styleFrom(backgroundColor: Colors.white10),
