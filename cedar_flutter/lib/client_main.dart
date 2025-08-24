@@ -42,32 +42,50 @@ typedef ObjectInfoDialogFunction = void Function(
 typedef WifiAccessPointDialogFunction = void Function(
     MyHomePageState, BuildContext);
 
+/// Controller class for WiFi client dialog functionality
+class WifiClientDialogController {
+  final void Function(bool, MyHomePageState, BuildContext) showDialog;
+  final void Function() hideTemporarily;
+  final void Function(BuildContext) showAfterHiding;
+
+  WifiClientDialogController({
+    required this.showDialog,
+    required this.hideTemporarily,
+    required this.showAfterHiding,
+  });
+}
+
 typedef WifiClientDialogFunction = void Function(
     bool, MyHomePageState, BuildContext);
 
 typedef UpdateServerSoftwareDialogFunction = void Function(
     MyHomePageState, BuildContext);
 
+typedef RestartCedarServerFunction = Future<void> Function();
+
 DrawCatalogEntriesFunction? _drawCatalogEntries;
 ShowCatalogBrowserFunction? _showCatalogBrowser;
 ObjectInfoDialogFunction? _objectInfoDialog;
 WifiAccessPointDialogFunction? _wifiAccessPointDialog;
-WifiClientDialogFunction? _wifiClientDialog;
+WifiClientDialogController? _wifiClientDialogController;
 UpdateServerSoftwareDialogFunction? _updateServerSoftwareDialogFunction;
+RestartCedarServerFunction? _restartCedarServerFunction;
 
 void clientMain(
     DrawCatalogEntriesFunction? drawCatalogEntries,
     ShowCatalogBrowserFunction? showCatalogBrowser,
     ObjectInfoDialogFunction? objectInfoDialog,
     WifiAccessPointDialogFunction? wifiAccessPointDialog,
-    WifiClientDialogFunction? wifiClientDialog,
-    UpdateServerSoftwareDialogFunction? updateServerSoftwareDialogFunction) {
+    WifiClientDialogController? wifiClientDialogController,
+    UpdateServerSoftwareDialogFunction? updateServerSoftwareDialogFunction,
+    RestartCedarServerFunction? restartCedarServerFunction) {
   _drawCatalogEntries = drawCatalogEntries;
   _showCatalogBrowser = showCatalogBrowser;
   _objectInfoDialog = objectInfoDialog;
   _wifiAccessPointDialog = wifiAccessPointDialog;
-  _wifiClientDialog = wifiClientDialog;
+  _wifiClientDialogController = wifiClientDialogController;
   _updateServerSoftwareDialogFunction = updateServerSoftwareDialogFunction;
+  _restartCedarServerFunction = restartCedarServerFunction;
 
   WidgetsFlutterBinding.ensureInitialized();
   runApp(MultiProvider(
@@ -376,6 +394,8 @@ class _OverlayImagePainter extends CustomPainter {
 }
 
 class MyHomePageState extends State<MyHomePage> {
+  // Computed properties
+  bool get healthy => _serverConnected && (_hasCamera || _demoMode);
   late final SlewDirectionsWidgets _slewDirections;
 
   MyHomePageState() {
@@ -948,6 +968,19 @@ class MyHomePageState extends State<MyHomePage> {
     shutdownInProgress = true;
     final request = cedar_rpc.ActionRequest(restartServer: true);
     await initiateAction(request);
+  }
+
+  Future<void> _crashServer() async {
+    final request = cedar_rpc.ActionRequest(crashServer: true);
+    await initiateAction(request);
+  }
+
+  Future<void> _restartCedarServer() async {
+    if (_restartCedarServerFunction != null) {
+      await _restartCedarServerFunction!();
+    } else {
+      throw Exception('Restart Cedar Server functionality not available');
+    }
   }
 
   Future<void> _saveImage() async {
@@ -1848,8 +1881,7 @@ class MyHomePageState extends State<MyHomePage> {
   }
 
   Widget _drawer() {
-    if (_serverConnected) {
-      return CedarDrawer(
+    return CedarDrawer(
         controller: CedarDrawerController(
           setupMode: _setupMode,
           focusAid: _focusAid,
@@ -1861,8 +1893,10 @@ class MyHomePageState extends State<MyHomePage> {
           systemMenuExpanded: _systemMenuExpanded,
           demoFile: _demoFile,
           hasWifiControl: _hasWifiControl,
+          badServerState: !healthy,
           updateServerSoftwareDialogFunction:
               _updateServerSoftwareDialogFunction,
+          restartCedarServerFunction: _restartCedarServerFunction,
           wifiAccessPointDialog: _wifiAccessPointDialog,
           setOperatingMode: (setupMode, focusAid) async {
             if (!_setupMode && setupMode) {
@@ -1892,6 +1926,8 @@ class MyHomePageState extends State<MyHomePage> {
           },
           saveImage: _saveImage,
           getServerLogs: _getServerLogs,
+          crashServer: _crashServer,
+          restartCedarServer: _restartCedarServer,
           initiateAction: initiateAction,
           updatePreferences: updatePreferences,
           setAdvanced: (value) async {
@@ -1928,15 +1964,12 @@ class MyHomePageState extends State<MyHomePage> {
           homePageState: this,
         ),
       );
-    }
-    return Container();
   }
 
   @override
   Widget build(BuildContext context) {
-    final bool healthy = _serverConnected && (_hasCamera || _demoMode);
-    if (healthy && _wifiClientDialog != null) {
-      _wifiClientDialog!(/*open=*/ false, this, context);
+    if (healthy && _wifiClientDialogController != null) {
+      _wifiClientDialogController!.showDialog(/*open=*/ false, this, context);
     }
 
     // This method is rerun every time setState() is called.
@@ -2107,6 +2140,8 @@ class MyHomePageState extends State<MyHomePage> {
           toolbarOpacity: hideAppBar ? 0.0 : 1.0,
           title: Text(widget.title),
           foregroundColor: Theme.of(context).colorScheme.primary),
+      onDrawerChanged: _handleDrawerChanged,
+      onEndDrawerChanged: _handleDrawerChanged,
       body: DefaultTextStyle.merge(
           style: const TextStyle(fontFamilyFallback: ["Roboto"]),
           child: SafeArea(
@@ -2133,17 +2168,22 @@ class MyHomePageState extends State<MyHomePage> {
                       ],
                     ],
                   )))),
-      // Prevent jank in demo mode image file selector.
-      onEndDrawerChanged: (isOpened) {
-        _inhibitRefresh = isOpened;
-      },
-      onDrawerChanged: (isOpened) {
-        _inhibitRefresh = isOpened;
-      },
       drawer: _drawer(),
       endDrawer: _drawer(),
       drawerEdgeDragWidth: 100,
     );
+  }
+
+  void _handleDrawerChanged(bool isOpened) {
+    if (isOpened) {
+      // Drawer opened, hide WiFi dialog temporarily
+      _wifiClientDialogController?.hideTemporarily();
+    } else {
+      // Drawer closed, show WiFi dialog again if it was temporarily hidden
+      _wifiClientDialogController?.showAfterHiding(context);
+    }
+    // Prevent jank in demo mode image file selector.
+    _inhibitRefresh = isOpened;
   }
 
   Widget _badServerState() {
@@ -2153,9 +2193,9 @@ class MyHomePageState extends State<MyHomePage> {
     if (elapsed.inMilliseconds < 1000) {
       return const Center(child: CircularProgressIndicator());
     }
-    if (isMobile() && !_serverConnected && _wifiClientDialog != null) {
+    if (isMobile() && !_serverConnected && _wifiClientDialogController != null) {
       SchedulerBinding.instance.addPostFrameCallback((_) {
-        _wifiClientDialog!(/*open=*/ true, this, context);
+        _wifiClientDialogController!.showDialog(/*open=*/ true, this, context);
       });
       return Container();
     }

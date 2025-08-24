@@ -870,6 +870,7 @@ const ActionRequest$json = {
     {'1': 'update_wifi_access_point', '3': 7, '4': 1, '5': 11, '6': '.cedar.WiFiAccessPoint', '9': 8, '10': 'updateWifiAccessPoint', '17': true},
     {'1': 'clear_dont_show_items', '3': 10, '4': 1, '5': 8, '9': 9, '10': 'clearDontShowItems', '17': true},
     {'1': 'designate_daylight_focus_region', '3': 11, '4': 1, '5': 11, '6': '.cedar.ImageCoord', '9': 10, '10': 'designateDaylightFocusRegion', '17': true},
+    {'1': 'crash_server', '3': 12, '4': 1, '5': 8, '9': 11, '10': 'crashServer', '17': true},
   ],
   '8': [
     {'1': '_cancel_calibration'},
@@ -883,6 +884,7 @@ const ActionRequest$json = {
     {'1': '_update_wifi_access_point'},
     {'1': '_clear_dont_show_items'},
     {'1': '_designate_daylight_focus_region'},
+    {'1': '_crash_server'},
   ],
 };
 
@@ -899,12 +901,13 @@ final $typed_data.Uint8List actionRequestDescriptor = $convert.base64Decode(
     'X3BvaW50GAcgASgLMhYuY2VkYXIuV2lGaUFjY2Vzc1BvaW50SAhSFXVwZGF0ZVdpZmlBY2Nlc3'
     'NQb2ludIgBARI2ChVjbGVhcl9kb250X3Nob3dfaXRlbXMYCiABKAhICVISY2xlYXJEb250U2hv'
     'd0l0ZW1ziAEBEl0KH2Rlc2lnbmF0ZV9kYXlsaWdodF9mb2N1c19yZWdpb24YCyABKAsyES5jZW'
-    'Rhci5JbWFnZUNvb3JkSApSHGRlc2lnbmF0ZURheWxpZ2h0Rm9jdXNSZWdpb26IAQFCFQoTX2Nh'
-    'bmNlbF9jYWxpYnJhdGlvbkIUChJfY2FwdHVyZV9ib3Jlc2lnaHRCFgoUX2Rlc2lnbmF0ZV9ib3'
-    'Jlc2lnaHRCEgoQX3NodXRkb3duX3NlcnZlckIRCg9fcmVzdGFydF9zZXJ2ZXJCEAoOX2luaXRp'
-    'YXRlX3NsZXdCDAoKX3N0b3Bfc2xld0INCgtfc2F2ZV9pbWFnZUIbChlfdXBkYXRlX3dpZmlfYW'
-    'NjZXNzX3BvaW50QhgKFl9jbGVhcl9kb250X3Nob3dfaXRlbXNCIgogX2Rlc2lnbmF0ZV9kYXls'
-    'aWdodF9mb2N1c19yZWdpb24=');
+    'Rhci5JbWFnZUNvb3JkSApSHGRlc2lnbmF0ZURheWxpZ2h0Rm9jdXNSZWdpb26IAQESJgoMY3Jh'
+    'c2hfc2VydmVyGAwgASgISAtSC2NyYXNoU2VydmVyiAEBQhUKE19jYW5jZWxfY2FsaWJyYXRpb2'
+    '5CFAoSX2NhcHR1cmVfYm9yZXNpZ2h0QhYKFF9kZXNpZ25hdGVfYm9yZXNpZ2h0QhIKEF9zaHV0'
+    'ZG93bl9zZXJ2ZXJCEQoPX3Jlc3RhcnRfc2VydmVyQhAKDl9pbml0aWF0ZV9zbGV3QgwKCl9zdG'
+    '9wX3NsZXdCDQoLX3NhdmVfaW1hZ2VCGwoZX3VwZGF0ZV93aWZpX2FjY2Vzc19wb2ludEIYChZf'
+    'Y2xlYXJfZG9udF9zaG93X2l0ZW1zQiIKIF9kZXNpZ25hdGVfZGF5bGlnaHRfZm9jdXNfcmVnaW'
+    '9uQg8KDV9jcmFzaF9zZXJ2ZXI=');
 
 @$core.Deprecated('Use serverLogRequestDescriptor instead')
 const ServerLogRequest$json = {

@@ -28,7 +28,9 @@ class CedarDrawerController {
   final bool systemMenuExpanded;
   final String demoFile;
   final bool hasWifiControl;
+  final bool badServerState;
   final UpdateServerSoftwareDialogFunction? updateServerSoftwareDialogFunction;
+  final RestartCedarServerFunction? restartCedarServerFunction;
   final WifiAccessPointDialogFunction? wifiAccessPointDialog;
 
   // Callbacks
@@ -36,6 +38,8 @@ class CedarDrawerController {
   final Future<void> Function(String) setDemoImage;
   final Future<void> Function() saveImage;
   final Future<String> Function() getServerLogs;
+  final Future<void> Function() crashServer;
+  final Future<void> Function() restartCedarServer;
   final Future<void> Function(cedar_rpc.ActionRequest) initiateAction;
   final Future<void> Function(cedar_rpc.Preferences) updatePreferences;
   final Future<void> Function(bool) setAdvanced;
@@ -59,12 +63,16 @@ class CedarDrawerController {
     required this.systemMenuExpanded,
     required this.demoFile,
     required this.hasWifiControl,
+    required this.badServerState,
     required this.updateServerSoftwareDialogFunction,
+    required this.restartCedarServerFunction,
     required this.wifiAccessPointDialog,
     required this.setOperatingMode,
     required this.setDemoImage,
     required this.saveImage,
     required this.getServerLogs,
+    required this.crashServer,
+    required this.restartCedarServer,
     required this.initiateAction,
     required this.updatePreferences,
     required this.setAdvanced,
@@ -86,13 +94,15 @@ class CedarDrawer extends StatelessWidget {
     required this.controller,
   });
 
+  Color get primaryColor => Theme.of(controller.context).colorScheme.primary;
+
   // Helper methods for text styling
   Text _scaledText(String text) {
     return Text(
       text,
       textScaler: textScaler(controller.context),
       style: TextStyle(
-        color: Theme.of(controller.context).colorScheme.primary,
+        color: primaryColor,
       ),
     );
   }
@@ -102,13 +112,90 @@ class CedarDrawer extends StatelessWidget {
       text,
       style: TextStyle(
         fontSize: (size ?? 14) * textScaleFactor(controller.context),
-        color: Theme.of(controller.context).colorScheme.primary,
+        color: primaryColor,
       ),
     );
   }
 
   String _removeExtension(String filename) {
     return path.basenameWithoutExtension(filename);
+  }
+
+  // Helper method for Check for Update button
+  Widget? _buildCheckForUpdateButton() {
+    if (controller.updateServerSoftwareDialogFunction == null) return null;
+
+    return Align(
+      alignment: Alignment.topLeft,
+      child: TextButton.icon(
+          label: _scaledText("Check for Update"),
+          icon: const Icon(Icons.system_update_alt),
+          onPressed: () {
+            controller.closeDrawer();
+            controller.updateServerSoftwareDialogFunction!(controller.homePageState, controller.context);
+          }),
+    );
+  }
+
+  // Helper method for Restart Cedar Server button
+  Widget? _buildRestartServerButton() {
+    if (controller.restartCedarServerFunction == null) return null;
+
+    return Align(
+      alignment: Alignment.topLeft,
+      child: TextButton.icon(
+          label: _scaledText("Restart Cedar Server"),
+          icon: const Icon(Icons.restart_alt),
+          onPressed: () {
+            // Show confirmation dialog since this affects the running system
+            showDialog(
+              context: controller.context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: Text("Restart Cedar Server", style: TextStyle(color: primaryColor)),
+                  content: Text("This will restart the Cedar server component. The app will reconnect automatically. Continue?", style: TextStyle(color: primaryColor)),
+                  actions: <Widget>[
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text("Cancel", style: TextStyle(color: primaryColor)),
+                    ),
+                    TextButton(
+                      onPressed: () async {
+                        Navigator.of(context).pop();
+                        controller.closeDrawer();
+
+                        // Capture context before async call
+                        final scaffoldContext = controller.context;
+
+                        try {
+                          await controller.restartCedarServerFunction!();
+                          // Show success message
+                          if (scaffoldContext.mounted) {
+                            ScaffoldMessenger.of(scaffoldContext).showSnackBar(
+                              const SnackBar(content: Text("Cedar server restart initiated")),
+                            );
+                          }
+                        } catch (e) {
+                          // Show error message
+                          if (scaffoldContext.mounted) {
+                            ScaffoldMessenger.of(scaffoldContext).showSnackBar(
+                              SnackBar(
+                                content: Text("Failed to restart Cedar server: $e"),
+                              ),
+                            );
+                          }
+                        }
+                      },
+                      child: Text("Restart", style: TextStyle(color: primaryColor)),
+                    ),
+                  ],
+                );
+              },
+            );
+          }),
+    );
   }
 
   @override
@@ -124,7 +211,40 @@ class CedarDrawer extends StatelessWidget {
     );
   }
 
+  List<Widget> _buildBadServerStateControls() {
+    return <Widget>[
+      const SizedBox(height: 15),
+      const CloseButton(
+          style: ButtonStyle(
+              backgroundColor: WidgetStatePropertyAll<Color>(Colors.white10),
+              alignment: Alignment.center)),
+      const SizedBox(height: 15),
+
+      Center(
+        child: _scaledText("Server Recovery"),
+      ),
+      const SizedBox(height: 20),
+      ...[
+        if (_buildCheckForUpdateButton() != null) ...[
+          _buildCheckForUpdateButton()!,
+          const SizedBox(height: 10),
+        ],
+        if (_buildRestartServerButton() != null) ...[
+          _buildRestartServerButton()!,
+          const SizedBox(height: 10),
+        ],
+      ],
+
+      const SizedBox(height: 15),
+    ];
+  }
+
   List<Widget> _buildDrawerControls() {
+    // Show simplified menu during bad server state.
+    if (controller.badServerState) {
+      return _buildBadServerStateControls();
+    }
+
     return <Widget>[
       const SizedBox(height: 15),
       const CloseButton(
@@ -165,7 +285,7 @@ class CedarDrawer extends StatelessWidget {
                   }).toList(),
                   textStyle: TextStyle(
                       fontSize: 12 * textScaleFactor(controller.context),
-                      color: Theme.of(controller.context).colorScheme.primary),
+                      color: primaryColor),
                   onSelected: (String? newValue) async {
                     if (newValue == "Focus") {
                       await controller.setOperatingMode(true, true);
@@ -299,7 +419,7 @@ class CedarDrawer extends StatelessWidget {
                 }).toList(),
                 textStyle: TextStyle(
                     fontSize: 12 * textScaleFactor(controller.context),
-                    color: Theme.of(controller.context).colorScheme.primary),
+                    color: primaryColor),
                 onSelected: (String? newValue) async {
                   await controller.setDemoImage(newValue!);
                   controller.onStateChanged();
@@ -349,19 +469,61 @@ class CedarDrawer extends StatelessWidget {
           const SizedBox(height: 5),
 
           // Check for Update button (conditional)
-          if (controller.updateServerSoftwareDialogFunction != null) ...[
+          if (_buildCheckForUpdateButton() != null) ...[
             Padding(
               padding: const EdgeInsets.only(left: 16),
-              child: Align(
-                alignment: Alignment.topLeft,
-                child: TextButton.icon(
-                    label: _scaledText("Check for Update"),
-                    icon: const Icon(Icons.system_update_alt),
-                    onPressed: () {
-                      controller.closeDrawer();
-                      controller.updateServerSoftwareDialogFunction!(controller.homePageState, controller.context);
-                    }),
-              ),
+              child: _buildCheckForUpdateButton()!,
+            ),
+            const SizedBox(height: 5),
+          ],
+
+          // Crash Server button (debug/testing only)
+          Padding(
+            padding: const EdgeInsets.only(left: 16),
+            child: Align(
+              alignment: Alignment.topLeft,
+              child: TextButton.icon(
+                  label: _scaledText("Crash Server (DEBUG)"),
+                  icon: const Icon(Icons.build),
+                  onPressed: () {
+                    // Show confirmation dialog since this is destructive
+                    showDialog(
+                      context: controller.context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text("Crash Server", style: TextStyle(color: primaryColor)),
+                          content: Text("This will crash the Cedar server for testing purposes. Are you sure?",
+                                        style: TextStyle(color: primaryColor)),
+                          actions: <Widget>[
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: Text("Cancel", style: TextStyle(color: primaryColor)),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                                controller.closeDrawer();
+                                controller.crashServer();
+                              },
+                              child: Text("Crash Server", style: TextStyle(color: primaryColor)),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  }),
+            ),
+          ),
+
+          const SizedBox(height: 5),
+
+          // Restart Cedar Server button (conditional)
+          if (_buildRestartServerButton() != null) ...[
+            Padding(
+              padding: const EdgeInsets.only(left: 16),
+              child: _buildRestartServerButton()!,
             ),
             const SizedBox(height: 5),
           ],

@@ -3609,6 +3609,7 @@ class ActionRequest extends $pb.GeneratedMessage {
     $core.bool? cancelCalibration,
     $core.bool? clearDontShowItems,
     ImageCoord? designateDaylightFocusRegion,
+    $core.bool? crashServer,
   }) {
     final $result = create();
     if (captureBoresight != null) {
@@ -3644,6 +3645,9 @@ class ActionRequest extends $pb.GeneratedMessage {
     if (designateDaylightFocusRegion != null) {
       $result.designateDaylightFocusRegion = designateDaylightFocusRegion;
     }
+    if (crashServer != null) {
+      $result.crashServer = crashServer;
+    }
     return $result;
   }
   ActionRequest._() : super();
@@ -3662,6 +3666,7 @@ class ActionRequest extends $pb.GeneratedMessage {
     ..aOB(9, _omitFieldNames ? '' : 'cancelCalibration')
     ..aOB(10, _omitFieldNames ? '' : 'clearDontShowItems')
     ..aOM<ImageCoord>(11, _omitFieldNames ? '' : 'designateDaylightFocusRegion', subBuilder: ImageCoord.create)
+    ..aOB(12, _omitFieldNames ? '' : 'crashServer')
     ..hasRequiredFields = false
   ;
 
@@ -3818,6 +3823,16 @@ class ActionRequest extends $pb.GeneratedMessage {
   void clearDesignateDaylightFocusRegion() => $_clearField(11);
   @$pb.TagNumber(11)
   ImageCoord ensureDesignateDaylightFocusRegion() => $_ensure(10);
+
+  /// Causes the Cedar server to panic. For testing.
+  @$pb.TagNumber(12)
+  $core.bool get crashServer => $_getBF(11);
+  @$pb.TagNumber(12)
+  set crashServer($core.bool v) { $_setBool(11, v); }
+  @$pb.TagNumber(12)
+  $core.bool hasCrashServer() => $_has(11);
+  @$pb.TagNumber(12)
+  void clearCrashServer() => $_clearField(12);
 }
 
 class ServerLogRequest extends $pb.GeneratedMessage {
