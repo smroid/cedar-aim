@@ -1274,8 +1274,8 @@ class MyHomePageState extends State<MyHomePage> {
         _polarAlignAdvice!.hasAzimuthCorrection();
   }
 
-  List<Widget> _raDec(double gaugeTextFactor) {
-    final size = 11.0 * gaugeTextFactor;
+  List<Widget> _raDec(double panelScaleFactor) {
+    final size = 11.0 * panelScaleFactor;
     return [
       Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -1289,8 +1289,8 @@ class MyHomePageState extends State<MyHomePage> {
     ];
   }
 
-  List<Widget> _azAlt(double gaugeTextFactor) {
-    final size = 10.0 * gaugeTextFactor;
+  List<Widget> _azAlt(double panelScaleFactor) {
+    final size = 10.0 * panelScaleFactor;
     return [
       Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -1308,13 +1308,13 @@ class MyHomePageState extends State<MyHomePage> {
     ];
   }
 
-  List<Widget> _coordInfo(double gaugeTextFactor) {
+  List<Widget> _coordInfo(double panelScaleFactor) {
     if (preferences?.celestialCoordChoice == "RA_DEC" ||
         preferences?.celestialCoordChoice == null ||
         locationBasedInfo == null) {
-      return _raDec(gaugeTextFactor);
+      return _raDec(panelScaleFactor);
     } else {
-      return _azAlt(gaugeTextFactor);
+      return _azAlt(panelScaleFactor);
     }
   }
 
@@ -1325,22 +1325,37 @@ class MyHomePageState extends State<MyHomePage> {
 
   List<Widget> _dataItems(BuildContext context) {
     final portrait = MediaQuery.of(context).orientation == Orientation.portrait;
-
-    // Scale widgets based on constraining dimension.
-    final constraints = MediaQuery.of(context).size;
-    final constrainingDimension = portrait ? constraints.width : constraints.height;
-    const referenceSize = 400.0;
-    final dimensionBasedScale = (constrainingDimension / referenceSize).clamp(0.5, 1.0);
-    debugPrint("constrainingDimension $constrainingDimension");
-
-    final panelScaleFactor = dimensionBasedScale;
     final textScale = textScaleFactor(context);
+    final constraints = MediaQuery.of(context).size;
+    final shortDimension = portrait ? constraints.width : constraints.height;
 
-    var gaugeSize = 40 * panelScaleFactor * textScale;
-    var gaugeThicknessFactor = panelScaleFactor;
-    var gaugeTextFactor = panelScaleFactor;
-    const coordInfoSize = 80.0;
-    const objectLabelSize = 60.0;
+    final calculations = _getLayoutCalculations();
+    final panelWidth = calculations['panelWidth']!;
+
+    // Note that widgets are sized according to two factors. The first is
+    // `textScale`, which is the user-chosen text size (small/medium/large). The
+    // second scaling factor is `panelScaleFactor`, computed below to adapt the
+    // widgets to available space in the panel above (or to the left of) the
+    // main image.
+
+    // Scale widgets based on constraining dimensions. We use the widgets shown
+    // when _slewRequest is non-null because these in aggregate use the largest
+    // layout.
+    final coordInfoSize = 85.0 * textScale;
+    final objectLabelSize = 60.0 * textScale;
+
+    // First, consider the dimension along the slew navigation widgets.
+    final mainDimension = 2.0 * coordInfoSize + objectLabelSize;
+    final mainDimensionBasedScale = (shortDimension / mainDimension);
+
+    // Next, consider the dimension across the slew navigation widgets.
+    final crossDimension = math.max(coordInfoSize, objectLabelSize);
+    final crossDimensionBasedScale = (panelWidth / crossDimension);
+
+    final panelScaleFactor =
+      math.min(mainDimensionBasedScale, crossDimensionBasedScale).clamp(0.5, 1.2);
+
+    var gaugeSize = 45 * panelScaleFactor * textScale;
 
     // When goto is active, show movement instructions.
     if (_slewRequest != null) {
@@ -1358,7 +1373,7 @@ class MyHomePageState extends State<MyHomePage> {
               isAltAz,
               true, // isRotationAxis
               panelScaleFactor,
-              coordInfoSize * panelScaleFactor * textScaleFactor(context),
+              coordInfoSize * panelScaleFactor,
             )),
         // Object label.
         RotatedBox(
@@ -1368,7 +1383,7 @@ class MyHomePageState extends State<MyHomePage> {
               slew.target,
               slew.targetCatalogEntry,
               panelScaleFactor,
-              objectLabelSize * panelScaleFactor * textScaleFactor(context),
+              objectLabelSize * panelScaleFactor,
               formatRightAscension,
               formatDeclination,
             )),
@@ -1382,7 +1397,7 @@ class MyHomePageState extends State<MyHomePage> {
               isAltAz,
               false, // isRotationAxis
               panelScaleFactor,
-              coordInfoSize * panelScaleFactor * textScaleFactor(context),
+              coordInfoSize * panelScaleFactor,
             )),
       ];
     }
@@ -1401,8 +1416,8 @@ class MyHomePageState extends State<MyHomePage> {
                       PerfGauge(
                         state: this,
                         size: gaugeSize,
-                        textFactor: gaugeTextFactor,
-                        thicknessFactor: gaugeThicknessFactor,
+                        textFactor: panelScaleFactor,
+                        thicknessFactor: panelScaleFactor,
                       ),
                     ])),
       if (!_setupMode) ...[
@@ -1418,7 +1433,7 @@ class MyHomePageState extends State<MyHomePage> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     // RA/Dec, Alt/Az, etc.
-                    children: _coordInfo(gaugeTextFactor),
+                    children: _coordInfo(panelScaleFactor),
                   ),
                 ))),
       ],
@@ -1681,14 +1696,14 @@ class MyHomePageState extends State<MyHomePage> {
     final portrait = MediaQuery.of(context).orientation == Orientation.portrait;
 
     // Calculate layout dimensions
-    const minPanelWidth = 145.0;
-    final totalWidth = portrait ? constraints.height : constraints.width;
-    final totalHeight = portrait ? constraints.width : constraints.height;
+    const minPanelWidth = 120.0;
+    final longDimension = portrait ? constraints.height : constraints.width;
+    final shortDimension = portrait ? constraints.width : constraints.height;
     const spacingWidth = 0.0;
 
     // Determine the natural/preferred image size using actual image dimensions
     final actualImageHeight = _imageRegion.height;
-    final naturalImageSize = math.min(totalHeight, actualImageHeight);
+    final naturalImageSize = math.min(shortDimension, actualImageHeight);
 
     // Calculate what we'd need for natural size + minimum panels
     final naturalLayoutWidth =
@@ -1697,15 +1712,15 @@ class MyHomePageState extends State<MyHomePage> {
     final double actualImageSize;
     final double panelWidth;
 
-    if (totalWidth >= naturalLayoutWidth) {
+    if (longDimension >= naturalLayoutWidth) {
       // We have plenty of space - use natural image size and let panels expand
       actualImageSize = naturalImageSize;
       // Calculate how much extra space we have and distribute it to panels
-      final extraSpace = totalWidth - naturalLayoutWidth;
+      final extraSpace = longDimension - naturalLayoutWidth;
       panelWidth = minPanelWidth + (extraSpace / 2);
     } else {
       // Space is constrained - calculate based on available space
-      final remainingWidth = totalWidth - naturalImageSize - spacingWidth;
+      final remainingWidth = longDimension - naturalImageSize - spacingWidth;
       const minPanelsWidth = 2 * minPanelWidth;
       if (remainingWidth >= minPanelsWidth) {
         // We can fit minimum panels with natural image size
@@ -1714,7 +1729,7 @@ class MyHomePageState extends State<MyHomePage> {
       } else {
         // Must shrink image to fit minimum panels
         actualImageSize =
-            math.max(50.0, totalWidth - minPanelsWidth - spacingWidth);
+            math.max(50.0, longDimension - minPanelsWidth - spacingWidth);
         panelWidth = minPanelWidth;
       }
     }
