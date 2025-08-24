@@ -9,7 +9,7 @@ import 'package:cedar_flutter/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:sprintf/sprintf.dart';
 
-const double _kStrokeWidthMultiplier = 3.0;
+const double _kStrokeWidthMultiplier = 4.0;
 const double _kStartAngleDegrees = 160.0;
 const double _kSweepAngleDegrees = 220.0;
 const double _kMaxValue = 10.0;
@@ -22,17 +22,17 @@ const double _kLabelBottomRatio = 0.0;
 const Color _kNoSolutionColor = Color(0xff606060);
 
 /// A custom circular performance gauge that displays metrics with dynamic scaling.
-/// 
+///
 /// The gauge displays three components:
-/// - Numeric value (centered in gauge opening)  
+/// - Numeric value (centered in gauge opening)
 /// - Units (smaller text below value, when applicable)
 /// - Descriptive label (below the gauge)
-/// 
+///
 /// Currently supports three metric types:
 /// - exposure_time: Shows ms or seconds based on value
-/// - solve_interval: Shows Hz (solve rate)  
+/// - solve_interval: Shows Hz (solve rate)
 /// - stars: Shows star count (no units)
-/// 
+///
 /// All metrics use sqrt scaling for better visual responsiveness at lower values,
 /// with values above the full-scale maximum pinned at maximum gauge deflection.
 class PerfGauge extends StatelessWidget {
@@ -40,7 +40,7 @@ class PerfGauge extends StatelessWidget {
   final double size;
   final double textFactor;
   final double thicknessFactor;
-  
+
   const PerfGauge({
     super.key,
     required this.state,
@@ -82,24 +82,24 @@ class PerfGauge extends StatelessWidget {
 
   /// Returns the current metric's display value, units, and gauge position.
   /// - Raw values are normalized to their full-scale maximum
-  /// - sqrt() is applied for better low-value visibility  
+  /// - sqrt() is applied for better low-value visibility
   /// - Result is scaled to _kMaxValue for the gauge painter
   ({String value, String? units, double gaugeValue}) _getCurrentValueAndUnits() {
-    final choice = (state.preferences?.perfGaugeChoice.isEmpty ?? true) 
-        ? "stars" 
+    final choice = (state.preferences?.perfGaugeChoice.isEmpty ?? true)
+        ? "stars"
         : state.preferences!.perfGaugeChoice;
-    
+
     String displayValue;
     String? displayUnits;
     double rawValue;
     double maxValue;
-    
+
     switch (choice) {
       case "exposure_time":
         final expTimeMs = state.exposureTimeMs;
         rawValue = expTimeMs;
         maxValue = _kExposureTimeMaxMs;
-        
+
         if (expTimeMs >= 1000) {
           double seconds = expTimeMs / 1000;
           displayValue = _formatWithConditionalDecimal(seconds);
@@ -133,17 +133,17 @@ class PerfGauge extends StatelessWidget {
         displayUnits = null;
         break;
     }
-    
+
     // Apply sqrt scaling to all metrics.
     double normalized = math.min(1.0, rawValue / maxValue);
     double gaugeVal = math.sqrt(normalized) * _kMaxValue;
-    
+
     return (value: displayValue, units: displayUnits, gaugeValue: gaugeVal);
   }
 
   String _getCurrentLabel() {
-    final choice = (state.preferences?.perfGaugeChoice.isEmpty ?? true) 
-        ? "stars" 
+    final choice = (state.preferences?.perfGaugeChoice.isEmpty ?? true)
+        ? "stars"
         : state.preferences!.perfGaugeChoice;
     switch (choice) {
       case "exposure_time":
@@ -225,7 +225,7 @@ class PerfGauge extends StatelessWidget {
 }
 
 /// Custom painter for drawing the circular gauge arc.
-/// 
+///
 /// Draws a background arc and a foreground arc that represents the current value.
 /// The gauge uses a partial circle (not full 360°) with rounded end caps.
 class _CircularGaugePainter extends CustomPainter {
@@ -249,14 +249,14 @@ class _CircularGaugePainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final center = Offset(size.width / 2, size.height / 2);
     final radius = (size.height / 2) - (backgroundStrokeWidth / 2);
-    
+
     // Draw background arc.
     final backgroundPaint = Paint()
       ..color = backgroundColor
       ..strokeWidth = backgroundStrokeWidth
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.round;
-    
+
     canvas.drawArc(
       Rect.fromCircle(center: center, radius: radius),
       _degreesToRadians(_kStartAngleDegrees),
@@ -264,14 +264,14 @@ class _CircularGaugePainter extends CustomPainter {
       false,
       backgroundPaint,
     );
-    
+
     // Draw foreground arc based on value.
     final foregroundPaint = Paint()
       ..color = foregroundColor
       ..strokeWidth = foregroundStrokeWidth
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.round;
-    
+
     final sweepAngle = _degreesToRadians(_kSweepAngleDegrees * (value / maxValue));
     canvas.drawArc(
       Rect.fromCircle(center: center, radius: radius),
@@ -281,7 +281,7 @@ class _CircularGaugePainter extends CustomPainter {
       foregroundPaint,
     );
   }
-  
+
   double _degreesToRadians(double degrees) {
     return degrees * math.pi / 180;
   }
