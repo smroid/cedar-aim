@@ -14,6 +14,8 @@ import 'package:cedar_flutter/server_log.dart';
 import 'package:cedar_flutter/settings.dart';
 import 'package:cedar_flutter/shutdown_dialog.dart';
 
+const double _kDrawerSpacing = 10.0;
+const double _kDrawerSpacingCondensed = 5.0;
 
 /// Interface for drawer state and callbacks
 class CedarDrawerController {
@@ -213,29 +215,27 @@ class CedarDrawer extends StatelessWidget {
 
   List<Widget> _buildBadServerStateControls() {
     return <Widget>[
-      const SizedBox(height: 15),
+      SizedBox(height: _kDrawerSpacing * textScaleFactor(controller.context)),
       const CloseButton(
           style: ButtonStyle(
               backgroundColor: WidgetStatePropertyAll<Color>(Colors.white10),
               alignment: Alignment.center)),
-      const SizedBox(height: 15),
+      SizedBox(height: _kDrawerSpacing * textScaleFactor(controller.context)),
 
       Center(
         child: _scaledText("Server Recovery"),
       ),
-      const SizedBox(height: 20),
+      SizedBox(height: _kDrawerSpacing * textScaleFactor(controller.context)),
       ...[
         if (_buildCheckForUpdateButton() != null) ...[
           _buildCheckForUpdateButton()!,
-          const SizedBox(height: 10),
+          SizedBox(height: _kDrawerSpacing * textScaleFactor(controller.context)),
         ],
         if (_buildRestartServerButton() != null) ...[
           _buildRestartServerButton()!,
-          const SizedBox(height: 10),
+          SizedBox(height: _kDrawerSpacing * textScaleFactor(controller.context)),
         ],
       ],
-
-      const SizedBox(height: 15),
     ];
   }
 
@@ -246,12 +246,12 @@ class CedarDrawer extends StatelessWidget {
     }
 
     return <Widget>[
-      const SizedBox(height: 15),
+      SizedBox(height: _kDrawerSpacing * textScaleFactor(controller.context)),
       const CloseButton(
           style: ButtonStyle(
               backgroundColor: WidgetStatePropertyAll<Color>(Colors.white10),
               alignment: Alignment.center)),
-      const SizedBox(height: 15),
+      SizedBox(height: _kDrawerSpacing * textScaleFactor(controller.context)),
 
       // Mode selection dropdown
       Align(
@@ -305,7 +305,7 @@ class CedarDrawer extends StatelessWidget {
             ],
           )),
 
-      const SizedBox(height: 15),
+      SizedBox(height: _kDrawerSpacing * textScaleFactor(controller.context)),
 
       // Preferences button
       Align(
@@ -325,7 +325,7 @@ class CedarDrawer extends StatelessWidget {
               })),
 
       // Map location (conditional)
-      SizedBox(height: controller.offerMap ? 15 : 0),
+      SizedBox(height: controller.offerMap ? _kDrawerSpacing * textScaleFactor(controller.context) : 0),
       if (controller.offerMap) ...[
         Align(
             alignment: Alignment.topLeft,
@@ -344,7 +344,7 @@ class CedarDrawer extends StatelessWidget {
                 })),
       ],
 
-      const SizedBox(height: 15),
+      SizedBox(height: _kDrawerSpacing * textScaleFactor(controller.context)),
 
       // Advanced toggle
       Align(
@@ -358,7 +358,7 @@ class CedarDrawer extends StatelessWidget {
                 await controller.setAdvanced(!controller.advanced);
               })),
 
-      const SizedBox(height: 15),
+      SizedBox(height: _kDrawerSpacing * textScaleFactor(controller.context)),
 
       // Shutdown button
       Align(
@@ -374,7 +374,7 @@ class CedarDrawer extends StatelessWidget {
       // Demo mode section (conditional)
       if ((controller.advanced || controller.demoMode) && controller.demoFiles.isNotEmpty) ...[
         Column(children: <Widget>[
-          const SizedBox(height: 10),
+          SizedBox(height: _kDrawerSpacing * textScaleFactor(controller.context)),
           Align(
               alignment: Alignment.topLeft,
               child: TextButton.icon(
@@ -428,13 +428,12 @@ class CedarDrawer extends StatelessWidget {
                   }
                 })
           ]),
-          const SizedBox(height: 8),
         ]),
       ],
 
-      // System submenu (conditional)
+      // System submenu (advanced only).
       if (controller.advanced) ...[
-        const SizedBox(height: 10),
+        SizedBox(height: _kDrawerSpacing * textScaleFactor(controller.context)),
         Align(
           alignment: Alignment.topLeft,
           child: TextButton.icon(
@@ -447,9 +446,9 @@ class CedarDrawer extends StatelessWidget {
               }),
         ),
 
-        // System submenu items (conditional)
+        // System submenu items.
         if (controller.systemMenuExpanded) ...[
-          const SizedBox(height: 5),
+          SizedBox(height: _kDrawerSpacingCondensed * textScaleFactor(controller.context)),
 
           // About button
           Padding(
@@ -466,15 +465,63 @@ class CedarDrawer extends StatelessWidget {
             ),
           ),
 
-          const SizedBox(height: 5),
+          SizedBox(height: _kDrawerSpacingCondensed * textScaleFactor(controller.context)),
 
-          // Check for Update button (conditional)
+          // Check for Update button.
           if (_buildCheckForUpdateButton() != null) ...[
             Padding(
               padding: const EdgeInsets.only(left: 16),
               child: _buildCheckForUpdateButton()!,
             ),
-            const SizedBox(height: 5),
+            SizedBox(height: _kDrawerSpacingCondensed * textScaleFactor(controller.context)),
+          ],
+
+          // Server log button
+          Padding(
+            padding: const EdgeInsets.only(left: 16),
+            child: Align(
+              alignment: Alignment.topLeft,
+              child: TextButton.icon(
+                  label: _scaledText("Show server log"),
+                  icon: const Icon(Icons.text_snippet_outlined),
+                  onPressed: () async {
+                    var logs = await controller.getServerLogs();
+                    if (controller.context.mounted) {
+                      showDialog(
+                          context: controller.context,
+                          builder: (context) => ServerLogPopUp(controller.homePageState, logs));
+                    }
+                  }),
+            ),
+          ),
+
+          SizedBox(height: _kDrawerSpacingCondensed * textScaleFactor(controller.context)),
+
+          // WiFi button (conditional).
+          if (controller.hasWifiControl && controller.wifiAccessPointDialog != null) ...[
+            Padding(
+              padding: const EdgeInsets.only(left: 16),
+              child: Align(
+                alignment: Alignment.topLeft,
+                child: TextButton.icon(
+                    label: _scaledText("WiFi"),
+                    icon: const Icon(Icons.wifi),
+                    onPressed: () {
+                      controller.closeDrawer();
+                      controller.wifiAccessPointDialog!(controller.homePageState, controller.context);
+                    }),
+              ),
+            ),
+            SizedBox(height: _kDrawerSpacingCondensed * textScaleFactor(controller.context)),
+          ],
+
+          // Restart Cedar Server button (conditional)
+          if (_buildRestartServerButton() != null) ...[
+            Padding(
+              padding: const EdgeInsets.only(left: 16),
+              child: _buildRestartServerButton()!,
+            ),
+            SizedBox(height: _kDrawerSpacingCondensed * textScaleFactor(controller.context)),
           ],
 
           // Crash Server button (debug/testing only)
@@ -516,63 +563,13 @@ class CedarDrawer extends StatelessWidget {
                   }),
             ),
           ),
-
-          const SizedBox(height: 5),
-
-          // Restart Cedar Server button (conditional)
-          if (_buildRestartServerButton() != null) ...[
-            Padding(
-              padding: const EdgeInsets.only(left: 16),
-              child: _buildRestartServerButton()!,
-            ),
-            const SizedBox(height: 5),
-          ],
-
-          // Server log button
-          Padding(
-            padding: const EdgeInsets.only(left: 16),
-            child: Align(
-              alignment: Alignment.topLeft,
-              child: TextButton.icon(
-                  label: _scaledText("Show server log"),
-                  icon: const Icon(Icons.text_snippet_outlined),
-                  onPressed: () async {
-                    var logs = await controller.getServerLogs();
-                    if (controller.context.mounted) {
-                      showDialog(
-                          context: controller.context,
-                          builder: (context) => ServerLogPopUp(controller.homePageState, logs));
-                    }
-                  }),
-            ),
-          ),
-
-          const SizedBox(height: 5),
-
-          // WiFi button (conditional)
-          if (controller.hasWifiControl && controller.wifiAccessPointDialog != null) ...[
-            Padding(
-              padding: const EdgeInsets.only(left: 16),
-              child: Align(
-                alignment: Alignment.topLeft,
-                child: TextButton.icon(
-                    label: _scaledText("WiFi"),
-                    icon: const Icon(Icons.wifi),
-                    onPressed: () {
-                      controller.closeDrawer();
-                      controller.wifiAccessPointDialog!(controller.homePageState, controller.context);
-                    }),
-              ),
-            ),
-            const SizedBox(height: 5),
-          ],
         ],
       ],
 
       // Save image button (conditional)
       if (controller.advanced) ...[
         Column(children: [
-          const SizedBox(height: 10),
+          SizedBox(height: _kDrawerSpacing * textScaleFactor(controller.context)),
           Align(
               alignment: Alignment.topLeft,
               child: TextButton.icon(
@@ -592,7 +589,7 @@ class CedarDrawer extends StatelessWidget {
       // Reset "Don't show again" button (conditional)
       if (controller.advanced) ...[
         Column(children: [
-          const SizedBox(height: 10),
+          SizedBox(height: _kDrawerSpacing * textScaleFactor(controller.context)),
           Align(
               alignment: Alignment.topLeft,
               child: TextButton.icon(
@@ -609,7 +606,7 @@ class CedarDrawer extends StatelessWidget {
         ]),
       ],
 
-      const SizedBox(height: 15),
+      SizedBox(height: _kDrawerSpacing * textScaleFactor(controller.context)),
     ];
   }
 }
