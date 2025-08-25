@@ -626,8 +626,8 @@ final $typed_data.Uint8List starInfoDescriptor = $convert.base64Decode(
 const ProcessingStats$json = {
   '1': 'ProcessingStats',
   '2': [
+    {'1': 'acquire_latency', '3': 9, '4': 1, '5': 11, '6': '.cedar.ValueStats', '10': 'acquireLatency'},
     {'1': 'detect_latency', '3': 3, '4': 1, '5': 11, '6': '.cedar.ValueStats', '10': 'detectLatency'},
-    {'1': 'overall_latency', '3': 2, '4': 1, '5': 11, '6': '.cedar.ValueStats', '10': 'overallLatency'},
     {'1': 'solve_latency', '3': 4, '4': 1, '5': 11, '6': '.cedar.ValueStats', '10': 'solveLatency'},
     {'1': 'solve_attempt_fraction', '3': 5, '4': 1, '5': 11, '6': '.cedar.ValueStats', '10': 'solveAttemptFraction'},
     {'1': 'solve_success_fraction', '3': 6, '4': 1, '5': 11, '6': '.cedar.ValueStats', '10': 'solveSuccessFraction'},
@@ -636,20 +636,21 @@ const ProcessingStats$json = {
   ],
   '9': [
     {'1': 1, '2': 2},
+    {'1': 2, '2': 3},
   ],
 };
 
 /// Descriptor for `ProcessingStats`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List processingStatsDescriptor = $convert.base64Decode(
-    'Cg9Qcm9jZXNzaW5nU3RhdHMSOAoOZGV0ZWN0X2xhdGVuY3kYAyABKAsyES5jZWRhci5WYWx1ZV'
-    'N0YXRzUg1kZXRlY3RMYXRlbmN5EjoKD292ZXJhbGxfbGF0ZW5jeRgCIAEoCzIRLmNlZGFyLlZh'
-    'bHVlU3RhdHNSDm92ZXJhbGxMYXRlbmN5EjYKDXNvbHZlX2xhdGVuY3kYBCABKAsyES5jZWRhci'
+    'Cg9Qcm9jZXNzaW5nU3RhdHMSOgoPYWNxdWlyZV9sYXRlbmN5GAkgASgLMhEuY2VkYXIuVmFsdW'
+    'VTdGF0c1IOYWNxdWlyZUxhdGVuY3kSOAoOZGV0ZWN0X2xhdGVuY3kYAyABKAsyES5jZWRhci5W'
+    'YWx1ZVN0YXRzUg1kZXRlY3RMYXRlbmN5EjYKDXNvbHZlX2xhdGVuY3kYBCABKAsyES5jZWRhci'
     '5WYWx1ZVN0YXRzUgxzb2x2ZUxhdGVuY3kSRwoWc29sdmVfYXR0ZW1wdF9mcmFjdGlvbhgFIAEo'
     'CzIRLmNlZGFyLlZhbHVlU3RhdHNSFHNvbHZlQXR0ZW1wdEZyYWN0aW9uEkcKFnNvbHZlX3N1Y2'
     'Nlc3NfZnJhY3Rpb24YBiABKAsyES5jZWRhci5WYWx1ZVN0YXRzUhRzb2x2ZVN1Y2Nlc3NGcmFj'
     'dGlvbhI2Cg1zZXJ2ZV9sYXRlbmN5GAcgASgLMhEuY2VkYXIuVmFsdWVTdGF0c1IMc2VydmVMYX'
     'RlbmN5EjgKDnNvbHZlX2ludGVydmFsGAggASgLMhEuY2VkYXIuVmFsdWVTdGF0c1INc29sdmVJ'
-    'bnRlcnZhbEoECAEQAg==');
+    'bnRlcnZhbEoECAEQAkoECAIQAw==');
 
 @$core.Deprecated('Use valueStatsDescriptor instead')
 const ValueStats$json = {
