@@ -271,11 +271,20 @@ class _MainImagePainter extends CustomPainter {
       final slew = state._slewRequest;
       Offset? posInImage;
       if (slew!.hasImagePos()) {
-        // Scale the slew position
-        posInImage = Offset(
-          (slew.imagePos.x / state._binFactor) * displayScale,
-          (slew.imagePos.y / state._binFactor) * displayScale,
-        );
+        var imagePos = slew.imagePos.deepCopy();
+        imagePos.x += state._imageRegion.left;
+        // Convert full image coordinates to image region coordinates.
+        final fullImagePos = Offset(imagePos.x / state._binFactor,
+                                    imagePos.y / state._binFactor);
+        // Check if the position is within the displayed central square crop.
+        if (state._imageRegion.contains(fullImagePos)) {
+          // Scale the slew position.
+          posInImage = Offset(
+            (slew.imagePos.x / state._binFactor) * displayScale,
+            (slew.imagePos.y / state._binFactor) * displayScale,
+          );
+        }
+        // If not within the displayed region, posInImage remains null.
       }
       // Scale the boresight position and scope FOV
       final scaledBoresightPosition = Offset(
