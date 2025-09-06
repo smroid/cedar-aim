@@ -91,6 +91,31 @@ bool get updateServiceAvailable => _updateServiceAvailable;
 /// Get the updater version for display in about screen.
 String? getUpdaterVersion() => _updaterInfo?.updaterVersion;
 
+/// Get server information by making a single GetFrame() RPC.
+/// Returns null if unable to connect to server.
+Future<cedar_rpc.ServerInformation?> getServerInformation() async {
+  try {
+    final client = getClient();
+
+    // Make a simple GetFrame request to get server information.
+    final request = cedar_rpc.FrameRequest()
+      ..nonBlocking = true
+      ..displayOrientation = cedar_rpc.DisplayOrientation.PORTRAIT;
+
+    final response = await client.getFrame(
+      request,
+      options: CallOptions(timeout: const Duration(seconds: 4)),
+    );
+
+    // Return the server information (which is always populated).
+    return response.serverInformation;
+
+  } catch (e) {
+    debugPrint('Error getting server information: $e');
+    return null;
+  }
+}
+
 void clientMain(
     DrawCatalogEntriesFunction? drawCatalogEntries,
     ShowCatalogBrowserFunction? showCatalogBrowser,
