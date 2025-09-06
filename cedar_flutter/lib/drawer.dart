@@ -31,9 +31,8 @@ class CedarDrawerController {
   final String demoFile;
   final bool isDIY;
   final bool badServerState;
+  final UpdaterInfo? updaterInfo;
   final bool updateServiceAvailable;
-  final UpdateServerSoftwareDialogFunction? updateServerSoftwareDialogFunction;
-  final RestartCedarServerFunction? restartCedarServerFunction;
   final WifiAccessPointDialogFunction? wifiAccessPointDialog;
 
   // Callbacks
@@ -67,9 +66,8 @@ class CedarDrawerController {
     required this.demoFile,
     required this.isDIY,
     required this.badServerState,
+    required this.updaterInfo,
     required this.updateServiceAvailable,
-    required this.updateServerSoftwareDialogFunction,
-    required this.restartCedarServerFunction,
     required this.wifiAccessPointDialog,
     required this.setOperatingMode,
     required this.setDemoImage,
@@ -127,7 +125,7 @@ class CedarDrawer extends StatelessWidget {
 
   // Helper method for Check for Update button.
   Widget? _buildCheckForUpdateButton() {
-    if (controller.updateServerSoftwareDialogFunction == null) {
+    if (controller.updaterInfo == null) {
       return null;
     }
     return Align(
@@ -137,14 +135,14 @@ class CedarDrawer extends StatelessWidget {
           icon: const Icon(Icons.system_update_alt),
           onPressed: () {
             controller.closeDrawer();
-            controller.updateServerSoftwareDialogFunction!(controller.homePageState, controller.context);
+            controller.updaterInfo!.updateServerSoftwareDialogFunction(controller.homePageState, controller.context);
           }),
     );
   }
 
   // Helper method for Restart Cedar Server button.
   Widget? _buildRestartServerButton() {
-    if (controller.restartCedarServerFunction == null) {
+    if (controller.updaterInfo == null) {
       return null;
     }
     return Align(
@@ -176,7 +174,7 @@ class CedarDrawer extends StatelessWidget {
                         final scaffoldContext = controller.context;
 
                         try {
-                          await controller.restartCedarServerFunction!();
+                          await controller.updaterInfo!.restartCedarServerFunction();
                           // Show success message
                           if (scaffoldContext.mounted) {
                             ScaffoldMessenger.of(scaffoldContext).showSnackBar(
@@ -227,7 +225,7 @@ class CedarDrawer extends StatelessWidget {
       SizedBox(height: _kDrawerSpacing * textScaleFactor(controller.context)),
 
       // Only show Server Recovery section if update service is available
-      if (controller.updateServiceAvailable) ...[
+      if (controller.updaterInfo != null && controller.updateServiceAvailable) ...[
         Center(
           child: _scaledText("Server Recovery"),
         ),

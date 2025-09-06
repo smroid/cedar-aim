@@ -10,7 +10,6 @@ void main() {
       /*objectInfoDialog=*/ null,
       /*wifiAccessPointDialog=*/ null,
       /*wifiClientDiaglog=*/ null,
-      /*updateServerSoftwareDialogFunction=*/ null,
-      /*restartCedarServerFunction=*/ null,
+      /*updaterInfo=*/ null,
       /*updateServiceAvailable=*/ false);
 }

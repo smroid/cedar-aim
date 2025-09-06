@@ -26,11 +26,42 @@ final ButtonStyle _viewButtonStyle = ElevatedButton.styleFrom(
   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
 );
 
+// Common spacing for dialog rows and sections.
+const SizedBox _dialogRowSpacing = SizedBox(width: 20);
+const SizedBox _sectionHeaderSpacing = SizedBox(height: 20);
+const SizedBox _sectionDividerSpacing = SizedBox(height: 15);
+const SizedBox _dialogItemSpacing = SizedBox(height: 8);
+const SizedBox _dialogSectionSpacing = SizedBox(height: 10);
+const SizedBox _headerTopSpacing = SizedBox(height: 5);
+
 Text _scaledText(String str) {
   return Text(
     str,
     textScaler: textScaler(_context),
     style: TextStyle(color: Theme.of(_context).colorScheme.primary),
+  );
+}
+
+TextStyle _dialogTextStyle() {
+  return TextStyle(
+    fontSize: 14 * textScaleFactor(_context),
+    color: Theme.of(_context).colorScheme.primary,
+  );
+}
+
+TextStyle _headerTextStyle() {
+  return TextStyle(
+    fontSize: 18 * textScaleFactor(_context),
+    color: Theme.of(_context).colorScheme.primary,
+  );
+}
+
+// Common dialog container decoration.
+BoxDecoration _dialogDecoration() {
+  return BoxDecoration(
+    border: Border.all(color: Theme.of(_context).colorScheme.primary),
+    color: Colors.black,
+    borderRadius: BorderRadius.circular(10),
   );
 }
 
@@ -120,16 +151,12 @@ Widget systemInfo(MyHomePageState state) {
   return RotatedBox(
       quarterTurns: portrait ? 3 : 0,
       child: Column(children: <Widget>[
-        const SizedBox(height: 5),
+        _headerTopSpacing,
         Text(
-          style: TextStyle(
-            fontSize: 18,
-            color: Theme.of(_context).colorScheme.primary,
-          ),
           "Cedar™ system",
-          textScaler: textScaler(_context),
+          style: _headerTextStyle(),
         ),
-        const SizedBox(height: 20),
+        _sectionHeaderSpacing,
         Expanded(
             child: ListView(children: [
           Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
@@ -143,7 +170,7 @@ Widget systemInfo(MyHomePageState state) {
             TextButton(
               style: _viewButtonStyle,
               onPressed: () {
-                versionsDialog(serverInfo.cedarServerVersion);
+                versionsDialog(serverInfo.cedarServerVersion, getUpdaterVersion());
               },
               child: _scaledText("view"),
             ),
@@ -158,7 +185,7 @@ Widget systemInfo(MyHomePageState state) {
               child: _scaledText("view"),
             ),
           ]),
-          const SizedBox(height: 15),
+          _sectionDividerSpacing,
           Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
             _scaledText("Server time"),
             TextButton(
@@ -184,7 +211,7 @@ Widget systemInfo(MyHomePageState state) {
               child: _scaledText("view"),
             ),
           ]),
-          const SizedBox(height: 15),
+          _sectionDividerSpacing,
           Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [_scaledText("Platform"), _scaledText(platform)]),
@@ -203,16 +230,12 @@ Widget calibrationInfo(MyHomePageState state) {
   return RotatedBox(
       quarterTurns: portrait ? 3 : 0,
       child: Column(children: <Widget>[
-        const SizedBox(height: 5),
+        _headerTopSpacing,
         Text(
-          style: TextStyle(
-            fontSize: 18,
-            color: Theme.of(_context).colorScheme.primary,
-          ),
           "Calibration",
-          textScaler: textScaler(_context),
+          style: _headerTextStyle(),
         ),
-        const SizedBox(height: 20),
+        _sectionHeaderSpacing,
         Expanded(
             child: ListView(children: [
           Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
@@ -233,7 +256,7 @@ Widget calibrationInfo(MyHomePageState state) {
                 ? sprintf("%.3f", [calData.matchMaxError])
                 : "unknown"),
           ]),
-          const SizedBox(height: 15),
+          _sectionDividerSpacing,
           Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
             _scaledText("Camera"),
             _scaledText(
@@ -269,7 +292,6 @@ Widget calibrationInfo(MyHomePageState state) {
 }
 
 void serverTimeDialog(MyHomePageState state) {
-  Color color = Theme.of(_context).colorScheme.primary;
   _serverTimeOverlayEntry = OverlayEntry(builder: (BuildContext context) {
     return GestureDetector(
       onTap: () {
@@ -283,11 +305,7 @@ void serverTimeDialog(MyHomePageState state) {
             child: Center(
               child: Container(
                 padding: const EdgeInsets.fromLTRB(10, 5, 10, 10),
-                decoration: BoxDecoration(
-                  border: Border.all(color: color),
-                  color: Colors.black,
-                  borderRadius: BorderRadius.circular(10),
-                ),
+                decoration: _dialogDecoration(),
                 child: Column(mainAxisSize: MainAxisSize.min, children: [
                   _scaledText(
                       formatTimestamp(state.serverInformation!.serverTime)),
@@ -303,7 +321,6 @@ void serverTimeDialog(MyHomePageState state) {
 
 void copyrightDialog(String copyright) {
   OverlayEntry? dialogOverlayEntry;
-  Color color = Theme.of(_context).colorScheme.primary;
   dialogOverlayEntry = OverlayEntry(builder: (BuildContext context) {
     return GestureDetector(
       onTap: () {
@@ -316,11 +333,7 @@ void copyrightDialog(String copyright) {
             child: Center(
               child: Container(
                 padding: const EdgeInsets.fromLTRB(10, 5, 10, 10),
-                decoration: BoxDecoration(
-                  border: Border.all(color: color),
-                  color: Colors.black,
-                  borderRadius: BorderRadius.circular(10),
-                ),
+                decoration: _dialogDecoration(),
                 child: Column(mainAxisSize: MainAxisSize.min, children: [
                   Text(
                     copyright,
@@ -342,7 +355,6 @@ void copyrightDialog(String copyright) {
 void processorOsDialog(
     String processor, String osVersion, String serialNumber) {
   OverlayEntry? dialogOverlayEntry;
-  Color color = Theme.of(_context).colorScheme.primary;
 
   // Clean up processor string - replace 'Raspberry Pi' with 'RPi'.
   String cleanProcessor = processor.replaceAll(
@@ -363,11 +375,7 @@ void processorOsDialog(
             child: Center(
               child: Container(
                 padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
-                decoration: BoxDecoration(
-                  border: Border.all(color: color),
-                  color: Colors.black,
-                  borderRadius: BorderRadius.circular(10),
-                ),
+                decoration: _dialogDecoration(),
                 child: Column(
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -376,47 +384,38 @@ void processorOsDialog(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             _scaledText("Processor:"),
-                            const SizedBox(width: 20),
+                            _dialogRowSpacing,
                             Expanded(
                                 child: Text(
                               cleanProcessor,
                               textAlign: TextAlign.right,
-                              style: TextStyle(
-                                fontSize: 14 * textScaleFactor(_context),
-                                color: Theme.of(_context).colorScheme.primary,
-                              ),
+                              style: _dialogTextStyle(),
                             )),
                           ]),
-                      const SizedBox(height: 8),
+                      _dialogItemSpacing,
                       Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             _scaledText("OS version:"),
-                            const SizedBox(width: 20),
+                            _dialogRowSpacing,
                             Expanded(
                                 child: Text(
                               cleanOsVersion,
                               textAlign: TextAlign.right,
-                              style: TextStyle(
-                                fontSize: 14 * textScaleFactor(_context),
-                                color: Theme.of(_context).colorScheme.primary,
-                              ),
+                              style: _dialogTextStyle(),
                             )),
                           ]),
-                      const SizedBox(height: 8),
+                      _dialogItemSpacing,
                       Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             _scaledText("Serial #:"),
-                            const SizedBox(width: 20),
+                            _dialogRowSpacing,
                             Expanded(
                                 child: Text(
                               serialNumber,
                               textAlign: TextAlign.right,
-                              style: TextStyle(
-                                fontSize: 14 * textScaleFactor(_context),
-                                color: Theme.of(_context).colorScheme.primary,
-                              ),
+                              style: _dialogTextStyle(),
                             )),
                           ]),
                     ]),
@@ -429,9 +428,8 @@ void processorOsDialog(
   Overlay.of(_context).insert(dialogOverlayEntry);
 }
 
-void versionsDialog(String serverVersion) async {
+void versionsDialog(String serverVersion, String? updaterVersion) async {
   OverlayEntry? dialogOverlayEntry;
-  Color color = Theme.of(_context).colorScheme.primary;
 
   // Get client version info.
   PackageInfo packageInfo = await PackageInfo.fromPlatform();
@@ -455,11 +453,7 @@ void versionsDialog(String serverVersion) async {
             child: Center(
               child: Container(
                 padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
-                decoration: BoxDecoration(
-                  border: Border.all(color: color),
-                  color: Colors.black,
-                  borderRadius: BorderRadius.circular(10),
-                ),
+                decoration: _dialogDecoration(),
                 child: Column(
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -468,31 +462,40 @@ void versionsDialog(String serverVersion) async {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             _scaledText("Server version:"),
-                            const SizedBox(width: 20),
+                            _dialogRowSpacing,
                             Expanded(
                                 child: Text(
                               serverVersion,
                               textAlign: TextAlign.right,
-                              style: TextStyle(
-                                fontSize: 14 * textScaleFactor(_context),
-                                color: Theme.of(_context).colorScheme.primary,
-                              ),
+                              style: _dialogTextStyle(),
                             )),
                           ]),
-                      const SizedBox(height: 10),
+                      _dialogSectionSpacing,
+                      if (updaterVersion != null) ...[
+                        Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              _scaledText("Updater version:"),
+                              _dialogRowSpacing,
+                              Expanded(
+                                  child: Text(
+                                updaterVersion,
+                                textAlign: TextAlign.right,
+                                style: _dialogTextStyle(),
+                              )),
+                            ]),
+                        _dialogSectionSpacing,
+                      ],
                       Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             _scaledText("Client version:"),
-                            const SizedBox(width: 20),
+                            _dialogRowSpacing,
                             Expanded(
                                 child: Text(
                               clientVersion,
                               textAlign: TextAlign.right,
-                              style: TextStyle(
-                                fontSize: 14 * textScaleFactor(_context),
-                                color: Theme.of(_context).colorScheme.primary,
-                              ),
+                              style: _dialogTextStyle(),
                             )),
                           ]),
                     ]),
@@ -507,7 +510,6 @@ void versionsDialog(String serverVersion) async {
 
 void plateScaleDialog(dynamic calData) {
   OverlayEntry? dialogOverlayEntry;
-  Color color = Theme.of(_context).colorScheme.primary;
 
   dialogOverlayEntry = OverlayEntry(builder: (BuildContext context) {
     return GestureDetector(
@@ -521,11 +523,7 @@ void plateScaleDialog(dynamic calData) {
             child: Center(
               child: Container(
                 padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
-                decoration: BoxDecoration(
-                  border: Border.all(color: color),
-                  color: Colors.black,
-                  borderRadius: BorderRadius.circular(10),
-                ),
+                decoration: _dialogDecoration(),
                 child: Column(
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -534,25 +532,22 @@ void plateScaleDialog(dynamic calData) {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             _scaledText("Lens focal length:"),
-                            const SizedBox(width: 20),
+                            _dialogRowSpacing,
                             Expanded(
                                 child: Text(
                               calData.hasLensFlMm()
                                   ? sprintf("%.1fmm", [calData.lensFlMm])
                                   : "unknown",
                               textAlign: TextAlign.right,
-                              style: TextStyle(
-                                fontSize: 14 * textScaleFactor(_context),
-                                color: Theme.of(_context).colorScheme.primary,
-                              ),
+                              style: _dialogTextStyle(),
                             )),
                           ]),
-                      const SizedBox(height: 8),
+                      _dialogItemSpacing,
                       Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             _scaledText("FOV:"),
-                            const SizedBox(width: 20),
+                            _dialogRowSpacing,
                             Expanded(
                                 child: Text(
                               calData.hasFovHorizontal()
@@ -562,18 +557,15 @@ void plateScaleDialog(dynamic calData) {
                                     ])
                                   : "unknown",
                               textAlign: TextAlign.right,
-                              style: TextStyle(
-                                fontSize: 14 * textScaleFactor(_context),
-                                color: Theme.of(_context).colorScheme.primary,
-                              ),
+                              style: _dialogTextStyle(),
                             )),
                           ]),
-                      const SizedBox(height: 8),
+                      _dialogItemSpacing,
                       Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             _scaledText("Pixel angular size:"),
-                            const SizedBox(width: 20),
+                            _dialogRowSpacing,
                             Expanded(
                                 child: Text(
                               calData.hasPixelAngularSize()
@@ -584,10 +576,7 @@ void plateScaleDialog(dynamic calData) {
                                           [calData.pixelAngularSize * 3600.0])
                                   : "unknown",
                               textAlign: TextAlign.right,
-                              style: TextStyle(
-                                fontSize: 14 * textScaleFactor(_context),
-                                color: Theme.of(_context).colorScheme.primary,
-                              ),
+                              style: _dialogTextStyle(),
                             )),
                           ]),
                     ]),

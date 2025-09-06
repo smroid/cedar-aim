@@ -63,17 +63,33 @@ typedef UpdateServerSoftwareDialogFunction = void Function(
 
 typedef RestartCedarServerFunction = Future<void> Function();
 
+/// Bundle of updater-related functionality and data.
+class UpdaterInfo {
+  final UpdateServerSoftwareDialogFunction updateServerSoftwareDialogFunction;
+  final RestartCedarServerFunction restartCedarServerFunction;
+  final String? updaterVersion;
+
+  const UpdaterInfo({
+    required this.updateServerSoftwareDialogFunction,
+    required this.restartCedarServerFunction,
+    this.updaterVersion,
+  });
+}
+
 DrawCatalogEntriesFunction? _drawCatalogEntries;
 ShowCatalogBrowserFunction? _showCatalogBrowser;
 ObjectInfoDialogFunction? _objectInfoDialog;
 WifiAccessPointDialogFunction? _wifiAccessPointDialog;
 WifiClientDialogController? _wifiClientDialogController;
-UpdateServerSoftwareDialogFunction? _updateServerSoftwareDialogFunction;
-RestartCedarServerFunction? _restartCedarServerFunction;
+UpdaterInfo? _updaterInfo;
 bool _updateServiceAvailable = false;
 
-/// Check if the update service is available for showing drawer menu items
+/// Check if the update service is available for showing updater-releated drawer
+/// menu items.
 bool get updateServiceAvailable => _updateServiceAvailable;
+
+/// Get the updater version for display in about screen.
+String? getUpdaterVersion() => _updaterInfo?.updaterVersion;
 
 void clientMain(
     DrawCatalogEntriesFunction? drawCatalogEntries,
@@ -81,16 +97,14 @@ void clientMain(
     ObjectInfoDialogFunction? objectInfoDialog,
     WifiAccessPointDialogFunction? wifiAccessPointDialog,
     WifiClientDialogController? wifiClientDialogController,
-    UpdateServerSoftwareDialogFunction? updateServerSoftwareDialogFunction,
-    RestartCedarServerFunction? restartCedarServerFunction,
+    UpdaterInfo? updaterInfo,
     bool updateServiceAvailable) {
   _drawCatalogEntries = drawCatalogEntries;
   _showCatalogBrowser = showCatalogBrowser;
   _objectInfoDialog = objectInfoDialog;
   _wifiAccessPointDialog = wifiAccessPointDialog;
   _wifiClientDialogController = wifiClientDialogController;
-  _updateServerSoftwareDialogFunction = updateServerSoftwareDialogFunction;
-  _restartCedarServerFunction = restartCedarServerFunction;
+  _updaterInfo = updaterInfo;
   _updateServiceAvailable = updateServiceAvailable;
 
   WidgetsFlutterBinding.ensureInitialized();
@@ -988,8 +1002,8 @@ class MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> _restartCedarServer() async {
-    if (_restartCedarServerFunction != null) {
-      await _restartCedarServerFunction!();
+    if (_updaterInfo != null) {
+      await _updaterInfo!.restartCedarServerFunction();
     } else {
       throw Exception('Restart Cedar Server functionality not available');
     }
@@ -1906,10 +1920,8 @@ class MyHomePageState extends State<MyHomePage> {
           demoFile: _demoFile,
           isDIY: isDIY,
           badServerState: !healthy,
-          updateServiceAvailable: _updateServiceAvailable,
-          updateServerSoftwareDialogFunction:
-              _updateServerSoftwareDialogFunction,
-          restartCedarServerFunction: _restartCedarServerFunction,
+          updaterInfo: _updaterInfo,
+          updateServiceAvailable: updateServiceAvailable,
           wifiAccessPointDialog: _wifiAccessPointDialog,
           setOperatingMode: (setupMode, focusAid) async {
             if (!_setupMode && setupMode) {
