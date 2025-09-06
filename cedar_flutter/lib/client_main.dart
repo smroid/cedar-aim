@@ -70,6 +70,10 @@ WifiAccessPointDialogFunction? _wifiAccessPointDialog;
 WifiClientDialogController? _wifiClientDialogController;
 UpdateServerSoftwareDialogFunction? _updateServerSoftwareDialogFunction;
 RestartCedarServerFunction? _restartCedarServerFunction;
+bool _updateServiceAvailable = false;
+
+/// Check if the update service is available for showing drawer menu items
+bool get updateServiceAvailable => _updateServiceAvailable;
 
 void clientMain(
     DrawCatalogEntriesFunction? drawCatalogEntries,
@@ -78,7 +82,8 @@ void clientMain(
     WifiAccessPointDialogFunction? wifiAccessPointDialog,
     WifiClientDialogController? wifiClientDialogController,
     UpdateServerSoftwareDialogFunction? updateServerSoftwareDialogFunction,
-    RestartCedarServerFunction? restartCedarServerFunction) {
+    RestartCedarServerFunction? restartCedarServerFunction,
+    bool updateServiceAvailable) {
   _drawCatalogEntries = drawCatalogEntries;
   _showCatalogBrowser = showCatalogBrowser;
   _objectInfoDialog = objectInfoDialog;
@@ -86,6 +91,7 @@ void clientMain(
   _wifiClientDialogController = wifiClientDialogController;
   _updateServerSoftwareDialogFunction = updateServerSoftwareDialogFunction;
   _restartCedarServerFunction = restartCedarServerFunction;
+  _updateServiceAvailable = updateServiceAvailable;
 
   WidgetsFlutterBinding.ensureInitialized();
   runApp(MultiProvider(
@@ -482,7 +488,6 @@ class MyHomePageState extends State<MyHomePage> {
   bool _systemMenuExpanded = false;
   bool _rightHanded = true;
   bool _canAlign = false;
-  bool _hasWifiControl = false;
   bool updateInProgress = false;
   bool shutdownInProgress = false;
 
@@ -596,8 +601,6 @@ class MyHomePageState extends State<MyHomePage> {
       Provider.of<ThemeModel>(context, listen: false).setNormalTheme();
     }
     serverInformation = response.serverInformation;
-    _hasWifiControl =
-        serverInformation!.featureLevel != cedar_rpc.FeatureLevel.DIY;
     _hasCamera = serverInformation!.hasCamera();
     if (_hasCamera) {
       _cameraWidth = serverInformation!.camera.imageWidth;
@@ -1901,8 +1904,9 @@ class MyHomePageState extends State<MyHomePage> {
           demoFiles: _demoFiles,
           systemMenuExpanded: _systemMenuExpanded,
           demoFile: _demoFile,
-          hasWifiControl: _hasWifiControl,
+          isDIY: isDIY,
           badServerState: !healthy,
+          updateServiceAvailable: _updateServiceAvailable,
           updateServerSoftwareDialogFunction:
               _updateServerSoftwareDialogFunction,
           restartCedarServerFunction: _restartCedarServerFunction,
