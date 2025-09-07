@@ -1175,9 +1175,9 @@ class MyHomePageState extends State<MyHomePage> {
         });
   }
 
-  Widget _buildControlsWidget() {
+  Widget _buildControlsWidget([Size? containerSize]) {
     return ControlsWidget(
-      layoutCalculations: _getLayoutCalculations(),
+      layoutCalculations: _getLayoutCalculations(containerSize),
       focusAid: _focusAid,
       daylightMode: _daylightMode,
       canAlign: _canAlign,
@@ -1422,13 +1422,13 @@ class MyHomePageState extends State<MyHomePage> {
     return Icon(value > 0 ? positive : negative, color: color);
   }
 
-  List<Widget> _dataItems(BuildContext context) {
+  List<Widget> _dataItems(BuildContext context, [Size? containerSize]) {
     final portrait = MediaQuery.of(context).orientation == Orientation.portrait;
     final textScale = textScaleFactor(context);
-    final constraints = MediaQuery.of(context).size;
+    final constraints = containerSize ?? MediaQuery.of(context).size;
     final shortDimension = portrait ? constraints.width : constraints.height;
 
-    final calculations = _getLayoutCalculations();
+    final calculations = _getLayoutCalculations(containerSize);
     final panelWidth = calculations['panelWidth']!;
 
     // Note that widgets are sized according to two factors. The first is
@@ -1790,8 +1790,8 @@ class MyHomePageState extends State<MyHomePage> {
   int _initialTextSizeIndex = 0;
 
   // Helper method to calculate display scale and image size
-  Map<String, double> _getLayoutCalculations() {
-    final constraints = MediaQuery.of(context).size;
+  Map<String, double> _getLayoutCalculations([Size? containerSize]) {
+    final constraints = containerSize ?? MediaQuery.of(context).size;
     final portrait = MediaQuery.of(context).orientation == Orientation.portrait;
 
     // Calculate layout dimensions
@@ -1842,18 +1842,18 @@ class MyHomePageState extends State<MyHomePage> {
     };
   }
 
-  double _getDisplayScale() {
-    return _getLayoutCalculations()['displayScale']!;
+  double _getDisplayScale([Size? containerSize]) {
+    return _getLayoutCalculations(containerSize)['displayScale']!;
   }
 
-  Widget _orientationLayout(BuildContext context) {
+  Widget _orientationLayout(BuildContext context, [Size? containerSize]) {
     final portrait = MediaQuery.of(context).orientation == Orientation.portrait;
     final controls = Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: [_buildControlsWidget()]);
+        children: [_buildControlsWidget(containerSize)]);
     final data = Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: _dataItems(context));
+        children: _dataItems(context, containerSize));
 
     return GestureDetector(
         // On Android, sometimes the system and navigation bars become visible.
@@ -1896,7 +1896,7 @@ class MyHomePageState extends State<MyHomePage> {
           child: Builder(
             builder: (context) {
               // Get layout calculations
-              final calculations = _getLayoutCalculations();
+              final calculations = _getLayoutCalculations(containerSize);
               final actualImageSize = calculations['actualImageSize']!;
               final panelWidth = calculations['panelWidth']!;
 
@@ -2200,39 +2200,45 @@ class MyHomePageState extends State<MyHomePage> {
 
     return Scaffold(
       key: _scaffoldKey,
-      appBar: AppBar(
-          toolbarHeight: hideAppBar ? 0 : 56,
-          toolbarOpacity: hideAppBar ? 0.0 : 1.0,
+      appBar: hideAppBar ? null : AppBar(
           title: Text(widget.title),
           foregroundColor: Theme.of(context).colorScheme.primary),
       onDrawerChanged: _handleDrawerChanged,
       onEndDrawerChanged: _handleDrawerChanged,
       body: DefaultTextStyle.merge(
           style: const TextStyle(fontFamilyFallback: ["Roboto"]),
-          child: SafeArea(
-              child: Container(
-                  color: Theme.of(context).colorScheme.surface,
-                  child: Stack(
+          child: hideAppBar
+            ? LayoutBuilder(
+                builder: (context, constraints) {
+                  return Stack(
                     fit: StackFit.expand,
                     children: [
-                      healthy ? _orientationLayout(context) : _badServerState(),
-                      if (hideAppBar) ...[
-                        Positioned(
-                            left: _rightHanded ? null : 0,
-                            right: _rightHanded ? 0 : null,
-                            top: 0,
-                            child: IconButton(
-                                icon: const Icon(Icons.menu),
-                                onPressed: () {
-                                  if (_rightHanded) {
-                                    _scaffoldKey.currentState!.openEndDrawer();
-                                  } else {
-                                    _scaffoldKey.currentState!.openDrawer();
-                                  }
-                                })),
-                      ],
+                      healthy ? _orientationLayout(context, Size(constraints.maxWidth, constraints.maxHeight)) : _badServerState(),
+                      // Menu icon positioned at top when in fullscreen mode
+                      Positioned(
+                        left: _rightHanded ? null : 0,
+                        right: _rightHanded ? 0 : null,
+                        top: 0,
+                        child: IconButton(
+                          icon: const Icon(Icons.menu),
+                          onPressed: () {
+                            if (_rightHanded) {
+                              _scaffoldKey.currentState!.openEndDrawer();
+                            } else {
+                              _scaffoldKey.currentState!.openDrawer();
+                            }
+                          },
+                        ),
+                      ),
                     ],
-                  )))),
+                  );
+                },
+              )
+            : LayoutBuilder(
+                builder: (context, constraints) {
+                  return healthy ? _orientationLayout(context, Size(constraints.maxWidth, constraints.maxHeight)) : _badServerState();
+                },
+              )),
       drawer: _drawer(),
       endDrawer: _drawer(),
       drawerEdgeDragWidth: 100,
