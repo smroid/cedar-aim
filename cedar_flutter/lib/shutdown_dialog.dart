@@ -154,10 +154,16 @@ void shutdownDialog(MyHomePageState state, BuildContext context) {
                 },
               );
             },
-            child: ElevatedButton(
-              onPressed: () {}, // Empty function to keep button enabled for GestureDetector.
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.white10),
-              child: _scaledText("Shutdown", context),
+            child: AbsorbPointer(
+              absorbing: false,
+              child: ElevatedButton(
+                onPressed: null, // Disabled to let GestureDetector handle all events
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white10,
+                  foregroundColor: Theme.of(context).colorScheme.primary, // Keep text color active
+                ),
+                child: _scaledText("Shutdown", context),
+              ),
             ),
           ),
         ],
