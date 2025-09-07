@@ -116,6 +116,21 @@ Future<cedar_rpc.ServerInformation?> getServerInformation() async {
   }
 }
 
+/// Clear the observer location on the server (revert to unknown).
+Future<void> clearObserverLocation() async {
+  try {
+    final client = getClient();
+    final request = cedar_rpc.EmptyMessage();
+    await client.clearObserverLocation(
+      request,
+      options: CallOptions(timeout: const Duration(seconds: 2)),
+    );
+    debugPrint('Observer location cleared successfully');
+  } catch (e) {
+    debugPrint('Error clearing observer location: $e');
+  }
+}
+
 void clientMain(
     DrawCatalogEntriesFunction? drawCatalogEntries,
     ShowCatalogBrowserFunction? showCatalogBrowser,

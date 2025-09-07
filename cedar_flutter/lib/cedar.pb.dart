@@ -3312,8 +3312,7 @@ class SlewRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   void clearTargetAngle() => $_clearField(3);
 
-  /// Position of the target in FrameResult.image (in full image resolution
-  /// coordinates).
+  /// Position of the target in FrameResult.image (in full resolution units).
   /// Omitted if the target is not in the field of view or there is no valid
   /// plate solution.
   @$pb.TagNumber(4)

@@ -30,6 +30,10 @@ class CedarClient extends $grpc.Client {
       '/cedar.Cedar/UpdateFixedSettings',
       ($0.FixedSettings value) => value.writeToBuffer(),
       ($core.List<$core.int> value) => $0.FixedSettings.fromBuffer(value));
+  static final _$clearObserverLocation = $grpc.ClientMethod<$0.EmptyMessage, $0.EmptyMessage>(
+      '/cedar.Cedar/ClearObserverLocation',
+      ($0.EmptyMessage value) => value.writeToBuffer(),
+      ($core.List<$core.int> value) => $0.EmptyMessage.fromBuffer(value));
   static final _$updateOperationSettings = $grpc.ClientMethod<$0.OperationSettings, $0.OperationSettings>(
       '/cedar.Cedar/UpdateOperationSettings',
       ($0.OperationSettings value) => value.writeToBuffer(),
@@ -79,6 +83,10 @@ class CedarClient extends $grpc.Client {
 
   $grpc.ResponseFuture<$0.FixedSettings> updateFixedSettings($0.FixedSettings request, {$grpc.CallOptions? options}) {
     return $createUnaryCall(_$updateFixedSettings, request, options: options);
+  }
+
+  $grpc.ResponseFuture<$0.EmptyMessage> clearObserverLocation($0.EmptyMessage request, {$grpc.CallOptions? options}) {
+    return $createUnaryCall(_$clearObserverLocation, request, options: options);
   }
 
   $grpc.ResponseFuture<$0.OperationSettings> updateOperationSettings($0.OperationSettings request, {$grpc.CallOptions? options}) {
@@ -137,6 +145,13 @@ abstract class CedarServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $0.FixedSettings.fromBuffer(value),
         ($0.FixedSettings value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.EmptyMessage, $0.EmptyMessage>(
+        'ClearObserverLocation',
+        clearObserverLocation_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.EmptyMessage.fromBuffer(value),
+        ($0.EmptyMessage value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.OperationSettings, $0.OperationSettings>(
         'UpdateOperationSettings',
         updateOperationSettings_Pre,
@@ -210,6 +225,10 @@ abstract class CedarServiceBase extends $grpc.Service {
     return updateFixedSettings($call, await $request);
   }
 
+  $async.Future<$0.EmptyMessage> clearObserverLocation_Pre($grpc.ServiceCall $call, $async.Future<$0.EmptyMessage> $request) async {
+    return clearObserverLocation($call, await $request);
+  }
+
   $async.Future<$0.OperationSettings> updateOperationSettings_Pre($grpc.ServiceCall $call, $async.Future<$0.OperationSettings> $request) async {
     return updateOperationSettings($call, await $request);
   }
@@ -248,6 +267,7 @@ abstract class CedarServiceBase extends $grpc.Service {
 
   $async.Future<$0.ServerLogResult> getServerLog($grpc.ServiceCall call, $0.ServerLogRequest request);
   $async.Future<$0.FixedSettings> updateFixedSettings($grpc.ServiceCall call, $0.FixedSettings request);
+  $async.Future<$0.EmptyMessage> clearObserverLocation($grpc.ServiceCall call, $0.EmptyMessage request);
   $async.Future<$0.OperationSettings> updateOperationSettings($grpc.ServiceCall call, $0.OperationSettings request);
   $async.Future<$0.Preferences> updatePreferences($grpc.ServiceCall call, $0.Preferences request);
   $async.Future<$0.FrameResult> getFrame($grpc.ServiceCall call, $0.FrameRequest request);
