@@ -47,7 +47,8 @@ String _formatHz(double seconds) {
   return "0.0";
 }
 
-/// A row widget that displays a label and value with optional bold styling and tap handling.
+/// A row widget that displays a label and value with optional bold styling and
+/// tap handling.
 ///
 /// Used in the performance stats dialog to show metrics. Supports:
 /// - Bold text styling for selected metrics
@@ -100,7 +101,7 @@ class StatRow extends StatelessWidget {
           height: 18 * textScaleFactor(context),
           margin: const EdgeInsets.symmetric(vertical: 1),
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.05),
+            color: Colors.white.withOpacity(0.15),
             borderRadius: BorderRadius.circular(4),
           ),
           padding: const EdgeInsets.symmetric(horizontal: 1, vertical: 0),
@@ -121,7 +122,6 @@ class StatRow extends StatelessWidget {
 /// The dialog updates every second and closes when tapping outside the dialog area.
 Future<void> perfStatsDialog(
     MyHomePageState state, BuildContext context) async {
-
   // Helper function to update gauge choice
   Future<void> updateGaugeChoice(String choice) async {
     // Copy existing preferences and update only the specific field
@@ -210,81 +210,91 @@ Future<void> perfStatsDialog(
                     },
                   ),
                   SizedBox(height: groupGap * textScaleFactor(context)),
-                  ...[ if (state.processingStats != null)
-                    Column(children: [
-                      ...[ if (state.advanced)
+                  ...[
+                    if (state.processingStats != null)
+                      Column(children: [
+                        ...[
+                          if (state.advanced)
+                            StatRow(
+                              context: context,
+                              label: "Acquire",
+                              value: sprintf("%s ms", [
+                                _formatMilliseconds(state.processingStats!
+                                    .acquireLatency.recent.mean)
+                              ]),
+                            ),
+                        ],
+                        ...[
+                          if (state.advanced)
+                            StatRow(
+                              context: context,
+                              label: "Detect+Solve",
+                              value: sprintf("%s+%s ms", [
+                                _formatMilliseconds(state.processingStats!
+                                    .detectLatency.recent.mean),
+                                _formatMilliseconds(state
+                                    .processingStats!.solveLatency.recent.mean),
+                              ]),
+                            ),
+                        ],
+                        ...[
+                          if (state.advanced)
+                            StatRow(
+                              context: context,
+                              label: "Serve",
+                              value: sprintf("%s ms", [
+                                _formatMilliseconds(state
+                                    .processingStats!.serveLatency.recent.mean)
+                              ]),
+                            ),
+                        ],
+                        SizedBox(height: groupGap * textScaleFactor(context)),
                         StatRow(
                           context: context,
-                          label: "Acquire",
-                          value: sprintf("%s ms", [_formatMilliseconds(
-                            state.processingStats!.acquireLatency.recent.mean
-                          )]),
-                        ),
-                      ],
-                      ...[ if (state.advanced)
-                        StatRow(
-                          context: context,
-                          label: "Detect+Solve",
-                          value: sprintf("%s+%s ms", [
-                            _formatMilliseconds(
-                              state.processingStats!.detectLatency.recent.mean),
-                            _formatMilliseconds(
-                              state.processingStats!.solveLatency.recent.mean),
+                          label: "Solve try/pass",
+                          value: sprintf("%s/%s %", [
+                            _formatPercentage(state.processingStats!
+                                .solveAttemptFraction.recent.mean),
+                            _formatPercentage(state.processingStats!
+                                .solveSuccessFraction.recent.mean),
                           ]),
                         ),
-                      ],
-                      ...[ if (state.advanced)
-                        StatRow(
-                          context: context,
-                          label: "Serve",
-                          value: sprintf("%s ms", [_formatMilliseconds(
-                            state.processingStats!.serveLatency.recent.mean
-                          )]),
-                        ),
-                      ],
-                      SizedBox(height: groupGap * textScaleFactor(context)),
-                      StatRow(
-                        context: context,
-                        label: "Solve try/pass",
-                        value: sprintf("%s/%s %", [
-                          _formatPercentage(
-                            state.processingStats!.solveAttemptFraction.recent.mean),
-                          _formatPercentage(
-                            state.processingStats!.solveSuccessFraction.recent.mean),
-                        ]),
-                      ),
-                      ...[ if (state.advanced)
-                        StatRow(
-                          context: context,
-                          label: "Solve rate",
-                          value: sprintf("%s Hz", [_formatHz(
-                            state.processingStats!.solveInterval.recent.mean
-                          )]),
-                          bold: currentChoice == "solve_interval",
-                          onTap: () async {
-                            await updateGaugeChoice("solve_interval");
-                            dialogOverlayEntry!.markNeedsBuild();
-                          },
-                        ),
-                      ],
-                    ])
+                        ...[
+                          if (state.advanced)
+                            StatRow(
+                              context: context,
+                              label: "Solve rate",
+                              value: sprintf("%s Hz", [
+                                _formatHz(state
+                                    .processingStats!.solveInterval.recent.mean)
+                              ]),
+                              bold: currentChoice == "solve_interval",
+                              onTap: () async {
+                                await updateGaugeChoice("solve_interval");
+                                dialogOverlayEntry!.markNeedsBuild();
+                              },
+                            ),
+                        ],
+                      ])
                   ],
                   SizedBox(height: groupGap * textScaleFactor(context)),
-                  ...[ if (state.advanced)
-                    StatRow(
-                      context: context,
-                      label: "Position RMSE",
-                      value: state.solutionRMSE > 60
-                          ? sprintf("%.1f arcmin", [state.solutionRMSE / 60])
-                          : sprintf("%.0f arcsec", [state.solutionRMSE]),
-                    ),
+                  ...[
+                    if (state.advanced)
+                      StatRow(
+                        context: context,
+                        label: "Position RMSE",
+                        value: state.solutionRMSE > 60
+                            ? sprintf("%.1f arcmin", [state.solutionRMSE / 60])
+                            : sprintf("%.0f arcsec", [state.solutionRMSE]),
+                      ),
                   ],
-                  ...[ if (state.advanced)
-                    StatRow(
-                      context: context,
-                      label: "Image noise",
-                      value: sprintf("%.1f ADU", [state.noiseEstimate]),
-                    ),
+                  ...[
+                    if (state.advanced)
+                      StatRow(
+                        context: context,
+                        label: "Image noise",
+                        value: sprintf("%.1f ADU", [state.noiseEstimate]),
+                      ),
                   ],
                 ],
               ),
