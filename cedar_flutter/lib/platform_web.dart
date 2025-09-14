@@ -86,3 +86,8 @@ Future<Position?> getLocationImpl() async {
 void exitAppImpl() {
   js.context.callMethod('close');
 }
+
+Future<bool> checkNetworkConnectivityImpl(String host) async {
+  // For web platform, we can't do traditional ping, but we can try HTTP request
+  throw UnimplementedError("Network connectivity check not implemented for web");
+}

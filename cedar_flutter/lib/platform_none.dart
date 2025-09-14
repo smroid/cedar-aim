@@ -55,3 +55,7 @@ Future<Position?> getLocationImpl() async {
 void exitAppImpl() async {
   throw UnimplementedError("No impl in platform_none");
 }
+
+Future<bool> checkNetworkConnectivityImpl(String host) async {
+  throw UnimplementedError("No impl in platform_none");
+}

@@ -106,3 +106,14 @@ void exitApp() {
     rethrow;
   }
 }
+
+/// Check network connectivity to a specific host (ping-like functionality).
+/// Returns true if the host is reachable, false otherwise.
+Future<bool> checkNetworkConnectivity(String host) async {
+  try {
+    return await checkNetworkConnectivityImpl(host);
+  } catch (e) {
+    debugPrint('checkNetworkConnectivity: $e');
+    return false;
+  }
+}

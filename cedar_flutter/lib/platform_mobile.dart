@@ -7,6 +7,7 @@ import 'dart:io';
 
 import 'package:cedar_flutter/platform.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:dart_ping/dart_ping.dart';
 
 import 'cedar.pbgrpc.dart' as cedar_rpc;
 import 'package:cedar_flutter/cedar.pbgrpc.dart';
@@ -118,4 +119,32 @@ Future<Position?> getLocationImpl() async {
 
 void exitAppImpl() {
   SystemNavigator.pop();
+}
+
+Future<bool> checkNetworkConnectivityImpl(String host) async {
+  try {
+    // On iOS, dart_ping doesn't work. Use socket connection test instead.
+    if (Platform.isIOS) {
+      // Try to connect to port 80 as a connectivity test
+      final socket = await Socket.connect(host, 80,
+          timeout: Duration(seconds: 3));
+      socket.destroy();
+      return true;
+    } else {
+      // Use ping on Android and other platforms
+      final ping = Ping(host, count: 1);
+
+      await for (final response in ping.stream) {
+        // If we get any response, the host is reachable
+        if (response.response != null) {
+          return true;
+        }
+        break; // We only need the first response
+      }
+      return false;
+    }
+  } catch (e) {
+    debugPrint('Network connectivity check failed: $e');
+    return false;
+  }
 }
