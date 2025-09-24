@@ -83,6 +83,10 @@ Future<Position?> getLocationImpl() async {
   throw UnimplementedError("No getLocationImpl in platform_web");
 }
 
+bool canExitAppImpl() {
+  return true; // Web can attempt to close the window
+}
+
 void exitAppImpl() {
   js.context.callMethod('close');
 }

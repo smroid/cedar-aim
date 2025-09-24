@@ -98,6 +98,15 @@ Future<Position?> getLocation() async {
   }
 }
 
+bool canExitApp() {
+  try {
+    return canExitAppImpl();
+  } catch (e) {
+    debugPrint('canExitApp: $e');
+    return false;
+  }
+}
+
 void exitApp() {
   try {
     return exitAppImpl();

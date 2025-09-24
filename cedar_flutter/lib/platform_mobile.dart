@@ -117,10 +117,14 @@ Future<Position?> getLocationImpl() async {
   return await Geolocator.getLastKnownPosition();
 }
 
+bool canExitAppImpl() {
+  return !Platform.isIOS;
+}
+
 void exitAppImpl() {
   if (Platform.isIOS) {
-    // On iOS, apps cannot exit themselves per Apple guidelines
-    // Users should use the home button to exit the app
+    // On iOS, apps cannot exit themselves per Apple guidelines.
+    // Users should use the home button to exit the app.
   } else {
     SystemNavigator.pop();
   }

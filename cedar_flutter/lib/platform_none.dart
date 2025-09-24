@@ -52,6 +52,10 @@ Future<Position?> getLocationImpl() async {
   throw UnimplementedError("No impl in platform_none");
 }
 
+bool canExitAppImpl() {
+  throw UnimplementedError("No impl in platform_none");
+}
+
 void exitAppImpl() async {
   throw UnimplementedError("No impl in platform_none");
 }
