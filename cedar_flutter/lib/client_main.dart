@@ -224,8 +224,7 @@ class _MainImagePainter extends CustomPainter {
     const double thick = 1.5;
     final Color primaryColor = Theme.of(_context).colorScheme.primary;
     final Color color = state._solveColor();
-    final Color opaqueColor =
-        Color.fromARGB(128, color.red, color.green, color.blue);
+    final Color opaqueColor = color.withAlpha(128);
 
     final displayScale = state._getDisplayScale();
 
@@ -1088,7 +1087,7 @@ class MyHomePageState extends State<MyHomePage> {
     return row ? Row(children: children) : Column(children: children);
   }
 
-  Widget focusDoneButton({fontSize = 14.0}) {
+  Widget focusDoneButton({double? fontSize = 14.0}) {
     return OutlinedButton(
         style: OutlinedButton.styleFrom(
             padding: const EdgeInsets.symmetric(horizontal: 0)),
@@ -1110,7 +1109,7 @@ class MyHomePageState extends State<MyHomePage> {
         });
   }
 
-  Widget setupAlignSkipOrDoneButton({fontSize = 14.0}) {
+  Widget setupAlignSkipOrDoneButton({double? fontSize = 14.0}) {
     return OutlinedButton(
         style: OutlinedButton.styleFrom(
             padding: const EdgeInsets.symmetric(horizontal: 0)),
@@ -1128,7 +1127,7 @@ class MyHomePageState extends State<MyHomePage> {
         });
   }
 
-  Widget slewReAlignButton({fontSize = 14.0}) {
+  Widget slewReAlignButton({double? fontSize = 14.0}) {
     return OutlinedButton(
         style: OutlinedButton.styleFrom(
             padding: const EdgeInsets.symmetric(horizontal: 0)),
@@ -1144,7 +1143,7 @@ class MyHomePageState extends State<MyHomePage> {
         });
   }
 
-  Widget catalogButton({fontSize = 14.0}) {
+  Widget catalogButton({double? fontSize = 14.0}) {
     return OutlinedButton(
         style: OutlinedButton.styleFrom(
             padding: const EdgeInsets.symmetric(horizontal: 0)),
@@ -1161,7 +1160,7 @@ class MyHomePageState extends State<MyHomePage> {
         });
   }
 
-  Widget endGotoButton({fontSize = 14.0}) {
+  Widget endGotoButton({double? fontSize = 14.0}) {
     return OutlinedButton(
         style: OutlinedButton.styleFrom(
             padding: const EdgeInsets.symmetric(horizontal: 0)),
