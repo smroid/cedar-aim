@@ -1056,7 +1056,9 @@ class MyHomePageState extends State<MyHomePage> {
   Future<void> updateWifi(String ssid, String psk, int channel) async {
     final updateWifi = WiFiAccessPoint(ssid: ssid, psk: psk, channel: channel);
     final request = cedar_rpc.ActionRequest(updateWifiAccessPoint: updateWifi);
-    await initiateAction(request);
+    // Call RPC directly so errors can propagate to caller.
+    await client().initiateAction(request,
+        options: CallOptions(timeout: const Duration(seconds: 2)));
   }
 
   Future<void> _cancelCalibration() async {
