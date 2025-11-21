@@ -44,7 +44,6 @@ class _InterstitialDialogContent extends StatefulWidget {
   final bool popContext;
 
   const _InterstitialDialogContent({
-    super.key,
     required this.message,
     this.showDontShowAgain = false,
     this.onDontShowAgainChanged,
