@@ -13,11 +13,9 @@ enum ArrowDirection { left, right, up, down }
 
 class SlewDirectionsWidgets {
   final bool northernHemisphere;
-  final Color Function() getSolveColor;
 
   SlewDirectionsWidgets({
     required this.northernHemisphere,
-    required this.getSolveColor,
   });
 
   Widget _buildTriangleArrow(ArrowDirection direction, Color color, double size) {
@@ -29,7 +27,7 @@ class SlewDirectionsWidgets {
 
   Widget buildAxisGuidance(BuildContext context, String axisName, double offset,
       bool isAltAz, bool isRotationAxis, double scaleFactor, double size) {
-    final color = getSolveColor();
+    final color = Theme.of(context).colorScheme.primary;
 
     // Format offset with appropriate precision.
     int precision = 0;

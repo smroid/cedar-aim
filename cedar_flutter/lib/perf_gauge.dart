@@ -62,7 +62,7 @@ class PerfGauge extends StatelessWidget {
   }
 
   Color _solveColor() {
-    return state.hasSolution
+    return state.hasPlateSolution
         ? Theme.of(state.context).colorScheme.primary
         : _kNoSolutionColor;
   }

@@ -223,7 +223,7 @@ class _MainImagePainter extends CustomPainter {
     const double thin = 1;
     const double thick = 1.5;
     final Color primaryColor = Theme.of(_context).colorScheme.primary;
-    final Color color = state._solveColor();
+    final Color color = primaryColor;
     final Color opaqueColor = color.withAlpha(128);
 
     final displayScale = state._getDisplayScale();
@@ -469,7 +469,6 @@ class MyHomePageState extends State<MyHomePage> {
   MyHomePageState() {
     _slewDirections = SlewDirectionsWidgets(
       northernHemisphere: _northernHemisphere,
-      getSolveColor: () => _solveColor(),
     );
     _initLocation();
     _refreshStateFromServer();
@@ -567,7 +566,14 @@ class MyHomePageState extends State<MyHomePage> {
   late List<cedar_rpc.StarCentroid> _stars;
   int numStars = 0;
   var exposureTimeMs = 0.0;
+
+  // Set to true when there is a solution. This can either be because of a plate
+  // solution or an IMU estimate.
   bool _hasSolution = false;
+
+  // Set to true when there is a plate solution.
+  bool _hasPlateSolution = false;
+
   double noiseEstimate = 0.0;
 
   List<Offset>? _solutionCentroids;
@@ -643,6 +649,7 @@ class MyHomePageState extends State<MyHomePage> {
       _northernHemisphere = _mapPosition!.latitude > 0.0;
     }
     _hasSolution = false;
+    _hasPlateSolution = false;
     bool prevCalibrating = _calibrating;
     _calibrating = response.calibrating;
     if (response.calibrating) {
@@ -753,6 +760,7 @@ class MyHomePageState extends State<MyHomePage> {
     if (response.hasPlateSolution()) {
       PlateSolution plateSolution = response.plateSolution;
       _hasSolution = true;
+      _hasPlateSolution = !plateSolution.solutionFromImu;
       _solutionCentroids = <Offset>[];
       for (var centroid in plateSolution.patternCentroids) {
         _solutionCentroids!.add(Offset(centroid.x, centroid.y));
@@ -1334,9 +1342,10 @@ class MyHomePageState extends State<MyHomePage> {
   }
 
   bool get hasSolution => _hasSolution;
+  bool get hasPlateSolution => _hasPlateSolution;
 
   Color _solveColor() {
-    return _hasSolution
+    return _hasPlateSolution
         ? Theme.of(context).colorScheme.primary
         : const Color(0xff606060);
   }

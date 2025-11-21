@@ -2,6 +2,7 @@
 // See LICENSE file in root directory for license terms.
 
 import 'dart:async';
+import 'dart:math';
 
 import 'package:cedar_flutter/client_main.dart';
 import 'package:cedar_flutter/platform.dart';
@@ -28,7 +29,7 @@ final ButtonStyle _viewButtonStyle = ElevatedButton.styleFrom(
 
 // Common spacing for dialog rows and sections.
 const SizedBox _dialogRowSpacing = SizedBox(width: 20);
-const SizedBox _sectionHeaderSpacing = SizedBox(height: 20);
+const SizedBox _sectionHeaderSpacing = SizedBox(height: 15);
 const SizedBox _sectionDividerSpacing = SizedBox(height: 15);
 const SizedBox _dialogItemSpacing = SizedBox(height: 8);
 const SizedBox _dialogSectionSpacing = SizedBox(height: 10);
@@ -77,6 +78,10 @@ String formatTime(Timestamp timestamp) {
   DateTime localDateTime = dateTime.toLocal();
   DateFormat formatter = DateFormat('HH:mm');
   return formatter.format(localDateTime);
+}
+
+double _calculateMagnitude(double x, double y, double z) {
+  return sqrt(x * x + y * y + z * z);
 }
 
 Future<void> aboutScreen(MyHomePageState state, BuildContext context) async {
@@ -259,34 +264,27 @@ Widget calibrationInfo(MyHomePageState state) {
           _sectionDividerSpacing,
           Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
             _scaledText("Camera"),
-            _scaledText(
-                serverInfo.hasCamera() ? serverInfo.camera.model : "no camera"),
-          ]),
-          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-            _scaledText("Resolution"),
-            _scaledText(serverInfo.hasCamera()
-                ? sprintf("%d x %d", [
-                    serverInfo.camera.imageWidth,
-                    serverInfo.camera.imageHeight
-                  ])
-                : "no camera"),
-          ]),
-          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-            _scaledText("Plate scale"),
             TextButton(
               style: _viewButtonStyle,
               onPressed: () {
-                plateScaleDialog(calData);
+                cameraDialog(serverInfo, calData);
               },
               child: _scaledText("view"),
             ),
           ]),
-          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-            _scaledText("Lens distortion"),
-            _scaledText(calData.hasLensDistortion()
-                ? sprintf("%.3f", [calData.lensDistortion])
-                : "unknown"),
-          ]),
+          if (serverInfo.hasImuModel()) ...[
+            _dialogSectionSpacing,
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+              _scaledText("Gyro"),
+              TextButton(
+                style: _viewButtonStyle,
+                onPressed: () {
+                  imuCalibrationDialog(serverInfo, calData);
+                },
+                child: _scaledText("view"),
+              ),
+            ]),
+          ],
         ]))
       ]));
 }
@@ -508,7 +506,7 @@ void versionsDialog(String serverVersion, String? updaterVersion) async {
   Overlay.of(_context).insert(dialogOverlayEntry);
 }
 
-void plateScaleDialog(dynamic calData) {
+void cameraDialog(dynamic serverInfo, dynamic calData) {
   OverlayEntry? dialogOverlayEntry;
 
   dialogOverlayEntry = OverlayEntry(builder: (BuildContext context) {
@@ -528,6 +526,39 @@ void plateScaleDialog(dynamic calData) {
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _scaledText("Model:"),
+                            _dialogRowSpacing,
+                            Expanded(
+                                child: Text(
+                              serverInfo.hasCamera()
+                                  ? serverInfo.camera.model
+                                  : "no camera",
+                              textAlign: TextAlign.right,
+                              style: _dialogTextStyle(),
+                            )),
+                          ]),
+                      _dialogItemSpacing,
+                      Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _scaledText("Resolution:"),
+                            _dialogRowSpacing,
+                            Expanded(
+                                child: Text(
+                              serverInfo.hasCamera()
+                                  ? sprintf("%d x %d", [
+                                      serverInfo.camera.imageWidth,
+                                      serverInfo.camera.imageHeight
+                                    ])
+                                  : "no camera",
+                              textAlign: TextAlign.right,
+                              style: _dialogTextStyle(),
+                            )),
+                          ]),
+                      _dialogItemSpacing,
                       Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -574,6 +605,158 @@ void plateScaleDialog(dynamic calData) {
                                           [calData.pixelAngularSize * 60.0])
                                       : sprintf("%.0f arcsec",
                                           [calData.pixelAngularSize * 3600.0])
+                                  : "unknown",
+                              textAlign: TextAlign.right,
+                              style: _dialogTextStyle(),
+                            )),
+                          ]),
+                      _dialogItemSpacing,
+                      Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _scaledText("Lens distortion:"),
+                            _dialogRowSpacing,
+                            Expanded(
+                                child: Text(
+                              calData.hasLensDistortion()
+                                  ? sprintf("%.3f", [calData.lensDistortion])
+                                  : "unknown",
+                              textAlign: TextAlign.right,
+                              style: _dialogTextStyle(),
+                            )),
+                          ]),
+                    ]),
+              ),
+            )),
+      ),
+    );
+  });
+
+  Overlay.of(_context).insert(dialogOverlayEntry);
+}
+
+void imuCalibrationDialog(dynamic serverInfo, dynamic calData) {
+  OverlayEntry? dialogOverlayEntry;
+
+  dialogOverlayEntry = OverlayEntry(builder: (BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        dialogOverlayEntry!.remove();
+      },
+      child: Material(
+        color: Colors.black54,
+        child: DefaultTextStyle.merge(
+            style: const TextStyle(fontFamilyFallback: ['Roboto']),
+            child: Center(
+              child: Container(
+                padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
+                decoration: _dialogDecoration(),
+                child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _scaledText("Model:"),
+                            _dialogRowSpacing,
+                            Expanded(
+                                child: Text(
+                              serverInfo.imuModel,
+                              textAlign: TextAlign.right,
+                              style: _dialogTextStyle(),
+                            )),
+                          ]),
+                      _dialogItemSpacing,
+                      Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _scaledText("Calibration error:"),
+                            _dialogRowSpacing,
+                            Expanded(
+                                child: Text(
+                              calData.hasGyroTransformErrorFraction()
+                                  ? sprintf("%.1f%%", [calData.gyroTransformErrorFraction * 100])
+                                  : "unknown",
+                              textAlign: TextAlign.right,
+                              style: _dialogTextStyle(),
+                            )),
+                          ]),
+                      _dialogItemSpacing,
+                      Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _scaledText("Zero bias:"),
+                            _dialogRowSpacing,
+                            Expanded(
+                                child: Text(
+                              calData.hasGyroZeroBiasX()
+                                  ? sprintf("%.4f°/s", [
+                                      _calculateMagnitude(
+                                          calData.gyroZeroBiasX,
+                                          calData.gyroZeroBiasY,
+                                          calData.gyroZeroBiasZ)
+                                    ])
+                                  : "unknown",
+                              textAlign: TextAlign.right,
+                              style: _dialogTextStyle(),
+                            )),
+                          ]),
+                      _dialogItemSpacing,
+                      Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _scaledText("Camera view axis:"),
+                            _dialogRowSpacing,
+                            Expanded(
+                                child: Text(
+                              calData.hasCameraViewGyroAxis()
+                                  ? calData.cameraViewGyroAxis
+                                  : "unknown",
+                              textAlign: TextAlign.right,
+                              style: _dialogTextStyle(),
+                            )),
+                          ]),
+                      _dialogItemSpacing,
+                      Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _scaledText("  Misalignment:"),
+                            _dialogRowSpacing,
+                            Expanded(
+                                child: Text(
+                              calData.hasCameraViewGyroAxis()
+                                  ? sprintf("%.1f°", [calData.cameraViewMisalignment])
+                                  : "unknown",
+                              textAlign: TextAlign.right,
+                              style: _dialogTextStyle(),
+                            )),
+                          ]),
+                      _dialogItemSpacing,
+                      Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _scaledText("Camera up axis:"),
+                            _dialogRowSpacing,
+                            Expanded(
+                                child: Text(
+                              calData.hasCameraUpGyroAxis()
+                                  ? calData.cameraUpGyroAxis
+                                  : "unknown",
+                              textAlign: TextAlign.right,
+                              style: _dialogTextStyle(),
+                            )),
+                          ]),
+                      _dialogItemSpacing,
+                      Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _scaledText("  Misalignment:"),
+                            _dialogRowSpacing,
+                            Expanded(
+                                child: Text(
+                              calData.hasCameraUpGyroAxis()
+                                  ? sprintf("%.1f°", [calData.cameraUpMisalignment])
                                   : "unknown",
                               textAlign: TextAlign.right,
                               style: _dialogTextStyle(),
