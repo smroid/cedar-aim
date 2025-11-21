@@ -39,6 +39,8 @@ class ServerInformation extends $pb.GeneratedMessage {
     $core.Iterable<$core.String>? demoImageNames,
     $core.String? serialNumber,
     ImuState? imu,
+    $core.String? imuModel,
+    ImuTrackerState? imuTrackerState,
   }) {
     final $result = create();
     if (productName != null) {
@@ -80,6 +82,12 @@ class ServerInformation extends $pb.GeneratedMessage {
     if (imu != null) {
       $result.imu = imu;
     }
+    if (imuModel != null) {
+      $result.imuModel = imuModel;
+    }
+    if (imuTrackerState != null) {
+      $result.imuTrackerState = imuTrackerState;
+    }
     return $result;
   }
   ServerInformation._() : super();
@@ -100,6 +108,8 @@ class ServerInformation extends $pb.GeneratedMessage {
     ..pPS(11, _omitFieldNames ? '' : 'demoImageNames')
     ..aOS(12, _omitFieldNames ? '' : 'serialNumber')
     ..aOM<ImuState>(13, _omitFieldNames ? '' : 'imu', subBuilder: ImuState.create)
+    ..aOS(14, _omitFieldNames ? '' : 'imuModel')
+    ..e<ImuTrackerState>(15, _omitFieldNames ? '' : 'imuTrackerState', $pb.PbFieldType.OE, defaultOrMaker: ImuTrackerState.TRACKER_STATE_UNKNOWN, valueOf: ImuTrackerState.valueOf, enumValues: ImuTrackerState.values)
     ..hasRequiredFields = false
   ;
 
@@ -235,7 +245,7 @@ class ServerInformation extends $pb.GeneratedMessage {
   @$pb.TagNumber(12)
   void clearSerialNumber() => $_clearField(12);
 
-  /// Omitted if no IMU detected.
+  /// The most recent IMU reading. Omitted if no IMU detected.
   @$pb.TagNumber(13)
   ImuState get imu => $_getN(12);
   @$pb.TagNumber(13)
@@ -246,6 +256,26 @@ class ServerInformation extends $pb.GeneratedMessage {
   void clearImu() => $_clearField(13);
   @$pb.TagNumber(13)
   ImuState ensureImu() => $_ensure(12);
+
+  /// Omitted if no IMU detected.
+  @$pb.TagNumber(14)
+  $core.String get imuModel => $_getSZ(13);
+  @$pb.TagNumber(14)
+  set imuModel($core.String v) { $_setString(13, v); }
+  @$pb.TagNumber(14)
+  $core.bool hasImuModel() => $_has(13);
+  @$pb.TagNumber(14)
+  void clearImuModel() => $_clearField(14);
+
+  /// The current state of the IMU tracking logic. Omitted if no IMU detected.
+  @$pb.TagNumber(15)
+  ImuTrackerState get imuTrackerState => $_getN(14);
+  @$pb.TagNumber(15)
+  set imuTrackerState(ImuTrackerState v) { $_setField(15, v); }
+  @$pb.TagNumber(15)
+  $core.bool hasImuTrackerState() => $_has(14);
+  @$pb.TagNumber(15)
+  void clearImuTrackerState() => $_clearField(15);
 }
 
 class CameraModel extends $pb.GeneratedMessage {
@@ -720,6 +750,7 @@ class OperationSettings extends $pb.GeneratedMessage {
     $1.CatalogEntryMatch? catalogEntryMatch,
     $core.String? demoImageFilename,
     $core.bool? focusAssistMode,
+    $core.bool? useImu,
   }) {
     final $result = create();
     if (daylightMode != null) {
@@ -740,6 +771,9 @@ class OperationSettings extends $pb.GeneratedMessage {
     if (focusAssistMode != null) {
       $result.focusAssistMode = focusAssistMode;
     }
+    if (useImu != null) {
+      $result.useImu = useImu;
+    }
     return $result;
   }
   OperationSettings._() : super();
@@ -753,6 +787,7 @@ class OperationSettings extends $pb.GeneratedMessage {
     ..aOM<$1.CatalogEntryMatch>(11, _omitFieldNames ? '' : 'catalogEntryMatch', subBuilder: $1.CatalogEntryMatch.create)
     ..aOS(12, _omitFieldNames ? '' : 'demoImageFilename')
     ..aOB(14, _omitFieldNames ? '' : 'focusAssistMode')
+    ..aOB(15, _omitFieldNames ? '' : 'useImu')
     ..hasRequiredFields = false
   ;
 
@@ -858,6 +893,17 @@ class OperationSettings extends $pb.GeneratedMessage {
   $core.bool hasFocusAssistMode() => $_has(5);
   @$pb.TagNumber(14)
   void clearFocusAssistMode() => $_clearField(14);
+
+  /// Controls whether the IMU, if present, is used to estimate camera pointing
+  /// when plate solutions are unavailable.
+  @$pb.TagNumber(15)
+  $core.bool get useImu => $_getBF(6);
+  @$pb.TagNumber(15)
+  set useImu($core.bool v) { $_setBool(6, v); }
+  @$pb.TagNumber(15)
+  $core.bool hasUseImu() => $_has(6);
+  @$pb.TagNumber(15)
+  void clearUseImu() => $_clearField(15);
 }
 
 /// User interface preferences and operation settings that are stored durably on
@@ -2213,6 +2259,7 @@ class PlateSolution extends $pb.GeneratedMessage {
     $core.Iterable<ImageCoord>? patternCentroids,
     $core.Iterable<StarInfo>? catalogStars,
     $core.Iterable<$core.double>? rotationMatrix,
+    $core.bool? solutionFromImu,
   }) {
     final $result = create();
     if (imageSkyCoord != null) {
@@ -2269,6 +2316,9 @@ class PlateSolution extends $pb.GeneratedMessage {
     if (rotationMatrix != null) {
       $result.rotationMatrix.addAll(rotationMatrix);
     }
+    if (solutionFromImu != null) {
+      $result.solutionFromImu = solutionFromImu;
+    }
     return $result;
   }
   PlateSolution._() : super();
@@ -2294,6 +2344,7 @@ class PlateSolution extends $pb.GeneratedMessage {
     ..pc<ImageCoord>(16, _omitFieldNames ? '' : 'patternCentroids', $pb.PbFieldType.PM, subBuilder: ImageCoord.create)
     ..pc<StarInfo>(17, _omitFieldNames ? '' : 'catalogStars', $pb.PbFieldType.PM, subBuilder: StarInfo.create)
     ..p<$core.double>(18, _omitFieldNames ? '' : 'rotationMatrix', $pb.PbFieldType.KD)
+    ..aOB(19, _omitFieldNames ? '' : 'solutionFromImu')
     ..hasRequiredFields = false
   ;
 
@@ -2453,6 +2504,18 @@ class PlateSolution extends $pb.GeneratedMessage {
   /// 3x3 matrix in row-major order.
   @$pb.TagNumber(18)
   $pb.PbList<$core.double> get rotationMatrix => $_getList(17);
+
+  /// False: solution is from plate solving.
+  /// True: solution is from an IMU estimate of the camera's sky coordinate and
+  /// roll angle.
+  @$pb.TagNumber(19)
+  $core.bool get solutionFromImu => $_getBF(18);
+  @$pb.TagNumber(19)
+  set solutionFromImu($core.bool v) { $_setBool(18, v); }
+  @$pb.TagNumber(19)
+  $core.bool hasSolutionFromImu() => $_has(18);
+  @$pb.TagNumber(19)
+  void clearSolutionFromImu() => $_clearField(19);
 }
 
 class StarInfo extends $pb.GeneratedMessage {
@@ -2906,6 +2969,14 @@ class CalibrationData extends $pb.GeneratedMessage {
     $core.double? matchMaxError,
     $core.double? fovVertical,
     CalibrationFailureReason? calibrationFailureReason,
+    $core.double? gyroZeroBiasX,
+    $core.double? gyroZeroBiasY,
+    $core.double? gyroZeroBiasZ,
+    $core.double? gyroTransformErrorFraction,
+    $core.String? cameraViewGyroAxis,
+    $core.double? cameraViewMisalignment,
+    $core.String? cameraUpGyroAxis,
+    $core.double? cameraUpMisalignment,
   }) {
     final $result = create();
     if (calibrationTime != null) {
@@ -2938,6 +3009,30 @@ class CalibrationData extends $pb.GeneratedMessage {
     if (calibrationFailureReason != null) {
       $result.calibrationFailureReason = calibrationFailureReason;
     }
+    if (gyroZeroBiasX != null) {
+      $result.gyroZeroBiasX = gyroZeroBiasX;
+    }
+    if (gyroZeroBiasY != null) {
+      $result.gyroZeroBiasY = gyroZeroBiasY;
+    }
+    if (gyroZeroBiasZ != null) {
+      $result.gyroZeroBiasZ = gyroZeroBiasZ;
+    }
+    if (gyroTransformErrorFraction != null) {
+      $result.gyroTransformErrorFraction = gyroTransformErrorFraction;
+    }
+    if (cameraViewGyroAxis != null) {
+      $result.cameraViewGyroAxis = cameraViewGyroAxis;
+    }
+    if (cameraViewMisalignment != null) {
+      $result.cameraViewMisalignment = cameraViewMisalignment;
+    }
+    if (cameraUpGyroAxis != null) {
+      $result.cameraUpGyroAxis = cameraUpGyroAxis;
+    }
+    if (cameraUpMisalignment != null) {
+      $result.cameraUpMisalignment = cameraUpMisalignment;
+    }
     return $result;
   }
   CalibrationData._() : super();
@@ -2955,6 +3050,14 @@ class CalibrationData extends $pb.GeneratedMessage {
     ..a<$core.double>(8, _omitFieldNames ? '' : 'matchMaxError', $pb.PbFieldType.OD)
     ..a<$core.double>(11, _omitFieldNames ? '' : 'fovVertical', $pb.PbFieldType.OD)
     ..e<CalibrationFailureReason>(12, _omitFieldNames ? '' : 'calibrationFailureReason', $pb.PbFieldType.OE, defaultOrMaker: CalibrationFailureReason.REASON_UNSPECIFIED, valueOf: CalibrationFailureReason.valueOf, enumValues: CalibrationFailureReason.values)
+    ..a<$core.double>(15, _omitFieldNames ? '' : 'gyroZeroBiasX', $pb.PbFieldType.OD)
+    ..a<$core.double>(16, _omitFieldNames ? '' : 'gyroZeroBiasY', $pb.PbFieldType.OD)
+    ..a<$core.double>(17, _omitFieldNames ? '' : 'gyroZeroBiasZ', $pb.PbFieldType.OD)
+    ..a<$core.double>(18, _omitFieldNames ? '' : 'gyroTransformErrorFraction', $pb.PbFieldType.OD)
+    ..aOS(19, _omitFieldNames ? '' : 'cameraViewGyroAxis')
+    ..a<$core.double>(20, _omitFieldNames ? '' : 'cameraViewMisalignment', $pb.PbFieldType.OD)
+    ..aOS(21, _omitFieldNames ? '' : 'cameraUpGyroAxis')
+    ..a<$core.double>(22, _omitFieldNames ? '' : 'cameraUpMisalignment', $pb.PbFieldType.OD)
     ..hasRequiredFields = false
   ;
 
@@ -3093,6 +3196,86 @@ class CalibrationData extends $pb.GeneratedMessage {
   $core.bool hasCalibrationFailureReason() => $_has(9);
   @$pb.TagNumber(12)
   void clearCalibrationFailureReason() => $_clearField(12);
+
+  /// Gyro zero bias, degrees per second. Absent if no IMU or if calibration not
+  /// yet performed.
+  @$pb.TagNumber(15)
+  $core.double get gyroZeroBiasX => $_getN(10);
+  @$pb.TagNumber(15)
+  set gyroZeroBiasX($core.double v) { $_setDouble(10, v); }
+  @$pb.TagNumber(15)
+  $core.bool hasGyroZeroBiasX() => $_has(10);
+  @$pb.TagNumber(15)
+  void clearGyroZeroBiasX() => $_clearField(15);
+
+  @$pb.TagNumber(16)
+  $core.double get gyroZeroBiasY => $_getN(11);
+  @$pb.TagNumber(16)
+  set gyroZeroBiasY($core.double v) { $_setDouble(11, v); }
+  @$pb.TagNumber(16)
+  $core.bool hasGyroZeroBiasY() => $_has(11);
+  @$pb.TagNumber(16)
+  void clearGyroZeroBiasY() => $_clearField(16);
+
+  @$pb.TagNumber(17)
+  $core.double get gyroZeroBiasZ => $_getN(12);
+  @$pb.TagNumber(17)
+  set gyroZeroBiasZ($core.double v) { $_setDouble(12, v); }
+  @$pb.TagNumber(17)
+  $core.bool hasGyroZeroBiasZ() => $_has(12);
+  @$pb.TagNumber(17)
+  void clearGyroZeroBiasZ() => $_clearField(17);
+
+  /// Gyro transform fit quality. Absent if no IMU or if calibration not yet
+  /// performed. This is the RMS residual angle distance divided by the angle
+  /// distance between the points from which the transform estimate was formed.
+  /// If this value is 0.05 (a decent fit), then during a slew of 100 degrees the
+  /// expected error in the IMU estimate will be 0.05 * 100 degrees or 5
+  /// degrees.
+  @$pb.TagNumber(18)
+  $core.double get gyroTransformErrorFraction => $_getN(13);
+  @$pb.TagNumber(18)
+  set gyroTransformErrorFraction($core.double v) { $_setDouble(13, v); }
+  @$pb.TagNumber(18)
+  $core.bool hasGyroTransformErrorFraction() => $_has(13);
+  @$pb.TagNumber(18)
+  void clearGyroTransformErrorFraction() => $_clearField(18);
+
+  @$pb.TagNumber(19)
+  $core.String get cameraViewGyroAxis => $_getSZ(14);
+  @$pb.TagNumber(19)
+  set cameraViewGyroAxis($core.String v) { $_setString(14, v); }
+  @$pb.TagNumber(19)
+  $core.bool hasCameraViewGyroAxis() => $_has(14);
+  @$pb.TagNumber(19)
+  void clearCameraViewGyroAxis() => $_clearField(19);
+
+  @$pb.TagNumber(20)
+  $core.double get cameraViewMisalignment => $_getN(15);
+  @$pb.TagNumber(20)
+  set cameraViewMisalignment($core.double v) { $_setDouble(15, v); }
+  @$pb.TagNumber(20)
+  $core.bool hasCameraViewMisalignment() => $_has(15);
+  @$pb.TagNumber(20)
+  void clearCameraViewMisalignment() => $_clearField(20);
+
+  @$pb.TagNumber(21)
+  $core.String get cameraUpGyroAxis => $_getSZ(16);
+  @$pb.TagNumber(21)
+  set cameraUpGyroAxis($core.String v) { $_setString(16, v); }
+  @$pb.TagNumber(21)
+  $core.bool hasCameraUpGyroAxis() => $_has(16);
+  @$pb.TagNumber(21)
+  void clearCameraUpGyroAxis() => $_clearField(21);
+
+  @$pb.TagNumber(22)
+  $core.double get cameraUpMisalignment => $_getN(17);
+  @$pb.TagNumber(22)
+  set cameraUpMisalignment($core.double v) { $_setDouble(17, v); }
+  @$pb.TagNumber(22)
+  $core.bool hasCameraUpMisalignment() => $_has(17);
+  @$pb.TagNumber(22)
+  void clearCameraUpMisalignment() => $_clearField(22);
 }
 
 /// When the observer's geographic location is known, the

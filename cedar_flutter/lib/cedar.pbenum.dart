@@ -32,6 +32,25 @@ class FeatureLevel extends $pb.ProtobufEnum {
   const FeatureLevel._(super.v, super.n);
 }
 
+class ImuTrackerState extends $pb.ProtobufEnum {
+  static const ImuTrackerState TRACKER_STATE_UNKNOWN = ImuTrackerState._(0, _omitEnumNames ? '' : 'TRACKER_STATE_UNKNOWN');
+  static const ImuTrackerState MOTIONLESS = ImuTrackerState._(1, _omitEnumNames ? '' : 'MOTIONLESS');
+  static const ImuTrackerState MOVING = ImuTrackerState._(2, _omitEnumNames ? '' : 'MOVING');
+  static const ImuTrackerState LOST = ImuTrackerState._(3, _omitEnumNames ? '' : 'LOST');
+
+  static const $core.List<ImuTrackerState> values = <ImuTrackerState> [
+    TRACKER_STATE_UNKNOWN,
+    MOTIONLESS,
+    MOVING,
+    LOST,
+  ];
+
+  static final $core.Map<$core.int, ImuTrackerState> _byValue = $pb.ProtobufEnum.initByValue(values);
+  static ImuTrackerState? valueOf($core.int value) => _byValue[value];
+
+  const ImuTrackerState._(super.v, super.n);
+}
+
 class OperatingMode extends $pb.ProtobufEnum {
   static const OperatingMode MODE_UNSPECIFIED = OperatingMode._(0, _omitEnumNames ? '' : 'MODE_UNSPECIFIED');
   /// Mode supporting establishment of camera focus and boresight alignment of
