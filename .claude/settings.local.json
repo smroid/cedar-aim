@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//c/Users/smrfl/Documents/projects/cedar-aim/src/proto/**)",
+      "Bash(dart analyze:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
