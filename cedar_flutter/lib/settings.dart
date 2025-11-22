@@ -61,6 +61,16 @@ bool diffPreferences(Preferences prev, Preferences curr) {
   } else {
     curr.clearScreenAlwaysOn();
   }
+  if (curr.useLx200Wifi != prev.useLx200Wifi) {
+    hasDiff = true;
+  } else {
+    curr.clearUseLx200Wifi();
+  }
+  if (curr.useLx200Bt != prev.useLx200Bt) {
+    hasDiff = true;
+  } else {
+    curr.clearUseLx200Bt();
+  }
   return hasDiff;
 }
 
@@ -137,6 +147,16 @@ class SettingsModel extends ChangeNotifier {
 
   void updateScreenAlwaysOn(bool alwaysOn) {
     preferencesProto.screenAlwaysOn = alwaysOn;
+    notifyListeners();
+  }
+
+  void updateUseLx200Wifi(bool enable) {
+    preferencesProto.useLx200Wifi = enable;
+    notifyListeners();
+  }
+
+  void updateUseLx200Bt(bool enable) {
+    preferencesProto.useLx200Bt = enable;
     notifyListeners();
   }
 }
@@ -369,6 +389,35 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 : 'Alt/Az mount'),
                       ),
                   ]),
+                  if (advanced)
+                    SettingsSection(
+                        title: scaledText('App Control (Restart Required)'),
+                        tiles: [
+                          SettingsTile(
+                            leading: Row(children: <Widget>[
+                              Switch(
+                                  value: prefsProto.useLx200Wifi,
+                                  onChanged: (bool value) {
+                                    setState(() {
+                                      provider.updateUseLx200Wifi(value);
+                                    });
+                                  })
+                            ]),
+                            title: scaledText('LX200 WiFi control'),
+                          ),
+                          SettingsTile(
+                            leading: Row(children: <Widget>[
+                              Switch(
+                                  value: prefsProto.useLx200Bt,
+                                  onChanged: (bool value) {
+                                    setState(() {
+                                      provider.updateUseLx200Bt(value);
+                                    });
+                                  })
+                            ]),
+                            title: scaledText('LX200 Bluetooth control'),
+                          ),
+                    ]),
                 ])));
   }
 }
