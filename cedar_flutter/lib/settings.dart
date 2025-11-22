@@ -4,7 +4,6 @@
 import 'dart:math';
 
 import 'package:cedar_flutter/cedar.pb.dart';
-import 'package:cedar_flutter/cedar.pbgrpc.dart' as cedar_rpc;
 import 'package:cedar_flutter/client_main.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:flutter/material.dart';
@@ -204,8 +203,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final isPlus = provider.isPlus;
     final isDIY = provider.isDIY;
     final rightHanded = prefsProto.rightHanded;
-    final serverInfo = _homePageState.serverInformation;
-    final hasImu = serverInfo != null && serverInfo.hasImuModel();
 
     final backButton = BackButton(
       style: const ButtonStyle(iconSize: WidgetStatePropertyAll(30)),
@@ -331,21 +328,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       title: scaledText(
                           rightHanded ? 'Right handed' : 'Left handed'),
                     ),
-                    if (advanced && hasImu)
-                      SettingsTile(
-                        leading: Row(children: <Widget>[
-                          Switch(
-                              value: _homePageState.operationSettings.useImu,
-                              onChanged: (bool value) async {
-                                setState(() {
-                                  _homePageState.operationSettings.useImu = value;
-                                });
-                                final request = cedar_rpc.OperationSettings(useImu: value);
-                                await _homePageState.updateOperationSettings(request);
-                              })
-                        ]),
-                        title: scaledText('Use Gyro'),
-                      ),
                   ]),
                   SettingsSection(title: scaledText('Telescope'), tiles: [
                     SettingsTile(
