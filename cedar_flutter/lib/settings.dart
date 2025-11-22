@@ -4,7 +4,6 @@
 import 'dart:math';
 
 import 'package:cedar_flutter/cedar.pb.dart';
-import 'package:cedar_flutter/cedar.pbgrpc.dart' as cedar_rpc;
 import 'package:cedar_flutter/client_main.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:flutter/material.dart';
@@ -210,9 +209,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       return Text(
         str,
         textScaler: textScaler(context),
-        style: TextStyle(
-          color: Theme.of(context).colorScheme.primary,
-        ),
+        style: TextStyle(color: Theme.of(context).colorScheme.primary),
       );
     }
 
@@ -224,8 +221,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final isPlus = provider.isPlus;
     final isDIY = provider.isDIY;
     final rightHanded = prefsProto.rightHanded;
-    final serverInfo = _homePageState.serverInformation;
-    final hasImu = serverInfo != null && serverInfo.hasImuModel();
 
     final backButton = BackButton(
       style: const ButtonStyle(iconSize: WidgetStatePropertyAll(30)),
@@ -235,210 +230,244 @@ class _SettingsScreenState extends State<SettingsScreen> {
       },
     );
     const sliderThemeData = SliderThemeData(
-        overlayShape: RoundSliderOverlayShape(overlayRadius: 0));
+      overlayShape: RoundSliderOverlayShape(overlayRadius: 0),
+    );
 
     return Scaffold(
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          leading: rightHanded ? null : backButton,
-          title: Text('Preferences',
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.primary,
-              )),
-          actions: [rightHanded ? backButton : Container()],
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        leading: rightHanded ? null : backButton,
+        title: Text(
+          'Preferences',
+          style: TextStyle(color: Theme.of(context).colorScheme.primary),
         ),
-        body: DefaultTextStyle.merge(
-            style: const TextStyle(
-                fontFamily: 'Roboto', fontFamilyFallback: ['Roboto']),
-            child: SettingsList(
-                darkTheme: prefsProto.nightVisionTheme
-                    ? const SettingsThemeData(
-                        titleTextColor: Colors.red,
-                        settingsTileTextColor: Colors.red,
-                        leadingIconsColor: Colors.red)
-                    : const SettingsThemeData(),
-                sections: [
-                  SettingsSection(title: scaledText('Appearance'), tiles: [
-                    // settings_ui has a bug on Web where the 'trailing' element
-                    // is not visible. We work around this by putting the important
-                    // element (the control) in the 'leading' position.
-                    SettingsTile(
-                      leading: SizedBox(
-                          width: 100,
-                          child: SliderTheme(
-                              data: sliderThemeData,
-                              child: Slider(
-                                min: -1,
-                                max: 1,
-                                divisions: 2,
-                                value: provider.preferencesProto.textSizeIndex
-                                    .toDouble(),
-                                onChanged: (double value) {
-                                  setState(() {
-                                    provider.updateTextSize(value.toInt());
-                                  });
-                                },
-                              ))),
-                      title: scaledText('Text size'),
-                    ),
-                    SettingsTile(
-                      leading: Row(children: <Widget>[
-                        Switch(
-                            value: prefsProto.hideAppBar,
-                            onChanged: (bool value) {
-                              setState(() {
-                                provider.updateHideAppBar(value);
-                              });
-                            })
-                      ]),
-                      title: scaledText('Full screen'),
-                    ),
-                    if (advanced)
-                      SettingsTile(
-                        leading: Row(children: <Widget>[
-                          Switch(
-                              value: prefsProto.celestialCoordFormat ==
-                                  CelestialCoordFormat.HMS_DMS,
-                              onChanged: (bool value) {
-                                setState(() {
-                                  provider.updateCelestialCoordFormat(value
-                                      ? CelestialCoordFormat.HMS_DMS
-                                      : CelestialCoordFormat.DECIMAL);
-                                });
-                              })
-                        ]),
-                        title: scaledText(prefsProto.celestialCoordFormat ==
-                                CelestialCoordFormat.HMS_DMS
-                            ? 'RA/Dec format H:M:S/D:M:S'
-                            : 'RA/Dec format D.DD/D.DD'),
+        actions: [rightHanded ? backButton : Container()],
+      ),
+      body: DefaultTextStyle.merge(
+        style: const TextStyle(
+          fontFamily: 'Roboto',
+          fontFamilyFallback: ['Roboto'],
+        ),
+        child: SettingsList(
+          darkTheme: prefsProto.nightVisionTheme
+              ? const SettingsThemeData(
+                  titleTextColor: Colors.red,
+                  settingsTileTextColor: Colors.red,
+                  leadingIconsColor: Colors.red,
+                )
+              : const SettingsThemeData(),
+          sections: [
+            SettingsSection(
+              title: scaledText('Appearance'),
+              tiles: [
+                // settings_ui has a bug on Web where the 'trailing' element
+                // is not visible. We work around this by putting the important
+                // element (the control) in the 'leading' position.
+                SettingsTile(
+                  leading: SizedBox(
+                    width: 100,
+                    child: SliderTheme(
+                      data: sliderThemeData,
+                      child: Slider(
+                        min: -1,
+                        max: 1,
+                        divisions: 2,
+                        value: provider.preferencesProto.textSizeIndex
+                            .toDouble(),
+                        onChanged: (double value) {
+                          setState(() {
+                            provider.updateTextSize(value.toInt());
+                          });
+                        },
                       ),
-                    SettingsTile(
-                      leading: Row(children: <Widget>[
-                        Switch(
-                            value: prefsProto.nightVisionTheme,
-                            onChanged: (bool value) {
-                              setState(() {
-                                provider.updateNightVisionEnabled(value);
-                              });
-                            })
-                      ]),
-                      title: scaledText('Night vision'),
                     ),
-                  ]),
-                  SettingsSection(title: scaledText('Operation'), tiles: [
-                    SettingsTile(
-                      leading: Row(children: <Widget>[
-                        Switch(
-                            value: prefsProto.screenAlwaysOn,
-                            onChanged: (bool value) {
-                              setState(() {
-                                provider.updateScreenAlwaysOn(value);
-                              });
-                            })
-                      ]),
-                      title: scaledText('Keep screen on'),
-                    ),
-                    SettingsTile(
-                      leading: Row(children: <Widget>[
-                        Switch(
-                            value: prefsProto.rightHanded,
-                            onChanged: (bool value) {
-                              setState(() {
-                                provider.updateRightHanded(value);
-                              });
-                            })
-                      ]),
-                      title: scaledText(
-                          rightHanded ? 'Right handed' : 'Left handed'),
-                    ),
-                    if (advanced && hasImu)
-                      SettingsTile(
-                        leading: Row(children: <Widget>[
-                          Switch(
-                              value: _homePageState.operationSettings.useImu,
-                              onChanged: (bool value) async {
-                                setState(() {
-                                  _homePageState.operationSettings.useImu =
-                                      value;
-                                });
-                                final request =
-                                    cedar_rpc.OperationSettings(useImu: value);
-                                await _homePageState
-                                    .updateOperationSettings(request);
-                              })
-                        ]),
-                        title: scaledText('Use Gyro'),
+                  ),
+                  title: scaledText('Text size'),
+                ),
+                SettingsTile(
+                  leading: Row(
+                    children: <Widget>[
+                      Switch(
+                        value: prefsProto.hideAppBar,
+                        onChanged: (bool value) {
+                          setState(() {
+                            provider.updateHideAppBar(value);
+                          });
+                        },
                       ),
-                  ]),
-                  SettingsSection(title: scaledText('Telescope'), tiles: [
-                    SettingsTile(
-                      leading: SizedBox(
-                          width: 140,
-                          child: SliderTheme(
-                              data: sliderThemeData,
-                              child: Slider(
-                                min: 0.1,
-                                max: 2.0,
-                                divisions: 19,
-                                value: min(prefsProto.eyepieceFov, 2.0),
-                                onChanged: (double value) {
-                                  setState(() {
-                                    provider.updateSlewBullseyeSize(value);
-                                  });
-                                },
-                              ))),
-                      title: scaledText(sprintf(
-                          'Eyepiece FOV %.1f°', [prefsProto.eyepieceFov])),
+                    ],
+                  ),
+                  title: scaledText('Full screen'),
+                ),
+                if (advanced)
+                  SettingsTile(
+                    leading: Row(
+                      children: <Widget>[
+                        Switch(
+                          value:
+                              prefsProto.celestialCoordFormat ==
+                              CelestialCoordFormat.HMS_DMS,
+                          onChanged: (bool value) {
+                            setState(() {
+                              provider.updateCelestialCoordFormat(
+                                value
+                                    ? CelestialCoordFormat.HMS_DMS
+                                    : CelestialCoordFormat.DECIMAL,
+                              );
+                            });
+                          },
+                        ),
+                      ],
                     ),
-                    if (advanced && (isPlus || isDIY))
-                      SettingsTile(
-                        leading: Row(children: <Widget>[
-                          Switch(
-                              value:
-                                  prefsProto.mountType == MountType.EQUATORIAL,
-                              onChanged: (bool value) {
-                                setState(() {
-                                  provider.updateMountType(value
-                                      ? MountType.EQUATORIAL
-                                      : MountType.ALT_AZ);
-                                });
-                              })
-                        ]),
-                        title: scaledText(
-                            prefsProto.mountType == MountType.EQUATORIAL
-                                ? 'Equatorial mount'
-                                : 'Alt/Az mount'),
+                    title: scaledText(
+                      prefsProto.celestialCoordFormat ==
+                              CelestialCoordFormat.HMS_DMS
+                          ? 'RA/Dec format H:M:S/D:M:S'
+                          : 'RA/Dec format D.DD/D.DD',
+                    ),
+                  ),
+                SettingsTile(
+                  leading: Row(
+                    children: <Widget>[
+                      Switch(
+                        value: prefsProto.nightVisionTheme,
+                        onChanged: (bool value) {
+                          setState(() {
+                            provider.updateNightVisionEnabled(value);
+                          });
+                        },
                       ),
-                  ]),
-                  if (advanced)
-                    SettingsSection(
-                        title: scaledText('App Control (Restart Required)'),
-                        tiles: [
-                          SettingsTile(
-                            leading: Row(children: <Widget>[
-                              Switch(
-                                  value: prefsProto.useLx200Wifi,
-                                  onChanged: (bool value) {
-                                    setState(() {
-                                      provider.updateUseLx200Wifi(value);
-                                    });
-                                  })
-                            ]),
-                            title: scaledText('LX200 WiFi control'),
-                          ),
-                          SettingsTile(
-                            leading: Row(children: <Widget>[
-                              Switch(
-                                  value: prefsProto.useLx200Bt,
-                                  onChanged: (bool value) {
-                                    setState(() {
-                                      provider.updateUseLx200Bt(value);
-                                    });
-                                  })
-                            ]),
-                            title: scaledText('LX200 Bluetooth control'),
-                          ),
-                        ]),
-                ])));
+                    ],
+                  ),
+                  title: scaledText('Night vision'),
+                ),
+              ],
+            ),
+            SettingsSection(
+              title: scaledText('Operation'),
+              tiles: [
+                SettingsTile(
+                  leading: Row(
+                    children: <Widget>[
+                      Switch(
+                        value: prefsProto.screenAlwaysOn,
+                        onChanged: (bool value) {
+                          setState(() {
+                            provider.updateScreenAlwaysOn(value);
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                  title: scaledText('Keep screen on'),
+                ),
+                SettingsTile(
+                  leading: Row(
+                    children: <Widget>[
+                      Switch(
+                        value: prefsProto.rightHanded,
+                        onChanged: (bool value) {
+                          setState(() {
+                            provider.updateRightHanded(value);
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                  title: scaledText(
+                    rightHanded ? 'Right handed' : 'Left handed',
+                  ),
+                ),
+              ],
+            ),
+            SettingsSection(
+              title: scaledText('Telescope'),
+              tiles: [
+                SettingsTile(
+                  leading: SizedBox(
+                    width: 140,
+                    child: SliderTheme(
+                      data: sliderThemeData,
+                      child: Slider(
+                        min: 0.1,
+                        max: 2.0,
+                        divisions: 19,
+                        value: min(prefsProto.eyepieceFov, 2.0),
+                        onChanged: (double value) {
+                          setState(() {
+                            provider.updateSlewBullseyeSize(value);
+                          });
+                        },
+                      ),
+                    ),
+                  ),
+                  title: scaledText(
+                    sprintf('Eyepiece FOV %.1f°', [prefsProto.eyepieceFov]),
+                  ),
+                ),
+                if (advanced && (isPlus || isDIY))
+                  SettingsTile(
+                    leading: Row(
+                      children: <Widget>[
+                        Switch(
+                          value: prefsProto.mountType == MountType.EQUATORIAL,
+                          onChanged: (bool value) {
+                            setState(() {
+                              provider.updateMountType(
+                                value ? MountType.EQUATORIAL : MountType.ALT_AZ,
+                              );
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                    title: scaledText(
+                      prefsProto.mountType == MountType.EQUATORIAL
+                          ? 'Equatorial mount'
+                          : 'Alt/Az mount',
+                    ),
+                  ),
+              ],
+            ),
+            if (advanced)
+              SettingsSection(
+                title: scaledText('App Control (Restart Required)'),
+                tiles: [
+                  SettingsTile(
+                    leading: Row(
+                      children: <Widget>[
+                        Switch(
+                          value: prefsProto.useLx200Wifi,
+                          onChanged: (bool value) {
+                            setState(() {
+                              provider.updateUseLx200Wifi(value);
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                    title: scaledText('LX200 WiFi control'),
+                  ),
+                  SettingsTile(
+                    leading: Row(
+                      children: <Widget>[
+                        Switch(
+                          value: prefsProto.useLx200Bt,
+                          onChanged: (bool value) {
+                            setState(() {
+                              provider.updateUseLx200Bt(value);
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                    title: scaledText('LX200 Bluetooth control'),
+                  ),
+                ],
+              ),
+          ],
+        ),
+      ),
+    );
   }
 }
