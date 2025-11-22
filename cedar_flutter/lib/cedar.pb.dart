@@ -41,6 +41,7 @@ class ServerInformation extends $pb.GeneratedMessage {
     ImuState? imu,
     $core.String? imuModel,
     ImuTrackerState? imuTrackerState,
+    $core.double? imuAngularSpeed,
   }) {
     final $result = create();
     if (productName != null) {
@@ -88,6 +89,9 @@ class ServerInformation extends $pb.GeneratedMessage {
     if (imuTrackerState != null) {
       $result.imuTrackerState = imuTrackerState;
     }
+    if (imuAngularSpeed != null) {
+      $result.imuAngularSpeed = imuAngularSpeed;
+    }
     return $result;
   }
   ServerInformation._() : super();
@@ -110,6 +114,7 @@ class ServerInformation extends $pb.GeneratedMessage {
     ..aOM<ImuState>(13, _omitFieldNames ? '' : 'imu', subBuilder: ImuState.create)
     ..aOS(14, _omitFieldNames ? '' : 'imuModel')
     ..e<ImuTrackerState>(15, _omitFieldNames ? '' : 'imuTrackerState', $pb.PbFieldType.OE, defaultOrMaker: ImuTrackerState.TRACKER_STATE_UNKNOWN, valueOf: ImuTrackerState.valueOf, enumValues: ImuTrackerState.values)
+    ..a<$core.double>(16, _omitFieldNames ? '' : 'imuAngularSpeed', $pb.PbFieldType.OD)
     ..hasRequiredFields = false
   ;
 
@@ -245,7 +250,7 @@ class ServerInformation extends $pb.GeneratedMessage {
   @$pb.TagNumber(12)
   void clearSerialNumber() => $_clearField(12);
 
-  /// The most recent IMU reading. Omitted if no IMU detected.
+  /// The most recent raw IMU reading. Omitted if no IMU detected.
   @$pb.TagNumber(13)
   ImuState get imu => $_getN(12);
   @$pb.TagNumber(13)
@@ -276,6 +281,17 @@ class ServerInformation extends $pb.GeneratedMessage {
   $core.bool hasImuTrackerState() => $_has(14);
   @$pb.TagNumber(15)
   void clearImuTrackerState() => $_clearField(15);
+
+  /// The current IMU angular speed, adjusted for the measured zero bias. Omitted
+  /// if no IMU detected.
+  @$pb.TagNumber(16)
+  $core.double get imuAngularSpeed => $_getN(15);
+  @$pb.TagNumber(16)
+  set imuAngularSpeed($core.double v) { $_setDouble(15, v); }
+  @$pb.TagNumber(16)
+  $core.bool hasImuAngularSpeed() => $_has(15);
+  @$pb.TagNumber(16)
+  void clearImuAngularSpeed() => $_clearField(16);
 }
 
 class CameraModel extends $pb.GeneratedMessage {
