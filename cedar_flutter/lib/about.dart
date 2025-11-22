@@ -691,7 +691,7 @@ void imuCalibrationDialog(dynamic serverInfo, dynamic calData) {
                             Expanded(
                                 child: Text(
                               calData.hasGyroZeroBiasX()
-                                  ? sprintf("%.4f°/s", [
+                                  ? sprintf("%.2f°/s", [
                                       _calculateMagnitude(
                                           calData.gyroZeroBiasX,
                                           calData.gyroZeroBiasY,
