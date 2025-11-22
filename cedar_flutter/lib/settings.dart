@@ -4,6 +4,7 @@
 import 'dart:math';
 
 import 'package:cedar_flutter/cedar.pb.dart';
+import 'package:cedar_flutter/cedar.pbgrpc.dart' as cedar_rpc;
 import 'package:cedar_flutter/client_main.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:flutter/material.dart';
@@ -60,6 +61,16 @@ bool diffPreferences(Preferences prev, Preferences curr) {
     hasDiff = true;
   } else {
     curr.clearScreenAlwaysOn();
+  }
+  if (curr.useLx200Wifi != prev.useLx200Wifi) {
+    hasDiff = true;
+  } else {
+    curr.clearUseLx200Wifi();
+  }
+  if (curr.useLx200Bt != prev.useLx200Bt) {
+    hasDiff = true;
+  } else {
+    curr.clearUseLx200Bt();
   }
   return hasDiff;
 }
@@ -139,6 +150,16 @@ class SettingsModel extends ChangeNotifier {
     preferencesProto.screenAlwaysOn = alwaysOn;
     notifyListeners();
   }
+
+  void updateUseLx200Wifi(bool enable) {
+    preferencesProto.useLx200Wifi = enable;
+    notifyListeners();
+  }
+
+  void updateUseLx200Bt(bool enable) {
+    preferencesProto.useLx200Bt = enable;
+    notifyListeners();
+  }
 }
 
 proto_duration.Duration durationFromMs(int intervalMs) {
@@ -203,6 +224,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final isPlus = provider.isPlus;
     final isDIY = provider.isDIY;
     final rightHanded = prefsProto.rightHanded;
+    final serverInfo = _homePageState.serverInformation;
+    final hasImu = serverInfo != null && serverInfo.hasImuModel();
 
     final backButton = BackButton(
       style: const ButtonStyle(iconSize: WidgetStatePropertyAll(30)),
@@ -328,6 +351,24 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       title: scaledText(
                           rightHanded ? 'Right handed' : 'Left handed'),
                     ),
+                    if (advanced && hasImu)
+                      SettingsTile(
+                        leading: Row(children: <Widget>[
+                          Switch(
+                              value: _homePageState.operationSettings.useImu,
+                              onChanged: (bool value) async {
+                                setState(() {
+                                  _homePageState.operationSettings.useImu =
+                                      value;
+                                });
+                                final request =
+                                    cedar_rpc.OperationSettings(useImu: value);
+                                await _homePageState
+                                    .updateOperationSettings(request);
+                              })
+                        ]),
+                        title: scaledText('Use Gyro'),
+                      ),
                   ]),
                   SettingsSection(title: scaledText('Telescope'), tiles: [
                     SettingsTile(
@@ -369,6 +410,35 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 : 'Alt/Az mount'),
                       ),
                   ]),
+                  if (advanced)
+                    SettingsSection(
+                        title: scaledText('App Control (Restart Required)'),
+                        tiles: [
+                          SettingsTile(
+                            leading: Row(children: <Widget>[
+                              Switch(
+                                  value: prefsProto.useLx200Wifi,
+                                  onChanged: (bool value) {
+                                    setState(() {
+                                      provider.updateUseLx200Wifi(value);
+                                    });
+                                  })
+                            ]),
+                            title: scaledText('LX200 WiFi control'),
+                          ),
+                          SettingsTile(
+                            leading: Row(children: <Widget>[
+                              Switch(
+                                  value: prefsProto.useLx200Bt,
+                                  onChanged: (bool value) {
+                                    setState(() {
+                                      provider.updateUseLx200Bt(value);
+                                    });
+                                  })
+                            ]),
+                            title: scaledText('LX200 Bluetooth control'),
+                          ),
+                        ]),
                 ])));
   }
 }
