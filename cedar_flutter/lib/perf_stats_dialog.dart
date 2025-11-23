@@ -2,7 +2,6 @@
 // See LICENSE file in root directory for license terms.
 
 import 'dart:async';
-import 'dart:math';
 
 import 'package:cedar_flutter/cedar.pb.dart' as cedar_rpc;
 import 'package:cedar_flutter/client_main.dart';
@@ -10,7 +9,7 @@ import 'package:cedar_flutter/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:sprintf/sprintf.dart';
 
-// Dialog layout constants
+// Dialog layout constants.
 const double _kDialogWidth = 200.0;
 const double _kBorderRadius = 10.0;
 const EdgeInsets _kDialogPadding = EdgeInsets.fromLTRB(10, 5, 10, 10);
@@ -46,10 +45,6 @@ String _formatHz(double seconds) {
     }
   }
   return "0.0";
-}
-
-double _calculateMagnitude(double x, double y, double z) {
-  return sqrt(x * x + y * y + z * z);
 }
 
 /// A row widget that displays a label and value with optional bold styling and
@@ -308,14 +303,9 @@ Future<void> perfStatsDialog(
                         StatRow(
                           context: context,
                           label: "Gyro tracker",
-                          value: state.serverInformation!.imuTrackerState == cedar_rpc.ImuTrackerState.MOVING && state.serverInformation!.hasImu()
-                              ? sprintf("%.2f °/s", [
-                                  _calculateMagnitude(
-                                    state.serverInformation!.imu.angleRateX,
-                                    state.serverInformation!.imu.angleRateY,
-                                    state.serverInformation!.imu.angleRateZ,
-                                  )
-                                ])
+                          value: state.serverInformation!.imuTrackerState == cedar_rpc.ImuTrackerState.MOVING &&
+                                 state.serverInformation!.hasImuAngularSpeed()
+                              ? sprintf("%.2f °/s", [state.serverInformation!.imuAngularSpeed])
                               : state.serverInformation!.imuTrackerState.toString().split('.').last,
                         ),
                       ])

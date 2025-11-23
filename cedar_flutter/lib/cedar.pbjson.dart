@@ -137,14 +137,16 @@ const ServerInformation$json = {
     {'1': 'camera', '3': 9, '4': 1, '5': 11, '6': '.cedar.CameraModel', '9': 0, '10': 'camera', '17': true},
     {'1': 'imu_model', '3': 14, '4': 1, '5': 9, '9': 1, '10': 'imuModel', '17': true},
     {'1': 'imu', '3': 13, '4': 1, '5': 11, '6': '.cedar.ImuState', '9': 2, '10': 'imu', '17': true},
-    {'1': 'imu_tracker_state', '3': 15, '4': 1, '5': 14, '6': '.cedar.ImuTrackerState', '9': 3, '10': 'imuTrackerState', '17': true},
-    {'1': 'wifi_access_point', '3': 10, '4': 1, '5': 11, '6': '.cedar.WiFiAccessPoint', '9': 4, '10': 'wifiAccessPoint', '17': true},
+    {'1': 'imu_angular_speed', '3': 16, '4': 1, '5': 1, '9': 3, '10': 'imuAngularSpeed', '17': true},
+    {'1': 'imu_tracker_state', '3': 15, '4': 1, '5': 14, '6': '.cedar.ImuTrackerState', '9': 4, '10': 'imuTrackerState', '17': true},
+    {'1': 'wifi_access_point', '3': 10, '4': 1, '5': 11, '6': '.cedar.WiFiAccessPoint', '9': 5, '10': 'wifiAccessPoint', '17': true},
     {'1': 'demo_image_names', '3': 11, '4': 3, '5': 9, '10': 'demoImageNames'},
   ],
   '8': [
     {'1': '_camera'},
     {'1': '_imu_model'},
     {'1': '_imu'},
+    {'1': '_imu_angular_speed'},
     {'1': '_imu_tracker_state'},
     {'1': '_wifi_access_point'},
   ],
@@ -161,12 +163,13 @@ final $typed_data.Uint8List serverInformationDescriptor = $convert.base64Decode(
     'bXBlcmF0dXJlEjsKC3NlcnZlcl90aW1lGAggASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdG'
     'FtcFIKc2VydmVyVGltZRIvCgZjYW1lcmEYCSABKAsyEi5jZWRhci5DYW1lcmFNb2RlbEgAUgZj'
     'YW1lcmGIAQESIAoJaW11X21vZGVsGA4gASgJSAFSCGltdU1vZGVsiAEBEiYKA2ltdRgNIAEoCz'
-    'IPLmNlZGFyLkltdVN0YXRlSAJSA2ltdYgBARJHChFpbXVfdHJhY2tlcl9zdGF0ZRgPIAEoDjIW'
-    'LmNlZGFyLkltdVRyYWNrZXJTdGF0ZUgDUg9pbXVUcmFja2VyU3RhdGWIAQESRwoRd2lmaV9hY2'
-    'Nlc3NfcG9pbnQYCiABKAsyFi5jZWRhci5XaUZpQWNjZXNzUG9pbnRIBFIPd2lmaUFjY2Vzc1Bv'
-    'aW50iAEBEigKEGRlbW9faW1hZ2VfbmFtZXMYCyADKAlSDmRlbW9JbWFnZU5hbWVzQgkKB19jYW'
-    '1lcmFCDAoKX2ltdV9tb2RlbEIGCgRfaW11QhQKEl9pbXVfdHJhY2tlcl9zdGF0ZUIUChJfd2lm'
-    'aV9hY2Nlc3NfcG9pbnQ=');
+    'IPLmNlZGFyLkltdVN0YXRlSAJSA2ltdYgBARIvChFpbXVfYW5ndWxhcl9zcGVlZBgQIAEoAUgD'
+    'Ug9pbXVBbmd1bGFyU3BlZWSIAQESRwoRaW11X3RyYWNrZXJfc3RhdGUYDyABKA4yFi5jZWRhci'
+    '5JbXVUcmFja2VyU3RhdGVIBFIPaW11VHJhY2tlclN0YXRliAEBEkcKEXdpZmlfYWNjZXNzX3Bv'
+    'aW50GAogASgLMhYuY2VkYXIuV2lGaUFjY2Vzc1BvaW50SAVSD3dpZmlBY2Nlc3NQb2ludIgBAR'
+    'IoChBkZW1vX2ltYWdlX25hbWVzGAsgAygJUg5kZW1vSW1hZ2VOYW1lc0IJCgdfY2FtZXJhQgwK'
+    'Cl9pbXVfbW9kZWxCBgoEX2ltdUIUChJfaW11X2FuZ3VsYXJfc3BlZWRCFAoSX2ltdV90cmFja2'
+    'VyX3N0YXRlQhQKEl93aWZpX2FjY2Vzc19wb2ludA==');
 
 @$core.Deprecated('Use cameraModelDescriptor instead')
 const CameraModel$json = {
