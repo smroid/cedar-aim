@@ -61,15 +61,10 @@ bool diffPreferences(Preferences prev, Preferences curr) {
   } else {
     curr.clearScreenAlwaysOn();
   }
-  if (curr.useLx200Wifi != prev.useLx200Wifi) {
+  if (curr.useBluetooth != prev.useBluetooth) {
     hasDiff = true;
   } else {
-    curr.clearUseLx200Wifi();
-  }
-  if (curr.useLx200Bt != prev.useLx200Bt) {
-    hasDiff = true;
-  } else {
-    curr.clearUseLx200Bt();
+    curr.clearUseBluetooth();
   }
   return hasDiff;
 }
@@ -150,13 +145,8 @@ class SettingsModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void updateUseLx200Wifi(bool enable) {
-    preferencesProto.useLx200Wifi = enable;
-    notifyListeners();
-  }
-
-  void updateUseLx200Bt(bool enable) {
-    preferencesProto.useLx200Bt = enable;
+  void updateUseBluetooth(bool enable) {
+    preferencesProto.useBluetooth = enable;
     notifyListeners();
   }
 }
@@ -348,6 +338,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       title: scaledText(
                           rightHanded ? 'Right handed' : 'Left handed'),
                     ),
+                    if (advanced)
+                      SettingsTile(
+                        leading: Row(children: <Widget>[
+                          Switch(
+                              value: prefsProto.useBluetooth,
+                              onChanged: (bool value) {
+                                setState(() {
+                                  provider.updateUseBluetooth(value);
+                                });
+                              })
+                        ]),
+                        title: scaledText('Bluetooth control'),
+                      ),
                   ]),
                   SettingsSection(title: scaledText('Telescope'), tiles: [
                     SettingsTile(
@@ -389,35 +392,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 : 'Alt/Az mount'),
                       ),
                   ]),
-                  if (advanced)
-                    SettingsSection(
-                        title: scaledText('App Control (Restart Required)'),
-                        tiles: [
-                          SettingsTile(
-                            leading: Row(children: <Widget>[
-                              Switch(
-                                  value: prefsProto.useLx200Wifi,
-                                  onChanged: (bool value) {
-                                    setState(() {
-                                      provider.updateUseLx200Wifi(value);
-                                    });
-                                  })
-                            ]),
-                            title: scaledText('LX200 WiFi control'),
-                          ),
-                          SettingsTile(
-                            leading: Row(children: <Widget>[
-                              Switch(
-                                  value: prefsProto.useLx200Bt,
-                                  onChanged: (bool value) {
-                                    setState(() {
-                                      provider.updateUseLx200Bt(value);
-                                    });
-                                  })
-                            ]),
-                            title: scaledText('LX200 Bluetooth control'),
-                          ),
-                    ]),
                 ])));
   }
 }
