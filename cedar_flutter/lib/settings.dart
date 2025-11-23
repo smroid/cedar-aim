@@ -347,6 +347,27 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 setState(() {
                                   provider.updateUseBluetooth(value);
                                 });
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      content: scaledText(
+                                          'A restart is required for Bluetooth changes to take effect'
+                                      ),
+                                      actions: [
+                                        ElevatedButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: Colors.white10,
+                                          ),
+                                          child: scaledText('OK'),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
                               })
                         ]),
                         title: scaledText('Bluetooth control'),
