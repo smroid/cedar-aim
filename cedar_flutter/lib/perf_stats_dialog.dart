@@ -296,20 +296,6 @@ Future<void> perfStatsDialog(
                         value: sprintf("%.1f ADU", [state.noiseEstimate]),
                       ),
                   ],
-                  ...[
-                    if (state.advanced && state.serverInformation != null && state.serverInformation!.hasImuModel())
-                      Column(children: [
-                        SizedBox(height: groupGap * textScaleFactor(context)),
-                        StatRow(
-                          context: context,
-                          label: "Gyro tracker",
-                          value: state.serverInformation!.imuTrackerState == cedar_rpc.ImuTrackerState.MOVING &&
-                                 state.serverInformation!.hasImuAngularSpeed()
-                              ? sprintf("%.2f °/s", [state.serverInformation!.imuAngularSpeed])
-                              : state.serverInformation!.imuTrackerState.toString().split('.').last,
-                        ),
-                      ])
-                  ],
                 ],
               ),
             ))),
