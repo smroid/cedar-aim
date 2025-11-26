@@ -91,47 +91,52 @@ Future<void> aboutScreen(MyHomePageState state, BuildContext context) async {
   _aboutOverlayEntry = OverlayEntry(
       builder: (BuildContext context) => Material(
           color: Colors.black,
-          child: DefaultTextStyle.merge(
-              style: const TextStyle(fontFamilyFallback: ['Roboto']),
-              child: Stack(
-                alignment: rightHanded ? Alignment.topRight : Alignment.topLeft,
-                children: [
-                  RotatedBox(
-                      quarterTurns: MediaQuery.of(context).orientation ==
-                              Orientation.portrait
-                          ? 1
-                          : 0,
-                      child: Row(children: [
-                        Expanded(
-                            child: Container(
-                          decoration: BoxDecoration(
-                              color: Theme.of(context).colorScheme.surface,
-                              borderRadius: BorderRadius.circular(10)),
-                          margin: const EdgeInsets.fromLTRB(10, 10, 5, 10),
-                          padding: const EdgeInsets.fromLTRB(0, 10, 10, 10),
-                          child: systemInfo(state),
-                        )),
-                        Expanded(
-                            child: Container(
-                          decoration: BoxDecoration(
-                              color: Theme.of(context).colorScheme.surface,
-                              borderRadius: BorderRadius.circular(10)),
-                          margin: const EdgeInsets.fromLTRB(10, 10, 5, 10),
-                          padding: const EdgeInsets.fromLTRB(0, 10, 10, 10),
-                          child: calibrationInfo(state),
-                        )),
-                      ])),
-                  IconButton(
-                    icon: const Icon(Icons.close, size: 30),
-                    onPressed: () {
-                      _aboutOverlayEntry?.remove();
-                      _aboutOverlayEntry = null;
-                      _timer?.cancel();
-                      state.closeDrawer();
-                    },
-                  ),
-                ],
-              ))));
+          child: SafeArea(
+              child: DefaultTextStyle.merge(
+                  style: const TextStyle(fontFamilyFallback: ['Roboto']),
+                  child: Stack(
+                    children: [
+                      RotatedBox(
+                          quarterTurns: MediaQuery.of(context).orientation ==
+                                  Orientation.portrait
+                              ? 1
+                              : 0,
+                          child: Row(children: [
+                            Expanded(
+                                child: Container(
+                              decoration: BoxDecoration(
+                                  color: Theme.of(context).colorScheme.surface,
+                                  borderRadius: BorderRadius.circular(10)),
+                              margin: const EdgeInsets.fromLTRB(10, 10, 5, 10),
+                              padding: const EdgeInsets.fromLTRB(0, 10, 10, 10),
+                              child: systemInfo(state),
+                            )),
+                            Expanded(
+                                child: Container(
+                              decoration: BoxDecoration(
+                                  color: Theme.of(context).colorScheme.surface,
+                                  borderRadius: BorderRadius.circular(10)),
+                              margin: const EdgeInsets.fromLTRB(10, 10, 5, 10),
+                              padding: const EdgeInsets.fromLTRB(0, 10, 10, 10),
+                              child: calibrationInfo(state),
+                            )),
+                          ])),
+                      Positioned(
+                        top: 0,
+                        right: rightHanded ? 0 : null,
+                        left: rightHanded ? null : 0,
+                        child: IconButton(
+                          icon: const Icon(Icons.close, size: 30),
+                          onPressed: () {
+                            _aboutOverlayEntry?.remove();
+                            _aboutOverlayEntry = null;
+                            _timer?.cancel();
+                            state.closeDrawer();
+                          },
+                        ),
+                      ),
+                    ],
+                  )))));
 
   _timer = Timer.periodic(const Duration(seconds: 1), (_) async {
     _serverTimeOverlayEntry?.markNeedsBuild();
@@ -274,16 +279,23 @@ Widget calibrationInfo(MyHomePageState state) {
           ]),
           if (serverInfo.hasImuModel()) ...[
             _dialogSectionSpacing,
-            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-              _scaledText("Gyro"),
-              TextButton(
-                style: _viewButtonStyle,
-                onPressed: () {
-                  imuCalibrationDialog(serverInfo, calData);
-                },
-                child: _scaledText("view"),
-              ),
-            ]),
+            GestureDetector(
+              onLongPress: () {
+                imuCalibrationDialog(serverInfo, calData);
+              },
+              child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                _scaledText("IMU"),
+                Text(
+                  serverInfo.imuModel,
+                  textScaler: textScaler(_context),
+                  style: TextStyle(
+                    color: (calData.hasGyroTransformErrorFraction() || calData.hasGyroZeroBiasX())
+                        ? Theme.of(_context).colorScheme.primary
+                        : Theme.of(_context).colorScheme.primary.withAlpha(128),
+                  ),
+                ),
+              ]),
+            ),
           ],
         ]))
       ]));
@@ -658,45 +670,12 @@ void imuCalibrationDialog(dynamic serverInfo, dynamic calData) {
                       Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            _scaledText("Model:"),
-                            _dialogRowSpacing,
-                            Expanded(
-                                child: Text(
-                              serverInfo.imuModel,
-                              textAlign: TextAlign.right,
-                              style: _dialogTextStyle(),
-                            )),
-                          ]),
-                      _dialogItemSpacing,
-                      Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
                             _scaledText("Calibration error:"),
                             _dialogRowSpacing,
                             Expanded(
                                 child: Text(
                               calData.hasGyroTransformErrorFraction()
                                   ? sprintf("%.1f%%", [calData.gyroTransformErrorFraction * 100])
-                                  : "unknown",
-                              textAlign: TextAlign.right,
-                              style: _dialogTextStyle(),
-                            )),
-                          ]),
-                      _dialogItemSpacing,
-                      Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            _scaledText("Zero bias:"),
-                            _dialogRowSpacing,
-                            Expanded(
-                                child: Text(
-                              calData.hasGyroZeroBiasX()
-                                  ? sprintf("%.2f°/s", [
-                                      _calculateMagnitude(
-                                          calData.gyroZeroBiasX,
-                                          calData.gyroZeroBiasY,
-                                          calData.gyroZeroBiasZ)
-                                    ])
                                   : "unknown",
                               textAlign: TextAlign.right,
                               style: _dialogTextStyle(),
@@ -717,7 +696,6 @@ void imuCalibrationDialog(dynamic serverInfo, dynamic calData) {
                               style: _dialogTextStyle(),
                             )),
                           ]),
-                      _dialogItemSpacing,
                       Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -747,7 +725,6 @@ void imuCalibrationDialog(dynamic serverInfo, dynamic calData) {
                               style: _dialogTextStyle(),
                             )),
                           ]),
-                      _dialogItemSpacing,
                       Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -757,6 +734,26 @@ void imuCalibrationDialog(dynamic serverInfo, dynamic calData) {
                                 child: Text(
                               calData.hasCameraUpGyroAxis()
                                   ? sprintf("%.1f°", [calData.cameraUpMisalignment])
+                                  : "unknown",
+                              textAlign: TextAlign.right,
+                              style: _dialogTextStyle(),
+                            )),
+                          ]),
+                      _dialogItemSpacing,
+                      Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _scaledText("Zero bias:"),
+                            _dialogRowSpacing,
+                            Expanded(
+                                child: Text(
+                              calData.hasGyroZeroBiasX()
+                                  ? sprintf("%.2f°/s", [
+                                      _calculateMagnitude(
+                                          calData.gyroZeroBiasX,
+                                          calData.gyroZeroBiasY,
+                                          calData.gyroZeroBiasZ)
+                                    ])
                                   : "unknown",
                               textAlign: TextAlign.right,
                               style: _dialogTextStyle(),

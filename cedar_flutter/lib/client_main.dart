@@ -2220,27 +2220,29 @@ class MyHomePageState extends State<MyHomePage> {
           child: hideAppBar
             ? LayoutBuilder(
                 builder: (context, constraints) {
-                  return Stack(
-                    fit: StackFit.expand,
-                    children: [
-                      healthy ? _orientationLayout(context, Size(constraints.maxWidth, constraints.maxHeight)) : _badServerState(),
-                      // Menu icon positioned at top when in fullscreen mode
-                      Positioned(
-                        left: _rightHanded ? null : 0,
-                        right: _rightHanded ? 0 : null,
-                        top: 0,
-                        child: IconButton(
-                          icon: const Icon(Icons.menu),
-                          onPressed: () {
-                            if (_rightHanded) {
-                              _scaffoldKey.currentState!.openEndDrawer();
-                            } else {
-                              _scaffoldKey.currentState!.openDrawer();
-                            }
-                          },
+                  return SafeArea(
+                    child: Stack(
+                      fit: StackFit.expand,
+                      children: [
+                        healthy ? _orientationLayout(context, Size(constraints.maxWidth, constraints.maxHeight)) : _badServerState(),
+                        // Menu icon positioned at top when in fullscreen mode
+                        Positioned(
+                          left: _rightHanded ? null : 0,
+                          right: _rightHanded ? 0 : null,
+                          top: 0,
+                          child: IconButton(
+                            icon: const Icon(Icons.menu),
+                            onPressed: () {
+                              if (_rightHanded) {
+                                _scaffoldKey.currentState!.openEndDrawer();
+                              } else {
+                                _scaffoldKey.currentState!.openDrawer();
+                              }
+                            },
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   );
                 },
               )
