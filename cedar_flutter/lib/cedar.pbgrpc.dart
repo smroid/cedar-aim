@@ -143,6 +143,14 @@ class CedarClient extends $grpc.Client {
     return $createUnaryCall(_$getConstellations, request, options: options);
   }
 
+  /// Bluetooth management.
+  $grpc.ResponseFuture<$0.GetBluetoothNameResponse> getBluetoothName(
+    $0.EmptyMessage request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$getBluetoothName, request, options: options);
+  }
+
   $grpc.ResponseFuture<$0.StartBondingResponse> startBonding(
     $0.EmptyMessage request, {
     $grpc.CallOptions? options,
@@ -225,6 +233,11 @@ class CedarClient extends $grpc.Client {
           '/cedar.Cedar/GetConstellations',
           ($0.EmptyMessage value) => value.writeToBuffer(),
           $1.ConstellationResponse.fromBuffer);
+  static final _$getBluetoothName =
+      $grpc.ClientMethod<$0.EmptyMessage, $0.GetBluetoothNameResponse>(
+          '/cedar.Cedar/GetBluetoothName',
+          ($0.EmptyMessage value) => value.writeToBuffer(),
+          $0.GetBluetoothNameResponse.fromBuffer);
   static final _$startBonding =
       $grpc.ClientMethod<$0.EmptyMessage, $0.StartBondingResponse>(
           '/cedar.Cedar/StartBonding',
@@ -334,6 +347,14 @@ abstract class CedarServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $0.EmptyMessage.fromBuffer(value),
         ($1.ConstellationResponse value) => value.writeToBuffer()));
+    $addMethod(
+        $grpc.ServiceMethod<$0.EmptyMessage, $0.GetBluetoothNameResponse>(
+            'GetBluetoothName',
+            getBluetoothName_Pre,
+            false,
+            false,
+            ($core.List<$core.int> value) => $0.EmptyMessage.fromBuffer(value),
+            ($0.GetBluetoothNameResponse value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.EmptyMessage, $0.StartBondingResponse>(
         'StartBonding',
         startBonding_Pre,
@@ -454,6 +475,14 @@ abstract class CedarServiceBase extends $grpc.Service {
   }
 
   $async.Future<$1.ConstellationResponse> getConstellations(
+      $grpc.ServiceCall call, $0.EmptyMessage request);
+
+  $async.Future<$0.GetBluetoothNameResponse> getBluetoothName_Pre(
+      $grpc.ServiceCall $call, $async.Future<$0.EmptyMessage> $request) async {
+    return getBluetoothName($call, await $request);
+  }
+
+  $async.Future<$0.GetBluetoothNameResponse> getBluetoothName(
       $grpc.ServiceCall call, $0.EmptyMessage request);
 
   $async.Future<$0.StartBondingResponse> startBonding_Pre(

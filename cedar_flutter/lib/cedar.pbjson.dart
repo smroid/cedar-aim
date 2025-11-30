@@ -2095,6 +2095,19 @@ const EmptyMessage$json = {
 final $typed_data.Uint8List emptyMessageDescriptor =
     $convert.base64Decode('CgxFbXB0eU1lc3NhZ2U=');
 
+@$core.Deprecated('Use getBluetoothNameResponseDescriptor instead')
+const GetBluetoothNameResponse$json = {
+  '1': 'GetBluetoothNameResponse',
+  '2': [
+    {'1': 'name', '3': 1, '4': 1, '5': 9, '10': 'name'},
+  ],
+};
+
+/// Descriptor for `GetBluetoothNameResponse`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List getBluetoothNameResponseDescriptor =
+    $convert.base64Decode(
+        'ChhHZXRCbHVldG9vdGhOYW1lUmVzcG9uc2USEgoEbmFtZRgBIAEoCVIEbmFtZQ==');
+
 @$core.Deprecated('Use startBondingResponseDescriptor instead')
 const StartBondingResponse$json = {
   '1': 'StartBondingResponse',

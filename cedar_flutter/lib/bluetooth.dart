@@ -20,11 +20,36 @@ class _BluetoothScreenState extends State<BluetoothScreen> {
   bool _isPairing = false;
   // Track which specific device is currently being removed to show the spinner on the correct row
   String? _removingDeviceAddress;
+  String _bluetoothName = 'cedar';
+  bool _isLoadingName = true;
 
   @override
   void initState() {
     super.initState();
+    _getBluetoothName();
     _refreshBondedDevices();
+  }
+
+  Future<void> _getBluetoothName() async {
+    try {
+      final client = getClient();
+      final response = await client.getBluetoothName(cedar_pb.EmptyMessage(),
+          options: CallOptions(timeout: const Duration(seconds: 5)));
+
+      if (mounted) {
+        setState(() {
+          _bluetoothName = response.name;
+          _isLoadingName = false;
+        });
+      }
+    } catch (e) {
+      debugPrint('Error fetching bluetooth name: $e');
+      if (mounted) {
+        setState(() {
+          _isLoadingName = false;
+        });
+      }
+    }
   }
 
   Future<void> _refreshBondedDevices() async {
@@ -152,13 +177,15 @@ class _BluetoothScreenState extends State<BluetoothScreen> {
             ],
           ),
           actions: <Widget>[
-            TextButton(
+            OutlinedButton(
               child: const Text('Dismiss'),
               onPressed: () {
                 Navigator.of(context).pop();
                 // Refresh list in case pairing succeeded immediately
                 _refreshBondedDevices(); 
               },
+              style: OutlinedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(horizontal: 10)),
             ),
           ],
         );
@@ -177,26 +204,28 @@ class _BluetoothScreenState extends State<BluetoothScreen> {
             const SizedBox(height: 20),
             // Pair New Device Button
             Center(
-              child: _isPairing
-                  ? Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: const [
-                        Text(
-                          'Pair with "cedar" using your other device.',
-                          style: const TextStyle(fontSize: 18),
+              child: _isLoadingName
+                  ? const CircularProgressIndicator()
+                  : _isPairing
+                      ? Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              'Pair with "$_bluetoothName" using your other device.',
+                              style: const TextStyle(fontSize: 18),
+                            ),
+                            const SizedBox(height: 20),
+                            const CircularProgressIndicator(),
+                          ],
+                        )
+                      : OutlinedButton(
+                          onPressed: _startBonding,
+                          style: OutlinedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 15),
+                          ),
+                          child: const Text('Pair New Device'),
                         ),
-                        SizedBox(height: 20),
-                        CircularProgressIndicator(),
-                      ],
-                    )
-                  : OutlinedButton(
-                      onPressed: _startBonding,
-                      style: OutlinedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 15),
-                      ),
-                      child: const Text('Pair New Device'),
-                    ),
             ),
             const SizedBox(height: 30),
             const Divider(),
@@ -274,4 +303,3 @@ class _BluetoothScreenState extends State<BluetoothScreen> {
     );
   }
 }
-

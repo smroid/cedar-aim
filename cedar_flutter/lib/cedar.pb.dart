@@ -4178,6 +4178,64 @@ class EmptyMessage extends $pb.GeneratedMessage {
   static EmptyMessage? _defaultInstance;
 }
 
+class GetBluetoothNameResponse extends $pb.GeneratedMessage {
+  factory GetBluetoothNameResponse({
+    $core.String? name,
+  }) {
+    final result = create();
+    if (name != null) result.name = name;
+    return result;
+  }
+
+  GetBluetoothNameResponse._();
+
+  factory GetBluetoothNameResponse.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory GetBluetoothNameResponse.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'GetBluetoothNameResponse',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'name')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GetBluetoothNameResponse clone() =>
+      GetBluetoothNameResponse()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GetBluetoothNameResponse copyWith(
+          void Function(GetBluetoothNameResponse) updates) =>
+      super.copyWith((message) => updates(message as GetBluetoothNameResponse))
+          as GetBluetoothNameResponse;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static GetBluetoothNameResponse create() => GetBluetoothNameResponse._();
+  @$core.override
+  GetBluetoothNameResponse createEmptyInstance() => create();
+  static $pb.PbList<GetBluetoothNameResponse> createRepeated() =>
+      $pb.PbList<GetBluetoothNameResponse>();
+  @$core.pragma('dart2js:noInline')
+  static GetBluetoothNameResponse getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<GetBluetoothNameResponse>(create);
+  static GetBluetoothNameResponse? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get name => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set name($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasName() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearName() => $_clearField(1);
+}
+
 class StartBondingResponse extends $pb.GeneratedMessage {
   factory StartBondingResponse({
     $core.String? name,
