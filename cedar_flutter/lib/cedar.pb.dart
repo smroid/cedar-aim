@@ -4178,6 +4178,252 @@ class EmptyMessage extends $pb.GeneratedMessage {
   static EmptyMessage? _defaultInstance;
 }
 
+class StartBondingResponse extends $pb.GeneratedMessage {
+  factory StartBondingResponse({
+    $core.String? name,
+    $core.int? passkey,
+  }) {
+    final result = create();
+    if (name != null) result.name = name;
+    if (passkey != null) result.passkey = passkey;
+    return result;
+  }
+
+  StartBondingResponse._();
+
+  factory StartBondingResponse.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory StartBondingResponse.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'StartBondingResponse',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'name')
+    ..a<$core.int>(2, _omitFieldNames ? '' : 'passkey', $pb.PbFieldType.OU3)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  StartBondingResponse clone() =>
+      StartBondingResponse()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  StartBondingResponse copyWith(void Function(StartBondingResponse) updates) =>
+      super.copyWith((message) => updates(message as StartBondingResponse))
+          as StartBondingResponse;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static StartBondingResponse create() => StartBondingResponse._();
+  @$core.override
+  StartBondingResponse createEmptyInstance() => create();
+  static $pb.PbList<StartBondingResponse> createRepeated() =>
+      $pb.PbList<StartBondingResponse>();
+  @$core.pragma('dart2js:noInline')
+  static StartBondingResponse getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<StartBondingResponse>(create);
+  static StartBondingResponse? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get name => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set name($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasName() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearName() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.int get passkey => $_getIZ(1);
+  @$pb.TagNumber(2)
+  set passkey($core.int value) => $_setUnsignedInt32(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasPasskey() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearPasskey() => $_clearField(2);
+}
+
+class BondedDevice extends $pb.GeneratedMessage {
+  factory BondedDevice({
+    $core.String? name,
+    $core.String? address,
+  }) {
+    final result = create();
+    if (name != null) result.name = name;
+    if (address != null) result.address = address;
+    return result;
+  }
+
+  BondedDevice._();
+
+  factory BondedDevice.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory BondedDevice.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'BondedDevice',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'name')
+    ..aOS(2, _omitFieldNames ? '' : 'address')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BondedDevice clone() => BondedDevice()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BondedDevice copyWith(void Function(BondedDevice) updates) =>
+      super.copyWith((message) => updates(message as BondedDevice))
+          as BondedDevice;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static BondedDevice create() => BondedDevice._();
+  @$core.override
+  BondedDevice createEmptyInstance() => create();
+  static $pb.PbList<BondedDevice> createRepeated() =>
+      $pb.PbList<BondedDevice>();
+  @$core.pragma('dart2js:noInline')
+  static BondedDevice getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<BondedDevice>(create);
+  static BondedDevice? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get name => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set name($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasName() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearName() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get address => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set address($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasAddress() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearAddress() => $_clearField(2);
+}
+
+class GetBondedDevicesResponse extends $pb.GeneratedMessage {
+  factory GetBondedDevicesResponse({
+    $core.Iterable<BondedDevice>? devices,
+  }) {
+    final result = create();
+    if (devices != null) result.devices.addAll(devices);
+    return result;
+  }
+
+  GetBondedDevicesResponse._();
+
+  factory GetBondedDevicesResponse.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory GetBondedDevicesResponse.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'GetBondedDevicesResponse',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'),
+      createEmptyInstance: create)
+    ..pc<BondedDevice>(1, _omitFieldNames ? '' : 'devices', $pb.PbFieldType.PM,
+        subBuilder: BondedDevice.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GetBondedDevicesResponse clone() =>
+      GetBondedDevicesResponse()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GetBondedDevicesResponse copyWith(
+          void Function(GetBondedDevicesResponse) updates) =>
+      super.copyWith((message) => updates(message as GetBondedDevicesResponse))
+          as GetBondedDevicesResponse;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static GetBondedDevicesResponse create() => GetBondedDevicesResponse._();
+  @$core.override
+  GetBondedDevicesResponse createEmptyInstance() => create();
+  static $pb.PbList<GetBondedDevicesResponse> createRepeated() =>
+      $pb.PbList<GetBondedDevicesResponse>();
+  @$core.pragma('dart2js:noInline')
+  static GetBondedDevicesResponse getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<GetBondedDevicesResponse>(create);
+  static GetBondedDevicesResponse? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $pb.PbList<BondedDevice> get devices => $_getList(0);
+}
+
+class RemoveBondRequest extends $pb.GeneratedMessage {
+  factory RemoveBondRequest({
+    $core.String? address,
+  }) {
+    final result = create();
+    if (address != null) result.address = address;
+    return result;
+  }
+
+  RemoveBondRequest._();
+
+  factory RemoveBondRequest.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory RemoveBondRequest.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'RemoveBondRequest',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'address')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  RemoveBondRequest clone() => RemoveBondRequest()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  RemoveBondRequest copyWith(void Function(RemoveBondRequest) updates) =>
+      super.copyWith((message) => updates(message as RemoveBondRequest))
+          as RemoveBondRequest;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static RemoveBondRequest create() => RemoveBondRequest._();
+  @$core.override
+  RemoveBondRequest createEmptyInstance() => create();
+  static $pb.PbList<RemoveBondRequest> createRepeated() =>
+      $pb.PbList<RemoveBondRequest>();
+  @$core.pragma('dart2js:noInline')
+  static RemoveBondRequest getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<RemoveBondRequest>(create);
+  static RemoveBondRequest? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get address => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set address($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasAddress() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearAddress() => $_clearField(1);
+}
+
 const $core.bool _omitFieldNames =
     $core.bool.fromEnvironment('protobuf.omit_field_names');
 const $core.bool _omitMessageNames =

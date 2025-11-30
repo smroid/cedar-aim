@@ -2094,3 +2094,76 @@ const EmptyMessage$json = {
 /// Descriptor for `EmptyMessage`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List emptyMessageDescriptor =
     $convert.base64Decode('CgxFbXB0eU1lc3NhZ2U=');
+
+@$core.Deprecated('Use startBondingResponseDescriptor instead')
+const StartBondingResponse$json = {
+  '1': 'StartBondingResponse',
+  '2': [
+    {'1': 'name', '3': 1, '4': 1, '5': 9, '9': 0, '10': 'name', '17': true},
+    {
+      '1': 'passkey',
+      '3': 2,
+      '4': 1,
+      '5': 13,
+      '9': 1,
+      '10': 'passkey',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_name'},
+    {'1': '_passkey'},
+  ],
+};
+
+/// Descriptor for `StartBondingResponse`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List startBondingResponseDescriptor = $convert.base64Decode(
+    'ChRTdGFydEJvbmRpbmdSZXNwb25zZRIXCgRuYW1lGAEgASgJSABSBG5hbWWIAQESHQoHcGFzc2'
+    'tleRgCIAEoDUgBUgdwYXNza2V5iAEBQgcKBV9uYW1lQgoKCF9wYXNza2V5');
+
+@$core.Deprecated('Use bondedDeviceDescriptor instead')
+const BondedDevice$json = {
+  '1': 'BondedDevice',
+  '2': [
+    {'1': 'name', '3': 1, '4': 1, '5': 9, '10': 'name'},
+    {'1': 'address', '3': 2, '4': 1, '5': 9, '10': 'address'},
+  ],
+};
+
+/// Descriptor for `BondedDevice`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List bondedDeviceDescriptor = $convert.base64Decode(
+    'CgxCb25kZWREZXZpY2USEgoEbmFtZRgBIAEoCVIEbmFtZRIYCgdhZGRyZXNzGAIgASgJUgdhZG'
+    'RyZXNz');
+
+@$core.Deprecated('Use getBondedDevicesResponseDescriptor instead')
+const GetBondedDevicesResponse$json = {
+  '1': 'GetBondedDevicesResponse',
+  '2': [
+    {
+      '1': 'devices',
+      '3': 1,
+      '4': 3,
+      '5': 11,
+      '6': '.cedar.BondedDevice',
+      '10': 'devices'
+    },
+  ],
+};
+
+/// Descriptor for `GetBondedDevicesResponse`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List getBondedDevicesResponseDescriptor =
+    $convert.base64Decode(
+        'ChhHZXRCb25kZWREZXZpY2VzUmVzcG9uc2USLQoHZGV2aWNlcxgBIAMoCzITLmNlZGFyLkJvbm'
+        'RlZERldmljZVIHZGV2aWNlcw==');
+
+@$core.Deprecated('Use removeBondRequestDescriptor instead')
+const RemoveBondRequest$json = {
+  '1': 'RemoveBondRequest',
+  '2': [
+    {'1': 'address', '3': 1, '4': 1, '5': 9, '10': 'address'},
+  ],
+};
+
+/// Descriptor for `RemoveBondRequest`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List removeBondRequestDescriptor = $convert.base64Decode(
+    'ChFSZW1vdmVCb25kUmVxdWVzdBIYCgdhZGRyZXNzGAEgASgJUgdhZGRyZXNz');
