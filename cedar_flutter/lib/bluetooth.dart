@@ -126,7 +126,7 @@ class _BluetoothScreenState extends State<BluetoothScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               if (!hasData)
-                const Text('No Devices Found')
+                const Text('No Device Found')
               else ...[
                 const Text('Please verify this passkey on your device:'),
                 const SizedBox(height: 16),
@@ -274,3 +274,4 @@ class _BluetoothScreenState extends State<BluetoothScreen> {
     );
   }
 }
+
