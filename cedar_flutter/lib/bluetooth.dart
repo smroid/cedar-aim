@@ -48,7 +48,6 @@ class _BluetoothScreenState extends State<BluetoothScreen> {
       if (mounted) {
         setState(() {
           _isLoadingList = false;
-          // Optionally handle error state here
         });
       }
     }
@@ -61,7 +60,7 @@ class _BluetoothScreenState extends State<BluetoothScreen> {
 
     try {
       final client = getClient();
-      // Use a longer timeout for pairing as it involves scanning/negotiation
+      // Use a longer timeout for pairing as it involves user action on the other device
       final response = await client.startBonding(cedar_pb.EmptyMessage(),
           options: CallOptions(timeout: const Duration(seconds: 60)));
 
@@ -157,7 +156,7 @@ class _BluetoothScreenState extends State<BluetoothScreen> {
               child: const Text('Dismiss'),
               onPressed: () {
                 Navigator.of(context).pop();
-                // Refresh list in case pairing succeeded immediately (though unlikely without user action on other side)
+                // Refresh list in case pairing succeeded immediately
                 _refreshBondedDevices(); 
               },
             ),
@@ -179,7 +178,17 @@ class _BluetoothScreenState extends State<BluetoothScreen> {
             // Pair New Device Button
             Center(
               child: _isPairing
-                  ? const CircularProgressIndicator()
+                  ? Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: const [
+                        Text(
+                          'Pair with "cedar" using your other device.',
+                          style: const TextStyle(fontSize: 18),
+                        ),
+                        SizedBox(height: 20),
+                        CircularProgressIndicator(),
+                      ],
+                    )
                   : OutlinedButton(
                       onPressed: _startBonding,
                       style: OutlinedButton.styleFrom(
