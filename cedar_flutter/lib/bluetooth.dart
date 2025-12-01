@@ -22,6 +22,7 @@ class _BluetoothScreenState extends State<BluetoothScreen> {
   String? _removingDeviceAddress;
   String _bluetoothName = 'cedar';
   bool _isLoadingName = true;
+  ResponseFuture<cedar_pb.StartBondingResponse>? _bondingFuture;
 
   @override
   void initState() {
@@ -86,13 +87,17 @@ class _BluetoothScreenState extends State<BluetoothScreen> {
     try {
       final client = getClient();
       // Use a longer timeout for pairing as it involves user action on the other device
-      final response = await client.startBonding(cedar_pb.EmptyMessage(),
+      _bondingFuture = client.startBonding(cedar_pb.EmptyMessage(),
           options: CallOptions(timeout: const Duration(seconds: 60)));
+      final response = await _bondingFuture!;
 
       if (mounted) {
         _showPairingResult(response);
       }
     } catch (e) {
+      if (e is GrpcError && e.code == StatusCode.cancelled) {
+        return;
+      }
       debugPrint('Error starting bonding: $e');
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -100,12 +105,17 @@ class _BluetoothScreenState extends State<BluetoothScreen> {
         );
       }
     } finally {
+      _bondingFuture = null;
       if (mounted) {
         setState(() {
           _isPairing = false;
         });
       }
     }
+  }
+
+  void _cancelBonding() {
+    _bondingFuture?.cancel();
   }
 
   Future<void> _removeBond(String address) async {
@@ -216,6 +226,11 @@ class _BluetoothScreenState extends State<BluetoothScreen> {
                             ),
                             const SizedBox(height: 20),
                             const CircularProgressIndicator(),
+                            const SizedBox(height: 20),
+                            OutlinedButton(
+                              onPressed: _cancelBonding,
+                              child: const Text('Cancel'),
+                            ),
                           ],
                         )
                       : OutlinedButton(
@@ -303,4 +318,3 @@ class _BluetoothScreenState extends State<BluetoothScreen> {
     );
   }
 }
-
