@@ -1514,7 +1514,7 @@ class MyHomePageState extends State<MyHomePage> {
     return <Widget>[
       RotatedBox(
           quarterTurns: portrait ? 3 : 0,
-          child: _setupMode && !(_focusAid && advanced && !_daylightMode)
+          child: _setupMode
               ? SizedBox(
                   width: gaugeSize,
                   height: gaugeSize,
@@ -1861,9 +1861,54 @@ class MyHomePageState extends State<MyHomePage> {
     final controls = Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [_buildControlsWidget(containerSize)]);
-    final data = Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: _dataItems(context, containerSize));
+
+    // Show "Hopper is pre-focused" message in focus mode for Hopper.
+    final isHopperFocusMode = _setupMode && _focusAid && !_daylightMode &&
+        serverInformation != null && serverInformation!.productName == "Hopper";
+
+    final data = isHopperFocusMode
+        ? GestureDetector(
+            onTap: () {
+              setState(() {
+                // Transition to align mode (same as Done button in focus screen).
+                _alignTargetTapped = false;
+                if (!_setupMode) {
+                  _transitionToSetup = true;
+                }
+                _setOperatingMode(/*setupMode=*/ true, /*focusAid=*/ false);
+              });
+            },
+            child: RotatedBox(
+              quarterTurns: portrait ? 3 : 0,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "Hopper is pre-focused",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                    textScaler: textScaler(context),
+                  ),
+                  const SizedBox(height: 12),
+                  Text(
+                    "You can tap Done to\nproceed to alignment",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                    textScaler: textScaler(context),
+                  ),
+                ],
+              ),
+            ),
+          )
+        : Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: _dataItems(context, containerSize));
 
     return GestureDetector(
         // On Android, sometimes the system and navigation bars become visible.
