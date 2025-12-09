@@ -358,11 +358,24 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                         ElevatedButton(
                                           onPressed: () {
                                             Navigator.of(context).pop();
+                                            _homePageState.restart();
                                           },
                                           style: ElevatedButton.styleFrom(
                                             backgroundColor: Colors.white10,
                                           ),
-                                          child: scaledText('OK'),
+                                          child: scaledText('Restart'),
+                                        ),
+                                        ElevatedButton(
+                                          onPressed: () {
+                                            setState(() {
+                                              provider.updateUseBluetooth(!value);
+                                            });
+                                            Navigator.of(context).pop();
+                                          },
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: Colors.white10,
+                                          ),
+                                          child: scaledText('Cancel'),
                                         ),
                                       ],
                                     );
