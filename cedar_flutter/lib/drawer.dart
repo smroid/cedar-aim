@@ -7,6 +7,7 @@ import 'package:path/path.dart' as path;
 import 'package:sprintf/sprintf.dart';
 
 import 'package:cedar_flutter/about.dart';
+import 'package:cedar_flutter/bluetooth.dart';
 import 'package:cedar_flutter/cedar.pbgrpc.dart' as cedar_rpc;
 import 'package:cedar_flutter/client_main.dart';
 import 'package:cedar_flutter/geolocation.dart';
@@ -432,6 +433,20 @@ class CedarDrawer extends StatelessWidget {
                 })
           ]),
         ]),
+      ],
+
+      // Bluetooth management (advanced only).
+      if (controller.advanced) ...[
+        Align(
+            alignment: Alignment.topLeft,
+            child: TextButton.icon(
+                label: _scaledText("Bluetooth Devices"),
+                icon: Icon(Icons.bluetooth),
+                onPressed: () {
+                  controller.closeDrawer();
+                  Navigator.push(controller.context,
+                      MaterialPageRoute(builder: (context) => BluetoothScreen()));
+                })),
       ],
 
       // System submenu (advanced only).

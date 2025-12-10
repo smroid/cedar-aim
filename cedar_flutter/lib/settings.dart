@@ -61,6 +61,11 @@ bool diffPreferences(Preferences prev, Preferences curr) {
   } else {
     curr.clearScreenAlwaysOn();
   }
+  if (curr.useBluetooth != prev.useBluetooth) {
+    hasDiff = true;
+  } else {
+    curr.clearUseBluetooth();
+  }
   return hasDiff;
 }
 
@@ -137,6 +142,11 @@ class SettingsModel extends ChangeNotifier {
 
   void updateScreenAlwaysOn(bool alwaysOn) {
     preferencesProto.screenAlwaysOn = alwaysOn;
+    notifyListeners();
+  }
+
+  void updateUseBluetooth(bool enable) {
+    preferencesProto.useBluetooth = enable;
     notifyListeners();
   }
 }
@@ -328,6 +338,54 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       title: scaledText(
                           rightHanded ? 'Right handed' : 'Left handed'),
                     ),
+                    if (advanced)
+                      SettingsTile(
+                        leading: Row(children: <Widget>[
+                          Switch(
+                              value: prefsProto.useBluetooth,
+                              onChanged: (bool value) {
+                                final currentValue = prefsProto.useBluetooth;
+                                setState(() {
+                                  provider.updateUseBluetooth(value);
+                                });
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      content: scaledText(
+                                          'A restart is required for Bluetooth changes to take effect'
+                                      ),
+                                      actions: [
+                                        ElevatedButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                            _homePageState.restart();
+                                          },
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: Colors.white10,
+                                          ),
+                                          child: scaledText('Restart'),
+                                        ),
+                                        ElevatedButton(
+                                          onPressed: () {
+                                            setState(() {
+                                              provider.updateUseBluetooth(currentValue);
+                                            });
+                                            Navigator.of(context).pop();
+                                          },
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: Colors.white10,
+                                          ),
+                                          child: scaledText('Cancel'),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              })
+                        ]),
+                        title: scaledText('Bluetooth control'),
+                      ),
                   ]),
                   SettingsSection(title: scaledText('Telescope'), tiles: [
                     SettingsTile(
