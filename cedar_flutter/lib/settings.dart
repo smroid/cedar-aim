@@ -344,6 +344,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           Switch(
                               value: prefsProto.useBluetooth,
                               onChanged: (bool value) {
+                                final currentValue = prefsProto.useBluetooth;
                                 setState(() {
                                   provider.updateUseBluetooth(value);
                                 });
@@ -368,7 +369,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                         ElevatedButton(
                                           onPressed: () {
                                             setState(() {
-                                              provider.updateUseBluetooth(!value);
+                                              provider.updateUseBluetooth(currentValue);
                                             });
                                             Navigator.of(context).pop();
                                           },
