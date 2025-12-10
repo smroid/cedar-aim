@@ -5,6 +5,7 @@ import 'dart:math';
 
 import 'package:cedar_flutter/cedar.pb.dart';
 import 'package:cedar_flutter/client_main.dart';
+import 'package:cedar_flutter/restart_helper.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -213,6 +214,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final isPlus = provider.isPlus;
     final isDIY = provider.isDIY;
     final rightHanded = prefsProto.rightHanded;
+    final productName = _homePageState.serverInformation?.productName ?? 'Cedar';
 
     final backButton = BackButton(
       style: const ButtonStyle(iconSize: WidgetStatePropertyAll(30)),
@@ -343,7 +345,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         leading: Row(children: <Widget>[
                           Switch(
                               value: prefsProto.useBluetooth,
-                              onChanged: (bool value) {
+                              onChanged: (bool value) async {
                                 final currentValue = prefsProto.useBluetooth;
                                 setState(() {
                                   provider.updateUseBluetooth(value);
@@ -357,9 +359,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                       ),
                                       actions: [
                                         ElevatedButton(
-                                          onPressed: () {
+                                          onPressed: () async {
                                             Navigator.of(context).pop();
-                                            _homePageState.restart();
+                                            await performRestart(context, _homePageState, productName);
                                           },
                                           style: ElevatedButton.styleFrom(
                                             backgroundColor: Colors.white10,

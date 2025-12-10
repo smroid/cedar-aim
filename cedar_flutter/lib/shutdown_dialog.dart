@@ -1,5 +1,6 @@
 import 'package:cedar_flutter/client_main.dart';
 import 'package:cedar_flutter/platform.dart';
+import 'package:cedar_flutter/restart_helper.dart';
 import 'package:cedar_flutter/settings.dart';
 import 'package:flutter/material.dart';
 
@@ -76,34 +77,7 @@ void shutdownDialog(MyHomePageState state, BuildContext context) {
           ),
           ElevatedButton(
             onPressed: () async {
-              // Show restart progress dialog.
-              showDialog(
-                context: context,
-                barrierDismissible: false,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    content: Column(mainAxisSize: MainAxisSize.min, children: [
-                      _scaledText('Restarting $productName', context),
-                      const SizedBox(height: 10),
-                      _scaledText('You will likely need to reconnect to $productName\'s WiFi', context),
-                      const SizedBox(height: 10),
-                      const CircularProgressIndicator()
-                    ]),
-                  );
-                },
-              );
-              // Initiate server restart.
-              state.restart();
-              // Wait for the server to restart.
-              await Future.delayed(const Duration(seconds: 15));
-              if (context.mounted) {
-                // Close progress dialog and main dialog, then exit app.
-                Navigator.of(context).pop(); // Close progress dialog.
-                Navigator.of(context).pop(); // Close main shutdown dialog.
-                state.closeDrawer();
-                // Exit the app since the server has restarted and user needs to reconnect
-                exitApp();
-              }
+              await performRestart(context, state, productName);
             },
             style: ElevatedButton.styleFrom(backgroundColor: Colors.white10),
             child: _scaledText("Restart", context),

@@ -435,20 +435,6 @@ class CedarDrawer extends StatelessWidget {
         ]),
       ],
 
-      // Bluetooth management (advanced only).
-      if (controller.advanced) ...[
-        Align(
-            alignment: Alignment.topLeft,
-            child: TextButton.icon(
-                label: _scaledText("Bluetooth Devices"),
-                icon: Icon(Icons.bluetooth),
-                onPressed: () {
-                  controller.closeDrawer();
-                  Navigator.push(controller.context,
-                      MaterialPageRoute(builder: (context) => BluetoothScreen()));
-                })),
-      ],
-
       // System submenu (advanced only).
       if (controller.advanced) ...[
         SizedBox(height: _kDrawerSpacing * textScaleFactor(controller.context)),
@@ -509,6 +495,24 @@ class CedarDrawer extends StatelessWidget {
                           context: controller.context,
                           builder: (context) => ServerLogPopUp(controller.homePageState, logs));
                     }
+                  }),
+            ),
+          ),
+
+          SizedBox(height: _kDrawerSpacingCondensed * textScaleFactor(controller.context)),
+
+          // Bluetooth management.
+          Padding(
+            padding: const EdgeInsets.only(left: 16),
+            child: Align(
+              alignment: Alignment.topLeft,
+              child: TextButton.icon(
+                  label: _scaledText("Bluetooth Devices"),
+                  icon: const Icon(Icons.bluetooth),
+                  onPressed: () {
+                    controller.closeDrawer();
+                    Navigator.push(controller.context,
+                        MaterialPageRoute(builder: (context) => BluetoothScreen()));
                   }),
             ),
           ),
