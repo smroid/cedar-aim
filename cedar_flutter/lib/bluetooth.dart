@@ -2,7 +2,6 @@
 // See LICENSE file in root directory for license terms.
 
 import 'package:cedar_flutter/cedar.pb.dart' as cedar_pb;
-import 'package:cedar_flutter/cedar.pbgrpc.dart' as cedar_rpc;
 import 'package:cedar_flutter/platform.dart';
 import 'package:flutter/material.dart';
 import 'package:grpc/grpc.dart';
@@ -62,7 +61,7 @@ class _BluetoothScreenState extends State<BluetoothScreen> {
       final client = getClient();
       final response = await client.getBondedDevices(cedar_pb.EmptyMessage(),
           options: CallOptions(timeout: const Duration(seconds: 10)));
-      
+
       if (mounted) {
         setState(() {
           _bondedDevices = response.devices;
@@ -127,8 +126,8 @@ class _BluetoothScreenState extends State<BluetoothScreen> {
       final client = getClient();
       await client.removeBond(cedar_pb.RemoveBondRequest(address: address),
           options: CallOptions(timeout: const Duration(seconds: 5)));
-      
-      // Refresh the list after successful removal
+
+      // Refresh the list after successful removal.
       await _refreshBondedDevices();
     } catch (e) {
       debugPrint('Error removing bond: $e');
@@ -176,11 +175,11 @@ class _BluetoothScreenState extends State<BluetoothScreen> {
                 ),
                 const SizedBox(height: 8),
                 Center(
-                  child: Text('${response.name}'),
+                  child: Text(response.name),
                 ),
                 const SizedBox(height: 16),
                 const Text(
-                  'Follow the instructions on the other device to complete the pairing process.',
+                  'Complete the pairing process in Bluetooth settings.',
                   style: TextStyle(fontStyle: FontStyle.italic),
                 ),
               ],
@@ -188,14 +187,14 @@ class _BluetoothScreenState extends State<BluetoothScreen> {
           ),
           actions: <Widget>[
             OutlinedButton(
-              child: const Text('Dismiss'),
               onPressed: () {
                 Navigator.of(context).pop();
                 // Refresh list in case pairing succeeded immediately
-                _refreshBondedDevices(); 
+                _refreshBondedDevices();
               },
               style: OutlinedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(horizontal: 10)),
+              child: const Text('Dismiss'),
             ),
           ],
         );
