@@ -2174,59 +2174,50 @@ class MyHomePageState extends State<MyHomePage> {
       String action = product == "Hopper"
           ? " and verify the lens cap is open"
           : ", verify the lens cap is open, and check focus";
-      return interstitialDialog(
-        "Calibration of $product failed because too few stars are visible.\n"
-        "Please point $product at stars$action.",
-        context,
-        onConfirm: () {
-          setState(() {
-            _showTooFewStars = false;
-          });
-        },
-        onDontShowAgainChanged: (value) async {
-          var prefs = cedar_rpc.Preferences();
-          if (value) {
-            prefs.dontShowItems.add('too_few_stars');
-          }
-          await updatePreferences(prefs);
-        },
-      );
+      SchedulerBinding.instance.addPostFrameCallback((_) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              "Calibration of $product failed because too few stars are visible.\n"
+              "Please point $product at stars$action.",
+            ),
+          ),
+        );
+        setState(() {
+          _showTooFewStars = false;
+        });
+      });
+      return SizedBox.shrink();
     }
     if (_showBrightSky) {
-      return interstitialDialog(
-        "Calibration of $product failed because the sky is too bright.\n",
-        context,
-        onConfirm: () {
-          setState(() {
-            _showBrightSky = false;
-          });
-        },
-        onDontShowAgainChanged: (value) async {
-          var prefs = cedar_rpc.Preferences();
-          if (value) {
-            prefs.dontShowItems.add('bright_sky');
-          }
-          await updatePreferences(prefs);
-        },
-      );
+      SchedulerBinding.instance.addPostFrameCallback((_) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              "Calibration of $product failed because the sky is too bright.",
+            ),
+          ),
+        );
+        setState(() {
+          _showBrightSky = false;
+        });
+      });
+      return SizedBox.shrink();
     }
     if (_showSolverFailed) {
-      return interstitialDialog(
-        "Calibration of $product failed because the star field is not recgonized.\n",
-        context,
-        onConfirm: () {
-          setState(() {
-            _showSolverFailed = false;
-          });
-        },
-        onDontShowAgainChanged: (value) async {
-          var prefs = cedar_rpc.Preferences();
-          if (value) {
-            prefs.dontShowItems.add('solver_failed');
-          }
-          await updatePreferences(prefs);
-        },
-      );
+      SchedulerBinding.instance.addPostFrameCallback((_) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              "Calibration of $product failed because the star field is not recgonized.",
+            ),
+          ),
+        );
+        setState(() {
+          _showSolverFailed = false;
+        });
+      });
+      return SizedBox.shrink();
     }
 
     if (_showSetupFinished) {

@@ -32,28 +32,37 @@ Future<void> _performShutdown(MyHomePageState state, BuildContext context, Strin
   // Wait for the server to have shut down.
   await Future.delayed(const Duration(seconds: 15));
   if (context.mounted) {
-    Navigator.of(context).pop();
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          content:
-              _scaledText('You can unplug $productName', context),
-          actions: [
-            ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                exitApp(); // Might not work on Web.
-              },
-              style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white10),
-              child: _scaledText("OK", context),
-            ),
-          ],
-        );
-      },
-    );
+    // Close the shutdown progress dialog and the main shutdown dialog
+    Navigator.of(context).pop(); // Close "Shutting down..." dialog
+    Navigator.of(context).pop(); // Close "Shutdown $productName?" dialog
+
+    // Get the root context for showing the Snackbar
+    final rootContext = Navigator.of(context, rootNavigator: true).context;
+    if (rootContext.mounted) {
+      const duration = Duration(seconds: 10);
+      bool snackBarDismissed = false;
+
+      final snackBar = SnackBar(
+        content: Text('You can unplug $productName'),
+        duration: duration,
+        action: SnackBarAction(
+          label: 'Exit',
+          onPressed: () {
+            snackBarDismissed = true;
+            exitApp(); // Might not work on Web.
+          },
+        ),
+        onVisible: () {
+          // Exit the app after the snackbar duration if not manually dismissed.
+          Future.delayed(duration, () {
+            if (!snackBarDismissed) {
+              exitApp(); // Might not work on Web.
+            }
+          });
+        },
+      );
+      ScaffoldMessenger.of(rootContext).showSnackBar(snackBar);
+    }
   }
 }
 
@@ -106,15 +115,15 @@ void shutdownDialog(MyHomePageState state, BuildContext context) {
                         onPressed: () async {
                           // Get the parent context before we start async operations
                           final parentContext = Navigator.of(context, rootNavigator: true).context;
-                          
+
                           // Clear observer location first.
                           await clearObserverLocation();
-                          
+
                           // Close confirmation dialog.
                           if (context.mounted) {
                             Navigator.of(context).pop();
                           }
-                          
+
                           // Perform shutdown using the parent context
                           if (parentContext.mounted) {
                             await _performShutdown(state, parentContext, productName);
