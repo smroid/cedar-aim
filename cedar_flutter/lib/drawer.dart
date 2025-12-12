@@ -501,23 +501,25 @@ class CedarDrawer extends StatelessWidget {
 
           SizedBox(height: _kDrawerSpacingCondensed * textScaleFactor(controller.context)),
 
-          // Bluetooth management.
-          Padding(
-            padding: const EdgeInsets.only(left: 16),
-            child: Align(
-              alignment: Alignment.topLeft,
-              child: TextButton.icon(
-                  label: _scaledText("Bluetooth Devices"),
-                  icon: const Icon(Icons.bluetooth),
-                  onPressed: () {
-                    controller.closeDrawer();
-                    Navigator.push(controller.context,
-                        MaterialPageRoute(builder: (context) => BluetoothScreen()));
-                  }),
+          // Bluetooth management (not for Hopper).
+          if (controller.homePageState.serverInformation?.productName != "Hopper")
+            Padding(
+              padding: const EdgeInsets.only(left: 16),
+              child: Align(
+                alignment: Alignment.topLeft,
+                child: TextButton.icon(
+                    label: _scaledText("Bluetooth Devices"),
+                    icon: const Icon(Icons.bluetooth),
+                    onPressed: () {
+                      controller.closeDrawer();
+                      Navigator.push(controller.context,
+                          MaterialPageRoute(builder: (context) => BluetoothScreen()));
+                    }),
+              ),
             ),
-          ),
 
-          SizedBox(height: _kDrawerSpacingCondensed * textScaleFactor(controller.context)),
+          if (controller.homePageState.serverInformation?.productName != "Hopper")
+            SizedBox(height: _kDrawerSpacingCondensed * textScaleFactor(controller.context)),
 
           // WiFi button.
           if (!controller.isDIY && controller.wifiAccessPointDialog != null) ...[

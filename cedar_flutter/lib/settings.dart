@@ -340,7 +340,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       title: scaledText(
                           rightHanded ? 'Right handed' : 'Left handed'),
                     ),
-                    if (advanced)
+                    if (advanced && productName != "Hopper")
                       SettingsTile(
                         leading: Row(children: <Widget>[
                           Switch(
