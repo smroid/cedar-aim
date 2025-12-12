@@ -157,7 +157,7 @@ class ControlsWidget extends StatelessWidget {
                           child: Align(
                               alignment: Alignment.center,
                               child: Text(
-                                "Tap image where scope is pointed",
+                                "2. Tap image where scope is pointed",
                                 maxLines: 8,
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
@@ -172,12 +172,12 @@ class ControlsWidget extends StatelessWidget {
                               child: Align(
                                   alignment: Alignment.center,
                                   child: Text(
-                                    "Move scope to center a highlighted object, then tap object",
+                                    "3. Tap object telescope is pointed at",
                                     maxLines: 8,
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                         color: color,
-                                        fontSize: 10 * panelScaleFactor),
+                                        fontSize: 12 * panelScaleFactor),
                                     textScaler: textScaler(context),
                                   ))),
                         ])

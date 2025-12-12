@@ -6,6 +6,7 @@ import 'package:cedar_flutter/cedar.pb.dart';
 import 'package:cedar_flutter/cedar_sky.pb.dart';
 import 'package:cedar_flutter/controls_widget.dart';
 import 'package:cedar_flutter/draw_slew_target.dart';
+import 'package:cedar_flutter/draw_util.dart';
 import 'package:cedar_flutter/drawer.dart';
 import 'package:cedar_flutter/google/protobuf/timestamp.pb.dart';
 import 'package:cedar_flutter/interstitial_msg.dart';
@@ -1618,6 +1619,19 @@ class MyHomePageState extends State<MyHomePage> {
                         ));
                         _alignTargetTapped = true;
                         _wantAlignFeedback = true;
+
+                        // Show snackbar with object name if available.
+                        if (mounted) {
+                          final objectName = _getCatalogEntryNameForStar(star.centroidPosition);
+                          final message = objectName != null && objectName.isNotEmpty
+                              ? 'Alignment target: $objectName'
+                              : 'Alignment target selected';
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(message),
+                            ),
+                          );
+                        }
                       }
                     }
                   }
@@ -1663,6 +1677,18 @@ class MyHomePageState extends State<MyHomePage> {
     }
     if (closest != null && closestDistance < tolerance * _binFactor) {
       return closest;
+    }
+    return null;
+  }
+
+  String? _getCatalogEntryNameForStar(cedar_rpc.ImageCoord starPos) {
+    for (var catEntry in _labeledFovCatalogEntries) {
+      // Check if catalog entry is near the star position
+      final distanceSq = (catEntry.imagePos.x - starPos.x) * (catEntry.imagePos.x - starPos.x) +
+          (catEntry.imagePos.y - starPos.y) * (catEntry.imagePos.y - starPos.y);
+      if (distanceSq < 4) { // Within ~2 pixels
+        return labelForEntry(catEntry.entry);
+      }
     }
     return null;
   }
@@ -1862,9 +1888,14 @@ class MyHomePageState extends State<MyHomePage> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [_buildControlsWidget(containerSize)]);
 
+    final String product =
+        serverInformation != null ? serverInformation!.productName : "e-finder";
+
     // Show "Hopper is pre-focused" message in focus mode for Hopper.
     final isHopperFocusMode = _setupMode && _focusAid && !_daylightMode &&
-        serverInformation != null && serverInformation!.productName == "Hopper";
+        product == "Hopper";
+
+    final isAlignMode = _setupMode && !_focusAid;
 
     final data = isHopperFocusMode
         ? GestureDetector(
@@ -1906,9 +1937,39 @@ class MyHomePageState extends State<MyHomePage> {
               ),
             ),
           )
-        : Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: _dataItems(context, containerSize));
+        : isAlignMode
+            ? RotatedBox(
+                quarterTurns: portrait ? 3 : 0,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Set $product alignment",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                      textScaler: textScaler(context),
+                    ),
+                    const SizedBox(height: 12),
+                    Text(
+                      _daylightMode
+                        ? "1. Point your telescope at a distant object"
+                        : "1. Point your telescope at a bright star\n2. Center in eyepiece",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 11,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                      textScaler: textScaler(context),
+                    ),
+                  ],
+                ),
+              )
+            : Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: _dataItems(context, containerSize));
 
     return GestureDetector(
         // On Android, sometimes the system and navigation bars become visible.
