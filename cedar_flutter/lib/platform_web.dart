@@ -95,3 +95,11 @@ Future<bool> checkNetworkConnectivityImpl(String host) async {
   // For web platform, we can't do traditional ping, but we can try HTTP request
   throw UnimplementedError("Network connectivity check not implemented for web");
 }
+
+Future<bool> isAppUpdateAvailableImpl() async {
+  return false; // No app store update mechanism for web
+}
+
+Future<void> startAppUpdateImpl() async {
+  // No app store update mechanism for web
+}

@@ -8,6 +8,8 @@ import 'dart:io';
 import 'package:cedar_flutter/platform.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:dart_ping/dart_ping.dart';
+import 'package:in_app_update/in_app_update.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'cedar.pbgrpc.dart' as cedar_rpc;
 import 'package:cedar_flutter/cedar.pbgrpc.dart';
@@ -155,5 +157,35 @@ Future<bool> checkNetworkConnectivityImpl(String host) async {
   } catch (e) {
     debugPrint('Network connectivity check failed: $e');
     return false;
+  }
+}
+
+Future<bool> isAppUpdateAvailableImpl() async {
+  try {
+    final info = await InAppUpdate.checkForUpdate();
+    return info.updateAvailability == UpdateAvailability.updateAvailable;
+  } catch (e) {
+    debugPrint('Error checking for app update: $e');
+    return false;
+  }
+}
+
+Future<void> startAppUpdateImpl() async {
+  try {
+    if (Platform.isAndroid) {
+      // On Android, use the native in-app update API.
+      await InAppUpdate.performImmediateUpdate();
+    } else if (Platform.isIOS) {
+      // On iOS, open the App Store.
+      final appStoreUrl = 'https://apps.apple.com/app/cedar-aim/id6740513717';
+      if (await canLaunchUrl(Uri.parse(appStoreUrl))) {
+        await launchUrl(
+          Uri.parse(appStoreUrl),
+          mode: LaunchMode.externalApplication,
+        );
+      }
+    }
+  } catch (e) {
+    debugPrint('Error starting app update: $e');
   }
 }

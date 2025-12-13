@@ -126,3 +126,24 @@ Future<bool> checkNetworkConnectivity(String host) async {
     return false;
   }
 }
+
+/// Check if an app update is available on the app store.
+/// Returns true if an update is available, false if on latest version or check fails.
+Future<bool> isAppUpdateAvailable() async {
+  try {
+    return await isAppUpdateAvailableImpl();
+  } catch (e) {
+    debugPrint('isAppUpdateAvailable: $e');
+    return false;
+  }
+}
+
+/// Initiate the app update flow. On Android, shows the system update UI.
+/// On iOS, opens the App Store. Does nothing if no update is available.
+Future<void> startAppUpdate() async {
+  try {
+    await startAppUpdateImpl();
+  } catch (e) {
+    debugPrint('startAppUpdate: $e');
+  }
+}

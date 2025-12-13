@@ -63,3 +63,11 @@ void exitAppImpl() async {
 Future<bool> checkNetworkConnectivityImpl(String host) async {
   throw UnimplementedError("No impl in platform_none");
 }
+
+Future<bool> isAppUpdateAvailableImpl() async {
+  throw UnimplementedError("No impl in platform_none");
+}
+
+Future<void> startAppUpdateImpl() async {
+  throw UnimplementedError("No impl in platform_none");
+}
