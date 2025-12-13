@@ -513,7 +513,7 @@ class CedarDrawer extends StatelessWidget {
                     onPressed: () {
                       controller.closeDrawer();
                       Navigator.push(controller.context,
-                          MaterialPageRoute(builder: (context) => BluetoothScreen()));
+                          MaterialPageRoute(builder: (context) => BluetoothScreen(controller.isDIY)));
                     }),
               ),
             ),
