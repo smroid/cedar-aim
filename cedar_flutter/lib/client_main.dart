@@ -538,6 +538,7 @@ class MyHomePageState extends State<MyHomePage> {
   List<String> _demoFiles = [];
   String _demoFile = "";
   bool advanced = false;
+  bool useBluetooth = false;
   bool _systemMenuExpanded = false;
   bool _rightHanded = true;
   bool _canAlign = false;
@@ -716,6 +717,7 @@ class MyHomePageState extends State<MyHomePage> {
     settingsModel.isBasic = isBasic;
     settingsModel.isPlus = isPlus;
     advanced = preferences!.advanced;
+    useBluetooth = preferences!.useBluetooth;
     _rightHanded = preferences!.rightHanded;
     calibrationData =
         response.hasCalibrationData() ? response.calibrationData : null;
@@ -2070,6 +2072,7 @@ class MyHomePageState extends State<MyHomePage> {
           offerMap: _offerMap,
           mapPosition: _mapPosition,
           advanced: advanced,
+          useBluetooth: useBluetooth,
           demoMode: _demoMode,
           demoFiles: _demoFiles,
           systemMenuExpanded: _systemMenuExpanded,

@@ -26,6 +26,7 @@ class CedarDrawerController {
   final bool offerMap;
   final LatLng? mapPosition;
   final bool advanced;
+  final bool useBluetooth;
   final bool demoMode;
   final List<String> demoFiles;
   final bool systemMenuExpanded;
@@ -61,6 +62,7 @@ class CedarDrawerController {
     required this.offerMap,
     required this.mapPosition,
     required this.advanced,
+    required this.useBluetooth,
     required this.demoMode,
     required this.demoFiles,
     required this.systemMenuExpanded,
@@ -502,7 +504,8 @@ class CedarDrawer extends StatelessWidget {
           SizedBox(height: _kDrawerSpacingCondensed * textScaleFactor(controller.context)),
 
           // Bluetooth management (not for Hopper).
-          if (controller.homePageState.serverInformation?.productName != "Hopper")
+          if (controller.useBluetooth 
+              && controller.homePageState.serverInformation?.productName != "Hopper") ...[
             Padding(
               padding: const EdgeInsets.only(left: 16),
               child: Align(
@@ -517,9 +520,8 @@ class CedarDrawer extends StatelessWidget {
                     }),
               ),
             ),
-
-          if (controller.homePageState.serverInformation?.productName != "Hopper")
             SizedBox(height: _kDrawerSpacingCondensed * textScaleFactor(controller.context)),
+          ],
 
           // WiFi button.
           if (!controller.isDIY && controller.wifiAccessPointDialog != null) ...[
