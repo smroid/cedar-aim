@@ -60,7 +60,7 @@ typedef WifiClientDialogFunction = void Function(
     bool, MyHomePageState, BuildContext);
 
 typedef UpdateServerSoftwareDialogFunction = void Function(
-    MyHomePageState, BuildContext);
+    MyHomePageState, BuildContext, {bool filterUpdateFiles});
 
 typedef RestartCedarServerFunction = Future<void> Function();
 

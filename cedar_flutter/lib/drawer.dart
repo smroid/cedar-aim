@@ -133,13 +133,31 @@ class CedarDrawer extends StatelessWidget {
     }
     return Align(
       alignment: Alignment.topLeft,
-      child: TextButton.icon(
+      child: GestureDetector(
+        onTap: () {
+          // Normal tap: filter some files when looking for Cedar updates.
+          controller.closeDrawer();
+          controller.updaterInfo!.updateServerSoftwareDialogFunction(
+            controller.homePageState,
+            controller.context,
+            filterUpdateFiles: true,
+          );
+        },
+        onLongPress: () {
+          // Long press: show all updates (useful for debugging).
+          controller.closeDrawer();
+          controller.updaterInfo!.updateServerSoftwareDialogFunction(
+            controller.homePageState,
+            controller.context,
+            filterUpdateFiles: false,
+          );
+        },
+        child: TextButton.icon(
           label: _scaledText("Check for Update"),
           icon: const Icon(Icons.system_update_alt),
-          onPressed: () {
-            controller.closeDrawer();
-            controller.updaterInfo!.updateServerSoftwareDialogFunction(controller.homePageState, controller.context);
-          }),
+          onPressed: null, // Handled by GestureDetector.
+        ),
+      ),
     );
   }
 
@@ -504,7 +522,7 @@ class CedarDrawer extends StatelessWidget {
           SizedBox(height: _kDrawerSpacingCondensed * textScaleFactor(controller.context)),
 
           // Bluetooth management (not for Hopper).
-          if (controller.useBluetooth 
+          if (controller.useBluetooth
               && controller.homePageState.serverInformation?.productName != "Hopper") ...[
             Padding(
               padding: const EdgeInsets.only(left: 16),
