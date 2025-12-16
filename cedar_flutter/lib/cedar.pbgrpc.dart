@@ -87,11 +87,7 @@ class CedarClient extends $grpc.Client {
       ($0.RemoveBondRequest value) => value.writeToBuffer(),
       ($core.List<$core.int> value) => $0.EmptyMessage.fromBuffer(value));
 
-  CedarClient($grpc.ClientChannel channel,
-      {$grpc.CallOptions? options,
-      $core.Iterable<$grpc.ClientInterceptor>? interceptors})
-      : super(channel, options: options,
-        interceptors: interceptors);
+  CedarClient(super.channel, {super.options, super.interceptors});
 
   $grpc.ResponseFuture<$0.ServerLogResult> getServerLog($0.ServerLogRequest request, {$grpc.CallOptions? options}) {
     return $createUnaryCall(_$getServerLog, request, options: options);
