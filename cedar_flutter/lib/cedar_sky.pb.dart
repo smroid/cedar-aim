@@ -13,7 +13,7 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import 'cedar_common.pb.dart' as $4;
+import 'cedar_common.pb.dart' as $0;
 import 'cedar_sky.pbenum.dart';
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
@@ -444,7 +444,7 @@ class CatalogEntry extends $pb.GeneratedMessage {
   factory CatalogEntry({
     $core.String? catalogLabel,
     $core.String? catalogEntry,
-    $4.CelestialCoord? coord,
+    $0.CelestialCoord? coord,
     Constellation? constellation,
     ObjectType? objectType,
     $core.double? magnitude,
@@ -489,7 +489,7 @@ class CatalogEntry extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'CatalogEntry', package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar_sky'), createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'catalogLabel')
     ..aOS(2, _omitFieldNames ? '' : 'catalogEntry')
-    ..aOM<$4.CelestialCoord>(3, _omitFieldNames ? '' : 'coord', subBuilder: $4.CelestialCoord.create)
+    ..aOM<$0.CelestialCoord>(3, _omitFieldNames ? '' : 'coord', subBuilder: $0.CelestialCoord.create)
     ..aOM<Constellation>(4, _omitFieldNames ? '' : 'constellation', subBuilder: Constellation.create)
     ..aOM<ObjectType>(5, _omitFieldNames ? '' : 'objectType', subBuilder: ObjectType.create)
     ..a<$core.double>(6, _omitFieldNames ? '' : 'magnitude', $pb.PbFieldType.OD)
@@ -541,15 +541,15 @@ class CatalogEntry extends $pb.GeneratedMessage {
   void clearCatalogEntry() => $_clearField(2);
 
   @$pb.TagNumber(3)
-  $4.CelestialCoord get coord => $_getN(2);
+  $0.CelestialCoord get coord => $_getN(2);
   @$pb.TagNumber(3)
-  set coord($4.CelestialCoord v) { $_setField(3, v); }
+  set coord($0.CelestialCoord v) { $_setField(3, v); }
   @$pb.TagNumber(3)
   $core.bool hasCoord() => $_has(2);
   @$pb.TagNumber(3)
   void clearCoord() => $_clearField(3);
   @$pb.TagNumber(3)
-  $4.CelestialCoord ensureCoord() => $_ensure(2);
+  $0.CelestialCoord ensureCoord() => $_ensure(2);
 
   @$pb.TagNumber(4)
   Constellation get constellation => $_getN(3);

@@ -136,13 +136,14 @@ const CatalogEntry$json = {
     {'1': 'coord', '3': 3, '4': 1, '5': 11, '6': '.cedar_common.CelestialCoord', '10': 'coord'},
     {'1': 'constellation', '3': 4, '4': 1, '5': 11, '6': '.cedar_sky.Constellation', '9': 0, '10': 'constellation', '17': true},
     {'1': 'object_type', '3': 5, '4': 1, '5': 11, '6': '.cedar_sky.ObjectType', '10': 'objectType'},
-    {'1': 'magnitude', '3': 6, '4': 1, '5': 1, '10': 'magnitude'},
-    {'1': 'angular_size', '3': 7, '4': 1, '5': 9, '9': 1, '10': 'angularSize', '17': true},
-    {'1': 'common_name', '3': 8, '4': 1, '5': 9, '9': 2, '10': 'commonName', '17': true},
-    {'1': 'notes', '3': 9, '4': 1, '5': 9, '9': 3, '10': 'notes', '17': true},
+    {'1': 'magnitude', '3': 6, '4': 1, '5': 1, '9': 1, '10': 'magnitude', '17': true},
+    {'1': 'angular_size', '3': 7, '4': 1, '5': 9, '9': 2, '10': 'angularSize', '17': true},
+    {'1': 'common_name', '3': 8, '4': 1, '5': 9, '9': 3, '10': 'commonName', '17': true},
+    {'1': 'notes', '3': 9, '4': 1, '5': 9, '9': 4, '10': 'notes', '17': true},
   ],
   '8': [
     {'1': '_constellation'},
+    {'1': '_magnitude'},
     {'1': '_angular_size'},
     {'1': '_common_name'},
     {'1': '_notes'},
@@ -155,11 +156,11 @@ final $typed_data.Uint8List catalogEntryDescriptor = $convert.base64Decode(
     'NhdGFsb2dfZW50cnkYAiABKAlSDGNhdGFsb2dFbnRyeRIyCgVjb29yZBgDIAEoCzIcLmNlZGFy'
     'X2NvbW1vbi5DZWxlc3RpYWxDb29yZFIFY29vcmQSQwoNY29uc3RlbGxhdGlvbhgEIAEoCzIYLm'
     'NlZGFyX3NreS5Db25zdGVsbGF0aW9uSABSDWNvbnN0ZWxsYXRpb26IAQESNgoLb2JqZWN0X3R5'
-    'cGUYBSABKAsyFS5jZWRhcl9za3kuT2JqZWN0VHlwZVIKb2JqZWN0VHlwZRIcCgltYWduaXR1ZG'
-    'UYBiABKAFSCW1hZ25pdHVkZRImCgxhbmd1bGFyX3NpemUYByABKAlIAVILYW5ndWxhclNpemWI'
-    'AQESJAoLY29tbW9uX25hbWUYCCABKAlIAlIKY29tbW9uTmFtZYgBARIZCgVub3RlcxgJIAEoCU'
-    'gDUgVub3Rlc4gBAUIQCg5fY29uc3RlbGxhdGlvbkIPCg1fYW5ndWxhcl9zaXplQg4KDF9jb21t'
-    'b25fbmFtZUIICgZfbm90ZXM=');
+    'cGUYBSABKAsyFS5jZWRhcl9za3kuT2JqZWN0VHlwZVIKb2JqZWN0VHlwZRIhCgltYWduaXR1ZG'
+    'UYBiABKAFIAVIJbWFnbml0dWRliAEBEiYKDGFuZ3VsYXJfc2l6ZRgHIAEoCUgCUgthbmd1bGFy'
+    'U2l6ZYgBARIkCgtjb21tb25fbmFtZRgIIAEoCUgDUgpjb21tb25OYW1liAEBEhkKBW5vdGVzGA'
+    'kgASgJSARSBW5vdGVziAEBQhAKDl9jb25zdGVsbGF0aW9uQgwKCl9tYWduaXR1ZGVCDwoNX2Fu'
+    'Z3VsYXJfc2l6ZUIOCgxfY29tbW9uX25hbWVCCAoGX25vdGVz');
 
 @$core.Deprecated('Use catalogDescriptionDescriptor instead')
 const CatalogDescription$json = {
