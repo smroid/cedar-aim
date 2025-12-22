@@ -147,3 +147,7 @@ Future<void> startAppUpdate() async {
     debugPrint('startAppUpdate: $e');
   }
 }
+
+void cleanup() {
+  cleanupImpl();
+}

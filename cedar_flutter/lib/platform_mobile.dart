@@ -18,6 +18,9 @@ import 'package:flutter/services.dart';
 import 'package:grpc/grpc.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
+import 'package:cedar_flutter/bluetooth_proxy.dart';
+import 'package:flutter_blue_classic/flutter_blue_classic.dart';
+
 bool isWebImpl() {
   return false;
 }
@@ -30,9 +33,13 @@ bool isIOSImpl() {
   return Platform.isIOS;
 }
 
+String _btUuid = "4e5d4c88-2965-423f-9111-28a506720760";
 String _wifiAddress = isMobile() ? "192.168.4.1" : "192.168.1.158";
 ClientChannel? _channel;
 cedar_rpc.CedarClient? _client;
+BluetoothGrpcProxy? _activeProxy;
+BluetoothConnection? _bluetoothConnection;
+bool _connecting = false;
 
 const _options = ChannelOptions(
   credentials: ChannelCredentials.insecure(),
@@ -41,13 +48,39 @@ const _options = ChannelOptions(
 
 void rpcSucceededImpl() {}
 void rpcFailedImpl() {
-  _client = null;
+  if (!_connecting) {
+    cleanup();
+  }
 }
 
 CedarClient getClientImpl() {
   if (_client != null) {
     return _client!;
   }
+
+  if (isAndroidImpl()) {
+    _connecting = true;
+    _activeProxy?.stop();
+    _bluetoothConnection?.dispose();
+
+    // Fixed port for local proxy allows immediate synchronous return
+    const int kLocalProxyPort = 50055;
+
+    // Start proxy and connection in the background
+    _establishBluetoothConnection(kLocalProxyPort);
+
+    final channel = ClientChannel(
+      InternetAddress.loopbackIPv4.address,
+      port: kLocalProxyPort,
+      options: const ChannelOptions(
+        credentials: ChannelCredentials.insecure(),
+      ),
+    );
+    _client = CedarClient(channel);
+    return _client!;
+  }
+
+  // Fallback for non-Android platforms or explicit WiFi usage
   _channel?.shutdown();
   _channel = ClientChannel(_wifiAddress, port: 80, options: _options);
   _client = CedarClient(_channel!);
@@ -137,8 +170,8 @@ Future<bool> checkNetworkConnectivityImpl(String host) async {
     // On iOS, dart_ping doesn't work. Use socket connection test instead.
     if (Platform.isIOS) {
       // Try to connect to port 80 as a connectivity test
-      final socket = await Socket.connect(host, 80,
-          timeout: Duration(seconds: 3));
+      final socket =
+          await Socket.connect(host, 80, timeout: Duration(seconds: 3));
       socket.destroy();
       return true;
     } else {
@@ -188,4 +221,51 @@ Future<void> startAppUpdateImpl() async {
   } catch (e) {
     debugPrint('Error starting app update: $e');
   }
+}
+
+Future<void> _establishBluetoothConnection(int localPort) async {
+  try {
+    final flutterBlue = FlutterBlueClassic(usesFineLocation: true);
+    final bondedDevices = await flutterBlue.bondedDevices ?? [];
+
+    BluetoothDevice? targetDevice;
+    for (var device in bondedDevices) {
+      if (device.name == 'Cedar-RPI5') {
+        targetDevice = device;
+        break;
+      }
+    }
+
+    if (targetDevice != null) {
+      print(
+          'Attempting to connect to ${targetDevice.name} (${targetDevice.address})...');
+
+      // Attempt connection
+      _bluetoothConnection =
+          await flutterBlue.connect(targetDevice.address, uuid: _btUuid);
+
+      if (_bluetoothConnection!.isConnected) {
+        print('Bluetooth Connected. Starting Proxy on port $localPort...');
+        _activeProxy = BluetoothGrpcProxy(_bluetoothConnection!);
+        await _activeProxy!.start(port: localPort);
+        print('Proxy is ready and forwarding traffic.');
+      }
+    } else {
+      print('Cedar-RPI5 not found in bonded devices.');
+    }
+  } catch (e) {
+    print('Error establishing Bluetooth connection: $e');
+  }
+  _connecting = false;
+}
+
+void cleanupImpl() {
+  _client = null;
+  _channel?.shutdown();
+  _activeProxy?.stop();
+  _bluetoothConnection?.close();
+  _bluetoothConnection?.dispose();
+  _channel = null;
+  _activeProxy = null;
+  _bluetoothConnection = null;
 }

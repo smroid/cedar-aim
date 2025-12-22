@@ -103,3 +103,8 @@ Future<bool> isAppUpdateAvailableImpl() async {
 Future<void> startAppUpdateImpl() async {
   // No app store update mechanism for web
 }
+
+void cleanupImpl {
+  _channel!.shutdown();
+  _channel = null;
+}

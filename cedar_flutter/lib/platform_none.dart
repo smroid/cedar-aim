@@ -71,3 +71,7 @@ Future<bool> isAppUpdateAvailableImpl() async {
 Future<void> startAppUpdateImpl() async {
   throw UnimplementedError("No impl in platform_none");
 }
+
+void cleanupImpl {
+  throw UnimplementedError("No impl in platform_none");
+}
