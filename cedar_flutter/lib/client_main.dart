@@ -9,7 +9,6 @@ import 'package:cedar_flutter/draw_slew_target.dart';
 import 'package:cedar_flutter/draw_util.dart';
 import 'package:cedar_flutter/drawer.dart';
 import 'package:cedar_flutter/google/protobuf/timestamp.pb.dart';
-import 'package:cedar_flutter/guidance.dart';
 import 'package:cedar_flutter/interstitial_msg.dart';
 import 'package:cedar_flutter/perf_gauge.dart';
 import 'package:cedar_flutter/settings.dart';
@@ -23,7 +22,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart' as dart_widgets;
 import 'package:grpc/grpc.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:pip/pip.dart';
 import 'package:provider/provider.dart';
 import 'package:sprintf/sprintf.dart';
 import 'cedar.pbgrpc.dart' as cedar_rpc;
@@ -608,50 +606,6 @@ class MyHomePageState extends State<MyHomePage> {
   // so if the update rate setting is e.g. 1 Hz. We put up a pacifier for this;
   // define a flag so we can know when it is done.
   bool _transitionToSetup = false;
-
-  final Pip _pip = Pip();
-  bool _isPipMode = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _initPipConfiguration();
-  }
-
-  Future<void> _initPipConfiguration() async {
-    if (!isAndroid()) {
-      // For now only enable PIP on Android
-      return;
-    }
-    final options = PipOptions(
-      autoEnterEnabled: true,
-      aspectRatioX: 16,
-      aspectRatioY: 9,
-      sourceRectHintLeft: 0,
-      sourceRectHintTop: 0,
-      sourceRectHintRight: 0,
-      sourceRectHintBottom: 0,
-      seamlessResizeEnabled: true,
-      useExternalStateMonitor: true,
-      externalStateMonitorInterval: 100,
-    );
-    
-    await _pip.setup(options);
-
-    _pip.registerStateChangedObserver(
-      PipStateChangedObserver(
-        onPipStateChanged: (state, error) {
-          setState(() {
-            _isPipMode = (state == PipState.pipStateStarted);
-          });
-          
-          if (state == PipState.pipStateFailed) {
-            debugPrint('PiP Failed: $error');
-          }
-        },
-      ),
-    );
-  }
 
   Future<void> _initLocation() async {
     _offerMap = isWeb() || !await canGetLocation();
@@ -2198,10 +2152,6 @@ class MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    if (_isPipMode) {
-      return GuidanceDisplay();
-    }
-
     if (healthy && _wifiClientDialogController != null) {
       _wifiClientDialogController!.showDialog(/*open=*/ false, this, context);
     }
@@ -2474,4 +2424,3 @@ class MyHomePageState extends State<MyHomePage> {
     );
   }
 } // MyHomePageState
-
