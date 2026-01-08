@@ -14,6 +14,7 @@ import 'package:cedar_flutter/geolocation.dart';
 import 'package:cedar_flutter/server_log.dart';
 import 'package:cedar_flutter/settings.dart';
 import 'package:cedar_flutter/shutdown_dialog.dart';
+import 'platform.dart';
 
 const double _kDrawerSpacing = 10.0;
 const double _kDrawerSpacingCondensed = 5.0;
@@ -382,7 +383,22 @@ class CedarDrawer extends StatelessWidget {
                 await controller.setAdvanced(!controller.advanced);
               })),
 
-      SizedBox(height: _kDrawerSpacing * textScaleFactor(controller.context)),
+      if (isAndroid()) ...[
+        SizedBox(height: _kDrawerSpacing * textScaleFactor(controller.context)),
+
+        // PIP button
+        Align(
+            alignment: Alignment.topLeft,
+            child: TextButton.icon(
+                label: _scaledText("Picture-in-Picture"),
+                icon: const Icon(Icons.picture_in_picture),
+                onPressed: () async {
+                  controller.closeDrawer();
+                  await controller.homePageState.pip.start();
+                })),
+
+        SizedBox(height: _kDrawerSpacing * textScaleFactor(controller.context)),
+      ],
 
       // Shutdown button
       Align(
