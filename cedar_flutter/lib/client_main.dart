@@ -609,7 +609,7 @@ class MyHomePageState extends State<MyHomePage> {
   // define a flag so we can know when it is done.
   bool _transitionToSetup = false;
 
-  final Pip _pip = Pip();
+  final Pip pip = Pip();
   bool _isPipMode = false;
 
   @override
@@ -636,9 +636,9 @@ class MyHomePageState extends State<MyHomePage> {
       externalStateMonitorInterval: 100,
     );
     
-    await _pip.setup(options);
+    await pip.setup(options);
 
-    _pip.registerStateChangedObserver(
+    pip.registerStateChangedObserver(
       PipStateChangedObserver(
         onPipStateChanged: (state, error) {
           setState(() {
@@ -2199,6 +2199,7 @@ class MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     if (_isPipMode) {
+      closeDrawer();
       return GuidanceDisplay();
     }
 
