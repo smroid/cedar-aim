@@ -643,6 +643,8 @@ class MyHomePageState extends State<MyHomePage> {
         onPipStateChanged: (state, error) {
           setState(() {
             _isPipMode = (state == PipState.pipStateStarted);
+            // Go back to the main page when starting or stopping PIP
+            Navigator.popUntil(context, ModalRoute.withName('/'));
           });
           
           if (state == PipState.pipStateFailed) {

@@ -392,9 +392,9 @@ class CedarDrawer extends StatelessWidget {
             child: TextButton.icon(
                 label: _scaledText("Picture-in-Picture"),
                 icon: const Icon(Icons.picture_in_picture),
-                onPressed: () {
+                onPressed: () async {
                   controller.closeDrawer();
-                  controller.homePageState.pip.start();
+                  await controller.homePageState.pip.start();
                 })),
 
         SizedBox(height: _kDrawerSpacing * textScaleFactor(controller.context)),

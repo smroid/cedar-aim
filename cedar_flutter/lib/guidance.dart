@@ -70,7 +70,7 @@ class _GuidanceDisplayState extends State<GuidanceDisplay> {
     if (_hasError || _latestFrame == null || !_latestFrame!.hasSlewRequest()) {
       return Center(
         child: CircularProgressIndicator(
-          color: theme.colorScheme.onSurface,
+          color: theme.colorScheme.primary,
         ),
       );
     }
@@ -86,14 +86,14 @@ class _GuidanceDisplayState extends State<GuidanceDisplay> {
     final offsetTextStyle = theme.textTheme.displayLarge?.copyWith(
       fontWeight: FontWeight.bold,
       fontFamily: 'RobotoMono',
-      color: theme.colorScheme.onSurface,
+      color: theme.colorScheme.primary,
     );
 
     final indicatorTextStyle = theme.textTheme.displayMedium?.copyWith(
       fontWeight: FontWeight.bold,
       fontStyle: FontStyle.italic,
       fontFamily: 'RobotoMono',
-      color: theme.colorScheme.onSurface,
+      color: theme.colorScheme.primary,
     );
 
     return Column(
@@ -260,7 +260,7 @@ class _TargetArrow extends StatelessWidget {
           angle: -rotationDegrees * (math.pi / 180),
           child: Icon(
             Icons.straight,
-            color: theme.colorScheme.onSurface,
+            color: theme.colorScheme.primary,
           ),
         ),
       ),
@@ -285,7 +285,7 @@ class _DirectionArrow extends StatelessWidget {
         painter: _ArrowPainter(
           rotationDegrees: rotation.toDouble(),
           alignRight: this.alignRight,
-          color: theme.colorScheme.onSurface,
+          color: theme.colorScheme.primary,
         ),
       ),
     );
