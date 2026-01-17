@@ -54,6 +54,7 @@ dependencies:
   in_app_update: ^4.2.3
   url_launcher: ^6.2.4
   flutter_blue_classic: ^0.0.8
+  shared_preferences: ^2.5.4
 
 dev_dependencies:
   flutter_test:

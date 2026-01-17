@@ -11,6 +11,13 @@ import 'platform_none.dart'
     if (dart.library.io) 'platform_mobile.dart'
     if (dart.library.html) 'platform_web.dart';
 
+class CedarDevice {
+  final String address; // IP or MAC address
+  final String? name; // null for WiFi
+
+  CedarDevice({required this.address, this.name});
+}
+
 bool isWeb() {
   return isWebImpl();
 }
@@ -150,4 +157,17 @@ Future<void> startAppUpdate() async {
 
 void cleanup() {
   cleanupImpl();
+}
+
+Future<List<CedarDevice>> getBluetoothDevices() async {
+  try {
+    return await getBluetoothDevicesImpl();
+  } catch (e) {
+    debugPrint('getBluetoothDevices: $e');
+    return [];
+  }
+}
+
+void setActiveDevice(CedarDevice device) {
+  setActiveDeviceImpl(device);
 }

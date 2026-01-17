@@ -72,6 +72,14 @@ Future<void> startAppUpdateImpl() async {
   throw UnimplementedError("No impl in platform_none");
 }
 
-void cleanupImpl {
+void cleanupImpl() {
+  throw UnimplementedError("No impl in platform_none");
+}
+
+Future<List<CedarDevice>> getBluetoothDevicesImpl() async {
+  throw UnimplementedError("No impl in platform_none");
+}
+
+void setActiveDeviceImpl(CedarDevice device) {
   throw UnimplementedError("No impl in platform_none");
 }
