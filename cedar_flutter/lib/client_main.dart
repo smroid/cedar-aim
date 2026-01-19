@@ -60,8 +60,8 @@ class WifiClientDialogController {
 typedef WifiClientDialogFunction = void Function(
     bool, MyHomePageState, BuildContext);
 
-typedef UpdateServerSoftwareDialogFunction = void
-    Function(MyHomePageState, BuildContext, {bool filterUpdateFiles});
+typedef UpdateServerSoftwareDialogFunction = void Function(
+    MyHomePageState, BuildContext, {bool filterUpdateFiles});
 
 typedef RestartCedarServerFunction = Future<void> Function();
 
@@ -111,6 +111,7 @@ Future<cedar_rpc.ServerInformation?> getServerInformation() async {
 
     // Return the server information (which is always populated).
     return response.serverInformation;
+
   } catch (e) {
     debugPrint('Error getting server information: $e');
     return null;
@@ -255,10 +256,8 @@ class _MainImagePainter extends CustomPainter {
       // Draw box around daylight focus zoom region.
       // Adjust coordinates relative to the displayed image region
       final scaledRect = Rect.fromLTWH(
-        (state._daylightFocusZoomRegion!.left - state._imageRegion.left) *
-            displayScale,
-        (state._daylightFocusZoomRegion!.top - state._imageRegion.top) *
-            displayScale,
+        (state._daylightFocusZoomRegion!.left - state._imageRegion.left) * displayScale,
+        (state._daylightFocusZoomRegion!.top - state._imageRegion.top) * displayScale,
         state._daylightFocusZoomRegion!.width * displayScale,
         state._daylightFocusZoomRegion!.height * displayScale,
       );
@@ -336,8 +335,8 @@ class _MainImagePainter extends CustomPainter {
         var imagePos = slew.imagePos.deepCopy();
         imagePos.x += state._imageRegion.left;
         // Convert full image coordinates to image region coordinates.
-        final fullImagePos = Offset(
-            imagePos.x / state._binFactor, imagePos.y / state._binFactor);
+        final fullImagePos = Offset(imagePos.x / state._binFactor,
+                                    imagePos.y / state._binFactor);
         // Check if the position is within the displayed central square crop.
         if (state._imageRegion.contains(fullImagePos)) {
           // Scale the slew position.
@@ -365,8 +364,7 @@ class _MainImagePainter extends CustomPainter {
           posInImage,
           slew.targetAngle,
           portrait,
-          Size(state._imageRegion.width * displayScale,
-              state._imageRegion.height * displayScale));
+          Size(state._imageRegion.width * displayScale, state._imageRegion.height * displayScale));
     } else if (!state._focusAid &&
         !state._calibrating &&
         !state._transitionToSetup) {
@@ -378,8 +376,8 @@ class _MainImagePainter extends CustomPainter {
       final scaledScopeFov =
           (state._scopeFov / state._rotationSizeRatio / 2) * displayScale;
 
-      drawBullseye(canvas, primaryColor, scaledBoresightPosition,
-          scaledScopeFov, rollAngleRad,
+      drawBullseye(
+          canvas, primaryColor, scaledBoresightPosition, scaledScopeFov, rollAngleRad,
           daylightMode: state._daylightMode);
 
       if (labeledCatalogEntries.isNotEmpty &&
@@ -839,14 +837,10 @@ class MyHomePageState extends State<MyHomePage> {
 
       // The rectangle gives us the region in full resolution coordinates.
       _daylightFocusZoomRegion = Rect.fromLTWH(
-          response.daylightFocusZoomImage.rectangle.originX.toDouble() /
-              _binFactor,
-          response.daylightFocusZoomImage.rectangle.originY.toDouble() /
-              _binFactor,
-          response.daylightFocusZoomImage.rectangle.width.toDouble() /
-              _binFactor,
-          response.daylightFocusZoomImage.rectangle.height.toDouble() /
-              _binFactor);
+          response.daylightFocusZoomImage.rectangle.originX.toDouble() / _binFactor,
+          response.daylightFocusZoomImage.rectangle.originY.toDouble() / _binFactor,
+          response.daylightFocusZoomImage.rectangle.width.toDouble() / _binFactor,
+          response.daylightFocusZoomImage.rectangle.height.toDouble() / _binFactor);
     }
     if (response.hasCenterPeakPosition()) {
       var cp = response.centerPeakPosition;
@@ -960,11 +954,7 @@ class MyHomePageState extends State<MyHomePage> {
     await Future.doWhile(() async {
       await Future.delayed(const Duration(milliseconds: 100));
       if (!_paintPending && !updateInProgress && !shutdownInProgress) {
-        var start = DateTime.now();
         await _getFrameFromServer();
-        var elapsedTime = DateTime.now().difference(start).inMilliseconds;
-        // TODO: We probably don't want to log this all the time
-        debugPrint("Received frame from server in $elapsedTime ms");
       }
       return true; // Forever!
     });
@@ -1009,8 +999,7 @@ class MyHomePageState extends State<MyHomePage> {
 
   Future<void> _designateDaylightFocusRegion(Offset pos) async {
     final coord = cedar_rpc.ImageCoord(x: pos.dx, y: pos.dy);
-    final request =
-        cedar_rpc.ActionRequest(designateDaylightFocusRegion: coord);
+    final request = cedar_rpc.ActionRequest(designateDaylightFocusRegion: coord);
     await initiateAction(request);
   }
 
@@ -1221,25 +1210,20 @@ class MyHomePageState extends State<MyHomePage> {
       operationSettings: operationSettings,
       showCatalogBrowser: _showCatalogBrowser != null,
       onPreferencesUpdate: (prefsDiff) => updatePreferences(prefsDiff),
-      onOperationSettingsUpdate: (opSettingsDiff) =>
-          updateOperationSettings(opSettingsDiff),
+      onOperationSettingsUpdate: (opSettingsDiff) => updateOperationSettings(opSettingsDiff),
       onGoFullScreen: goFullScreen,
       onCancelFullScreen: cancelFullScreen,
       onSetWakeLock: (enabled) => setWakeLock(enabled),
       onSetDaylightMode: (enabled) => setState(() {
         _setDaylightMode(enabled);
       }),
-      focusDoneButton: ({double? fontSize}) =>
-          focusDoneButton(fontSize: fontSize),
-      setupAlignSkipOrDoneButton: ({double? fontSize}) =>
-          setupAlignSkipOrDoneButton(fontSize: fontSize),
-      slewReAlignButton: ({double? fontSize}) =>
-          slewReAlignButton(fontSize: fontSize),
+      focusDoneButton: ({double? fontSize}) => focusDoneButton(fontSize: fontSize),
+      setupAlignSkipOrDoneButton: ({double? fontSize}) => setupAlignSkipOrDoneButton(fontSize: fontSize),
+      slewReAlignButton: ({double? fontSize}) => slewReAlignButton(fontSize: fontSize),
       catalogButton: ({double? fontSize}) => catalogButton(fontSize: fontSize),
       endGotoButton: ({double? fontSize}) => endGotoButton(fontSize: fontSize),
       scaledText: (String text) => _scaledText(text),
-      rowOrColumn: (bool portrait, List<Widget> children) =>
-          _rowOrColumn(portrait, children),
+      rowOrColumn: (bool portrait, List<Widget> children) => _rowOrColumn(portrait, children),
     );
   }
 
@@ -1490,9 +1474,8 @@ class MyHomePageState extends State<MyHomePage> {
     final crossDimension = math.max(coordInfoSize, objectLabelSize);
     final crossDimensionBasedScale = (panelWidth / crossDimension);
 
-    final panelScaleFactor = math
-        .min(mainDimensionBasedScale, crossDimensionBasedScale)
-        .clamp(0.5, 1.2);
+    final panelScaleFactor =
+      math.min(mainDimensionBasedScale, crossDimensionBasedScale).clamp(0.5, 1.2);
 
     var gaugeSize = 45 * panelScaleFactor * textScale;
 
@@ -1651,12 +1634,10 @@ class MyHomePageState extends State<MyHomePage> {
 
                         // Show snackbar with object name if available.
                         if (mounted) {
-                          final objectName = _getCatalogEntryNameForStar(
-                              star.centroidPosition);
-                          final message =
-                              objectName != null && objectName.isNotEmpty
-                                  ? 'Alignment target: $objectName'
-                                  : 'Alignment target selected';
+                          final objectName = _getCatalogEntryNameForStar(star.centroidPosition);
+                          final message = objectName != null && objectName.isNotEmpty
+                              ? 'Alignment target: $objectName'
+                              : 'Alignment target selected';
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text(message),
@@ -1715,11 +1696,9 @@ class MyHomePageState extends State<MyHomePage> {
   String? _getCatalogEntryNameForStar(cedar_rpc.ImageCoord starPos) {
     for (var catEntry in _labeledFovCatalogEntries) {
       // Check if catalog entry is near the star position
-      final distanceSq = (catEntry.imagePos.x - starPos.x) *
-              (catEntry.imagePos.x - starPos.x) +
+      final distanceSq = (catEntry.imagePos.x - starPos.x) * (catEntry.imagePos.x - starPos.x) +
           (catEntry.imagePos.y - starPos.y) * (catEntry.imagePos.y - starPos.y);
-      if (distanceSq < 4) {
-        // Within ~2 pixels
+      if (distanceSq < 4) { // Within ~2 pixels
         return labelForEntry(catEntry.entry);
       }
     }
@@ -1791,10 +1770,7 @@ class MyHomePageState extends State<MyHomePage> {
     // Scale the overlay size with the display scale
     final displayScale = _getDisplayScale();
 
-    if (_setupMode &&
-        _focusAid &&
-        _daylightMode &&
-        _daylightFocusZoomImageBytes != null) {
+    if (_setupMode && _focusAid && _daylightMode && _daylightFocusZoomImageBytes != null) {
       final overlaySize = (_imageRegion.height / 4) * displayScale;
       overlayWidget = dart_widgets.Image.memory(_daylightFocusZoomImageBytes!,
           height: overlaySize,
@@ -1928,8 +1904,8 @@ class MyHomePageState extends State<MyHomePage> {
         serverInformation != null ? serverInformation!.productName : "e-finder";
 
     // Show "Hopper is pre-focused" message in focus mode for Hopper.
-    final isHopperFocusMode =
-        _setupMode && _focusAid && !_daylightMode && product == "Hopper";
+    final isHopperFocusMode = _setupMode && _focusAid && !_daylightMode &&
+        product == "Hopper";
 
     final isAlignMode = _setupMode && !_focusAid;
 
@@ -1991,8 +1967,8 @@ class MyHomePageState extends State<MyHomePage> {
                     const SizedBox(height: 12),
                     Text(
                       _daylightMode
-                          ? "1. Point your telescope at a distant object"
-                          : "1. Point your telescope at a bright star\n2. Center in eyepiece",
+                        ? "1. Point your telescope at a distant object"
+                        : "1. Point your telescope at a bright star\n2. Center in eyepiece",
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 11,
@@ -2100,88 +2076,88 @@ class MyHomePageState extends State<MyHomePage> {
 
   Widget _drawer() {
     return CedarDrawer(
-      controller: CedarDrawerController(
-        setupMode: _setupMode,
-        focusAid: _focusAid,
-        offerMap: _offerMap,
-        mapPosition: _mapPosition,
-        advanced: advanced,
-        useBluetooth: useBluetooth,
-        demoMode: _demoMode,
-        demoFiles: _demoFiles,
-        systemMenuExpanded: _systemMenuExpanded,
-        demoFile: _demoFile,
-        isDIY: isDIY,
-        badServerState: !healthy,
-        updaterInfo: _updaterInfo,
-        updateServiceAvailable: updateServiceAvailable,
-        wifiAccessPointDialog: _wifiAccessPointDialog,
-        setOperatingMode: (setupMode, focusAid) async {
-          if (!_setupMode && setupMode) {
-            setState(() {
-              _transitionToSetup = true;
-            });
-          }
-          if (setupMode && focusAid) {
-            // Focus mode specific setup
-            setState(() {
-              _alignTargetTapped = false;
-            });
-          } else if (setupMode && !focusAid) {
-            // Align mode specific setup
-            setState(() {
-              _alignTargetTapped = false;
-            });
-          }
-          await _setOperatingMode(setupMode, focusAid);
-        },
-        setDemoImage: (imageFile) async {
-          setState(() {
-            _demoFile = imageFile;
-            _demoMode = imageFile.isNotEmpty;
-          });
-          await _setDemoImage(imageFile);
-        },
-        saveImage: _saveImage,
-        getServerLogs: _getServerLogs,
-        crashServer: _crashServer,
-        restartCedarServer: _restartCedarServer,
-        initiateAction: initiateAction,
-        updatePreferences: updatePreferences,
-        setAdvanced: (value) async {
-          setState(() {
-            advanced = value;
-          });
-          var settingsModel =
-              Provider.of<SettingsModel>(context, listen: false);
-          settingsModel.preferencesProto.advanced = value;
-          var prefs = cedar_rpc.Preferences();
-          prefs.advanced = value;
-          await updatePreferences(prefs);
-        },
-        setDemoMode: (value) async {
-          setState(() {
-            _demoMode = value;
-            if (value && _demoFile.isNotEmpty) {
-              // Turn on demo mode with current file
-              _setDemoImage(_demoFile);
-            } else {
-              // Turn off demo mode
-              _setDemoImage("");
+        controller: CedarDrawerController(
+          setupMode: _setupMode,
+          focusAid: _focusAid,
+          offerMap: _offerMap,
+          mapPosition: _mapPosition,
+          advanced: advanced,
+          useBluetooth: useBluetooth,
+          demoMode: _demoMode,
+          demoFiles: _demoFiles,
+          systemMenuExpanded: _systemMenuExpanded,
+          demoFile: _demoFile,
+          isDIY: isDIY,
+          badServerState: !healthy,
+          updaterInfo: _updaterInfo,
+          updateServiceAvailable: updateServiceAvailable,
+          wifiAccessPointDialog: _wifiAccessPointDialog,
+          setOperatingMode: (setupMode, focusAid) async {
+            if (!_setupMode && setupMode) {
+              setState(() {
+                _transitionToSetup = true;
+              });
             }
-          });
-        },
-        setSystemMenuExpanded: (value) {
-          setState(() {
-            _systemMenuExpanded = value;
-          });
-        },
-        onStateChanged: () => setState(() {}),
-        closeDrawer: closeDrawer,
-        context: context,
-        homePageState: this,
-      ),
-    );
+            if (setupMode && focusAid) {
+              // Focus mode specific setup
+              setState(() {
+                _alignTargetTapped = false;
+              });
+            } else if (setupMode && !focusAid) {
+              // Align mode specific setup
+              setState(() {
+                _alignTargetTapped = false;
+              });
+            }
+            await _setOperatingMode(setupMode, focusAid);
+          },
+          setDemoImage: (imageFile) async {
+            setState(() {
+              _demoFile = imageFile;
+              _demoMode = imageFile.isNotEmpty;
+            });
+            await _setDemoImage(imageFile);
+          },
+          saveImage: _saveImage,
+          getServerLogs: _getServerLogs,
+          crashServer: _crashServer,
+          restartCedarServer: _restartCedarServer,
+          initiateAction: initiateAction,
+          updatePreferences: updatePreferences,
+          setAdvanced: (value) async {
+            setState(() {
+              advanced = value;
+            });
+            var settingsModel =
+                Provider.of<SettingsModel>(context, listen: false);
+            settingsModel.preferencesProto.advanced = value;
+            var prefs = cedar_rpc.Preferences();
+            prefs.advanced = value;
+            await updatePreferences(prefs);
+          },
+          setDemoMode: (value) async {
+            setState(() {
+              _demoMode = value;
+              if (value && _demoFile.isNotEmpty) {
+                // Turn on demo mode with current file
+                _setDemoImage(_demoFile);
+              } else {
+                // Turn off demo mode
+                _setDemoImage("");
+              }
+            });
+          },
+          setSystemMenuExpanded: (value) {
+            setState(() {
+              _systemMenuExpanded = value;
+            });
+          },
+          onStateChanged: () => setState(() {}),
+          closeDrawer: closeDrawer,
+          context: context,
+          homePageState: this,
+        ),
+      );
   }
 
   @override
@@ -2344,57 +2320,47 @@ class MyHomePageState extends State<MyHomePage> {
 
     return Scaffold(
       key: _scaffoldKey,
-      appBar: hideAppBar
-          ? null
-          : AppBar(
-              title: Text(widget.title),
-              foregroundColor: Theme.of(context).colorScheme.primary),
+      appBar: hideAppBar ? null : AppBar(
+          title: Text(widget.title),
+          foregroundColor: Theme.of(context).colorScheme.primary),
       onDrawerChanged: _handleDrawerChanged,
       onEndDrawerChanged: _handleDrawerChanged,
       body: DefaultTextStyle.merge(
           style: const TextStyle(fontFamilyFallback: ["Roboto"]),
           child: hideAppBar
-              ? LayoutBuilder(
-                  builder: (context, constraints) {
-                    return SafeArea(
-                      child: Stack(
-                        fit: StackFit.expand,
-                        children: [
-                          healthy
-                              ? _orientationLayout(
-                                  context,
-                                  Size(constraints.maxWidth,
-                                      constraints.maxHeight))
-                              : _badServerState(),
-                          // Menu icon positioned at top when in fullscreen mode
-                          Positioned(
-                            left: _rightHanded ? null : 0,
-                            right: _rightHanded ? 0 : null,
-                            top: 0,
-                            child: IconButton(
-                              icon: const Icon(Icons.menu),
-                              onPressed: () {
-                                if (_rightHanded) {
-                                  _scaffoldKey.currentState!.openEndDrawer();
-                                } else {
-                                  _scaffoldKey.currentState!.openDrawer();
-                                }
-                              },
-                            ),
+            ? LayoutBuilder(
+                builder: (context, constraints) {
+                  return SafeArea(
+                    child: Stack(
+                      fit: StackFit.expand,
+                      children: [
+                        healthy ? _orientationLayout(context, Size(constraints.maxWidth, constraints.maxHeight)) : _badServerState(),
+                        // Menu icon positioned at top when in fullscreen mode
+                        Positioned(
+                          left: _rightHanded ? null : 0,
+                          right: _rightHanded ? 0 : null,
+                          top: 0,
+                          child: IconButton(
+                            icon: const Icon(Icons.menu),
+                            onPressed: () {
+                              if (_rightHanded) {
+                                _scaffoldKey.currentState!.openEndDrawer();
+                              } else {
+                                _scaffoldKey.currentState!.openDrawer();
+                              }
+                            },
                           ),
-                        ],
-                      ),
-                    );
-                  },
-                )
-              : LayoutBuilder(
-                  builder: (context, constraints) {
-                    return healthy
-                        ? _orientationLayout(context,
-                            Size(constraints.maxWidth, constraints.maxHeight))
-                        : _badServerState();
-                  },
-                )),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              )
+            : LayoutBuilder(
+                builder: (context, constraints) {
+                  return healthy ? _orientationLayout(context, Size(constraints.maxWidth, constraints.maxHeight)) : _badServerState();
+                },
+              )),
       drawer: _drawer(),
       endDrawer: _drawer(),
       drawerEdgeDragWidth: 100,
@@ -2423,9 +2389,7 @@ class MyHomePageState extends State<MyHomePage> {
     if (isAndroid()) {
       return _buildErrorWidget();
     }
-    if (isMobile() &&
-        !_serverConnected &&
-        _wifiClientDialogController != null) {
+    if (isMobile() && !_serverConnected && _wifiClientDialogController != null) {
       SchedulerBinding.instance.addPostFrameCallback((_) {
         _wifiClientDialogController!.showDialog(/*open=*/ true, this, context);
       });
