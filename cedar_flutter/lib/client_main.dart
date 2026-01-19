@@ -511,7 +511,7 @@ class MyHomePageState extends State<MyHomePage> {
   bool _paintPending = false;
   bool _inhibitRefresh = false;
 
-  final DateTime _startTime = DateTime.now();
+  DateTime _startTime = DateTime.now();
   bool _serverConnected = false;
   bool everConnected = false;
   DateTime _lastServerResponseTime = DateTime.now();
@@ -2417,7 +2417,7 @@ class MyHomePageState extends State<MyHomePage> {
     _paintPending = false;
     // Give some time for an initial connection to succeed.
     final elapsed = DateTime.now().difference(_startTime);
-    if (elapsed.inMilliseconds < 1000) {
+    if (elapsed.inMilliseconds < 5000) {
       return const Center(child: CircularProgressIndicator());
     }
     if (isAndroid()) {
@@ -2516,6 +2516,7 @@ class MyHomePageState extends State<MyHomePage> {
 
   Future<void> _selectDevice(CedarDevice device) async {
     setState(() {
+      _startTime = DateTime.now();
       _selectedDevice = device;
       setActiveDevice(device);
     });
@@ -2536,6 +2537,10 @@ class MyHomePageState extends State<MyHomePage> {
       builder: (context) {
         return AlertDialog(
           title: const Text('Select Cedar Device'),
+          titleTextStyle: TextStyle(
+            color: Theme.of(context).colorScheme.primary,
+            fontSize: 24,
+          ),
           content: Container(
             width: double.maxFinite,
             child: FutureBuilder<List<CedarDevice>>(
@@ -2553,9 +2558,20 @@ class MyHomePageState extends State<MyHomePage> {
                   shrinkWrap: true,
                   children: [
                     ListTile(
-                      leading: const Icon(Icons.wifi),
-                      title: const Text('Use Wi-Fi (Default)'),
-                      subtitle: const Text('Connects to 192.168.4.1'),
+                      leading: Icon(
+                        Icons.wifi,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                      title: Text(
+                        'Use Wi-Fi (Default)',
+                        style: TextStyle(
+                            color: Theme.of(context).colorScheme.primary),
+                      ),
+                      subtitle: Text(
+                        'Connects to 192.168.4.1',
+                        style: TextStyle(
+                            color: Theme.of(context).colorScheme.secondary),
+                      ),
                       onTap: () {
                         Navigator.pop(context);
                         _selectDevice(CedarDevice(address: '192.168.4.1'));
@@ -2566,9 +2582,20 @@ class MyHomePageState extends State<MyHomePage> {
                       const ListTile(
                           title: Text('No bonded Bluetooth devices found')),
                     ...devices.map((device) => ListTile(
-                          leading: const Icon(Icons.bluetooth),
-                          title: Text(device.name ?? 'Unknown'),
-                          subtitle: Text(device.address ?? ''),
+                          leading: Icon(
+                            Icons.bluetooth,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                          title: Text(
+                            device.name ?? 'Unknown',
+                            style: TextStyle(
+                                color: Theme.of(context).colorScheme.primary),
+                          ),
+                          subtitle: Text(
+                            device.address ?? '',
+                            style: TextStyle(
+                                color: Theme.of(context).colorScheme.secondary),
+                          ),
                           onTap: () {
                             Navigator.pop(context);
                             _selectDevice(device);
