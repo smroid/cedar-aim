@@ -6,6 +6,8 @@ import 'dart:async';
 import 'package:cedar_flutter/cedar.pb.dart' as cedar_pb;
 import 'package:cedar_flutter/platform.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_blue_classic/flutter_blue_classic.dart';
 import 'package:grpc/grpc.dart';
 
 class BluetoothScreen extends StatefulWidget {
@@ -17,18 +19,20 @@ class BluetoothScreen extends StatefulWidget {
   State<BluetoothScreen> createState() => _BluetoothScreenState();
 }
 
-enum PairingStep { idle, confirmStart, pairing, result }
+enum PairingStep { idle, confirmStart, pairing, result, success }
 
 class _BluetoothScreenState extends State<BluetoothScreen> {
   List<cedar_pb.BondedDevice> _bondedDevices = [];
+  List<String> _localBondedDevices = [];
   bool _isLoadingList = true;
 
   // User-friendly device name
   String _deviceName = 'Hopper';
-  
+
   // Track which specific device is currently being removed to show the spinner on the correct row
   String? _removingDeviceAddress;
   String _bluetoothName = 'cedar';
+  String? _bluetoothAddr;
   bool _isLoadingName = true;
 
   // Pairing State
@@ -39,6 +43,10 @@ class _BluetoothScreenState extends State<BluetoothScreen> {
   cedar_pb.StartBondingResponse? _pairingResponse;
   String? _pairingErrorMessage;
 
+  // Android specific pairing state
+  bool _isPairingThisDevice = false;
+  final _flutterBlueClassic = FlutterBlueClassic();
+
   @override
   void initState() {
     super.initState();
@@ -47,6 +55,7 @@ class _BluetoothScreenState extends State<BluetoothScreen> {
     }
     _getBluetoothName();
     _refreshBondedDevices();
+    _loadLocalBondedDevices();
   }
 
   @override
@@ -65,6 +74,7 @@ class _BluetoothScreenState extends State<BluetoothScreen> {
       if (mounted) {
         setState(() {
           _bluetoothName = response.name;
+          _bluetoothAddr = response.address;
           _isLoadingName = false;
         });
       }
@@ -132,6 +142,21 @@ class _BluetoothScreenState extends State<BluetoothScreen> {
     }
   }
 
+  Future<void> _loadLocalBondedDevices() async {
+    if (!isAndroid()) {
+      return;
+    }
+    BluetoothAdapterState state = await _flutterBlueClassic.adapterStateNow;
+    if (state != BluetoothAdapterState.on) {
+      _flutterBlueClassic.turnOn();
+      await Future.delayed(const Duration(seconds: 3));
+    }
+    List<BluetoothDevice>? devices = await _flutterBlueClassic.bondedDevices;
+    if (devices != null) {
+      _localBondedDevices = devices.map((d) => d.address).toList();
+    }
+  }
+
   // --- Pairing Logic ---
 
   void _onPairNewDevicePressed() {
@@ -139,6 +164,7 @@ class _BluetoothScreenState extends State<BluetoothScreen> {
       _pairingStep = PairingStep.confirmStart;
       _pairingErrorMessage = null;
       _pairingResponse = null;
+      _isPairingThisDevice = false;
     });
   }
 
@@ -150,9 +176,11 @@ class _BluetoothScreenState extends State<BluetoothScreen> {
       _countdownValue = 55;
       _pairingErrorMessage = null;
       _pairingResponse = null;
+      _isPairingThisDevice = false;
     });
-    // Refresh the list when returning to idle, just in case a pairing succeeded
+    // Refresh lists when returning to idle, just in case a pairing succeeded
     _refreshBondedDevices();
+    _loadLocalBondedDevices();
   }
 
   void _startTimer() {
@@ -176,10 +204,33 @@ class _BluetoothScreenState extends State<BluetoothScreen> {
     _countdownTimer = null;
   }
 
+  void _startBondCheckTimer() {
+    _countdownValue = 30;
+    _countdownTimer?.cancel();
+    // Check every 3 seconds if bonding is successful
+    _countdownTimer = Timer.periodic(const Duration(seconds: 3), (timer) {
+      if (mounted) {
+        setState(() {
+          if (_countdownValue > 0) {
+            _countdownValue -= 3;
+            _loadLocalBondedDevices();
+            if (_localBondedDevices.contains(_bluetoothAddr!)) {
+              _pairingStep = PairingStep.success;
+              _stopTimer();
+            }
+          } else {
+            _stopTimer();
+          }
+        });
+      }
+    });
+  }
+
   Future<void> _startBonding() async {
     setState(() {
       _pairingStep = PairingStep.pairing;
       _pairingErrorMessage = null;
+      _isPairingThisDevice = false;
     });
     _startTimer();
 
@@ -210,6 +261,79 @@ class _BluetoothScreenState extends State<BluetoothScreen> {
     } finally {
       _bondingFuture = null;
       _stopTimer();
+    }
+  }
+
+  Future<void> _startBondingThisDevice() async {
+    setState(() {
+      _pairingStep = PairingStep.pairing;
+      _pairingErrorMessage = null;
+      _isPairingThisDevice = true;
+    });
+    _startTimer();
+
+    try {
+      final client = getClient();
+      // Initiate bonding on the device side
+      _bondingFuture = client.startBonding(cedar_pb.EmptyMessage(),
+          options: CallOptions(timeout: const Duration(seconds: 60)));
+
+      // Attempt to pair locally
+      if (_bluetoothAddr != null) {
+        // Check local bonded devices in case pairing is invoked before those were loaded
+        if (_localBondedDevices.contains(_bluetoothAddr!)) {
+          throw 'Already paired to $_deviceName. Please unpair in Bluetooth settings to pair again.';
+        }
+        bool paired = await _flutterBlueClassic.bondDevice(_bluetoothAddr!);
+
+        // If the user cancelled while the dialog was open, stop.
+        if (!mounted || _pairingStep != PairingStep.pairing) return;
+
+        if (!paired) {
+          // Check if Bluetooth is on
+          BluetoothAdapterState state =
+              await _flutterBlueClassic.adapterStateNow;
+          if (state != BluetoothAdapterState.on) {
+            throw 'Turn on Bluetooth on this device and try again.';
+          }
+          throw 'Pairing did not complete successfully.';
+        }
+      } else {
+        throw 'Bluetooth address unknown.';
+      }
+
+      // Wait for the device to confirm the bond
+      final response = await _bondingFuture!;
+
+      if (mounted) {
+        setState(() {
+          _pairingResponse = response;
+          _pairingStep = PairingStep.result;
+        });
+      }
+    } catch (e) {
+      if (e is GrpcError && e.code == StatusCode.cancelled) {
+        return;
+      }
+      debugPrint('Error bonding this device: $e');
+      if (mounted) {
+        setState(() {
+          if (e is PlatformException && e.code == 'permissionDenied') {
+            _pairingErrorMessage =
+                'Bluetooth permission denied - please grant all permissions to this app in Settings.';
+          } else {
+            _pairingErrorMessage = e.toString();
+          }
+          _pairingStep = PairingStep.result;
+        });
+      }
+    } finally {
+      _bondingFuture = null;
+      _stopTimer();
+      // Poll for success if we received a pairing response
+      if (_pairingResponse != null) {
+        _startBondCheckTimer();
+      }
     }
   }
 
@@ -315,6 +439,8 @@ class _BluetoothScreenState extends State<BluetoothScreen> {
   }
 
   Widget _buildPairingFlowLayout() {
+    bool isSelfPaired =
+        _bluetoothAddr != null && _localBondedDevices.contains(_bluetoothAddr);
     return Center(
       child: SingleChildScrollView(
         child: Padding(
@@ -323,53 +449,98 @@ class _BluetoothScreenState extends State<BluetoothScreen> {
             mainAxisSize: MainAxisSize.min,
             children: [
               if (_pairingStep == PairingStep.confirmStart) ...[
-                Text(
-                  'Pair $_deviceName with a mobile device.',
-                  style: TextStyle(fontSize: 18),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 30),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    FilledButton(
-                      onPressed: _startBonding,
-                      child: const Text('Start'),
-                    ),
-                    const SizedBox(width: 16),
-                    OutlinedButton(
-                      onPressed: _resetPairingState,
-                      child: const Text('Cancel'),
-                    ),
-                  ],
-                ),
-              ] else if (_pairingStep == PairingStep.pairing) ...[
-                Text(
-                  '$_deviceName is now available for pairing.',
-                  style: const TextStyle(fontSize: 16),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 10),
-                const Text(
-                  'Open Bluetooth settings on your mobile device to continue pairing.',
-                  style: const TextStyle(fontSize: 16),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 10),
-                Text.rich(
-                  TextSpan(
+                if (isAndroid() && !isSelfPaired) ...[
+                  Text(
+                    'Pair $_deviceName with this device or another mobile device?',
+                    style: TextStyle(fontSize: 18),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 30),
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      const TextSpan(text: 'Select '),
-                      TextSpan(
-                        text: _bluetoothName,
-                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      FilledButton(
+                        onPressed: _startBondingThisDevice,
+                        child: const Text('This Device'),
                       ),
-                      const TextSpan(text: ' from the list of available devices'),
+                      const SizedBox(height: 12),
+                      OutlinedButton(
+                        onPressed: _startBonding,
+                        child: const Text('Another Device'),
+                      ),
+                      const SizedBox(height: 12),
+                      OutlinedButton(
+                        onPressed: _resetPairingState,
+                        child: const Text('Cancel'),
+                      ),
                     ],
                   ),
-                  style: const TextStyle(fontSize: 16),
-                  textAlign: TextAlign.center,
-                ),
+                ] else ...[
+                  Text(
+                    'Pair $_deviceName with ${isSelfPaired ? "another" : "a"} mobile device.',
+                    style: const TextStyle(fontSize: 18),
+                    textAlign: TextAlign.center,
+                  ),
+                  if (isSelfPaired) ...[
+                    const SizedBox(height: 14),
+                    Text(
+                      'Unpair $_deviceName in Bluetooth settings to pair with this device again.',
+                      style: const TextStyle(fontSize: 14),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                  const SizedBox(height: 30),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      FilledButton(
+                        onPressed: _startBonding,
+                        child: const Text('Start'),
+                      ),
+                      const SizedBox(width: 16),
+                      OutlinedButton(
+                        onPressed: _resetPairingState,
+                        child: const Text('Cancel'),
+                      ),
+                    ],
+                  ),
+                ],
+              ] else if (_pairingStep == PairingStep.pairing) ...[
+                if (_isPairingThisDevice)
+                  const Text(
+                    'Attempting to pair this device with your e-finder',
+                    style: TextStyle(fontSize: 16),
+                    textAlign: TextAlign.center,
+                  )
+                else ...[
+                  Text(
+                    '$_deviceName is now available for pairing.',
+                    style: const TextStyle(fontSize: 16),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 10),
+                  const Text(
+                    'Open Bluetooth settings on your mobile device to continue pairing.',
+                    style: TextStyle(fontSize: 16),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 10),
+                  Text.rich(
+                    TextSpan(
+                      children: [
+                        const TextSpan(text: 'Select '),
+                        TextSpan(
+                          text: _bluetoothName,
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        const TextSpan(
+                            text: ' from the list of available devices'),
+                      ],
+                    ),
+                    style: const TextStyle(fontSize: 16),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
                 const SizedBox(height: 30),
                 Text(
                   '$_countdownValue',
@@ -400,7 +571,8 @@ class _BluetoothScreenState extends State<BluetoothScreen> {
                       !_pairingResponse!.hasPasskey())
                     const Text('No mobile device found.')
                   else ...[
-                    const Text('Please verify this passkey on your mobile device:'),
+                    const Text(
+                        'Please verify this passkey on your mobile device:'),
                     const SizedBox(height: 20),
                     Text(
                       '${_pairingResponse!.passkey}',
@@ -422,6 +594,15 @@ class _BluetoothScreenState extends State<BluetoothScreen> {
                     ),
                   ],
                 ],
+                const SizedBox(height: 30),
+                _countdownTimer != null
+                    ? const CircularProgressIndicator()
+                    : OutlinedButton(
+                        onPressed: _resetPairingState,
+                        child: const Text('Dismiss'),
+                      ),
+              ] else if (_pairingStep == PairingStep.success) ...[
+                Text('Successfully paired with $_deviceName.'),
                 const SizedBox(height: 30),
                 OutlinedButton(
                   onPressed: _resetPairingState,

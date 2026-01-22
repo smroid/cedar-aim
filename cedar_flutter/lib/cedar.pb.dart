@@ -1,13 +1,14 @@
+// This is a generated file - do not edit.
 //
-//  Generated code. Do not modify.
-//  source: cedar.proto
-//
+// Generated from cedar.proto.
+
 // @dart = 3.3
 
 // ignore_for_file: annotate_overrides, camel_case_types, comment_references
-// ignore_for_file: constant_identifier_names, library_prefixes
-// ignore_for_file: non_constant_identifier_names, prefer_final_fields
-// ignore_for_file: unnecessary_import, unnecessary_this, unused_import
+// ignore_for_file: constant_identifier_names
+// ignore_for_file: curly_braces_in_flow_control_structures
+// ignore_for_file: deprecated_member_use_from_same_package, library_prefixes
+// ignore_for_file: non_constant_identifier_names
 
 import 'dart:core' as $core;
 
@@ -16,7 +17,6 @@ import 'package:protobuf/protobuf.dart' as $pb;
 import 'cedar.pbenum.dart';
 import 'cedar_common.pb.dart' as $4;
 import 'cedar_sky.pb.dart' as $1;
-import 'cedar_sky.pbenum.dart' as $1;
 import 'google/protobuf/duration.pb.dart' as $3;
 import 'google/protobuf/timestamp.pb.dart' as $2;
 
@@ -43,106 +43,97 @@ class ServerInformation extends $pb.GeneratedMessage {
     ImuTrackerState? imuTrackerState,
     $core.double? imuAngularSpeed,
   }) {
-    final $result = create();
-    if (productName != null) {
-      $result.productName = productName;
-    }
-    if (copyright != null) {
-      $result.copyright = copyright;
-    }
-    if (cedarServerVersion != null) {
-      $result.cedarServerVersion = cedarServerVersion;
-    }
-    if (featureLevel != null) {
-      $result.featureLevel = featureLevel;
-    }
-    if (processorModel != null) {
-      $result.processorModel = processorModel;
-    }
-    if (osVersion != null) {
-      $result.osVersion = osVersion;
-    }
-    if (cpuTemperature != null) {
-      $result.cpuTemperature = cpuTemperature;
-    }
-    if (serverTime != null) {
-      $result.serverTime = serverTime;
-    }
-    if (camera != null) {
-      $result.camera = camera;
-    }
-    if (wifiAccessPoint != null) {
-      $result.wifiAccessPoint = wifiAccessPoint;
-    }
-    if (demoImageNames != null) {
-      $result.demoImageNames.addAll(demoImageNames);
-    }
-    if (serialNumber != null) {
-      $result.serialNumber = serialNumber;
-    }
-    if (imu != null) {
-      $result.imu = imu;
-    }
-    if (imuModel != null) {
-      $result.imuModel = imuModel;
-    }
-    if (imuTrackerState != null) {
-      $result.imuTrackerState = imuTrackerState;
-    }
-    if (imuAngularSpeed != null) {
-      $result.imuAngularSpeed = imuAngularSpeed;
-    }
-    return $result;
+    final result = create();
+    if (productName != null) result.productName = productName;
+    if (copyright != null) result.copyright = copyright;
+    if (cedarServerVersion != null)
+      result.cedarServerVersion = cedarServerVersion;
+    if (featureLevel != null) result.featureLevel = featureLevel;
+    if (processorModel != null) result.processorModel = processorModel;
+    if (osVersion != null) result.osVersion = osVersion;
+    if (cpuTemperature != null) result.cpuTemperature = cpuTemperature;
+    if (serverTime != null) result.serverTime = serverTime;
+    if (camera != null) result.camera = camera;
+    if (wifiAccessPoint != null) result.wifiAccessPoint = wifiAccessPoint;
+    if (demoImageNames != null) result.demoImageNames.addAll(demoImageNames);
+    if (serialNumber != null) result.serialNumber = serialNumber;
+    if (imu != null) result.imu = imu;
+    if (imuModel != null) result.imuModel = imuModel;
+    if (imuTrackerState != null) result.imuTrackerState = imuTrackerState;
+    if (imuAngularSpeed != null) result.imuAngularSpeed = imuAngularSpeed;
+    return result;
   }
-  ServerInformation._() : super();
-  factory ServerInformation.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory ServerInformation.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
 
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'ServerInformation', package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'), createEmptyInstance: create)
+  ServerInformation._();
+
+  factory ServerInformation.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ServerInformation.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ServerInformation',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'),
+      createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'productName')
     ..aOS(2, _omitFieldNames ? '' : 'copyright')
     ..aOS(3, _omitFieldNames ? '' : 'cedarServerVersion')
-    ..e<FeatureLevel>(4, _omitFieldNames ? '' : 'featureLevel', $pb.PbFieldType.OE, defaultOrMaker: FeatureLevel.FEATURE_LEVEL_UNSPECIFIED, valueOf: FeatureLevel.valueOf, enumValues: FeatureLevel.values)
+    ..e<FeatureLevel>(
+        4, _omitFieldNames ? '' : 'featureLevel', $pb.PbFieldType.OE,
+        defaultOrMaker: FeatureLevel.FEATURE_LEVEL_UNSPECIFIED,
+        valueOf: FeatureLevel.valueOf,
+        enumValues: FeatureLevel.values)
     ..aOS(5, _omitFieldNames ? '' : 'processorModel')
     ..aOS(6, _omitFieldNames ? '' : 'osVersion')
-    ..a<$core.double>(7, _omitFieldNames ? '' : 'cpuTemperature', $pb.PbFieldType.OF)
-    ..aOM<$2.Timestamp>(8, _omitFieldNames ? '' : 'serverTime', subBuilder: $2.Timestamp.create)
-    ..aOM<CameraModel>(9, _omitFieldNames ? '' : 'camera', subBuilder: CameraModel.create)
-    ..aOM<WiFiAccessPoint>(10, _omitFieldNames ? '' : 'wifiAccessPoint', subBuilder: WiFiAccessPoint.create)
+    ..a<$core.double>(
+        7, _omitFieldNames ? '' : 'cpuTemperature', $pb.PbFieldType.OF)
+    ..aOM<$2.Timestamp>(8, _omitFieldNames ? '' : 'serverTime',
+        subBuilder: $2.Timestamp.create)
+    ..aOM<CameraModel>(9, _omitFieldNames ? '' : 'camera',
+        subBuilder: CameraModel.create)
+    ..aOM<WiFiAccessPoint>(10, _omitFieldNames ? '' : 'wifiAccessPoint',
+        subBuilder: WiFiAccessPoint.create)
     ..pPS(11, _omitFieldNames ? '' : 'demoImageNames')
     ..aOS(12, _omitFieldNames ? '' : 'serialNumber')
-    ..aOM<ImuState>(13, _omitFieldNames ? '' : 'imu', subBuilder: ImuState.create)
+    ..aOM<ImuState>(13, _omitFieldNames ? '' : 'imu',
+        subBuilder: ImuState.create)
     ..aOS(14, _omitFieldNames ? '' : 'imuModel')
-    ..e<ImuTrackerState>(15, _omitFieldNames ? '' : 'imuTrackerState', $pb.PbFieldType.OE, defaultOrMaker: ImuTrackerState.TRACKER_STATE_UNKNOWN, valueOf: ImuTrackerState.valueOf, enumValues: ImuTrackerState.values)
-    ..a<$core.double>(16, _omitFieldNames ? '' : 'imuAngularSpeed', $pb.PbFieldType.OD)
-    ..hasRequiredFields = false
-  ;
+    ..e<ImuTrackerState>(
+        15, _omitFieldNames ? '' : 'imuTrackerState', $pb.PbFieldType.OE,
+        defaultOrMaker: ImuTrackerState.TRACKER_STATE_UNKNOWN,
+        valueOf: ImuTrackerState.valueOf,
+        enumValues: ImuTrackerState.values)
+    ..a<$core.double>(
+        16, _omitFieldNames ? '' : 'imuAngularSpeed', $pb.PbFieldType.OD)
+    ..hasRequiredFields = false;
 
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
-  'Will be removed in next major version')
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   ServerInformation clone() => ServerInformation()..mergeFromMessage(this);
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
-  'Will be removed in next major version')
-  ServerInformation copyWith(void Function(ServerInformation) updates) => super.copyWith((message) => updates(message as ServerInformation)) as ServerInformation;
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ServerInformation copyWith(void Function(ServerInformation) updates) =>
+      super.copyWith((message) => updates(message as ServerInformation))
+          as ServerInformation;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static ServerInformation create() => ServerInformation._();
+  @$core.override
   ServerInformation createEmptyInstance() => create();
-  static $pb.PbList<ServerInformation> createRepeated() => $pb.PbList<ServerInformation>();
+  static $pb.PbList<ServerInformation> createRepeated() =>
+      $pb.PbList<ServerInformation>();
   @$core.pragma('dart2js:noInline')
-  static ServerInformation getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<ServerInformation>(create);
+  static ServerInformation getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ServerInformation>(create);
   static ServerInformation? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get productName => $_getSZ(0);
   @$pb.TagNumber(1)
-  set productName($core.String v) { $_setString(0, v); }
+  set productName($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
   $core.bool hasProductName() => $_has(0);
   @$pb.TagNumber(1)
@@ -151,7 +142,7 @@ class ServerInformation extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $core.String get copyright => $_getSZ(1);
   @$pb.TagNumber(2)
-  set copyright($core.String v) { $_setString(1, v); }
+  set copyright($core.String value) => $_setString(1, value);
   @$pb.TagNumber(2)
   $core.bool hasCopyright() => $_has(1);
   @$pb.TagNumber(2)
@@ -160,7 +151,7 @@ class ServerInformation extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   $core.String get cedarServerVersion => $_getSZ(2);
   @$pb.TagNumber(3)
-  set cedarServerVersion($core.String v) { $_setString(2, v); }
+  set cedarServerVersion($core.String value) => $_setString(2, value);
   @$pb.TagNumber(3)
   $core.bool hasCedarServerVersion() => $_has(2);
   @$pb.TagNumber(3)
@@ -169,7 +160,7 @@ class ServerInformation extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   FeatureLevel get featureLevel => $_getN(3);
   @$pb.TagNumber(4)
-  set featureLevel(FeatureLevel v) { $_setField(4, v); }
+  set featureLevel(FeatureLevel value) => $_setField(4, value);
   @$pb.TagNumber(4)
   $core.bool hasFeatureLevel() => $_has(3);
   @$pb.TagNumber(4)
@@ -178,7 +169,7 @@ class ServerInformation extends $pb.GeneratedMessage {
   @$pb.TagNumber(5)
   $core.String get processorModel => $_getSZ(4);
   @$pb.TagNumber(5)
-  set processorModel($core.String v) { $_setString(4, v); }
+  set processorModel($core.String value) => $_setString(4, value);
   @$pb.TagNumber(5)
   $core.bool hasProcessorModel() => $_has(4);
   @$pb.TagNumber(5)
@@ -187,7 +178,7 @@ class ServerInformation extends $pb.GeneratedMessage {
   @$pb.TagNumber(6)
   $core.String get osVersion => $_getSZ(5);
   @$pb.TagNumber(6)
-  set osVersion($core.String v) { $_setString(5, v); }
+  set osVersion($core.String value) => $_setString(5, value);
   @$pb.TagNumber(6)
   $core.bool hasOsVersion() => $_has(5);
   @$pb.TagNumber(6)
@@ -196,7 +187,7 @@ class ServerInformation extends $pb.GeneratedMessage {
   @$pb.TagNumber(7)
   $core.double get cpuTemperature => $_getN(6);
   @$pb.TagNumber(7)
-  set cpuTemperature($core.double v) { $_setFloat(6, v); }
+  set cpuTemperature($core.double value) => $_setFloat(6, value);
   @$pb.TagNumber(7)
   $core.bool hasCpuTemperature() => $_has(6);
   @$pb.TagNumber(7)
@@ -205,7 +196,7 @@ class ServerInformation extends $pb.GeneratedMessage {
   @$pb.TagNumber(8)
   $2.Timestamp get serverTime => $_getN(7);
   @$pb.TagNumber(8)
-  set serverTime($2.Timestamp v) { $_setField(8, v); }
+  set serverTime($2.Timestamp value) => $_setField(8, value);
   @$pb.TagNumber(8)
   $core.bool hasServerTime() => $_has(7);
   @$pb.TagNumber(8)
@@ -217,7 +208,7 @@ class ServerInformation extends $pb.GeneratedMessage {
   @$pb.TagNumber(9)
   CameraModel get camera => $_getN(8);
   @$pb.TagNumber(9)
-  set camera(CameraModel v) { $_setField(9, v); }
+  set camera(CameraModel value) => $_setField(9, value);
   @$pb.TagNumber(9)
   $core.bool hasCamera() => $_has(8);
   @$pb.TagNumber(9)
@@ -229,7 +220,7 @@ class ServerInformation extends $pb.GeneratedMessage {
   @$pb.TagNumber(10)
   WiFiAccessPoint get wifiAccessPoint => $_getN(9);
   @$pb.TagNumber(10)
-  set wifiAccessPoint(WiFiAccessPoint v) { $_setField(10, v); }
+  set wifiAccessPoint(WiFiAccessPoint value) => $_setField(10, value);
   @$pb.TagNumber(10)
   $core.bool hasWifiAccessPoint() => $_has(9);
   @$pb.TagNumber(10)
@@ -244,7 +235,7 @@ class ServerInformation extends $pb.GeneratedMessage {
   @$pb.TagNumber(12)
   $core.String get serialNumber => $_getSZ(11);
   @$pb.TagNumber(12)
-  set serialNumber($core.String v) { $_setString(11, v); }
+  set serialNumber($core.String value) => $_setString(11, value);
   @$pb.TagNumber(12)
   $core.bool hasSerialNumber() => $_has(11);
   @$pb.TagNumber(12)
@@ -254,7 +245,7 @@ class ServerInformation extends $pb.GeneratedMessage {
   @$pb.TagNumber(13)
   ImuState get imu => $_getN(12);
   @$pb.TagNumber(13)
-  set imu(ImuState v) { $_setField(13, v); }
+  set imu(ImuState value) => $_setField(13, value);
   @$pb.TagNumber(13)
   $core.bool hasImu() => $_has(12);
   @$pb.TagNumber(13)
@@ -266,7 +257,7 @@ class ServerInformation extends $pb.GeneratedMessage {
   @$pb.TagNumber(14)
   $core.String get imuModel => $_getSZ(13);
   @$pb.TagNumber(14)
-  set imuModel($core.String v) { $_setString(13, v); }
+  set imuModel($core.String value) => $_setString(13, value);
   @$pb.TagNumber(14)
   $core.bool hasImuModel() => $_has(13);
   @$pb.TagNumber(14)
@@ -276,7 +267,7 @@ class ServerInformation extends $pb.GeneratedMessage {
   @$pb.TagNumber(15)
   ImuTrackerState get imuTrackerState => $_getN(14);
   @$pb.TagNumber(15)
-  set imuTrackerState(ImuTrackerState v) { $_setField(15, v); }
+  set imuTrackerState(ImuTrackerState value) => $_setField(15, value);
   @$pb.TagNumber(15)
   $core.bool hasImuTrackerState() => $_has(14);
   @$pb.TagNumber(15)
@@ -287,7 +278,7 @@ class ServerInformation extends $pb.GeneratedMessage {
   @$pb.TagNumber(16)
   $core.double get imuAngularSpeed => $_getN(15);
   @$pb.TagNumber(16)
-  set imuAngularSpeed($core.double v) { $_setDouble(15, v); }
+  set imuAngularSpeed($core.double value) => $_setDouble(15, value);
   @$pb.TagNumber(16)
   $core.bool hasImuAngularSpeed() => $_has(15);
   @$pb.TagNumber(16)
@@ -301,58 +292,57 @@ class CameraModel extends $pb.GeneratedMessage {
     $core.int? imageHeight,
     $core.String? modelDetail,
   }) {
-    final $result = create();
-    if (model != null) {
-      $result.model = model;
-    }
-    if (imageWidth != null) {
-      $result.imageWidth = imageWidth;
-    }
-    if (imageHeight != null) {
-      $result.imageHeight = imageHeight;
-    }
-    if (modelDetail != null) {
-      $result.modelDetail = modelDetail;
-    }
-    return $result;
+    final result = create();
+    if (model != null) result.model = model;
+    if (imageWidth != null) result.imageWidth = imageWidth;
+    if (imageHeight != null) result.imageHeight = imageHeight;
+    if (modelDetail != null) result.modelDetail = modelDetail;
+    return result;
   }
-  CameraModel._() : super();
-  factory CameraModel.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory CameraModel.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
 
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'CameraModel', package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'), createEmptyInstance: create)
+  CameraModel._();
+
+  factory CameraModel.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory CameraModel.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'CameraModel',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'),
+      createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'model')
     ..a<$core.int>(2, _omitFieldNames ? '' : 'imageWidth', $pb.PbFieldType.O3)
     ..a<$core.int>(3, _omitFieldNames ? '' : 'imageHeight', $pb.PbFieldType.O3)
     ..aOS(4, _omitFieldNames ? '' : 'modelDetail')
-    ..hasRequiredFields = false
-  ;
+    ..hasRequiredFields = false;
 
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
-  'Will be removed in next major version')
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   CameraModel clone() => CameraModel()..mergeFromMessage(this);
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
-  'Will be removed in next major version')
-  CameraModel copyWith(void Function(CameraModel) updates) => super.copyWith((message) => updates(message as CameraModel)) as CameraModel;
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  CameraModel copyWith(void Function(CameraModel) updates) =>
+      super.copyWith((message) => updates(message as CameraModel))
+          as CameraModel;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static CameraModel create() => CameraModel._();
+  @$core.override
   CameraModel createEmptyInstance() => create();
   static $pb.PbList<CameraModel> createRepeated() => $pb.PbList<CameraModel>();
   @$core.pragma('dart2js:noInline')
-  static CameraModel getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<CameraModel>(create);
+  static CameraModel getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<CameraModel>(create);
   static CameraModel? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get model => $_getSZ(0);
   @$pb.TagNumber(1)
-  set model($core.String v) { $_setString(0, v); }
+  set model($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
   $core.bool hasModel() => $_has(0);
   @$pb.TagNumber(1)
@@ -361,7 +351,7 @@ class CameraModel extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $core.int get imageWidth => $_getIZ(1);
   @$pb.TagNumber(2)
-  set imageWidth($core.int v) { $_setSignedInt32(1, v); }
+  set imageWidth($core.int value) => $_setSignedInt32(1, value);
   @$pb.TagNumber(2)
   $core.bool hasImageWidth() => $_has(1);
   @$pb.TagNumber(2)
@@ -370,7 +360,7 @@ class CameraModel extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   $core.int get imageHeight => $_getIZ(2);
   @$pb.TagNumber(3)
-  set imageHeight($core.int v) { $_setSignedInt32(2, v); }
+  set imageHeight($core.int value) => $_setSignedInt32(2, value);
   @$pb.TagNumber(3)
   $core.bool hasImageHeight() => $_has(2);
   @$pb.TagNumber(3)
@@ -379,7 +369,7 @@ class CameraModel extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   $core.String get modelDetail => $_getSZ(3);
   @$pb.TagNumber(4)
-  set modelDetail($core.String v) { $_setString(3, v); }
+  set modelDetail($core.String value) => $_setString(3, value);
   @$pb.TagNumber(4)
   $core.bool hasModelDetail() => $_has(3);
   @$pb.TagNumber(4)
@@ -395,67 +385,64 @@ class ImuState extends $pb.GeneratedMessage {
     $core.double? angleRateY,
     $core.double? angleRateZ,
   }) {
-    final $result = create();
-    if (accelX != null) {
-      $result.accelX = accelX;
-    }
-    if (accelY != null) {
-      $result.accelY = accelY;
-    }
-    if (accelZ != null) {
-      $result.accelZ = accelZ;
-    }
-    if (angleRateX != null) {
-      $result.angleRateX = angleRateX;
-    }
-    if (angleRateY != null) {
-      $result.angleRateY = angleRateY;
-    }
-    if (angleRateZ != null) {
-      $result.angleRateZ = angleRateZ;
-    }
-    return $result;
+    final result = create();
+    if (accelX != null) result.accelX = accelX;
+    if (accelY != null) result.accelY = accelY;
+    if (accelZ != null) result.accelZ = accelZ;
+    if (angleRateX != null) result.angleRateX = angleRateX;
+    if (angleRateY != null) result.angleRateY = angleRateY;
+    if (angleRateZ != null) result.angleRateZ = angleRateZ;
+    return result;
   }
-  ImuState._() : super();
-  factory ImuState.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory ImuState.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
 
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'ImuState', package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'), createEmptyInstance: create)
+  ImuState._();
+
+  factory ImuState.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ImuState.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ImuState',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'),
+      createEmptyInstance: create)
     ..a<$core.double>(1, _omitFieldNames ? '' : 'accelX', $pb.PbFieldType.OD)
     ..a<$core.double>(2, _omitFieldNames ? '' : 'accelY', $pb.PbFieldType.OD)
     ..a<$core.double>(3, _omitFieldNames ? '' : 'accelZ', $pb.PbFieldType.OD)
-    ..a<$core.double>(4, _omitFieldNames ? '' : 'angleRateX', $pb.PbFieldType.OD)
-    ..a<$core.double>(5, _omitFieldNames ? '' : 'angleRateY', $pb.PbFieldType.OD)
-    ..a<$core.double>(6, _omitFieldNames ? '' : 'angleRateZ', $pb.PbFieldType.OD)
-    ..hasRequiredFields = false
-  ;
+    ..a<$core.double>(
+        4, _omitFieldNames ? '' : 'angleRateX', $pb.PbFieldType.OD)
+    ..a<$core.double>(
+        5, _omitFieldNames ? '' : 'angleRateY', $pb.PbFieldType.OD)
+    ..a<$core.double>(
+        6, _omitFieldNames ? '' : 'angleRateZ', $pb.PbFieldType.OD)
+    ..hasRequiredFields = false;
 
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
-  'Will be removed in next major version')
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   ImuState clone() => ImuState()..mergeFromMessage(this);
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
-  'Will be removed in next major version')
-  ImuState copyWith(void Function(ImuState) updates) => super.copyWith((message) => updates(message as ImuState)) as ImuState;
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ImuState copyWith(void Function(ImuState) updates) =>
+      super.copyWith((message) => updates(message as ImuState)) as ImuState;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static ImuState create() => ImuState._();
+  @$core.override
   ImuState createEmptyInstance() => create();
   static $pb.PbList<ImuState> createRepeated() => $pb.PbList<ImuState>();
   @$core.pragma('dart2js:noInline')
-  static ImuState getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<ImuState>(create);
+  static ImuState getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<ImuState>(create);
   static ImuState? _defaultInstance;
 
   /// Meters per second squared.
   @$pb.TagNumber(1)
   $core.double get accelX => $_getN(0);
   @$pb.TagNumber(1)
-  set accelX($core.double v) { $_setDouble(0, v); }
+  set accelX($core.double value) => $_setDouble(0, value);
   @$pb.TagNumber(1)
   $core.bool hasAccelX() => $_has(0);
   @$pb.TagNumber(1)
@@ -464,7 +451,7 @@ class ImuState extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $core.double get accelY => $_getN(1);
   @$pb.TagNumber(2)
-  set accelY($core.double v) { $_setDouble(1, v); }
+  set accelY($core.double value) => $_setDouble(1, value);
   @$pb.TagNumber(2)
   $core.bool hasAccelY() => $_has(1);
   @$pb.TagNumber(2)
@@ -473,7 +460,7 @@ class ImuState extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   $core.double get accelZ => $_getN(2);
   @$pb.TagNumber(3)
-  set accelZ($core.double v) { $_setDouble(2, v); }
+  set accelZ($core.double value) => $_setDouble(2, value);
   @$pb.TagNumber(3)
   $core.bool hasAccelZ() => $_has(2);
   @$pb.TagNumber(3)
@@ -483,7 +470,7 @@ class ImuState extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   $core.double get angleRateX => $_getN(3);
   @$pb.TagNumber(4)
-  set angleRateX($core.double v) { $_setDouble(3, v); }
+  set angleRateX($core.double value) => $_setDouble(3, value);
   @$pb.TagNumber(4)
   $core.bool hasAngleRateX() => $_has(3);
   @$pb.TagNumber(4)
@@ -492,7 +479,7 @@ class ImuState extends $pb.GeneratedMessage {
   @$pb.TagNumber(5)
   $core.double get angleRateY => $_getN(4);
   @$pb.TagNumber(5)
-  set angleRateY($core.double v) { $_setDouble(4, v); }
+  set angleRateY($core.double value) => $_setDouble(4, value);
   @$pb.TagNumber(5)
   $core.bool hasAngleRateY() => $_has(4);
   @$pb.TagNumber(5)
@@ -501,7 +488,7 @@ class ImuState extends $pb.GeneratedMessage {
   @$pb.TagNumber(6)
   $core.double get angleRateZ => $_getN(5);
   @$pb.TagNumber(6)
-  set angleRateZ($core.double v) { $_setDouble(5, v); }
+  set angleRateZ($core.double value) => $_setDouble(5, value);
   @$pb.TagNumber(6)
   $core.bool hasAngleRateZ() => $_has(5);
   @$pb.TagNumber(6)
@@ -515,54 +502,56 @@ class WiFiAccessPoint extends $pb.GeneratedMessage {
     $core.String? psk,
     $core.int? channel,
   }) {
-    final $result = create();
-    if (ssid != null) {
-      $result.ssid = ssid;
-    }
-    if (psk != null) {
-      $result.psk = psk;
-    }
-    if (channel != null) {
-      $result.channel = channel;
-    }
-    return $result;
+    final result = create();
+    if (ssid != null) result.ssid = ssid;
+    if (psk != null) result.psk = psk;
+    if (channel != null) result.channel = channel;
+    return result;
   }
-  WiFiAccessPoint._() : super();
-  factory WiFiAccessPoint.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory WiFiAccessPoint.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
 
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'WiFiAccessPoint', package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'), createEmptyInstance: create)
+  WiFiAccessPoint._();
+
+  factory WiFiAccessPoint.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory WiFiAccessPoint.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'WiFiAccessPoint',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'),
+      createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'ssid')
     ..aOS(2, _omitFieldNames ? '' : 'psk')
     ..a<$core.int>(3, _omitFieldNames ? '' : 'channel', $pb.PbFieldType.O3)
-    ..hasRequiredFields = false
-  ;
+    ..hasRequiredFields = false;
 
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
-  'Will be removed in next major version')
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   WiFiAccessPoint clone() => WiFiAccessPoint()..mergeFromMessage(this);
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
-  'Will be removed in next major version')
-  WiFiAccessPoint copyWith(void Function(WiFiAccessPoint) updates) => super.copyWith((message) => updates(message as WiFiAccessPoint)) as WiFiAccessPoint;
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  WiFiAccessPoint copyWith(void Function(WiFiAccessPoint) updates) =>
+      super.copyWith((message) => updates(message as WiFiAccessPoint))
+          as WiFiAccessPoint;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static WiFiAccessPoint create() => WiFiAccessPoint._();
+  @$core.override
   WiFiAccessPoint createEmptyInstance() => create();
-  static $pb.PbList<WiFiAccessPoint> createRepeated() => $pb.PbList<WiFiAccessPoint>();
+  static $pb.PbList<WiFiAccessPoint> createRepeated() =>
+      $pb.PbList<WiFiAccessPoint>();
   @$core.pragma('dart2js:noInline')
-  static WiFiAccessPoint getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<WiFiAccessPoint>(create);
+  static WiFiAccessPoint getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<WiFiAccessPoint>(create);
   static WiFiAccessPoint? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get ssid => $_getSZ(0);
   @$pb.TagNumber(1)
-  set ssid($core.String v) { $_setString(0, v); }
+  set ssid($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
   $core.bool hasSsid() => $_has(0);
   @$pb.TagNumber(1)
@@ -571,7 +560,7 @@ class WiFiAccessPoint extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $core.String get psk => $_getSZ(1);
   @$pb.TagNumber(2)
-  set psk($core.String v) { $_setString(1, v); }
+  set psk($core.String value) => $_setString(1, value);
   @$pb.TagNumber(2)
   $core.bool hasPsk() => $_has(1);
   @$pb.TagNumber(2)
@@ -580,7 +569,7 @@ class WiFiAccessPoint extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   $core.int get channel => $_getIZ(2);
   @$pb.TagNumber(3)
-  set channel($core.int v) { $_setSignedInt32(2, v); }
+  set channel($core.int value) => $_setSignedInt32(2, value);
   @$pb.TagNumber(3)
   $core.bool hasChannel() => $_has(2);
   @$pb.TagNumber(3)
@@ -594,58 +583,61 @@ class FixedSettings extends $pb.GeneratedMessage {
     $core.String? sessionName,
     $3.Duration? maxExposureTime,
   }) {
-    final $result = create();
-    if (observerLocation != null) {
-      $result.observerLocation = observerLocation;
-    }
-    if (currentTime != null) {
-      $result.currentTime = currentTime;
-    }
-    if (sessionName != null) {
-      $result.sessionName = sessionName;
-    }
-    if (maxExposureTime != null) {
-      $result.maxExposureTime = maxExposureTime;
-    }
-    return $result;
+    final result = create();
+    if (observerLocation != null) result.observerLocation = observerLocation;
+    if (currentTime != null) result.currentTime = currentTime;
+    if (sessionName != null) result.sessionName = sessionName;
+    if (maxExposureTime != null) result.maxExposureTime = maxExposureTime;
+    return result;
   }
-  FixedSettings._() : super();
-  factory FixedSettings.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory FixedSettings.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
 
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'FixedSettings', package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'), createEmptyInstance: create)
-    ..aOM<LatLong>(2, _omitFieldNames ? '' : 'observerLocation', subBuilder: LatLong.create)
-    ..aOM<$2.Timestamp>(4, _omitFieldNames ? '' : 'currentTime', subBuilder: $2.Timestamp.create)
+  FixedSettings._();
+
+  factory FixedSettings.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory FixedSettings.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'FixedSettings',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'),
+      createEmptyInstance: create)
+    ..aOM<LatLong>(2, _omitFieldNames ? '' : 'observerLocation',
+        subBuilder: LatLong.create)
+    ..aOM<$2.Timestamp>(4, _omitFieldNames ? '' : 'currentTime',
+        subBuilder: $2.Timestamp.create)
     ..aOS(5, _omitFieldNames ? '' : 'sessionName')
-    ..aOM<$3.Duration>(6, _omitFieldNames ? '' : 'maxExposureTime', subBuilder: $3.Duration.create)
-    ..hasRequiredFields = false
-  ;
+    ..aOM<$3.Duration>(6, _omitFieldNames ? '' : 'maxExposureTime',
+        subBuilder: $3.Duration.create)
+    ..hasRequiredFields = false;
 
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
-  'Will be removed in next major version')
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   FixedSettings clone() => FixedSettings()..mergeFromMessage(this);
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
-  'Will be removed in next major version')
-  FixedSettings copyWith(void Function(FixedSettings) updates) => super.copyWith((message) => updates(message as FixedSettings)) as FixedSettings;
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  FixedSettings copyWith(void Function(FixedSettings) updates) =>
+      super.copyWith((message) => updates(message as FixedSettings))
+          as FixedSettings;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static FixedSettings create() => FixedSettings._();
+  @$core.override
   FixedSettings createEmptyInstance() => create();
-  static $pb.PbList<FixedSettings> createRepeated() => $pb.PbList<FixedSettings>();
+  static $pb.PbList<FixedSettings> createRepeated() =>
+      $pb.PbList<FixedSettings>();
   @$core.pragma('dart2js:noInline')
-  static FixedSettings getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<FixedSettings>(create);
+  static FixedSettings getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<FixedSettings>(create);
   static FixedSettings? _defaultInstance;
 
   @$pb.TagNumber(2)
   LatLong get observerLocation => $_getN(0);
   @$pb.TagNumber(2)
-  set observerLocation(LatLong v) { $_setField(2, v); }
+  set observerLocation(LatLong value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasObserverLocation() => $_has(0);
   @$pb.TagNumber(2)
@@ -659,7 +651,7 @@ class FixedSettings extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   $2.Timestamp get currentTime => $_getN(1);
   @$pb.TagNumber(4)
-  set currentTime($2.Timestamp v) { $_setField(4, v); }
+  set currentTime($2.Timestamp value) => $_setField(4, value);
   @$pb.TagNumber(4)
   $core.bool hasCurrentTime() => $_has(1);
   @$pb.TagNumber(4)
@@ -673,7 +665,7 @@ class FixedSettings extends $pb.GeneratedMessage {
   @$pb.TagNumber(5)
   $core.String get sessionName => $_getSZ(2);
   @$pb.TagNumber(5)
-  set sessionName($core.String v) { $_setString(2, v); }
+  set sessionName($core.String value) => $_setString(2, value);
   @$pb.TagNumber(5)
   $core.bool hasSessionName() => $_has(2);
   @$pb.TagNumber(5)
@@ -684,7 +676,7 @@ class FixedSettings extends $pb.GeneratedMessage {
   @$pb.TagNumber(6)
   $3.Duration get maxExposureTime => $_getN(3);
   @$pb.TagNumber(6)
-  set maxExposureTime($3.Duration v) { $_setField(6, v); }
+  set maxExposureTime($3.Duration value) => $_setField(6, value);
   @$pb.TagNumber(6)
   $core.bool hasMaxExposureTime() => $_has(3);
   @$pb.TagNumber(6)
@@ -698,51 +690,53 @@ class LatLong extends $pb.GeneratedMessage {
     $core.double? latitude,
     $core.double? longitude,
   }) {
-    final $result = create();
-    if (latitude != null) {
-      $result.latitude = latitude;
-    }
-    if (longitude != null) {
-      $result.longitude = longitude;
-    }
-    return $result;
+    final result = create();
+    if (latitude != null) result.latitude = latitude;
+    if (longitude != null) result.longitude = longitude;
+    return result;
   }
-  LatLong._() : super();
-  factory LatLong.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory LatLong.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
 
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'LatLong', package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'), createEmptyInstance: create)
+  LatLong._();
+
+  factory LatLong.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory LatLong.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'LatLong',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'),
+      createEmptyInstance: create)
     ..a<$core.double>(1, _omitFieldNames ? '' : 'latitude', $pb.PbFieldType.OD)
     ..a<$core.double>(2, _omitFieldNames ? '' : 'longitude', $pb.PbFieldType.OD)
-    ..hasRequiredFields = false
-  ;
+    ..hasRequiredFields = false;
 
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
-  'Will be removed in next major version')
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   LatLong clone() => LatLong()..mergeFromMessage(this);
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
-  'Will be removed in next major version')
-  LatLong copyWith(void Function(LatLong) updates) => super.copyWith((message) => updates(message as LatLong)) as LatLong;
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  LatLong copyWith(void Function(LatLong) updates) =>
+      super.copyWith((message) => updates(message as LatLong)) as LatLong;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static LatLong create() => LatLong._();
+  @$core.override
   LatLong createEmptyInstance() => create();
   static $pb.PbList<LatLong> createRepeated() => $pb.PbList<LatLong>();
   @$core.pragma('dart2js:noInline')
-  static LatLong getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<LatLong>(create);
+  static LatLong getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<LatLong>(create);
   static LatLong? _defaultInstance;
 
   /// Degrees.
   @$pb.TagNumber(1)
   $core.double get latitude => $_getN(0);
   @$pb.TagNumber(1)
-  set latitude($core.double v) { $_setDouble(0, v); }
+  set latitude($core.double value) => $_setDouble(0, value);
   @$pb.TagNumber(1)
   $core.bool hasLatitude() => $_has(0);
   @$pb.TagNumber(1)
@@ -751,7 +745,7 @@ class LatLong extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $core.double get longitude => $_getN(1);
   @$pb.TagNumber(2)
-  set longitude($core.double v) { $_setDouble(1, v); }
+  set longitude($core.double value) => $_setDouble(1, value);
   @$pb.TagNumber(2)
   $core.bool hasLongitude() => $_has(1);
   @$pb.TagNumber(2)
@@ -768,64 +762,64 @@ class OperationSettings extends $pb.GeneratedMessage {
     $core.bool? focusAssistMode,
     $core.bool? useImu,
   }) {
-    final $result = create();
-    if (daylightMode != null) {
-      $result.daylightMode = daylightMode;
-    }
-    if (operatingMode != null) {
-      $result.operatingMode = operatingMode;
-    }
-    if (logDwelledPositions != null) {
-      $result.logDwelledPositions = logDwelledPositions;
-    }
-    if (catalogEntryMatch != null) {
-      $result.catalogEntryMatch = catalogEntryMatch;
-    }
-    if (demoImageFilename != null) {
-      $result.demoImageFilename = demoImageFilename;
-    }
-    if (focusAssistMode != null) {
-      $result.focusAssistMode = focusAssistMode;
-    }
-    if (useImu != null) {
-      $result.useImu = useImu;
-    }
-    return $result;
+    final result = create();
+    if (daylightMode != null) result.daylightMode = daylightMode;
+    if (operatingMode != null) result.operatingMode = operatingMode;
+    if (logDwelledPositions != null)
+      result.logDwelledPositions = logDwelledPositions;
+    if (catalogEntryMatch != null) result.catalogEntryMatch = catalogEntryMatch;
+    if (demoImageFilename != null) result.demoImageFilename = demoImageFilename;
+    if (focusAssistMode != null) result.focusAssistMode = focusAssistMode;
+    if (useImu != null) result.useImu = useImu;
+    return result;
   }
-  OperationSettings._() : super();
-  factory OperationSettings.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory OperationSettings.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
 
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'OperationSettings', package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'), createEmptyInstance: create)
+  OperationSettings._();
+
+  factory OperationSettings.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory OperationSettings.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'OperationSettings',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'),
+      createEmptyInstance: create)
     ..aOB(1, _omitFieldNames ? '' : 'daylightMode')
-    ..e<OperatingMode>(4, _omitFieldNames ? '' : 'operatingMode', $pb.PbFieldType.OE, defaultOrMaker: OperatingMode.MODE_UNSPECIFIED, valueOf: OperatingMode.valueOf, enumValues: OperatingMode.values)
+    ..e<OperatingMode>(
+        4, _omitFieldNames ? '' : 'operatingMode', $pb.PbFieldType.OE,
+        defaultOrMaker: OperatingMode.MODE_UNSPECIFIED,
+        valueOf: OperatingMode.valueOf,
+        enumValues: OperatingMode.values)
     ..aOB(10, _omitFieldNames ? '' : 'logDwelledPositions')
-    ..aOM<$1.CatalogEntryMatch>(11, _omitFieldNames ? '' : 'catalogEntryMatch', subBuilder: $1.CatalogEntryMatch.create)
+    ..aOM<$1.CatalogEntryMatch>(11, _omitFieldNames ? '' : 'catalogEntryMatch',
+        subBuilder: $1.CatalogEntryMatch.create)
     ..aOS(12, _omitFieldNames ? '' : 'demoImageFilename')
     ..aOB(14, _omitFieldNames ? '' : 'focusAssistMode')
     ..aOB(15, _omitFieldNames ? '' : 'useImu')
-    ..hasRequiredFields = false
-  ;
+    ..hasRequiredFields = false;
 
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
-  'Will be removed in next major version')
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   OperationSettings clone() => OperationSettings()..mergeFromMessage(this);
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
-  'Will be removed in next major version')
-  OperationSettings copyWith(void Function(OperationSettings) updates) => super.copyWith((message) => updates(message as OperationSettings)) as OperationSettings;
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  OperationSettings copyWith(void Function(OperationSettings) updates) =>
+      super.copyWith((message) => updates(message as OperationSettings))
+          as OperationSettings;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static OperationSettings create() => OperationSettings._();
+  @$core.override
   OperationSettings createEmptyInstance() => create();
-  static $pb.PbList<OperationSettings> createRepeated() => $pb.PbList<OperationSettings>();
+  static $pb.PbList<OperationSettings> createRepeated() =>
+      $pb.PbList<OperationSettings>();
   @$core.pragma('dart2js:noInline')
-  static OperationSettings getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<OperationSettings>(create);
+  static OperationSettings getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<OperationSettings>(create);
   static OperationSettings? _defaultInstance;
 
   /// Relevant only in SETUP mode. Instead of trying to detect and plate solve
@@ -838,7 +832,7 @@ class OperationSettings extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $core.bool get daylightMode => $_getBF(0);
   @$pb.TagNumber(1)
-  set daylightMode($core.bool v) { $_setBool(0, v); }
+  set daylightMode($core.bool value) => $_setBool(0, value);
   @$pb.TagNumber(1)
   $core.bool hasDaylightMode() => $_has(0);
   @$pb.TagNumber(1)
@@ -848,7 +842,7 @@ class OperationSettings extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   OperatingMode get operatingMode => $_getN(1);
   @$pb.TagNumber(4)
-  set operatingMode(OperatingMode v) { $_setField(4, v); }
+  set operatingMode(OperatingMode value) => $_setField(4, value);
   @$pb.TagNumber(4)
   $core.bool hasOperatingMode() => $_has(1);
   @$pb.TagNumber(4)
@@ -862,7 +856,7 @@ class OperationSettings extends $pb.GeneratedMessage {
   @$pb.TagNumber(10)
   $core.bool get logDwelledPositions => $_getBF(2);
   @$pb.TagNumber(10)
-  set logDwelledPositions($core.bool v) { $_setBool(2, v); }
+  set logDwelledPositions($core.bool value) => $_setBool(2, value);
   @$pb.TagNumber(10)
   $core.bool hasLogDwelledPositions() => $_has(2);
   @$pb.TagNumber(10)
@@ -878,7 +872,7 @@ class OperationSettings extends $pb.GeneratedMessage {
   @$pb.TagNumber(11)
   $1.CatalogEntryMatch get catalogEntryMatch => $_getN(3);
   @$pb.TagNumber(11)
-  set catalogEntryMatch($1.CatalogEntryMatch v) { $_setField(11, v); }
+  set catalogEntryMatch($1.CatalogEntryMatch value) => $_setField(11, value);
   @$pb.TagNumber(11)
   $core.bool hasCatalogEntryMatch() => $_has(3);
   @$pb.TagNumber(11)
@@ -892,7 +886,7 @@ class OperationSettings extends $pb.GeneratedMessage {
   @$pb.TagNumber(12)
   $core.String get demoImageFilename => $_getSZ(4);
   @$pb.TagNumber(12)
-  set demoImageFilename($core.String v) { $_setString(4, v); }
+  set demoImageFilename($core.String value) => $_setString(4, value);
   @$pb.TagNumber(12)
   $core.bool hasDemoImageFilename() => $_has(4);
   @$pb.TagNumber(12)
@@ -904,7 +898,7 @@ class OperationSettings extends $pb.GeneratedMessage {
   @$pb.TagNumber(14)
   $core.bool get focusAssistMode => $_getBF(5);
   @$pb.TagNumber(14)
-  set focusAssistMode($core.bool v) { $_setBool(5, v); }
+  set focusAssistMode($core.bool value) => $_setBool(5, value);
   @$pb.TagNumber(14)
   $core.bool hasFocusAssistMode() => $_has(5);
   @$pb.TagNumber(14)
@@ -915,7 +909,7 @@ class OperationSettings extends $pb.GeneratedMessage {
   @$pb.TagNumber(15)
   $core.bool get useImu => $_getBF(6);
   @$pb.TagNumber(15)
-  set useImu($core.bool v) { $_setBool(6, v); }
+  set useImu($core.bool value) => $_setBool(6, value);
   @$pb.TagNumber(15)
   $core.bool hasUseImu() => $_has(6);
   @$pb.TagNumber(15)
@@ -948,127 +942,112 @@ class Preferences extends $pb.GeneratedMessage {
     $core.String? perfGaugeChoice,
     $core.bool? useBluetooth,
   }) {
-    final $result = create();
-    if (celestialCoordFormat != null) {
-      $result.celestialCoordFormat = celestialCoordFormat;
-    }
-    if (eyepieceFov != null) {
-      $result.eyepieceFov = eyepieceFov;
-    }
-    if (nightVisionTheme != null) {
-      $result.nightVisionTheme = nightVisionTheme;
-    }
-    if (hideAppBar != null) {
-      $result.hideAppBar = hideAppBar;
-    }
-    if (mountType != null) {
-      $result.mountType = mountType;
-    }
-    if (observerLocation != null) {
-      $result.observerLocation = observerLocation;
-    }
-    if (catalogEntryMatch != null) {
-      $result.catalogEntryMatch = catalogEntryMatch;
-    }
-    if (maxDistance != null) {
-      $result.maxDistance = maxDistance;
-    }
-    if (minElevation != null) {
-      $result.minElevation = minElevation;
-    }
-    if (ordering != null) {
-      $result.ordering = ordering;
-    }
-    if (maxDistanceActive != null) {
-      $result.maxDistanceActive = maxDistanceActive;
-    }
-    if (minElevationActive != null) {
-      $result.minElevationActive = minElevationActive;
-    }
-    if (advanced != null) {
-      $result.advanced = advanced;
-    }
-    if (textSizeIndex != null) {
-      $result.textSizeIndex = textSizeIndex;
-    }
-    if (boresightPixel != null) {
-      $result.boresightPixel = boresightPixel;
-    }
-    if (rightHanded != null) {
-      $result.rightHanded = rightHanded;
-    }
-    if (celestialCoordChoice != null) {
-      $result.celestialCoordChoice = celestialCoordChoice;
-    }
-    if (screenAlwaysOn != null) {
-      $result.screenAlwaysOn = screenAlwaysOn;
-    }
-    if (dontShowItems != null) {
-      $result.dontShowItems.addAll(dontShowItems);
-    }
-    if (perfGaugeChoice != null) {
-      $result.perfGaugeChoice = perfGaugeChoice;
-    }
-    if (useBluetooth != null) {
-      $result.useBluetooth = useBluetooth;
-    }
-    return $result;
+    final result = create();
+    if (celestialCoordFormat != null)
+      result.celestialCoordFormat = celestialCoordFormat;
+    if (eyepieceFov != null) result.eyepieceFov = eyepieceFov;
+    if (nightVisionTheme != null) result.nightVisionTheme = nightVisionTheme;
+    if (hideAppBar != null) result.hideAppBar = hideAppBar;
+    if (mountType != null) result.mountType = mountType;
+    if (observerLocation != null) result.observerLocation = observerLocation;
+    if (catalogEntryMatch != null) result.catalogEntryMatch = catalogEntryMatch;
+    if (maxDistance != null) result.maxDistance = maxDistance;
+    if (minElevation != null) result.minElevation = minElevation;
+    if (ordering != null) result.ordering = ordering;
+    if (maxDistanceActive != null) result.maxDistanceActive = maxDistanceActive;
+    if (minElevationActive != null)
+      result.minElevationActive = minElevationActive;
+    if (advanced != null) result.advanced = advanced;
+    if (textSizeIndex != null) result.textSizeIndex = textSizeIndex;
+    if (boresightPixel != null) result.boresightPixel = boresightPixel;
+    if (rightHanded != null) result.rightHanded = rightHanded;
+    if (celestialCoordChoice != null)
+      result.celestialCoordChoice = celestialCoordChoice;
+    if (screenAlwaysOn != null) result.screenAlwaysOn = screenAlwaysOn;
+    if (dontShowItems != null) result.dontShowItems.addAll(dontShowItems);
+    if (perfGaugeChoice != null) result.perfGaugeChoice = perfGaugeChoice;
+    if (useBluetooth != null) result.useBluetooth = useBluetooth;
+    return result;
   }
-  Preferences._() : super();
-  factory Preferences.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory Preferences.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
 
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'Preferences', package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'), createEmptyInstance: create)
-    ..e<CelestialCoordFormat>(1, _omitFieldNames ? '' : 'celestialCoordFormat', $pb.PbFieldType.OE, defaultOrMaker: CelestialCoordFormat.FORMAT_UNSPECIFIED, valueOf: CelestialCoordFormat.valueOf, enumValues: CelestialCoordFormat.values)
-    ..a<$core.double>(2, _omitFieldNames ? '' : 'eyepieceFov', $pb.PbFieldType.OD)
+  Preferences._();
+
+  factory Preferences.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory Preferences.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'Preferences',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'),
+      createEmptyInstance: create)
+    ..e<CelestialCoordFormat>(
+        1, _omitFieldNames ? '' : 'celestialCoordFormat', $pb.PbFieldType.OE,
+        defaultOrMaker: CelestialCoordFormat.FORMAT_UNSPECIFIED,
+        valueOf: CelestialCoordFormat.valueOf,
+        enumValues: CelestialCoordFormat.values)
+    ..a<$core.double>(
+        2, _omitFieldNames ? '' : 'eyepieceFov', $pb.PbFieldType.OD)
     ..aOB(3, _omitFieldNames ? '' : 'nightVisionTheme')
     ..aOB(5, _omitFieldNames ? '' : 'hideAppBar')
-    ..e<MountType>(6, _omitFieldNames ? '' : 'mountType', $pb.PbFieldType.OE, defaultOrMaker: MountType.MOUNT_UNSPECIFIED, valueOf: MountType.valueOf, enumValues: MountType.values)
-    ..aOM<LatLong>(7, _omitFieldNames ? '' : 'observerLocation', subBuilder: LatLong.create)
-    ..aOM<$1.CatalogEntryMatch>(11, _omitFieldNames ? '' : 'catalogEntryMatch', subBuilder: $1.CatalogEntryMatch.create)
-    ..a<$core.double>(12, _omitFieldNames ? '' : 'maxDistance', $pb.PbFieldType.OD)
-    ..a<$core.double>(13, _omitFieldNames ? '' : 'minElevation', $pb.PbFieldType.OD)
-    ..e<$1.Ordering>(14, _omitFieldNames ? '' : 'ordering', $pb.PbFieldType.OE, defaultOrMaker: $1.Ordering.UNSPECIFIED, valueOf: $1.Ordering.valueOf, enumValues: $1.Ordering.values)
+    ..e<MountType>(6, _omitFieldNames ? '' : 'mountType', $pb.PbFieldType.OE,
+        defaultOrMaker: MountType.MOUNT_UNSPECIFIED,
+        valueOf: MountType.valueOf,
+        enumValues: MountType.values)
+    ..aOM<LatLong>(7, _omitFieldNames ? '' : 'observerLocation',
+        subBuilder: LatLong.create)
+    ..aOM<$1.CatalogEntryMatch>(11, _omitFieldNames ? '' : 'catalogEntryMatch',
+        subBuilder: $1.CatalogEntryMatch.create)
+    ..a<$core.double>(
+        12, _omitFieldNames ? '' : 'maxDistance', $pb.PbFieldType.OD)
+    ..a<$core.double>(
+        13, _omitFieldNames ? '' : 'minElevation', $pb.PbFieldType.OD)
+    ..e<$1.Ordering>(14, _omitFieldNames ? '' : 'ordering', $pb.PbFieldType.OE,
+        defaultOrMaker: $1.Ordering.UNSPECIFIED,
+        valueOf: $1.Ordering.valueOf,
+        enumValues: $1.Ordering.values)
     ..aOB(15, _omitFieldNames ? '' : 'maxDistanceActive')
     ..aOB(16, _omitFieldNames ? '' : 'minElevationActive')
     ..aOB(17, _omitFieldNames ? '' : 'advanced')
-    ..a<$core.int>(18, _omitFieldNames ? '' : 'textSizeIndex', $pb.PbFieldType.O3)
-    ..aOM<ImageCoord>(19, _omitFieldNames ? '' : 'boresightPixel', subBuilder: ImageCoord.create)
+    ..a<$core.int>(
+        18, _omitFieldNames ? '' : 'textSizeIndex', $pb.PbFieldType.O3)
+    ..aOM<ImageCoord>(19, _omitFieldNames ? '' : 'boresightPixel',
+        subBuilder: ImageCoord.create)
     ..aOB(21, _omitFieldNames ? '' : 'rightHanded')
     ..aOS(22, _omitFieldNames ? '' : 'celestialCoordChoice')
     ..aOB(23, _omitFieldNames ? '' : 'screenAlwaysOn')
     ..pPS(32, _omitFieldNames ? '' : 'dontShowItems')
     ..aOS(33, _omitFieldNames ? '' : 'perfGaugeChoice')
     ..aOB(34, _omitFieldNames ? '' : 'useBluetooth')
-    ..hasRequiredFields = false
-  ;
+    ..hasRequiredFields = false;
 
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
-  'Will be removed in next major version')
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   Preferences clone() => Preferences()..mergeFromMessage(this);
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
-  'Will be removed in next major version')
-  Preferences copyWith(void Function(Preferences) updates) => super.copyWith((message) => updates(message as Preferences)) as Preferences;
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Preferences copyWith(void Function(Preferences) updates) =>
+      super.copyWith((message) => updates(message as Preferences))
+          as Preferences;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static Preferences create() => Preferences._();
+  @$core.override
   Preferences createEmptyInstance() => create();
   static $pb.PbList<Preferences> createRepeated() => $pb.PbList<Preferences>();
   @$core.pragma('dart2js:noInline')
-  static Preferences getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Preferences>(create);
+  static Preferences getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<Preferences>(create);
   static Preferences? _defaultInstance;
 
   /// How the user interface should display celestial coordinates.
   @$pb.TagNumber(1)
   CelestialCoordFormat get celestialCoordFormat => $_getN(0);
   @$pb.TagNumber(1)
-  set celestialCoordFormat(CelestialCoordFormat v) { $_setField(1, v); }
+  set celestialCoordFormat(CelestialCoordFormat value) => $_setField(1, value);
   @$pb.TagNumber(1)
   $core.bool hasCelestialCoordFormat() => $_has(0);
   @$pb.TagNumber(1)
@@ -1079,7 +1058,7 @@ class Preferences extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $core.double get eyepieceFov => $_getN(1);
   @$pb.TagNumber(2)
-  set eyepieceFov($core.double v) { $_setDouble(1, v); }
+  set eyepieceFov($core.double value) => $_setDouble(1, value);
   @$pb.TagNumber(2)
   $core.bool hasEyepieceFov() => $_has(1);
   @$pb.TagNumber(2)
@@ -1089,7 +1068,7 @@ class Preferences extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   $core.bool get nightVisionTheme => $_getBF(2);
   @$pb.TagNumber(3)
-  set nightVisionTheme($core.bool v) { $_setBool(2, v); }
+  set nightVisionTheme($core.bool value) => $_setBool(2, value);
   @$pb.TagNumber(3)
   $core.bool hasNightVisionTheme() => $_has(2);
   @$pb.TagNumber(3)
@@ -1099,7 +1078,7 @@ class Preferences extends $pb.GeneratedMessage {
   @$pb.TagNumber(5)
   $core.bool get hideAppBar => $_getBF(3);
   @$pb.TagNumber(5)
-  set hideAppBar($core.bool v) { $_setBool(3, v); }
+  set hideAppBar($core.bool value) => $_setBool(3, value);
   @$pb.TagNumber(5)
   $core.bool hasHideAppBar() => $_has(3);
   @$pb.TagNumber(5)
@@ -1111,7 +1090,7 @@ class Preferences extends $pb.GeneratedMessage {
   @$pb.TagNumber(6)
   MountType get mountType => $_getN(4);
   @$pb.TagNumber(6)
-  set mountType(MountType v) { $_setField(6, v); }
+  set mountType(MountType value) => $_setField(6, value);
   @$pb.TagNumber(6)
   $core.bool hasMountType() => $_has(4);
   @$pb.TagNumber(6)
@@ -1123,7 +1102,7 @@ class Preferences extends $pb.GeneratedMessage {
   @$pb.TagNumber(7)
   LatLong get observerLocation => $_getN(5);
   @$pb.TagNumber(7)
-  set observerLocation(LatLong v) { $_setField(7, v); }
+  set observerLocation(LatLong value) => $_setField(7, value);
   @$pb.TagNumber(7)
   $core.bool hasObserverLocation() => $_has(5);
   @$pb.TagNumber(7)
@@ -1137,7 +1116,7 @@ class Preferences extends $pb.GeneratedMessage {
   @$pb.TagNumber(11)
   $1.CatalogEntryMatch get catalogEntryMatch => $_getN(6);
   @$pb.TagNumber(11)
-  set catalogEntryMatch($1.CatalogEntryMatch v) { $_setField(11, v); }
+  set catalogEntryMatch($1.CatalogEntryMatch value) => $_setField(11, value);
   @$pb.TagNumber(11)
   $core.bool hasCatalogEntryMatch() => $_has(6);
   @$pb.TagNumber(11)
@@ -1148,7 +1127,7 @@ class Preferences extends $pb.GeneratedMessage {
   @$pb.TagNumber(12)
   $core.double get maxDistance => $_getN(7);
   @$pb.TagNumber(12)
-  set maxDistance($core.double v) { $_setDouble(7, v); }
+  set maxDistance($core.double value) => $_setDouble(7, value);
   @$pb.TagNumber(12)
   $core.bool hasMaxDistance() => $_has(7);
   @$pb.TagNumber(12)
@@ -1157,7 +1136,7 @@ class Preferences extends $pb.GeneratedMessage {
   @$pb.TagNumber(13)
   $core.double get minElevation => $_getN(8);
   @$pb.TagNumber(13)
-  set minElevation($core.double v) { $_setDouble(8, v); }
+  set minElevation($core.double value) => $_setDouble(8, value);
   @$pb.TagNumber(13)
   $core.bool hasMinElevation() => $_has(8);
   @$pb.TagNumber(13)
@@ -1166,7 +1145,7 @@ class Preferences extends $pb.GeneratedMessage {
   @$pb.TagNumber(14)
   $1.Ordering get ordering => $_getN(9);
   @$pb.TagNumber(14)
-  set ordering($1.Ordering v) { $_setField(14, v); }
+  set ordering($1.Ordering value) => $_setField(14, value);
   @$pb.TagNumber(14)
   $core.bool hasOrdering() => $_has(9);
   @$pb.TagNumber(14)
@@ -1175,7 +1154,7 @@ class Preferences extends $pb.GeneratedMessage {
   @$pb.TagNumber(15)
   $core.bool get maxDistanceActive => $_getBF(10);
   @$pb.TagNumber(15)
-  set maxDistanceActive($core.bool v) { $_setBool(10, v); }
+  set maxDistanceActive($core.bool value) => $_setBool(10, value);
   @$pb.TagNumber(15)
   $core.bool hasMaxDistanceActive() => $_has(10);
   @$pb.TagNumber(15)
@@ -1184,7 +1163,7 @@ class Preferences extends $pb.GeneratedMessage {
   @$pb.TagNumber(16)
   $core.bool get minElevationActive => $_getBF(11);
   @$pb.TagNumber(16)
-  set minElevationActive($core.bool v) { $_setBool(11, v); }
+  set minElevationActive($core.bool value) => $_setBool(11, value);
   @$pb.TagNumber(16)
   $core.bool hasMinElevationActive() => $_has(11);
   @$pb.TagNumber(16)
@@ -1194,7 +1173,7 @@ class Preferences extends $pb.GeneratedMessage {
   @$pb.TagNumber(17)
   $core.bool get advanced => $_getBF(12);
   @$pb.TagNumber(17)
-  set advanced($core.bool v) { $_setBool(12, v); }
+  set advanced($core.bool value) => $_setBool(12, value);
   @$pb.TagNumber(17)
   $core.bool hasAdvanced() => $_has(12);
   @$pb.TagNumber(17)
@@ -1204,7 +1183,7 @@ class Preferences extends $pb.GeneratedMessage {
   @$pb.TagNumber(18)
   $core.int get textSizeIndex => $_getIZ(13);
   @$pb.TagNumber(18)
-  set textSizeIndex($core.int v) { $_setSignedInt32(13, v); }
+  set textSizeIndex($core.int value) => $_setSignedInt32(13, value);
   @$pb.TagNumber(18)
   $core.bool hasTextSizeIndex() => $_has(13);
   @$pb.TagNumber(18)
@@ -1216,7 +1195,7 @@ class Preferences extends $pb.GeneratedMessage {
   @$pb.TagNumber(19)
   ImageCoord get boresightPixel => $_getN(14);
   @$pb.TagNumber(19)
-  set boresightPixel(ImageCoord v) { $_setField(19, v); }
+  set boresightPixel(ImageCoord value) => $_setField(19, value);
   @$pb.TagNumber(19)
   $core.bool hasBoresightPixel() => $_has(14);
   @$pb.TagNumber(19)
@@ -1228,7 +1207,7 @@ class Preferences extends $pb.GeneratedMessage {
   @$pb.TagNumber(21)
   $core.bool get rightHanded => $_getBF(15);
   @$pb.TagNumber(21)
-  set rightHanded($core.bool v) { $_setBool(15, v); }
+  set rightHanded($core.bool value) => $_setBool(15, value);
   @$pb.TagNumber(21)
   $core.bool hasRightHanded() => $_has(15);
   @$pb.TagNumber(21)
@@ -1240,7 +1219,7 @@ class Preferences extends $pb.GeneratedMessage {
   @$pb.TagNumber(22)
   $core.String get celestialCoordChoice => $_getSZ(16);
   @$pb.TagNumber(22)
-  set celestialCoordChoice($core.String v) { $_setString(16, v); }
+  set celestialCoordChoice($core.String value) => $_setString(16, value);
   @$pb.TagNumber(22)
   $core.bool hasCelestialCoordChoice() => $_has(16);
   @$pb.TagNumber(22)
@@ -1250,7 +1229,7 @@ class Preferences extends $pb.GeneratedMessage {
   @$pb.TagNumber(23)
   $core.bool get screenAlwaysOn => $_getBF(17);
   @$pb.TagNumber(23)
-  set screenAlwaysOn($core.bool v) { $_setBool(17, v); }
+  set screenAlwaysOn($core.bool value) => $_setBool(17, value);
   @$pb.TagNumber(23)
   $core.bool hasScreenAlwaysOn() => $_has(17);
   @$pb.TagNumber(23)
@@ -1271,7 +1250,7 @@ class Preferences extends $pb.GeneratedMessage {
   @$pb.TagNumber(33)
   $core.String get perfGaugeChoice => $_getSZ(19);
   @$pb.TagNumber(33)
-  set perfGaugeChoice($core.String v) { $_setString(19, v); }
+  set perfGaugeChoice($core.String value) => $_setString(19, value);
   @$pb.TagNumber(33)
   $core.bool hasPerfGaugeChoice() => $_has(19);
   @$pb.TagNumber(33)
@@ -1281,7 +1260,7 @@ class Preferences extends $pb.GeneratedMessage {
   @$pb.TagNumber(34)
   $core.bool get useBluetooth => $_getBF(20);
   @$pb.TagNumber(34)
-  set useBluetooth($core.bool v) { $_setBool(20, v); }
+  set useBluetooth($core.bool value) => $_setBool(20, value);
   @$pb.TagNumber(34)
   $core.bool hasUseBluetooth() => $_has(20);
   @$pb.TagNumber(34)
@@ -1294,48 +1273,55 @@ class FrameRequest extends $pb.GeneratedMessage {
     $core.bool? nonBlocking,
     DisplayOrientation? displayOrientation,
   }) {
-    final $result = create();
-    if (prevFrameId != null) {
-      $result.prevFrameId = prevFrameId;
-    }
-    if (nonBlocking != null) {
-      $result.nonBlocking = nonBlocking;
-    }
-    if (displayOrientation != null) {
-      $result.displayOrientation = displayOrientation;
-    }
-    return $result;
+    final result = create();
+    if (prevFrameId != null) result.prevFrameId = prevFrameId;
+    if (nonBlocking != null) result.nonBlocking = nonBlocking;
+    if (displayOrientation != null)
+      result.displayOrientation = displayOrientation;
+    return result;
   }
-  FrameRequest._() : super();
-  factory FrameRequest.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory FrameRequest.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
 
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'FrameRequest', package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'), createEmptyInstance: create)
+  FrameRequest._();
+
+  factory FrameRequest.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory FrameRequest.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'FrameRequest',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'),
+      createEmptyInstance: create)
     ..a<$core.int>(1, _omitFieldNames ? '' : 'prevFrameId', $pb.PbFieldType.O3)
     ..aOB(2, _omitFieldNames ? '' : 'nonBlocking')
-    ..e<DisplayOrientation>(3, _omitFieldNames ? '' : 'displayOrientation', $pb.PbFieldType.OE, defaultOrMaker: DisplayOrientation.ORIENTATION_UNSPECIFIED, valueOf: DisplayOrientation.valueOf, enumValues: DisplayOrientation.values)
-    ..hasRequiredFields = false
-  ;
+    ..e<DisplayOrientation>(
+        3, _omitFieldNames ? '' : 'displayOrientation', $pb.PbFieldType.OE,
+        defaultOrMaker: DisplayOrientation.ORIENTATION_UNSPECIFIED,
+        valueOf: DisplayOrientation.valueOf,
+        enumValues: DisplayOrientation.values)
+    ..hasRequiredFields = false;
 
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
-  'Will be removed in next major version')
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   FrameRequest clone() => FrameRequest()..mergeFromMessage(this);
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
-  'Will be removed in next major version')
-  FrameRequest copyWith(void Function(FrameRequest) updates) => super.copyWith((message) => updates(message as FrameRequest)) as FrameRequest;
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  FrameRequest copyWith(void Function(FrameRequest) updates) =>
+      super.copyWith((message) => updates(message as FrameRequest))
+          as FrameRequest;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static FrameRequest create() => FrameRequest._();
+  @$core.override
   FrameRequest createEmptyInstance() => create();
-  static $pb.PbList<FrameRequest> createRepeated() => $pb.PbList<FrameRequest>();
+  static $pb.PbList<FrameRequest> createRepeated() =>
+      $pb.PbList<FrameRequest>();
   @$core.pragma('dart2js:noInline')
-  static FrameRequest getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<FrameRequest>(create);
+  static FrameRequest getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<FrameRequest>(create);
   static FrameRequest? _defaultInstance;
 
   /// This is the frame_id of the previous FrameResult obtained by the requesting
@@ -1345,7 +1331,7 @@ class FrameRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $core.int get prevFrameId => $_getIZ(0);
   @$pb.TagNumber(1)
-  set prevFrameId($core.int v) { $_setSignedInt32(0, v); }
+  set prevFrameId($core.int value) => $_setSignedInt32(0, value);
   @$pb.TagNumber(1)
   $core.bool hasPrevFrameId() => $_has(0);
   @$pb.TagNumber(1)
@@ -1358,7 +1344,7 @@ class FrameRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $core.bool get nonBlocking => $_getBF(1);
   @$pb.TagNumber(2)
-  set nonBlocking($core.bool v) { $_setBool(1, v); }
+  set nonBlocking($core.bool value) => $_setBool(1, value);
   @$pb.TagNumber(2)
   $core.bool hasNonBlocking() => $_has(1);
   @$pb.TagNumber(2)
@@ -1371,7 +1357,7 @@ class FrameRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   DisplayOrientation get displayOrientation => $_getN(2);
   @$pb.TagNumber(3)
-  set displayOrientation(DisplayOrientation v) { $_setField(3, v); }
+  set displayOrientation(DisplayOrientation value) => $_setField(3, value);
   @$pb.TagNumber(3)
   $core.bool hasDisplayOrientation() => $_has(2);
   @$pb.TagNumber(3)
@@ -1411,152 +1397,135 @@ class FrameResult extends $pb.GeneratedMessage {
     $core.double? contrastRatio,
     Image? daylightFocusZoomImage,
   }) {
-    final $result = create();
-    if (frameId != null) {
-      $result.frameId = frameId;
-    }
-    if (operationSettings != null) {
-      $result.operationSettings = operationSettings;
-    }
-    if (image != null) {
-      $result.image = image;
-    }
-    if (starCandidates != null) {
-      $result.starCandidates.addAll(starCandidates);
-    }
-    if (calibrationData != null) {
-      $result.calibrationData = calibrationData;
-    }
-    if (centerPeakValue != null) {
-      $result.centerPeakValue = centerPeakValue;
-    }
-    if (exposureTime != null) {
-      $result.exposureTime = exposureTime;
-    }
-    if (processingStats != null) {
-      $result.processingStats = processingStats;
-    }
-    if (captureTime != null) {
-      $result.captureTime = captureTime;
-    }
-    if (centerPeakPosition != null) {
-      $result.centerPeakPosition = centerPeakPosition;
-    }
-    if (centerPeakImage != null) {
-      $result.centerPeakImage = centerPeakImage;
-    }
-    if (plateSolution != null) {
-      $result.plateSolution = plateSolution;
-    }
-    if (boresightPosition != null) {
-      $result.boresightPosition = boresightPosition;
-    }
-    if (calibrating != null) {
-      $result.calibrating = calibrating;
-    }
-    if (calibrationProgress != null) {
-      $result.calibrationProgress = calibrationProgress;
-    }
-    if (slewRequest != null) {
-      $result.slewRequest = slewRequest;
-    }
-    if (preferences != null) {
-      $result.preferences = preferences;
-    }
-    if (noiseEstimate != null) {
-      $result.noiseEstimate = noiseEstimate;
-    }
-    if (fixedSettings != null) {
-      $result.fixedSettings = fixedSettings;
-    }
-    if (boresightImage != null) {
-      $result.boresightImage = boresightImage;
-    }
-    if (locationBasedInfo != null) {
-      $result.locationBasedInfo = locationBasedInfo;
-    }
-    if (polarAlignAdvice != null) {
-      $result.polarAlignAdvice = polarAlignAdvice;
-    }
-    if (labeledCatalogEntries != null) {
-      $result.labeledCatalogEntries.addAll(labeledCatalogEntries);
-    }
-    if (serverInformation != null) {
-      $result.serverInformation = serverInformation;
-    }
-    if (unlabeledCatalogEntries != null) {
-      $result.unlabeledCatalogEntries.addAll(unlabeledCatalogEntries);
-    }
-    if (hasResult != null) {
-      $result.hasResult = hasResult;
-    }
-    if (starCountMovingAverage != null) {
-      $result.starCountMovingAverage = starCountMovingAverage;
-    }
-    if (contrastRatio != null) {
-      $result.contrastRatio = contrastRatio;
-    }
-    if (daylightFocusZoomImage != null) {
-      $result.daylightFocusZoomImage = daylightFocusZoomImage;
-    }
-    return $result;
+    final result = create();
+    if (frameId != null) result.frameId = frameId;
+    if (operationSettings != null) result.operationSettings = operationSettings;
+    if (image != null) result.image = image;
+    if (starCandidates != null) result.starCandidates.addAll(starCandidates);
+    if (calibrationData != null) result.calibrationData = calibrationData;
+    if (centerPeakValue != null) result.centerPeakValue = centerPeakValue;
+    if (exposureTime != null) result.exposureTime = exposureTime;
+    if (processingStats != null) result.processingStats = processingStats;
+    if (captureTime != null) result.captureTime = captureTime;
+    if (centerPeakPosition != null)
+      result.centerPeakPosition = centerPeakPosition;
+    if (centerPeakImage != null) result.centerPeakImage = centerPeakImage;
+    if (plateSolution != null) result.plateSolution = plateSolution;
+    if (boresightPosition != null) result.boresightPosition = boresightPosition;
+    if (calibrating != null) result.calibrating = calibrating;
+    if (calibrationProgress != null)
+      result.calibrationProgress = calibrationProgress;
+    if (slewRequest != null) result.slewRequest = slewRequest;
+    if (preferences != null) result.preferences = preferences;
+    if (noiseEstimate != null) result.noiseEstimate = noiseEstimate;
+    if (fixedSettings != null) result.fixedSettings = fixedSettings;
+    if (boresightImage != null) result.boresightImage = boresightImage;
+    if (locationBasedInfo != null) result.locationBasedInfo = locationBasedInfo;
+    if (polarAlignAdvice != null) result.polarAlignAdvice = polarAlignAdvice;
+    if (labeledCatalogEntries != null)
+      result.labeledCatalogEntries.addAll(labeledCatalogEntries);
+    if (serverInformation != null) result.serverInformation = serverInformation;
+    if (unlabeledCatalogEntries != null)
+      result.unlabeledCatalogEntries.addAll(unlabeledCatalogEntries);
+    if (hasResult != null) result.hasResult = hasResult;
+    if (starCountMovingAverage != null)
+      result.starCountMovingAverage = starCountMovingAverage;
+    if (contrastRatio != null) result.contrastRatio = contrastRatio;
+    if (daylightFocusZoomImage != null)
+      result.daylightFocusZoomImage = daylightFocusZoomImage;
+    return result;
   }
-  FrameResult._() : super();
-  factory FrameResult.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory FrameResult.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
 
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'FrameResult', package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'), createEmptyInstance: create)
+  FrameResult._();
+
+  factory FrameResult.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory FrameResult.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'FrameResult',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'),
+      createEmptyInstance: create)
     ..a<$core.int>(1, _omitFieldNames ? '' : 'frameId', $pb.PbFieldType.O3)
-    ..aOM<OperationSettings>(2, _omitFieldNames ? '' : 'operationSettings', subBuilder: OperationSettings.create)
+    ..aOM<OperationSettings>(2, _omitFieldNames ? '' : 'operationSettings',
+        subBuilder: OperationSettings.create)
     ..aOM<Image>(3, _omitFieldNames ? '' : 'image', subBuilder: Image.create)
-    ..pc<StarCentroid>(4, _omitFieldNames ? '' : 'starCandidates', $pb.PbFieldType.PM, subBuilder: StarCentroid.create)
-    ..aOM<CalibrationData>(5, _omitFieldNames ? '' : 'calibrationData', subBuilder: CalibrationData.create)
-    ..a<$core.int>(6, _omitFieldNames ? '' : 'centerPeakValue', $pb.PbFieldType.O3)
-    ..aOM<$3.Duration>(7, _omitFieldNames ? '' : 'exposureTime', subBuilder: $3.Duration.create)
-    ..aOM<ProcessingStats>(8, _omitFieldNames ? '' : 'processingStats', subBuilder: ProcessingStats.create)
-    ..aOM<$2.Timestamp>(9, _omitFieldNames ? '' : 'captureTime', subBuilder: $2.Timestamp.create)
-    ..aOM<ImageCoord>(12, _omitFieldNames ? '' : 'centerPeakPosition', subBuilder: ImageCoord.create)
-    ..aOM<Image>(13, _omitFieldNames ? '' : 'centerPeakImage', subBuilder: Image.create)
-    ..aOM<PlateSolution>(17, _omitFieldNames ? '' : 'plateSolution', subBuilder: PlateSolution.create)
-    ..aOM<ImageCoord>(21, _omitFieldNames ? '' : 'boresightPosition', subBuilder: ImageCoord.create)
+    ..pc<StarCentroid>(
+        4, _omitFieldNames ? '' : 'starCandidates', $pb.PbFieldType.PM,
+        subBuilder: StarCentroid.create)
+    ..aOM<CalibrationData>(5, _omitFieldNames ? '' : 'calibrationData',
+        subBuilder: CalibrationData.create)
+    ..a<$core.int>(
+        6, _omitFieldNames ? '' : 'centerPeakValue', $pb.PbFieldType.O3)
+    ..aOM<$3.Duration>(7, _omitFieldNames ? '' : 'exposureTime',
+        subBuilder: $3.Duration.create)
+    ..aOM<ProcessingStats>(8, _omitFieldNames ? '' : 'processingStats',
+        subBuilder: ProcessingStats.create)
+    ..aOM<$2.Timestamp>(9, _omitFieldNames ? '' : 'captureTime',
+        subBuilder: $2.Timestamp.create)
+    ..aOM<ImageCoord>(12, _omitFieldNames ? '' : 'centerPeakPosition',
+        subBuilder: ImageCoord.create)
+    ..aOM<Image>(13, _omitFieldNames ? '' : 'centerPeakImage',
+        subBuilder: Image.create)
+    ..aOM<PlateSolution>(17, _omitFieldNames ? '' : 'plateSolution',
+        subBuilder: PlateSolution.create)
+    ..aOM<ImageCoord>(21, _omitFieldNames ? '' : 'boresightPosition',
+        subBuilder: ImageCoord.create)
     ..aOB(22, _omitFieldNames ? '' : 'calibrating')
-    ..a<$core.double>(23, _omitFieldNames ? '' : 'calibrationProgress', $pb.PbFieldType.OD)
-    ..aOM<SlewRequest>(24, _omitFieldNames ? '' : 'slewRequest', subBuilder: SlewRequest.create)
-    ..aOM<Preferences>(25, _omitFieldNames ? '' : 'preferences', subBuilder: Preferences.create)
-    ..a<$core.double>(26, _omitFieldNames ? '' : 'noiseEstimate', $pb.PbFieldType.OD)
-    ..aOM<FixedSettings>(27, _omitFieldNames ? '' : 'fixedSettings', subBuilder: FixedSettings.create)
-    ..aOM<Image>(28, _omitFieldNames ? '' : 'boresightImage', subBuilder: Image.create)
-    ..aOM<LocationBasedInfo>(29, _omitFieldNames ? '' : 'locationBasedInfo', subBuilder: LocationBasedInfo.create)
-    ..aOM<PolarAlignAdvice>(30, _omitFieldNames ? '' : 'polarAlignAdvice', subBuilder: PolarAlignAdvice.create)
-    ..pc<FovCatalogEntry>(31, _omitFieldNames ? '' : 'labeledCatalogEntries', $pb.PbFieldType.PM, subBuilder: FovCatalogEntry.create)
-    ..aOM<ServerInformation>(32, _omitFieldNames ? '' : 'serverInformation', subBuilder: ServerInformation.create)
-    ..pc<FovCatalogEntry>(33, _omitFieldNames ? '' : 'unlabeledCatalogEntries', $pb.PbFieldType.PM, subBuilder: FovCatalogEntry.create)
+    ..a<$core.double>(
+        23, _omitFieldNames ? '' : 'calibrationProgress', $pb.PbFieldType.OD)
+    ..aOM<SlewRequest>(24, _omitFieldNames ? '' : 'slewRequest',
+        subBuilder: SlewRequest.create)
+    ..aOM<Preferences>(25, _omitFieldNames ? '' : 'preferences',
+        subBuilder: Preferences.create)
+    ..a<$core.double>(
+        26, _omitFieldNames ? '' : 'noiseEstimate', $pb.PbFieldType.OD)
+    ..aOM<FixedSettings>(27, _omitFieldNames ? '' : 'fixedSettings',
+        subBuilder: FixedSettings.create)
+    ..aOM<Image>(28, _omitFieldNames ? '' : 'boresightImage',
+        subBuilder: Image.create)
+    ..aOM<LocationBasedInfo>(29, _omitFieldNames ? '' : 'locationBasedInfo',
+        subBuilder: LocationBasedInfo.create)
+    ..aOM<PolarAlignAdvice>(30, _omitFieldNames ? '' : 'polarAlignAdvice',
+        subBuilder: PolarAlignAdvice.create)
+    ..pc<FovCatalogEntry>(
+        31, _omitFieldNames ? '' : 'labeledCatalogEntries', $pb.PbFieldType.PM,
+        subBuilder: FovCatalogEntry.create)
+    ..aOM<ServerInformation>(32, _omitFieldNames ? '' : 'serverInformation',
+        subBuilder: ServerInformation.create)
+    ..pc<FovCatalogEntry>(33, _omitFieldNames ? '' : 'unlabeledCatalogEntries',
+        $pb.PbFieldType.PM,
+        subBuilder: FovCatalogEntry.create)
     ..aOB(34, _omitFieldNames ? '' : 'hasResult')
-    ..a<$core.double>(35, _omitFieldNames ? '' : 'starCountMovingAverage', $pb.PbFieldType.OD)
-    ..a<$core.double>(36, _omitFieldNames ? '' : 'contrastRatio', $pb.PbFieldType.OD)
-    ..aOM<Image>(37, _omitFieldNames ? '' : 'daylightFocusZoomImage', subBuilder: Image.create)
-    ..hasRequiredFields = false
-  ;
+    ..a<$core.double>(
+        35, _omitFieldNames ? '' : 'starCountMovingAverage', $pb.PbFieldType.OD)
+    ..a<$core.double>(
+        36, _omitFieldNames ? '' : 'contrastRatio', $pb.PbFieldType.OD)
+    ..aOM<Image>(37, _omitFieldNames ? '' : 'daylightFocusZoomImage',
+        subBuilder: Image.create)
+    ..hasRequiredFields = false;
 
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
-  'Will be removed in next major version')
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   FrameResult clone() => FrameResult()..mergeFromMessage(this);
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
-  'Will be removed in next major version')
-  FrameResult copyWith(void Function(FrameResult) updates) => super.copyWith((message) => updates(message as FrameResult)) as FrameResult;
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  FrameResult copyWith(void Function(FrameResult) updates) =>
+      super.copyWith((message) => updates(message as FrameResult))
+          as FrameResult;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static FrameResult create() => FrameResult._();
+  @$core.override
   FrameResult createEmptyInstance() => create();
   static $pb.PbList<FrameResult> createRepeated() => $pb.PbList<FrameResult>();
   @$core.pragma('dart2js:noInline')
-  static FrameResult getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<FrameResult>(create);
+  static FrameResult getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<FrameResult>(create);
   static FrameResult? _defaultInstance;
 
   /// Identifies this FrameResult. A client can include this in its next
@@ -1564,7 +1533,7 @@ class FrameResult extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $core.int get frameId => $_getIZ(0);
   @$pb.TagNumber(1)
-  set frameId($core.int v) { $_setSignedInt32(0, v); }
+  set frameId($core.int value) => $_setSignedInt32(0, value);
   @$pb.TagNumber(1)
   $core.bool hasFrameId() => $_has(0);
   @$pb.TagNumber(1)
@@ -1574,7 +1543,7 @@ class FrameResult extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   OperationSettings get operationSettings => $_getN(1);
   @$pb.TagNumber(2)
-  set operationSettings(OperationSettings v) { $_setField(2, v); }
+  set operationSettings(OperationSettings value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasOperationSettings() => $_has(1);
   @$pb.TagNumber(2)
@@ -1591,7 +1560,7 @@ class FrameResult extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   Image get image => $_getN(2);
   @$pb.TagNumber(3)
-  set image(Image v) { $_setField(3, v); }
+  set image(Image value) => $_setField(3, value);
   @$pb.TagNumber(3)
   $core.bool hasImage() => $_has(2);
   @$pb.TagNumber(3)
@@ -1610,7 +1579,7 @@ class FrameResult extends $pb.GeneratedMessage {
   @$pb.TagNumber(5)
   CalibrationData get calibrationData => $_getN(4);
   @$pb.TagNumber(5)
-  set calibrationData(CalibrationData v) { $_setField(5, v); }
+  set calibrationData(CalibrationData value) => $_setField(5, value);
   @$pb.TagNumber(5)
   $core.bool hasCalibrationData() => $_has(4);
   @$pb.TagNumber(5)
@@ -1623,7 +1592,7 @@ class FrameResult extends $pb.GeneratedMessage {
   @$pb.TagNumber(6)
   $core.int get centerPeakValue => $_getIZ(5);
   @$pb.TagNumber(6)
-  set centerPeakValue($core.int v) { $_setSignedInt32(5, v); }
+  set centerPeakValue($core.int value) => $_setSignedInt32(5, value);
   @$pb.TagNumber(6)
   $core.bool hasCenterPeakValue() => $_has(5);
   @$pb.TagNumber(6)
@@ -1633,7 +1602,7 @@ class FrameResult extends $pb.GeneratedMessage {
   @$pb.TagNumber(7)
   $3.Duration get exposureTime => $_getN(6);
   @$pb.TagNumber(7)
-  set exposureTime($3.Duration v) { $_setField(7, v); }
+  set exposureTime($3.Duration value) => $_setField(7, value);
   @$pb.TagNumber(7)
   $core.bool hasExposureTime() => $_has(6);
   @$pb.TagNumber(7)
@@ -1645,7 +1614,7 @@ class FrameResult extends $pb.GeneratedMessage {
   @$pb.TagNumber(8)
   ProcessingStats get processingStats => $_getN(7);
   @$pb.TagNumber(8)
-  set processingStats(ProcessingStats v) { $_setField(8, v); }
+  set processingStats(ProcessingStats value) => $_setField(8, value);
   @$pb.TagNumber(8)
   $core.bool hasProcessingStats() => $_has(7);
   @$pb.TagNumber(8)
@@ -1657,7 +1626,7 @@ class FrameResult extends $pb.GeneratedMessage {
   @$pb.TagNumber(9)
   $2.Timestamp get captureTime => $_getN(8);
   @$pb.TagNumber(9)
-  set captureTime($2.Timestamp v) { $_setField(9, v); }
+  set captureTime($2.Timestamp value) => $_setField(9, value);
   @$pb.TagNumber(9)
   $core.bool hasCaptureTime() => $_has(8);
   @$pb.TagNumber(9)
@@ -1670,7 +1639,7 @@ class FrameResult extends $pb.GeneratedMessage {
   @$pb.TagNumber(12)
   ImageCoord get centerPeakPosition => $_getN(9);
   @$pb.TagNumber(12)
-  set centerPeakPosition(ImageCoord v) { $_setField(12, v); }
+  set centerPeakPosition(ImageCoord value) => $_setField(12, value);
   @$pb.TagNumber(12)
   $core.bool hasCenterPeakPosition() => $_has(9);
   @$pb.TagNumber(12)
@@ -1685,7 +1654,7 @@ class FrameResult extends $pb.GeneratedMessage {
   @$pb.TagNumber(13)
   Image get centerPeakImage => $_getN(10);
   @$pb.TagNumber(13)
-  set centerPeakImage(Image v) { $_setField(13, v); }
+  set centerPeakImage(Image value) => $_setField(13, value);
   @$pb.TagNumber(13)
   $core.bool hasCenterPeakImage() => $_has(10);
   @$pb.TagNumber(13)
@@ -1701,7 +1670,7 @@ class FrameResult extends $pb.GeneratedMessage {
   @$pb.TagNumber(17)
   PlateSolution get plateSolution => $_getN(11);
   @$pb.TagNumber(17)
-  set plateSolution(PlateSolution v) { $_setField(17, v); }
+  set plateSolution(PlateSolution value) => $_setField(17, value);
   @$pb.TagNumber(17)
   $core.bool hasPlateSolution() => $_has(11);
   @$pb.TagNumber(17)
@@ -1715,7 +1684,7 @@ class FrameResult extends $pb.GeneratedMessage {
   @$pb.TagNumber(21)
   ImageCoord get boresightPosition => $_getN(12);
   @$pb.TagNumber(21)
-  set boresightPosition(ImageCoord v) { $_setField(21, v); }
+  set boresightPosition(ImageCoord value) => $_setField(21, value);
   @$pb.TagNumber(21)
   $core.bool hasBoresightPosition() => $_has(12);
   @$pb.TagNumber(21)
@@ -1731,7 +1700,7 @@ class FrameResult extends $pb.GeneratedMessage {
   @$pb.TagNumber(22)
   $core.bool get calibrating => $_getBF(13);
   @$pb.TagNumber(22)
-  set calibrating($core.bool v) { $_setBool(13, v); }
+  set calibrating($core.bool value) => $_setBool(13, value);
   @$pb.TagNumber(22)
   $core.bool hasCalibrating() => $_has(13);
   @$pb.TagNumber(22)
@@ -1742,7 +1711,7 @@ class FrameResult extends $pb.GeneratedMessage {
   @$pb.TagNumber(23)
   $core.double get calibrationProgress => $_getN(14);
   @$pb.TagNumber(23)
-  set calibrationProgress($core.double v) { $_setDouble(14, v); }
+  set calibrationProgress($core.double value) => $_setDouble(14, value);
   @$pb.TagNumber(23)
   $core.bool hasCalibrationProgress() => $_has(14);
   @$pb.TagNumber(23)
@@ -1753,7 +1722,7 @@ class FrameResult extends $pb.GeneratedMessage {
   @$pb.TagNumber(24)
   SlewRequest get slewRequest => $_getN(15);
   @$pb.TagNumber(24)
-  set slewRequest(SlewRequest v) { $_setField(24, v); }
+  set slewRequest(SlewRequest value) => $_setField(24, value);
   @$pb.TagNumber(24)
   $core.bool hasSlewRequest() => $_has(15);
   @$pb.TagNumber(24)
@@ -1765,7 +1734,7 @@ class FrameResult extends $pb.GeneratedMessage {
   @$pb.TagNumber(25)
   Preferences get preferences => $_getN(16);
   @$pb.TagNumber(25)
-  set preferences(Preferences v) { $_setField(25, v); }
+  set preferences(Preferences value) => $_setField(25, value);
   @$pb.TagNumber(25)
   $core.bool hasPreferences() => $_has(16);
   @$pb.TagNumber(25)
@@ -1778,7 +1747,7 @@ class FrameResult extends $pb.GeneratedMessage {
   @$pb.TagNumber(26)
   $core.double get noiseEstimate => $_getN(17);
   @$pb.TagNumber(26)
-  set noiseEstimate($core.double v) { $_setDouble(17, v); }
+  set noiseEstimate($core.double value) => $_setDouble(17, value);
   @$pb.TagNumber(26)
   $core.bool hasNoiseEstimate() => $_has(17);
   @$pb.TagNumber(26)
@@ -1788,7 +1757,7 @@ class FrameResult extends $pb.GeneratedMessage {
   @$pb.TagNumber(27)
   FixedSettings get fixedSettings => $_getN(18);
   @$pb.TagNumber(27)
-  set fixedSettings(FixedSettings v) { $_setField(27, v); }
+  set fixedSettings(FixedSettings value) => $_setField(27, value);
   @$pb.TagNumber(27)
   $core.bool hasFixedSettings() => $_has(18);
   @$pb.TagNumber(27)
@@ -1803,7 +1772,7 @@ class FrameResult extends $pb.GeneratedMessage {
   @$pb.TagNumber(28)
   Image get boresightImage => $_getN(19);
   @$pb.TagNumber(28)
-  set boresightImage(Image v) { $_setField(28, v); }
+  set boresightImage(Image value) => $_setField(28, value);
   @$pb.TagNumber(28)
   $core.bool hasBoresightImage() => $_has(19);
   @$pb.TagNumber(28)
@@ -1820,7 +1789,7 @@ class FrameResult extends $pb.GeneratedMessage {
   @$pb.TagNumber(29)
   LocationBasedInfo get locationBasedInfo => $_getN(20);
   @$pb.TagNumber(29)
-  set locationBasedInfo(LocationBasedInfo v) { $_setField(29, v); }
+  set locationBasedInfo(LocationBasedInfo value) => $_setField(29, value);
   @$pb.TagNumber(29)
   $core.bool hasLocationBasedInfo() => $_has(20);
   @$pb.TagNumber(29)
@@ -1833,7 +1802,7 @@ class FrameResult extends $pb.GeneratedMessage {
   @$pb.TagNumber(30)
   PolarAlignAdvice get polarAlignAdvice => $_getN(21);
   @$pb.TagNumber(30)
-  set polarAlignAdvice(PolarAlignAdvice v) { $_setField(30, v); }
+  set polarAlignAdvice(PolarAlignAdvice value) => $_setField(30, value);
   @$pb.TagNumber(30)
   $core.bool hasPolarAlignAdvice() => $_has(21);
   @$pb.TagNumber(30)
@@ -1855,7 +1824,7 @@ class FrameResult extends $pb.GeneratedMessage {
   @$pb.TagNumber(32)
   ServerInformation get serverInformation => $_getN(23);
   @$pb.TagNumber(32)
-  set serverInformation(ServerInformation v) { $_setField(32, v); }
+  set serverInformation(ServerInformation value) => $_setField(32, value);
   @$pb.TagNumber(32)
   $core.bool hasServerInformation() => $_has(23);
   @$pb.TagNumber(32)
@@ -1876,7 +1845,7 @@ class FrameResult extends $pb.GeneratedMessage {
   @$pb.TagNumber(34)
   $core.bool get hasResult => $_getBF(25);
   @$pb.TagNumber(34)
-  set hasResult($core.bool v) { $_setBool(25, v); }
+  set hasResult($core.bool value) => $_setBool(25, value);
   @$pb.TagNumber(34)
   $core.bool hasHasResult() => $_has(25);
   @$pb.TagNumber(34)
@@ -1887,7 +1856,7 @@ class FrameResult extends $pb.GeneratedMessage {
   @$pb.TagNumber(35)
   $core.double get starCountMovingAverage => $_getN(26);
   @$pb.TagNumber(35)
-  set starCountMovingAverage($core.double v) { $_setDouble(26, v); }
+  set starCountMovingAverage($core.double value) => $_setDouble(26, value);
   @$pb.TagNumber(35)
   $core.bool hasStarCountMovingAverage() => $_has(26);
   @$pb.TagNumber(35)
@@ -1900,7 +1869,7 @@ class FrameResult extends $pb.GeneratedMessage {
   @$pb.TagNumber(36)
   $core.double get contrastRatio => $_getN(27);
   @$pb.TagNumber(36)
-  set contrastRatio($core.double v) { $_setDouble(27, v); }
+  set contrastRatio($core.double value) => $_setDouble(27, value);
   @$pb.TagNumber(36)
   $core.bool hasContrastRatio() => $_has(27);
   @$pb.TagNumber(36)
@@ -1913,7 +1882,7 @@ class FrameResult extends $pb.GeneratedMessage {
   @$pb.TagNumber(37)
   Image get daylightFocusZoomImage => $_getN(28);
   @$pb.TagNumber(37)
-  set daylightFocusZoomImage(Image v) { $_setField(37, v); }
+  set daylightFocusZoomImage(Image value) => $_setField(37, value);
   @$pb.TagNumber(37)
   $core.bool hasDaylightFocusZoomImage() => $_has(28);
   @$pb.TagNumber(37)
@@ -1929,52 +1898,54 @@ class Image extends $pb.GeneratedMessage {
     $core.List<$core.int>? imageData,
     $core.double? rotationSizeRatio,
   }) {
-    final $result = create();
-    if (binningFactor != null) {
-      $result.binningFactor = binningFactor;
-    }
-    if (rectangle != null) {
-      $result.rectangle = rectangle;
-    }
-    if (imageData != null) {
-      $result.imageData = imageData;
-    }
-    if (rotationSizeRatio != null) {
-      $result.rotationSizeRatio = rotationSizeRatio;
-    }
-    return $result;
+    final result = create();
+    if (binningFactor != null) result.binningFactor = binningFactor;
+    if (rectangle != null) result.rectangle = rectangle;
+    if (imageData != null) result.imageData = imageData;
+    if (rotationSizeRatio != null) result.rotationSizeRatio = rotationSizeRatio;
+    return result;
   }
-  Image._() : super();
-  factory Image.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory Image.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
 
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'Image', package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'), createEmptyInstance: create)
-    ..a<$core.int>(1, _omitFieldNames ? '' : 'binningFactor', $pb.PbFieldType.O3)
-    ..aOM<Rectangle>(2, _omitFieldNames ? '' : 'rectangle', subBuilder: Rectangle.create)
-    ..a<$core.List<$core.int>>(3, _omitFieldNames ? '' : 'imageData', $pb.PbFieldType.OY)
-    ..a<$core.double>(4, _omitFieldNames ? '' : 'rotationSizeRatio', $pb.PbFieldType.OD)
-    ..hasRequiredFields = false
-  ;
+  Image._();
 
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
-  'Will be removed in next major version')
+  factory Image.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory Image.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'Image',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'),
+      createEmptyInstance: create)
+    ..a<$core.int>(
+        1, _omitFieldNames ? '' : 'binningFactor', $pb.PbFieldType.O3)
+    ..aOM<Rectangle>(2, _omitFieldNames ? '' : 'rectangle',
+        subBuilder: Rectangle.create)
+    ..a<$core.List<$core.int>>(
+        3, _omitFieldNames ? '' : 'imageData', $pb.PbFieldType.OY)
+    ..a<$core.double>(
+        4, _omitFieldNames ? '' : 'rotationSizeRatio', $pb.PbFieldType.OD)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   Image clone() => Image()..mergeFromMessage(this);
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
-  'Will be removed in next major version')
-  Image copyWith(void Function(Image) updates) => super.copyWith((message) => updates(message as Image)) as Image;
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Image copyWith(void Function(Image) updates) =>
+      super.copyWith((message) => updates(message as Image)) as Image;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static Image create() => Image._();
+  @$core.override
   Image createEmptyInstance() => create();
   static $pb.PbList<Image> createRepeated() => $pb.PbList<Image>();
   @$core.pragma('dart2js:noInline')
-  static Image getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Image>(create);
+  static Image getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Image>(create);
   static Image? _defaultInstance;
 
   /// Whether the image is binned/sampled or full resolution. Values:
@@ -1985,7 +1956,7 @@ class Image extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $core.int get binningFactor => $_getIZ(0);
   @$pb.TagNumber(1)
-  set binningFactor($core.int v) { $_setSignedInt32(0, v); }
+  set binningFactor($core.int value) => $_setSignedInt32(0, value);
   @$pb.TagNumber(1)
   $core.bool hasBinningFactor() => $_has(0);
   @$pb.TagNumber(1)
@@ -1997,7 +1968,7 @@ class Image extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   Rectangle get rectangle => $_getN(1);
   @$pb.TagNumber(2)
-  set rectangle(Rectangle v) { $_setField(2, v); }
+  set rectangle(Rectangle value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasRectangle() => $_has(1);
   @$pb.TagNumber(2)
@@ -2009,7 +1980,7 @@ class Image extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   $core.List<$core.int> get imageData => $_getN(2);
   @$pb.TagNumber(3)
-  set imageData($core.List<$core.int> v) { $_setBytes(2, v); }
+  set imageData($core.List<$core.int> value) => $_setBytes(2, value);
   @$pb.TagNumber(3)
   $core.bool hasImageData() => $_has(2);
   @$pb.TagNumber(3)
@@ -2018,7 +1989,7 @@ class Image extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   $core.double get rotationSizeRatio => $_getN(3);
   @$pb.TagNumber(4)
-  set rotationSizeRatio($core.double v) { $_setDouble(3, v); }
+  set rotationSizeRatio($core.double value) => $_setDouble(3, value);
   @$pb.TagNumber(4)
   $core.bool hasRotationSizeRatio() => $_has(3);
   @$pb.TagNumber(4)
@@ -2034,58 +2005,56 @@ class Rectangle extends $pb.GeneratedMessage {
     $core.int? width,
     $core.int? height,
   }) {
-    final $result = create();
-    if (originX != null) {
-      $result.originX = originX;
-    }
-    if (originY != null) {
-      $result.originY = originY;
-    }
-    if (width != null) {
-      $result.width = width;
-    }
-    if (height != null) {
-      $result.height = height;
-    }
-    return $result;
+    final result = create();
+    if (originX != null) result.originX = originX;
+    if (originY != null) result.originY = originY;
+    if (width != null) result.width = width;
+    if (height != null) result.height = height;
+    return result;
   }
-  Rectangle._() : super();
-  factory Rectangle.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory Rectangle.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
 
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'Rectangle', package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'), createEmptyInstance: create)
+  Rectangle._();
+
+  factory Rectangle.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory Rectangle.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'Rectangle',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'),
+      createEmptyInstance: create)
     ..a<$core.int>(1, _omitFieldNames ? '' : 'originX', $pb.PbFieldType.O3)
     ..a<$core.int>(2, _omitFieldNames ? '' : 'originY', $pb.PbFieldType.O3)
     ..a<$core.int>(3, _omitFieldNames ? '' : 'width', $pb.PbFieldType.O3)
     ..a<$core.int>(4, _omitFieldNames ? '' : 'height', $pb.PbFieldType.O3)
-    ..hasRequiredFields = false
-  ;
+    ..hasRequiredFields = false;
 
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
-  'Will be removed in next major version')
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   Rectangle clone() => Rectangle()..mergeFromMessage(this);
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
-  'Will be removed in next major version')
-  Rectangle copyWith(void Function(Rectangle) updates) => super.copyWith((message) => updates(message as Rectangle)) as Rectangle;
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Rectangle copyWith(void Function(Rectangle) updates) =>
+      super.copyWith((message) => updates(message as Rectangle)) as Rectangle;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static Rectangle create() => Rectangle._();
+  @$core.override
   Rectangle createEmptyInstance() => create();
   static $pb.PbList<Rectangle> createRepeated() => $pb.PbList<Rectangle>();
   @$core.pragma('dart2js:noInline')
-  static Rectangle getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Rectangle>(create);
+  static Rectangle getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Rectangle>(create);
   static Rectangle? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.int get originX => $_getIZ(0);
   @$pb.TagNumber(1)
-  set originX($core.int v) { $_setSignedInt32(0, v); }
+  set originX($core.int value) => $_setSignedInt32(0, value);
   @$pb.TagNumber(1)
   $core.bool hasOriginX() => $_has(0);
   @$pb.TagNumber(1)
@@ -2094,7 +2063,7 @@ class Rectangle extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $core.int get originY => $_getIZ(1);
   @$pb.TagNumber(2)
-  set originY($core.int v) { $_setSignedInt32(1, v); }
+  set originY($core.int value) => $_setSignedInt32(1, value);
   @$pb.TagNumber(2)
   $core.bool hasOriginY() => $_has(1);
   @$pb.TagNumber(2)
@@ -2103,7 +2072,7 @@ class Rectangle extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   $core.int get width => $_getIZ(2);
   @$pb.TagNumber(3)
-  set width($core.int v) { $_setSignedInt32(2, v); }
+  set width($core.int value) => $_setSignedInt32(2, value);
   @$pb.TagNumber(3)
   $core.bool hasWidth() => $_has(2);
   @$pb.TagNumber(3)
@@ -2112,7 +2081,7 @@ class Rectangle extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   $core.int get height => $_getIZ(3);
   @$pb.TagNumber(4)
-  set height($core.int v) { $_setSignedInt32(3, v); }
+  set height($core.int value) => $_setSignedInt32(3, value);
   @$pb.TagNumber(4)
   $core.bool hasHeight() => $_has(3);
   @$pb.TagNumber(4)
@@ -2126,55 +2095,59 @@ class StarCentroid extends $pb.GeneratedMessage {
     $core.double? brightness,
     $core.int? numSaturated,
   }) {
-    final $result = create();
-    if (centroidPosition != null) {
-      $result.centroidPosition = centroidPosition;
-    }
-    if (brightness != null) {
-      $result.brightness = brightness;
-    }
-    if (numSaturated != null) {
-      $result.numSaturated = numSaturated;
-    }
-    return $result;
+    final result = create();
+    if (centroidPosition != null) result.centroidPosition = centroidPosition;
+    if (brightness != null) result.brightness = brightness;
+    if (numSaturated != null) result.numSaturated = numSaturated;
+    return result;
   }
-  StarCentroid._() : super();
-  factory StarCentroid.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory StarCentroid.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
 
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'StarCentroid', package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'), createEmptyInstance: create)
-    ..aOM<ImageCoord>(1, _omitFieldNames ? '' : 'centroidPosition', subBuilder: ImageCoord.create)
-    ..a<$core.double>(4, _omitFieldNames ? '' : 'brightness', $pb.PbFieldType.OD)
+  StarCentroid._();
+
+  factory StarCentroid.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory StarCentroid.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'StarCentroid',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'),
+      createEmptyInstance: create)
+    ..aOM<ImageCoord>(1, _omitFieldNames ? '' : 'centroidPosition',
+        subBuilder: ImageCoord.create)
+    ..a<$core.double>(
+        4, _omitFieldNames ? '' : 'brightness', $pb.PbFieldType.OD)
     ..a<$core.int>(6, _omitFieldNames ? '' : 'numSaturated', $pb.PbFieldType.O3)
-    ..hasRequiredFields = false
-  ;
+    ..hasRequiredFields = false;
 
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
-  'Will be removed in next major version')
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   StarCentroid clone() => StarCentroid()..mergeFromMessage(this);
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
-  'Will be removed in next major version')
-  StarCentroid copyWith(void Function(StarCentroid) updates) => super.copyWith((message) => updates(message as StarCentroid)) as StarCentroid;
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  StarCentroid copyWith(void Function(StarCentroid) updates) =>
+      super.copyWith((message) => updates(message as StarCentroid))
+          as StarCentroid;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static StarCentroid create() => StarCentroid._();
+  @$core.override
   StarCentroid createEmptyInstance() => create();
-  static $pb.PbList<StarCentroid> createRepeated() => $pb.PbList<StarCentroid>();
+  static $pb.PbList<StarCentroid> createRepeated() =>
+      $pb.PbList<StarCentroid>();
   @$core.pragma('dart2js:noInline')
-  static StarCentroid getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<StarCentroid>(create);
+  static StarCentroid getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<StarCentroid>(create);
   static StarCentroid? _defaultInstance;
 
   /// Location of star centroid in full resolution image coordinates.
   @$pb.TagNumber(1)
   ImageCoord get centroidPosition => $_getN(0);
   @$pb.TagNumber(1)
-  set centroidPosition(ImageCoord v) { $_setField(1, v); }
+  set centroidPosition(ImageCoord value) => $_setField(1, value);
   @$pb.TagNumber(1)
   $core.bool hasCentroidPosition() => $_has(0);
   @$pb.TagNumber(1)
@@ -2187,7 +2160,7 @@ class StarCentroid extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   $core.double get brightness => $_getN(1);
   @$pb.TagNumber(4)
-  set brightness($core.double v) { $_setDouble(1, v); }
+  set brightness($core.double value) => $_setDouble(1, value);
   @$pb.TagNumber(4)
   $core.bool hasBrightness() => $_has(1);
   @$pb.TagNumber(4)
@@ -2197,7 +2170,7 @@ class StarCentroid extends $pb.GeneratedMessage {
   @$pb.TagNumber(6)
   $core.int get numSaturated => $_getIZ(2);
   @$pb.TagNumber(6)
-  set numSaturated($core.int v) { $_setSignedInt32(2, v); }
+  set numSaturated($core.int value) => $_setSignedInt32(2, value);
   @$pb.TagNumber(6)
   $core.bool hasNumSaturated() => $_has(2);
   @$pb.TagNumber(6)
@@ -2209,44 +2182,46 @@ class ImageCoord extends $pb.GeneratedMessage {
     $core.double? x,
     $core.double? y,
   }) {
-    final $result = create();
-    if (x != null) {
-      $result.x = x;
-    }
-    if (y != null) {
-      $result.y = y;
-    }
-    return $result;
+    final result = create();
+    if (x != null) result.x = x;
+    if (y != null) result.y = y;
+    return result;
   }
-  ImageCoord._() : super();
-  factory ImageCoord.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory ImageCoord.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
 
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'ImageCoord', package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'), createEmptyInstance: create)
+  ImageCoord._();
+
+  factory ImageCoord.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ImageCoord.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ImageCoord',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'),
+      createEmptyInstance: create)
     ..a<$core.double>(1, _omitFieldNames ? '' : 'x', $pb.PbFieldType.OD)
     ..a<$core.double>(2, _omitFieldNames ? '' : 'y', $pb.PbFieldType.OD)
-    ..hasRequiredFields = false
-  ;
+    ..hasRequiredFields = false;
 
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
-  'Will be removed in next major version')
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   ImageCoord clone() => ImageCoord()..mergeFromMessage(this);
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
-  'Will be removed in next major version')
-  ImageCoord copyWith(void Function(ImageCoord) updates) => super.copyWith((message) => updates(message as ImageCoord)) as ImageCoord;
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ImageCoord copyWith(void Function(ImageCoord) updates) =>
+      super.copyWith((message) => updates(message as ImageCoord)) as ImageCoord;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static ImageCoord create() => ImageCoord._();
+  @$core.override
   ImageCoord createEmptyInstance() => create();
   static $pb.PbList<ImageCoord> createRepeated() => $pb.PbList<ImageCoord>();
   @$core.pragma('dart2js:noInline')
-  static ImageCoord getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<ImageCoord>(create);
+  static ImageCoord getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ImageCoord>(create);
   static ImageCoord? _defaultInstance;
 
   /// A location in full resolution image coordinates. (0.5, 0.5) corresponds to
@@ -2254,7 +2229,7 @@ class ImageCoord extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $core.double get x => $_getN(0);
   @$pb.TagNumber(1)
-  set x($core.double v) { $_setDouble(0, v); }
+  set x($core.double value) => $_setDouble(0, value);
   @$pb.TagNumber(1)
   $core.bool hasX() => $_has(0);
   @$pb.TagNumber(1)
@@ -2263,7 +2238,7 @@ class ImageCoord extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $core.double get y => $_getN(1);
   @$pb.TagNumber(2)
-  set y($core.double v) { $_setDouble(1, v); }
+  set y($core.double value) => $_setDouble(1, value);
   @$pb.TagNumber(2)
   $core.bool hasY() => $_has(1);
   @$pb.TagNumber(2)
@@ -2292,119 +2267,106 @@ class PlateSolution extends $pb.GeneratedMessage {
     $core.Iterable<$core.double>? rotationMatrix,
     $core.bool? solutionFromImu,
   }) {
-    final $result = create();
-    if (imageSkyCoord != null) {
-      $result.imageSkyCoord = imageSkyCoord;
-    }
-    if (roll != null) {
-      $result.roll = roll;
-    }
-    if (fov != null) {
-      $result.fov = fov;
-    }
-    if (distortion != null) {
-      $result.distortion = distortion;
-    }
-    if (rmse != null) {
-      $result.rmse = rmse;
-    }
-    if (p90Error != null) {
-      $result.p90Error = p90Error;
-    }
-    if (maxError != null) {
-      $result.maxError = maxError;
-    }
-    if (numMatches != null) {
-      $result.numMatches = numMatches;
-    }
-    if (prob != null) {
-      $result.prob = prob;
-    }
-    if (epochEquinox != null) {
-      $result.epochEquinox = epochEquinox;
-    }
-    if (epochProperMotion != null) {
-      $result.epochProperMotion = epochProperMotion;
-    }
-    if (solveTime != null) {
-      $result.solveTime = solveTime;
-    }
-    if (targetSkyCoord != null) {
-      $result.targetSkyCoord.addAll(targetSkyCoord);
-    }
-    if (targetPixel != null) {
-      $result.targetPixel.addAll(targetPixel);
-    }
-    if (matchedStars != null) {
-      $result.matchedStars.addAll(matchedStars);
-    }
-    if (patternCentroids != null) {
-      $result.patternCentroids.addAll(patternCentroids);
-    }
-    if (catalogStars != null) {
-      $result.catalogStars.addAll(catalogStars);
-    }
-    if (rotationMatrix != null) {
-      $result.rotationMatrix.addAll(rotationMatrix);
-    }
-    if (solutionFromImu != null) {
-      $result.solutionFromImu = solutionFromImu;
-    }
-    return $result;
+    final result = create();
+    if (imageSkyCoord != null) result.imageSkyCoord = imageSkyCoord;
+    if (roll != null) result.roll = roll;
+    if (fov != null) result.fov = fov;
+    if (distortion != null) result.distortion = distortion;
+    if (rmse != null) result.rmse = rmse;
+    if (p90Error != null) result.p90Error = p90Error;
+    if (maxError != null) result.maxError = maxError;
+    if (numMatches != null) result.numMatches = numMatches;
+    if (prob != null) result.prob = prob;
+    if (epochEquinox != null) result.epochEquinox = epochEquinox;
+    if (epochProperMotion != null) result.epochProperMotion = epochProperMotion;
+    if (solveTime != null) result.solveTime = solveTime;
+    if (targetSkyCoord != null) result.targetSkyCoord.addAll(targetSkyCoord);
+    if (targetPixel != null) result.targetPixel.addAll(targetPixel);
+    if (matchedStars != null) result.matchedStars.addAll(matchedStars);
+    if (patternCentroids != null)
+      result.patternCentroids.addAll(patternCentroids);
+    if (catalogStars != null) result.catalogStars.addAll(catalogStars);
+    if (rotationMatrix != null) result.rotationMatrix.addAll(rotationMatrix);
+    if (solutionFromImu != null) result.solutionFromImu = solutionFromImu;
+    return result;
   }
-  PlateSolution._() : super();
-  factory PlateSolution.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory PlateSolution.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
 
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'PlateSolution', package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'), createEmptyInstance: create)
-    ..aOM<$4.CelestialCoord>(1, _omitFieldNames ? '' : 'imageSkyCoord', subBuilder: $4.CelestialCoord.create)
+  PlateSolution._();
+
+  factory PlateSolution.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory PlateSolution.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'PlateSolution',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'),
+      createEmptyInstance: create)
+    ..aOM<$4.CelestialCoord>(1, _omitFieldNames ? '' : 'imageSkyCoord',
+        subBuilder: $4.CelestialCoord.create)
     ..a<$core.double>(2, _omitFieldNames ? '' : 'roll', $pb.PbFieldType.OD)
     ..a<$core.double>(3, _omitFieldNames ? '' : 'fov', $pb.PbFieldType.OD)
-    ..a<$core.double>(4, _omitFieldNames ? '' : 'distortion', $pb.PbFieldType.OD)
+    ..a<$core.double>(
+        4, _omitFieldNames ? '' : 'distortion', $pb.PbFieldType.OD)
     ..a<$core.double>(5, _omitFieldNames ? '' : 'rmse', $pb.PbFieldType.OD)
     ..a<$core.double>(6, _omitFieldNames ? '' : 'p90Error', $pb.PbFieldType.OD)
     ..a<$core.double>(7, _omitFieldNames ? '' : 'maxError', $pb.PbFieldType.OD)
     ..a<$core.int>(8, _omitFieldNames ? '' : 'numMatches', $pb.PbFieldType.O3)
     ..a<$core.double>(9, _omitFieldNames ? '' : 'prob', $pb.PbFieldType.OD)
-    ..a<$core.int>(10, _omitFieldNames ? '' : 'epochEquinox', $pb.PbFieldType.O3)
-    ..a<$core.double>(11, _omitFieldNames ? '' : 'epochProperMotion', $pb.PbFieldType.OF)
-    ..aOM<$3.Duration>(12, _omitFieldNames ? '' : 'solveTime', subBuilder: $3.Duration.create)
-    ..pc<$4.CelestialCoord>(13, _omitFieldNames ? '' : 'targetSkyCoord', $pb.PbFieldType.PM, subBuilder: $4.CelestialCoord.create)
-    ..pc<ImageCoord>(14, _omitFieldNames ? '' : 'targetPixel', $pb.PbFieldType.PM, subBuilder: ImageCoord.create)
-    ..pc<StarInfo>(15, _omitFieldNames ? '' : 'matchedStars', $pb.PbFieldType.PM, subBuilder: StarInfo.create)
-    ..pc<ImageCoord>(16, _omitFieldNames ? '' : 'patternCentroids', $pb.PbFieldType.PM, subBuilder: ImageCoord.create)
-    ..pc<StarInfo>(17, _omitFieldNames ? '' : 'catalogStars', $pb.PbFieldType.PM, subBuilder: StarInfo.create)
-    ..p<$core.double>(18, _omitFieldNames ? '' : 'rotationMatrix', $pb.PbFieldType.KD)
+    ..a<$core.int>(
+        10, _omitFieldNames ? '' : 'epochEquinox', $pb.PbFieldType.O3)
+    ..a<$core.double>(
+        11, _omitFieldNames ? '' : 'epochProperMotion', $pb.PbFieldType.OF)
+    ..aOM<$3.Duration>(12, _omitFieldNames ? '' : 'solveTime',
+        subBuilder: $3.Duration.create)
+    ..pc<$4.CelestialCoord>(
+        13, _omitFieldNames ? '' : 'targetSkyCoord', $pb.PbFieldType.PM,
+        subBuilder: $4.CelestialCoord.create)
+    ..pc<ImageCoord>(
+        14, _omitFieldNames ? '' : 'targetPixel', $pb.PbFieldType.PM,
+        subBuilder: ImageCoord.create)
+    ..pc<StarInfo>(
+        15, _omitFieldNames ? '' : 'matchedStars', $pb.PbFieldType.PM,
+        subBuilder: StarInfo.create)
+    ..pc<ImageCoord>(
+        16, _omitFieldNames ? '' : 'patternCentroids', $pb.PbFieldType.PM,
+        subBuilder: ImageCoord.create)
+    ..pc<StarInfo>(
+        17, _omitFieldNames ? '' : 'catalogStars', $pb.PbFieldType.PM,
+        subBuilder: StarInfo.create)
+    ..p<$core.double>(
+        18, _omitFieldNames ? '' : 'rotationMatrix', $pb.PbFieldType.KD)
     ..aOB(19, _omitFieldNames ? '' : 'solutionFromImu')
-    ..hasRequiredFields = false
-  ;
+    ..hasRequiredFields = false;
 
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
-  'Will be removed in next major version')
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   PlateSolution clone() => PlateSolution()..mergeFromMessage(this);
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
-  'Will be removed in next major version')
-  PlateSolution copyWith(void Function(PlateSolution) updates) => super.copyWith((message) => updates(message as PlateSolution)) as PlateSolution;
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  PlateSolution copyWith(void Function(PlateSolution) updates) =>
+      super.copyWith((message) => updates(message as PlateSolution))
+          as PlateSolution;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static PlateSolution create() => PlateSolution._();
+  @$core.override
   PlateSolution createEmptyInstance() => create();
-  static $pb.PbList<PlateSolution> createRepeated() => $pb.PbList<PlateSolution>();
+  static $pb.PbList<PlateSolution> createRepeated() =>
+      $pb.PbList<PlateSolution>();
   @$core.pragma('dart2js:noInline')
-  static PlateSolution getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<PlateSolution>(create);
+  static PlateSolution getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<PlateSolution>(create);
   static PlateSolution? _defaultInstance;
 
   /// See tetra3.py for descriptions of fields.
   @$pb.TagNumber(1)
   $4.CelestialCoord get imageSkyCoord => $_getN(0);
   @$pb.TagNumber(1)
-  set imageSkyCoord($4.CelestialCoord v) { $_setField(1, v); }
+  set imageSkyCoord($4.CelestialCoord value) => $_setField(1, value);
   @$pb.TagNumber(1)
   $core.bool hasImageSkyCoord() => $_has(0);
   @$pb.TagNumber(1)
@@ -2415,7 +2377,7 @@ class PlateSolution extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $core.double get roll => $_getN(1);
   @$pb.TagNumber(2)
-  set roll($core.double v) { $_setDouble(1, v); }
+  set roll($core.double value) => $_setDouble(1, value);
   @$pb.TagNumber(2)
   $core.bool hasRoll() => $_has(1);
   @$pb.TagNumber(2)
@@ -2424,7 +2386,7 @@ class PlateSolution extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   $core.double get fov => $_getN(2);
   @$pb.TagNumber(3)
-  set fov($core.double v) { $_setDouble(2, v); }
+  set fov($core.double value) => $_setDouble(2, value);
   @$pb.TagNumber(3)
   $core.bool hasFov() => $_has(2);
   @$pb.TagNumber(3)
@@ -2433,7 +2395,7 @@ class PlateSolution extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   $core.double get distortion => $_getN(3);
   @$pb.TagNumber(4)
-  set distortion($core.double v) { $_setDouble(3, v); }
+  set distortion($core.double value) => $_setDouble(3, value);
   @$pb.TagNumber(4)
   $core.bool hasDistortion() => $_has(3);
   @$pb.TagNumber(4)
@@ -2443,7 +2405,7 @@ class PlateSolution extends $pb.GeneratedMessage {
   @$pb.TagNumber(5)
   $core.double get rmse => $_getN(4);
   @$pb.TagNumber(5)
-  set rmse($core.double v) { $_setDouble(4, v); }
+  set rmse($core.double value) => $_setDouble(4, value);
   @$pb.TagNumber(5)
   $core.bool hasRmse() => $_has(4);
   @$pb.TagNumber(5)
@@ -2452,7 +2414,7 @@ class PlateSolution extends $pb.GeneratedMessage {
   @$pb.TagNumber(6)
   $core.double get p90Error => $_getN(5);
   @$pb.TagNumber(6)
-  set p90Error($core.double v) { $_setDouble(5, v); }
+  set p90Error($core.double value) => $_setDouble(5, value);
   @$pb.TagNumber(6)
   $core.bool hasP90Error() => $_has(5);
   @$pb.TagNumber(6)
@@ -2461,7 +2423,7 @@ class PlateSolution extends $pb.GeneratedMessage {
   @$pb.TagNumber(7)
   $core.double get maxError => $_getN(6);
   @$pb.TagNumber(7)
-  set maxError($core.double v) { $_setDouble(6, v); }
+  set maxError($core.double value) => $_setDouble(6, value);
   @$pb.TagNumber(7)
   $core.bool hasMaxError() => $_has(6);
   @$pb.TagNumber(7)
@@ -2470,7 +2432,7 @@ class PlateSolution extends $pb.GeneratedMessage {
   @$pb.TagNumber(8)
   $core.int get numMatches => $_getIZ(7);
   @$pb.TagNumber(8)
-  set numMatches($core.int v) { $_setSignedInt32(7, v); }
+  set numMatches($core.int value) => $_setSignedInt32(7, value);
   @$pb.TagNumber(8)
   $core.bool hasNumMatches() => $_has(7);
   @$pb.TagNumber(8)
@@ -2479,7 +2441,7 @@ class PlateSolution extends $pb.GeneratedMessage {
   @$pb.TagNumber(9)
   $core.double get prob => $_getN(8);
   @$pb.TagNumber(9)
-  set prob($core.double v) { $_setDouble(8, v); }
+  set prob($core.double value) => $_setDouble(8, value);
   @$pb.TagNumber(9)
   $core.bool hasProb() => $_has(8);
   @$pb.TagNumber(9)
@@ -2488,7 +2450,7 @@ class PlateSolution extends $pb.GeneratedMessage {
   @$pb.TagNumber(10)
   $core.int get epochEquinox => $_getIZ(9);
   @$pb.TagNumber(10)
-  set epochEquinox($core.int v) { $_setSignedInt32(9, v); }
+  set epochEquinox($core.int value) => $_setSignedInt32(9, value);
   @$pb.TagNumber(10)
   $core.bool hasEpochEquinox() => $_has(9);
   @$pb.TagNumber(10)
@@ -2497,7 +2459,7 @@ class PlateSolution extends $pb.GeneratedMessage {
   @$pb.TagNumber(11)
   $core.double get epochProperMotion => $_getN(10);
   @$pb.TagNumber(11)
-  set epochProperMotion($core.double v) { $_setFloat(10, v); }
+  set epochProperMotion($core.double value) => $_setFloat(10, value);
   @$pb.TagNumber(11)
   $core.bool hasEpochProperMotion() => $_has(10);
   @$pb.TagNumber(11)
@@ -2506,7 +2468,7 @@ class PlateSolution extends $pb.GeneratedMessage {
   @$pb.TagNumber(12)
   $3.Duration get solveTime => $_getN(11);
   @$pb.TagNumber(12)
-  set solveTime($3.Duration v) { $_setField(12, v); }
+  set solveTime($3.Duration value) => $_setField(12, value);
   @$pb.TagNumber(12)
   $core.bool hasSolveTime() => $_has(11);
   @$pb.TagNumber(12)
@@ -2542,7 +2504,7 @@ class PlateSolution extends $pb.GeneratedMessage {
   @$pb.TagNumber(19)
   $core.bool get solutionFromImu => $_getBF(18);
   @$pb.TagNumber(19)
-  set solutionFromImu($core.bool v) { $_setBool(18, v); }
+  set solutionFromImu($core.bool value) => $_setBool(18, value);
   @$pb.TagNumber(19)
   $core.bool hasSolutionFromImu() => $_has(18);
   @$pb.TagNumber(19)
@@ -2555,54 +2517,56 @@ class StarInfo extends $pb.GeneratedMessage {
     $4.CelestialCoord? skyCoord,
     $core.double? mag,
   }) {
-    final $result = create();
-    if (pixel != null) {
-      $result.pixel = pixel;
-    }
-    if (skyCoord != null) {
-      $result.skyCoord = skyCoord;
-    }
-    if (mag != null) {
-      $result.mag = mag;
-    }
-    return $result;
+    final result = create();
+    if (pixel != null) result.pixel = pixel;
+    if (skyCoord != null) result.skyCoord = skyCoord;
+    if (mag != null) result.mag = mag;
+    return result;
   }
-  StarInfo._() : super();
-  factory StarInfo.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory StarInfo.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
 
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'StarInfo', package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'), createEmptyInstance: create)
-    ..aOM<ImageCoord>(1, _omitFieldNames ? '' : 'pixel', subBuilder: ImageCoord.create)
-    ..aOM<$4.CelestialCoord>(2, _omitFieldNames ? '' : 'skyCoord', subBuilder: $4.CelestialCoord.create)
+  StarInfo._();
+
+  factory StarInfo.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory StarInfo.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'StarInfo',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'),
+      createEmptyInstance: create)
+    ..aOM<ImageCoord>(1, _omitFieldNames ? '' : 'pixel',
+        subBuilder: ImageCoord.create)
+    ..aOM<$4.CelestialCoord>(2, _omitFieldNames ? '' : 'skyCoord',
+        subBuilder: $4.CelestialCoord.create)
     ..a<$core.double>(3, _omitFieldNames ? '' : 'mag', $pb.PbFieldType.OF)
-    ..hasRequiredFields = false
-  ;
+    ..hasRequiredFields = false;
 
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
-  'Will be removed in next major version')
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   StarInfo clone() => StarInfo()..mergeFromMessage(this);
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
-  'Will be removed in next major version')
-  StarInfo copyWith(void Function(StarInfo) updates) => super.copyWith((message) => updates(message as StarInfo)) as StarInfo;
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  StarInfo copyWith(void Function(StarInfo) updates) =>
+      super.copyWith((message) => updates(message as StarInfo)) as StarInfo;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static StarInfo create() => StarInfo._();
+  @$core.override
   StarInfo createEmptyInstance() => create();
   static $pb.PbList<StarInfo> createRepeated() => $pb.PbList<StarInfo>();
   @$core.pragma('dart2js:noInline')
-  static StarInfo getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<StarInfo>(create);
+  static StarInfo getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<StarInfo>(create);
   static StarInfo? _defaultInstance;
 
   @$pb.TagNumber(1)
   ImageCoord get pixel => $_getN(0);
   @$pb.TagNumber(1)
-  set pixel(ImageCoord v) { $_setField(1, v); }
+  set pixel(ImageCoord value) => $_setField(1, value);
   @$pb.TagNumber(1)
   $core.bool hasPixel() => $_has(0);
   @$pb.TagNumber(1)
@@ -2613,7 +2577,7 @@ class StarInfo extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $4.CelestialCoord get skyCoord => $_getN(1);
   @$pb.TagNumber(2)
-  set skyCoord($4.CelestialCoord v) { $_setField(2, v); }
+  set skyCoord($4.CelestialCoord value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasSkyCoord() => $_has(1);
   @$pb.TagNumber(2)
@@ -2624,7 +2588,7 @@ class StarInfo extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   $core.double get mag => $_getN(2);
   @$pb.TagNumber(3)
-  set mag($core.double v) { $_setFloat(2, v); }
+  set mag($core.double value) => $_setFloat(2, value);
   @$pb.TagNumber(3)
   $core.bool hasMag() => $_has(2);
   @$pb.TagNumber(3)
@@ -2642,71 +2606,74 @@ class ProcessingStats extends $pb.GeneratedMessage {
     ValueStats? solveInterval,
     ValueStats? acquireLatency,
   }) {
-    final $result = create();
-    if (detectLatency != null) {
-      $result.detectLatency = detectLatency;
-    }
-    if (solveLatency != null) {
-      $result.solveLatency = solveLatency;
-    }
-    if (solveAttemptFraction != null) {
-      $result.solveAttemptFraction = solveAttemptFraction;
-    }
-    if (solveSuccessFraction != null) {
-      $result.solveSuccessFraction = solveSuccessFraction;
-    }
-    if (serveLatency != null) {
-      $result.serveLatency = serveLatency;
-    }
-    if (solveInterval != null) {
-      $result.solveInterval = solveInterval;
-    }
-    if (acquireLatency != null) {
-      $result.acquireLatency = acquireLatency;
-    }
-    return $result;
+    final result = create();
+    if (detectLatency != null) result.detectLatency = detectLatency;
+    if (solveLatency != null) result.solveLatency = solveLatency;
+    if (solveAttemptFraction != null)
+      result.solveAttemptFraction = solveAttemptFraction;
+    if (solveSuccessFraction != null)
+      result.solveSuccessFraction = solveSuccessFraction;
+    if (serveLatency != null) result.serveLatency = serveLatency;
+    if (solveInterval != null) result.solveInterval = solveInterval;
+    if (acquireLatency != null) result.acquireLatency = acquireLatency;
+    return result;
   }
-  ProcessingStats._() : super();
-  factory ProcessingStats.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory ProcessingStats.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
 
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'ProcessingStats', package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'), createEmptyInstance: create)
-    ..aOM<ValueStats>(3, _omitFieldNames ? '' : 'detectLatency', subBuilder: ValueStats.create)
-    ..aOM<ValueStats>(4, _omitFieldNames ? '' : 'solveLatency', subBuilder: ValueStats.create)
-    ..aOM<ValueStats>(5, _omitFieldNames ? '' : 'solveAttemptFraction', subBuilder: ValueStats.create)
-    ..aOM<ValueStats>(6, _omitFieldNames ? '' : 'solveSuccessFraction', subBuilder: ValueStats.create)
-    ..aOM<ValueStats>(7, _omitFieldNames ? '' : 'serveLatency', subBuilder: ValueStats.create)
-    ..aOM<ValueStats>(8, _omitFieldNames ? '' : 'solveInterval', subBuilder: ValueStats.create)
-    ..aOM<ValueStats>(9, _omitFieldNames ? '' : 'acquireLatency', subBuilder: ValueStats.create)
-    ..hasRequiredFields = false
-  ;
+  ProcessingStats._();
 
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
-  'Will be removed in next major version')
+  factory ProcessingStats.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ProcessingStats.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ProcessingStats',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'),
+      createEmptyInstance: create)
+    ..aOM<ValueStats>(3, _omitFieldNames ? '' : 'detectLatency',
+        subBuilder: ValueStats.create)
+    ..aOM<ValueStats>(4, _omitFieldNames ? '' : 'solveLatency',
+        subBuilder: ValueStats.create)
+    ..aOM<ValueStats>(5, _omitFieldNames ? '' : 'solveAttemptFraction',
+        subBuilder: ValueStats.create)
+    ..aOM<ValueStats>(6, _omitFieldNames ? '' : 'solveSuccessFraction',
+        subBuilder: ValueStats.create)
+    ..aOM<ValueStats>(7, _omitFieldNames ? '' : 'serveLatency',
+        subBuilder: ValueStats.create)
+    ..aOM<ValueStats>(8, _omitFieldNames ? '' : 'solveInterval',
+        subBuilder: ValueStats.create)
+    ..aOM<ValueStats>(9, _omitFieldNames ? '' : 'acquireLatency',
+        subBuilder: ValueStats.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   ProcessingStats clone() => ProcessingStats()..mergeFromMessage(this);
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
-  'Will be removed in next major version')
-  ProcessingStats copyWith(void Function(ProcessingStats) updates) => super.copyWith((message) => updates(message as ProcessingStats)) as ProcessingStats;
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ProcessingStats copyWith(void Function(ProcessingStats) updates) =>
+      super.copyWith((message) => updates(message as ProcessingStats))
+          as ProcessingStats;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static ProcessingStats create() => ProcessingStats._();
+  @$core.override
   ProcessingStats createEmptyInstance() => create();
-  static $pb.PbList<ProcessingStats> createRepeated() => $pb.PbList<ProcessingStats>();
+  static $pb.PbList<ProcessingStats> createRepeated() =>
+      $pb.PbList<ProcessingStats>();
   @$core.pragma('dart2js:noInline')
-  static ProcessingStats getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<ProcessingStats>(create);
+  static ProcessingStats getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ProcessingStats>(create);
   static ProcessingStats? _defaultInstance;
 
   /// How much time (in seconds) is spent detecting/centroiding stars.
   @$pb.TagNumber(3)
   ValueStats get detectLatency => $_getN(0);
   @$pb.TagNumber(3)
-  set detectLatency(ValueStats v) { $_setField(3, v); }
+  set detectLatency(ValueStats value) => $_setField(3, value);
   @$pb.TagNumber(3)
   $core.bool hasDetectLatency() => $_has(0);
   @$pb.TagNumber(3)
@@ -2718,7 +2685,7 @@ class ProcessingStats extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   ValueStats get solveLatency => $_getN(1);
   @$pb.TagNumber(4)
-  set solveLatency(ValueStats v) { $_setField(4, v); }
+  set solveLatency(ValueStats value) => $_setField(4, value);
   @$pb.TagNumber(4)
   $core.bool hasSolveLatency() => $_has(1);
   @$pb.TagNumber(4)
@@ -2731,7 +2698,7 @@ class ProcessingStats extends $pb.GeneratedMessage {
   @$pb.TagNumber(5)
   ValueStats get solveAttemptFraction => $_getN(2);
   @$pb.TagNumber(5)
-  set solveAttemptFraction(ValueStats v) { $_setField(5, v); }
+  set solveAttemptFraction(ValueStats value) => $_setField(5, value);
   @$pb.TagNumber(5)
   $core.bool hasSolveAttemptFraction() => $_has(2);
   @$pb.TagNumber(5)
@@ -2744,7 +2711,7 @@ class ProcessingStats extends $pb.GeneratedMessage {
   @$pb.TagNumber(6)
   ValueStats get solveSuccessFraction => $_getN(3);
   @$pb.TagNumber(6)
-  set solveSuccessFraction(ValueStats v) { $_setField(6, v); }
+  set solveSuccessFraction(ValueStats value) => $_setField(6, value);
   @$pb.TagNumber(6)
   $core.bool hasSolveSuccessFraction() => $_has(3);
   @$pb.TagNumber(6)
@@ -2758,7 +2725,7 @@ class ProcessingStats extends $pb.GeneratedMessage {
   @$pb.TagNumber(7)
   ValueStats get serveLatency => $_getN(4);
   @$pb.TagNumber(7)
-  set serveLatency(ValueStats v) { $_setField(7, v); }
+  set serveLatency(ValueStats value) => $_setField(7, value);
   @$pb.TagNumber(7)
   $core.bool hasServeLatency() => $_has(4);
   @$pb.TagNumber(7)
@@ -2770,7 +2737,7 @@ class ProcessingStats extends $pb.GeneratedMessage {
   @$pb.TagNumber(8)
   ValueStats get solveInterval => $_getN(5);
   @$pb.TagNumber(8)
-  set solveInterval(ValueStats v) { $_setField(8, v); }
+  set solveInterval(ValueStats value) => $_setField(8, value);
   @$pb.TagNumber(8)
   $core.bool hasSolveInterval() => $_has(5);
   @$pb.TagNumber(8)
@@ -2784,7 +2751,7 @@ class ProcessingStats extends $pb.GeneratedMessage {
   @$pb.TagNumber(9)
   ValueStats get acquireLatency => $_getN(6);
   @$pb.TagNumber(9)
-  set acquireLatency(ValueStats v) { $_setField(9, v); }
+  set acquireLatency(ValueStats value) => $_setField(9, value);
   @$pb.TagNumber(9)
   $core.bool hasAcquireLatency() => $_has(6);
   @$pb.TagNumber(9)
@@ -2798,44 +2765,48 @@ class ValueStats extends $pb.GeneratedMessage {
     DescriptiveStats? recent,
     DescriptiveStats? session,
   }) {
-    final $result = create();
-    if (recent != null) {
-      $result.recent = recent;
-    }
-    if (session != null) {
-      $result.session = session;
-    }
-    return $result;
+    final result = create();
+    if (recent != null) result.recent = recent;
+    if (session != null) result.session = session;
+    return result;
   }
-  ValueStats._() : super();
-  factory ValueStats.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory ValueStats.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
 
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'ValueStats', package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'), createEmptyInstance: create)
-    ..aOM<DescriptiveStats>(1, _omitFieldNames ? '' : 'recent', subBuilder: DescriptiveStats.create)
-    ..aOM<DescriptiveStats>(2, _omitFieldNames ? '' : 'session', subBuilder: DescriptiveStats.create)
-    ..hasRequiredFields = false
-  ;
+  ValueStats._();
 
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
-  'Will be removed in next major version')
+  factory ValueStats.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ValueStats.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ValueStats',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'),
+      createEmptyInstance: create)
+    ..aOM<DescriptiveStats>(1, _omitFieldNames ? '' : 'recent',
+        subBuilder: DescriptiveStats.create)
+    ..aOM<DescriptiveStats>(2, _omitFieldNames ? '' : 'session',
+        subBuilder: DescriptiveStats.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   ValueStats clone() => ValueStats()..mergeFromMessage(this);
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
-  'Will be removed in next major version')
-  ValueStats copyWith(void Function(ValueStats) updates) => super.copyWith((message) => updates(message as ValueStats)) as ValueStats;
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ValueStats copyWith(void Function(ValueStats) updates) =>
+      super.copyWith((message) => updates(message as ValueStats)) as ValueStats;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static ValueStats create() => ValueStats._();
+  @$core.override
   ValueStats createEmptyInstance() => create();
   static $pb.PbList<ValueStats> createRepeated() => $pb.PbList<ValueStats>();
   @$core.pragma('dart2js:noInline')
-  static ValueStats getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<ValueStats>(create);
+  static ValueStats getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ValueStats>(create);
   static ValueStats? _defaultInstance;
 
   /// Stats from the most recent 100 results. Omitted if there are no results
@@ -2843,7 +2814,7 @@ class ValueStats extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   DescriptiveStats get recent => $_getN(0);
   @$pb.TagNumber(1)
-  set recent(DescriptiveStats v) { $_setField(1, v); }
+  set recent(DescriptiveStats value) => $_setField(1, value);
   @$pb.TagNumber(1)
   $core.bool hasRecent() => $_has(0);
   @$pb.TagNumber(1)
@@ -2857,7 +2828,7 @@ class ValueStats extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   DescriptiveStats get session => $_getN(1);
   @$pb.TagNumber(2)
-  set session(DescriptiveStats v) { $_setField(2, v); }
+  set session(DescriptiveStats value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasSession() => $_has(1);
   @$pb.TagNumber(2)
@@ -2876,66 +2847,64 @@ class DescriptiveStats extends $pb.GeneratedMessage {
     $core.double? median,
     $core.double? medianAbsoluteDeviation,
   }) {
-    final $result = create();
-    if (min != null) {
-      $result.min = min;
-    }
-    if (max != null) {
-      $result.max = max;
-    }
-    if (mean != null) {
-      $result.mean = mean;
-    }
-    if (stddev != null) {
-      $result.stddev = stddev;
-    }
-    if (median != null) {
-      $result.median = median;
-    }
-    if (medianAbsoluteDeviation != null) {
-      $result.medianAbsoluteDeviation = medianAbsoluteDeviation;
-    }
-    return $result;
+    final result = create();
+    if (min != null) result.min = min;
+    if (max != null) result.max = max;
+    if (mean != null) result.mean = mean;
+    if (stddev != null) result.stddev = stddev;
+    if (median != null) result.median = median;
+    if (medianAbsoluteDeviation != null)
+      result.medianAbsoluteDeviation = medianAbsoluteDeviation;
+    return result;
   }
-  DescriptiveStats._() : super();
-  factory DescriptiveStats.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory DescriptiveStats.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
 
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'DescriptiveStats', package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'), createEmptyInstance: create)
+  DescriptiveStats._();
+
+  factory DescriptiveStats.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory DescriptiveStats.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'DescriptiveStats',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'),
+      createEmptyInstance: create)
     ..a<$core.double>(1, _omitFieldNames ? '' : 'min', $pb.PbFieldType.OD)
     ..a<$core.double>(2, _omitFieldNames ? '' : 'max', $pb.PbFieldType.OD)
     ..a<$core.double>(3, _omitFieldNames ? '' : 'mean', $pb.PbFieldType.OD)
     ..a<$core.double>(4, _omitFieldNames ? '' : 'stddev', $pb.PbFieldType.OD)
     ..a<$core.double>(5, _omitFieldNames ? '' : 'median', $pb.PbFieldType.OD)
-    ..a<$core.double>(6, _omitFieldNames ? '' : 'medianAbsoluteDeviation', $pb.PbFieldType.OD)
-    ..hasRequiredFields = false
-  ;
+    ..a<$core.double>(
+        6, _omitFieldNames ? '' : 'medianAbsoluteDeviation', $pb.PbFieldType.OD)
+    ..hasRequiredFields = false;
 
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
-  'Will be removed in next major version')
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   DescriptiveStats clone() => DescriptiveStats()..mergeFromMessage(this);
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
-  'Will be removed in next major version')
-  DescriptiveStats copyWith(void Function(DescriptiveStats) updates) => super.copyWith((message) => updates(message as DescriptiveStats)) as DescriptiveStats;
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  DescriptiveStats copyWith(void Function(DescriptiveStats) updates) =>
+      super.copyWith((message) => updates(message as DescriptiveStats))
+          as DescriptiveStats;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static DescriptiveStats create() => DescriptiveStats._();
+  @$core.override
   DescriptiveStats createEmptyInstance() => create();
-  static $pb.PbList<DescriptiveStats> createRepeated() => $pb.PbList<DescriptiveStats>();
+  static $pb.PbList<DescriptiveStats> createRepeated() =>
+      $pb.PbList<DescriptiveStats>();
   @$core.pragma('dart2js:noInline')
-  static DescriptiveStats getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<DescriptiveStats>(create);
+  static DescriptiveStats getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<DescriptiveStats>(create);
   static DescriptiveStats? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.double get min => $_getN(0);
   @$pb.TagNumber(1)
-  set min($core.double v) { $_setDouble(0, v); }
+  set min($core.double value) => $_setDouble(0, value);
   @$pb.TagNumber(1)
   $core.bool hasMin() => $_has(0);
   @$pb.TagNumber(1)
@@ -2944,7 +2913,7 @@ class DescriptiveStats extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $core.double get max => $_getN(1);
   @$pb.TagNumber(2)
-  set max($core.double v) { $_setDouble(1, v); }
+  set max($core.double value) => $_setDouble(1, value);
   @$pb.TagNumber(2)
   $core.bool hasMax() => $_has(1);
   @$pb.TagNumber(2)
@@ -2953,7 +2922,7 @@ class DescriptiveStats extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   $core.double get mean => $_getN(2);
   @$pb.TagNumber(3)
-  set mean($core.double v) { $_setDouble(2, v); }
+  set mean($core.double value) => $_setDouble(2, value);
   @$pb.TagNumber(3)
   $core.bool hasMean() => $_has(2);
   @$pb.TagNumber(3)
@@ -2962,7 +2931,7 @@ class DescriptiveStats extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   $core.double get stddev => $_getN(3);
   @$pb.TagNumber(4)
-  set stddev($core.double v) { $_setDouble(3, v); }
+  set stddev($core.double value) => $_setDouble(3, value);
   @$pb.TagNumber(4)
   $core.bool hasStddev() => $_has(3);
   @$pb.TagNumber(4)
@@ -2972,7 +2941,7 @@ class DescriptiveStats extends $pb.GeneratedMessage {
   @$pb.TagNumber(5)
   $core.double get median => $_getN(4);
   @$pb.TagNumber(5)
-  set median($core.double v) { $_setDouble(4, v); }
+  set median($core.double value) => $_setDouble(4, value);
   @$pb.TagNumber(5)
   $core.bool hasMedian() => $_has(4);
   @$pb.TagNumber(5)
@@ -2981,7 +2950,7 @@ class DescriptiveStats extends $pb.GeneratedMessage {
   @$pb.TagNumber(6)
   $core.double get medianAbsoluteDeviation => $_getN(5);
   @$pb.TagNumber(6)
-  set medianAbsoluteDeviation($core.double v) { $_setDouble(5, v); }
+  set medianAbsoluteDeviation($core.double value) => $_setDouble(5, value);
   @$pb.TagNumber(6)
   $core.bool hasMedianAbsoluteDeviation() => $_has(5);
   @$pb.TagNumber(6)
@@ -3009,115 +2978,110 @@ class CalibrationData extends $pb.GeneratedMessage {
     $core.String? cameraUpGyroAxis,
     $core.double? cameraUpMisalignment,
   }) {
-    final $result = create();
-    if (calibrationTime != null) {
-      $result.calibrationTime = calibrationTime;
-    }
-    if (targetExposureTime != null) {
-      $result.targetExposureTime = targetExposureTime;
-    }
-    if (cameraOffset != null) {
-      $result.cameraOffset = cameraOffset;
-    }
-    if (fovHorizontal != null) {
-      $result.fovHorizontal = fovHorizontal;
-    }
-    if (lensDistortion != null) {
-      $result.lensDistortion = lensDistortion;
-    }
-    if (lensFlMm != null) {
-      $result.lensFlMm = lensFlMm;
-    }
-    if (pixelAngularSize != null) {
-      $result.pixelAngularSize = pixelAngularSize;
-    }
-    if (matchMaxError != null) {
-      $result.matchMaxError = matchMaxError;
-    }
-    if (fovVertical != null) {
-      $result.fovVertical = fovVertical;
-    }
-    if (calibrationFailureReason != null) {
-      $result.calibrationFailureReason = calibrationFailureReason;
-    }
-    if (gyroZeroBiasX != null) {
-      $result.gyroZeroBiasX = gyroZeroBiasX;
-    }
-    if (gyroZeroBiasY != null) {
-      $result.gyroZeroBiasY = gyroZeroBiasY;
-    }
-    if (gyroZeroBiasZ != null) {
-      $result.gyroZeroBiasZ = gyroZeroBiasZ;
-    }
-    if (gyroTransformErrorFraction != null) {
-      $result.gyroTransformErrorFraction = gyroTransformErrorFraction;
-    }
-    if (cameraViewGyroAxis != null) {
-      $result.cameraViewGyroAxis = cameraViewGyroAxis;
-    }
-    if (cameraViewMisalignment != null) {
-      $result.cameraViewMisalignment = cameraViewMisalignment;
-    }
-    if (cameraUpGyroAxis != null) {
-      $result.cameraUpGyroAxis = cameraUpGyroAxis;
-    }
-    if (cameraUpMisalignment != null) {
-      $result.cameraUpMisalignment = cameraUpMisalignment;
-    }
-    return $result;
+    final result = create();
+    if (calibrationTime != null) result.calibrationTime = calibrationTime;
+    if (targetExposureTime != null)
+      result.targetExposureTime = targetExposureTime;
+    if (cameraOffset != null) result.cameraOffset = cameraOffset;
+    if (fovHorizontal != null) result.fovHorizontal = fovHorizontal;
+    if (lensDistortion != null) result.lensDistortion = lensDistortion;
+    if (lensFlMm != null) result.lensFlMm = lensFlMm;
+    if (pixelAngularSize != null) result.pixelAngularSize = pixelAngularSize;
+    if (matchMaxError != null) result.matchMaxError = matchMaxError;
+    if (fovVertical != null) result.fovVertical = fovVertical;
+    if (calibrationFailureReason != null)
+      result.calibrationFailureReason = calibrationFailureReason;
+    if (gyroZeroBiasX != null) result.gyroZeroBiasX = gyroZeroBiasX;
+    if (gyroZeroBiasY != null) result.gyroZeroBiasY = gyroZeroBiasY;
+    if (gyroZeroBiasZ != null) result.gyroZeroBiasZ = gyroZeroBiasZ;
+    if (gyroTransformErrorFraction != null)
+      result.gyroTransformErrorFraction = gyroTransformErrorFraction;
+    if (cameraViewGyroAxis != null)
+      result.cameraViewGyroAxis = cameraViewGyroAxis;
+    if (cameraViewMisalignment != null)
+      result.cameraViewMisalignment = cameraViewMisalignment;
+    if (cameraUpGyroAxis != null) result.cameraUpGyroAxis = cameraUpGyroAxis;
+    if (cameraUpMisalignment != null)
+      result.cameraUpMisalignment = cameraUpMisalignment;
+    return result;
   }
-  CalibrationData._() : super();
-  factory CalibrationData.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory CalibrationData.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
 
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'CalibrationData', package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'), createEmptyInstance: create)
-    ..aOM<$2.Timestamp>(1, _omitFieldNames ? '' : 'calibrationTime', subBuilder: $2.Timestamp.create)
-    ..aOM<$3.Duration>(2, _omitFieldNames ? '' : 'targetExposureTime', subBuilder: $3.Duration.create)
+  CalibrationData._();
+
+  factory CalibrationData.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory CalibrationData.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'CalibrationData',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'),
+      createEmptyInstance: create)
+    ..aOM<$2.Timestamp>(1, _omitFieldNames ? '' : 'calibrationTime',
+        subBuilder: $2.Timestamp.create)
+    ..aOM<$3.Duration>(2, _omitFieldNames ? '' : 'targetExposureTime',
+        subBuilder: $3.Duration.create)
     ..a<$core.int>(3, _omitFieldNames ? '' : 'cameraOffset', $pb.PbFieldType.O3)
-    ..a<$core.double>(4, _omitFieldNames ? '' : 'fovHorizontal', $pb.PbFieldType.OD)
-    ..a<$core.double>(5, _omitFieldNames ? '' : 'lensDistortion', $pb.PbFieldType.OD)
+    ..a<$core.double>(
+        4, _omitFieldNames ? '' : 'fovHorizontal', $pb.PbFieldType.OD)
+    ..a<$core.double>(
+        5, _omitFieldNames ? '' : 'lensDistortion', $pb.PbFieldType.OD)
     ..a<$core.double>(6, _omitFieldNames ? '' : 'lensFlMm', $pb.PbFieldType.OD)
-    ..a<$core.double>(7, _omitFieldNames ? '' : 'pixelAngularSize', $pb.PbFieldType.OD)
-    ..a<$core.double>(8, _omitFieldNames ? '' : 'matchMaxError', $pb.PbFieldType.OD)
-    ..a<$core.double>(11, _omitFieldNames ? '' : 'fovVertical', $pb.PbFieldType.OD)
-    ..e<CalibrationFailureReason>(12, _omitFieldNames ? '' : 'calibrationFailureReason', $pb.PbFieldType.OE, defaultOrMaker: CalibrationFailureReason.REASON_UNSPECIFIED, valueOf: CalibrationFailureReason.valueOf, enumValues: CalibrationFailureReason.values)
-    ..a<$core.double>(15, _omitFieldNames ? '' : 'gyroZeroBiasX', $pb.PbFieldType.OD)
-    ..a<$core.double>(16, _omitFieldNames ? '' : 'gyroZeroBiasY', $pb.PbFieldType.OD)
-    ..a<$core.double>(17, _omitFieldNames ? '' : 'gyroZeroBiasZ', $pb.PbFieldType.OD)
-    ..a<$core.double>(18, _omitFieldNames ? '' : 'gyroTransformErrorFraction', $pb.PbFieldType.OD)
+    ..a<$core.double>(
+        7, _omitFieldNames ? '' : 'pixelAngularSize', $pb.PbFieldType.OD)
+    ..a<$core.double>(
+        8, _omitFieldNames ? '' : 'matchMaxError', $pb.PbFieldType.OD)
+    ..a<$core.double>(
+        11, _omitFieldNames ? '' : 'fovVertical', $pb.PbFieldType.OD)
+    ..e<CalibrationFailureReason>(12,
+        _omitFieldNames ? '' : 'calibrationFailureReason', $pb.PbFieldType.OE,
+        defaultOrMaker: CalibrationFailureReason.REASON_UNSPECIFIED,
+        valueOf: CalibrationFailureReason.valueOf,
+        enumValues: CalibrationFailureReason.values)
+    ..a<$core.double>(
+        15, _omitFieldNames ? '' : 'gyroZeroBiasX', $pb.PbFieldType.OD)
+    ..a<$core.double>(
+        16, _omitFieldNames ? '' : 'gyroZeroBiasY', $pb.PbFieldType.OD)
+    ..a<$core.double>(
+        17, _omitFieldNames ? '' : 'gyroZeroBiasZ', $pb.PbFieldType.OD)
+    ..a<$core.double>(18, _omitFieldNames ? '' : 'gyroTransformErrorFraction',
+        $pb.PbFieldType.OD)
     ..aOS(19, _omitFieldNames ? '' : 'cameraViewGyroAxis')
-    ..a<$core.double>(20, _omitFieldNames ? '' : 'cameraViewMisalignment', $pb.PbFieldType.OD)
+    ..a<$core.double>(
+        20, _omitFieldNames ? '' : 'cameraViewMisalignment', $pb.PbFieldType.OD)
     ..aOS(21, _omitFieldNames ? '' : 'cameraUpGyroAxis')
-    ..a<$core.double>(22, _omitFieldNames ? '' : 'cameraUpMisalignment', $pb.PbFieldType.OD)
-    ..hasRequiredFields = false
-  ;
+    ..a<$core.double>(
+        22, _omitFieldNames ? '' : 'cameraUpMisalignment', $pb.PbFieldType.OD)
+    ..hasRequiredFields = false;
 
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
-  'Will be removed in next major version')
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   CalibrationData clone() => CalibrationData()..mergeFromMessage(this);
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
-  'Will be removed in next major version')
-  CalibrationData copyWith(void Function(CalibrationData) updates) => super.copyWith((message) => updates(message as CalibrationData)) as CalibrationData;
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  CalibrationData copyWith(void Function(CalibrationData) updates) =>
+      super.copyWith((message) => updates(message as CalibrationData))
+          as CalibrationData;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static CalibrationData create() => CalibrationData._();
+  @$core.override
   CalibrationData createEmptyInstance() => create();
-  static $pb.PbList<CalibrationData> createRepeated() => $pb.PbList<CalibrationData>();
+  static $pb.PbList<CalibrationData> createRepeated() =>
+      $pb.PbList<CalibrationData>();
   @$core.pragma('dart2js:noInline')
-  static CalibrationData getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<CalibrationData>(create);
+  static CalibrationData getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<CalibrationData>(create);
   static CalibrationData? _defaultInstance;
 
   /// Omitted if a sky/camera calibration has not been attempted.
   @$pb.TagNumber(1)
   $2.Timestamp get calibrationTime => $_getN(0);
   @$pb.TagNumber(1)
-  set calibrationTime($2.Timestamp v) { $_setField(1, v); }
+  set calibrationTime($2.Timestamp value) => $_setField(1, value);
   @$pb.TagNumber(1)
   $core.bool hasCalibrationTime() => $_has(0);
   @$pb.TagNumber(1)
@@ -3132,7 +3096,7 @@ class CalibrationData extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $3.Duration get targetExposureTime => $_getN(1);
   @$pb.TagNumber(2)
-  set targetExposureTime($3.Duration v) { $_setField(2, v); }
+  set targetExposureTime($3.Duration value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasTargetExposureTime() => $_has(1);
   @$pb.TagNumber(2)
@@ -3145,7 +3109,7 @@ class CalibrationData extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   $core.int get cameraOffset => $_getIZ(2);
   @$pb.TagNumber(3)
-  set cameraOffset($core.int v) { $_setSignedInt32(2, v); }
+  set cameraOffset($core.int value) => $_setSignedInt32(2, value);
   @$pb.TagNumber(3)
   $core.bool hasCameraOffset() => $_has(2);
   @$pb.TagNumber(3)
@@ -3157,7 +3121,7 @@ class CalibrationData extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   $core.double get fovHorizontal => $_getN(3);
   @$pb.TagNumber(4)
-  set fovHorizontal($core.double v) { $_setDouble(3, v); }
+  set fovHorizontal($core.double value) => $_setDouble(3, value);
   @$pb.TagNumber(4)
   $core.bool hasFovHorizontal() => $_has(3);
   @$pb.TagNumber(4)
@@ -3168,7 +3132,7 @@ class CalibrationData extends $pb.GeneratedMessage {
   @$pb.TagNumber(5)
   $core.double get lensDistortion => $_getN(4);
   @$pb.TagNumber(5)
-  set lensDistortion($core.double v) { $_setDouble(4, v); }
+  set lensDistortion($core.double value) => $_setDouble(4, value);
   @$pb.TagNumber(5)
   $core.bool hasLensDistortion() => $_has(4);
   @$pb.TagNumber(5)
@@ -3180,7 +3144,7 @@ class CalibrationData extends $pb.GeneratedMessage {
   @$pb.TagNumber(6)
   $core.double get lensFlMm => $_getN(5);
   @$pb.TagNumber(6)
-  set lensFlMm($core.double v) { $_setDouble(5, v); }
+  set lensFlMm($core.double value) => $_setDouble(5, value);
   @$pb.TagNumber(6)
   $core.bool hasLensFlMm() => $_has(5);
   @$pb.TagNumber(6)
@@ -3193,7 +3157,7 @@ class CalibrationData extends $pb.GeneratedMessage {
   @$pb.TagNumber(7)
   $core.double get pixelAngularSize => $_getN(6);
   @$pb.TagNumber(7)
-  set pixelAngularSize($core.double v) { $_setDouble(6, v); }
+  set pixelAngularSize($core.double value) => $_setDouble(6, value);
   @$pb.TagNumber(7)
   $core.bool hasPixelAngularSize() => $_has(6);
   @$pb.TagNumber(7)
@@ -3203,7 +3167,7 @@ class CalibrationData extends $pb.GeneratedMessage {
   @$pb.TagNumber(8)
   $core.double get matchMaxError => $_getN(7);
   @$pb.TagNumber(8)
-  set matchMaxError($core.double v) { $_setDouble(7, v); }
+  set matchMaxError($core.double value) => $_setDouble(7, value);
   @$pb.TagNumber(8)
   $core.bool hasMatchMaxError() => $_has(7);
   @$pb.TagNumber(8)
@@ -3212,7 +3176,7 @@ class CalibrationData extends $pb.GeneratedMessage {
   @$pb.TagNumber(11)
   $core.double get fovVertical => $_getN(8);
   @$pb.TagNumber(11)
-  set fovVertical($core.double v) { $_setDouble(8, v); }
+  set fovVertical($core.double value) => $_setDouble(8, value);
   @$pb.TagNumber(11)
   $core.bool hasFovVertical() => $_has(8);
   @$pb.TagNumber(11)
@@ -3222,7 +3186,8 @@ class CalibrationData extends $pb.GeneratedMessage {
   @$pb.TagNumber(12)
   CalibrationFailureReason get calibrationFailureReason => $_getN(9);
   @$pb.TagNumber(12)
-  set calibrationFailureReason(CalibrationFailureReason v) { $_setField(12, v); }
+  set calibrationFailureReason(CalibrationFailureReason value) =>
+      $_setField(12, value);
   @$pb.TagNumber(12)
   $core.bool hasCalibrationFailureReason() => $_has(9);
   @$pb.TagNumber(12)
@@ -3233,7 +3198,7 @@ class CalibrationData extends $pb.GeneratedMessage {
   @$pb.TagNumber(15)
   $core.double get gyroZeroBiasX => $_getN(10);
   @$pb.TagNumber(15)
-  set gyroZeroBiasX($core.double v) { $_setDouble(10, v); }
+  set gyroZeroBiasX($core.double value) => $_setDouble(10, value);
   @$pb.TagNumber(15)
   $core.bool hasGyroZeroBiasX() => $_has(10);
   @$pb.TagNumber(15)
@@ -3242,7 +3207,7 @@ class CalibrationData extends $pb.GeneratedMessage {
   @$pb.TagNumber(16)
   $core.double get gyroZeroBiasY => $_getN(11);
   @$pb.TagNumber(16)
-  set gyroZeroBiasY($core.double v) { $_setDouble(11, v); }
+  set gyroZeroBiasY($core.double value) => $_setDouble(11, value);
   @$pb.TagNumber(16)
   $core.bool hasGyroZeroBiasY() => $_has(11);
   @$pb.TagNumber(16)
@@ -3251,7 +3216,7 @@ class CalibrationData extends $pb.GeneratedMessage {
   @$pb.TagNumber(17)
   $core.double get gyroZeroBiasZ => $_getN(12);
   @$pb.TagNumber(17)
-  set gyroZeroBiasZ($core.double v) { $_setDouble(12, v); }
+  set gyroZeroBiasZ($core.double value) => $_setDouble(12, value);
   @$pb.TagNumber(17)
   $core.bool hasGyroZeroBiasZ() => $_has(12);
   @$pb.TagNumber(17)
@@ -3266,7 +3231,7 @@ class CalibrationData extends $pb.GeneratedMessage {
   @$pb.TagNumber(18)
   $core.double get gyroTransformErrorFraction => $_getN(13);
   @$pb.TagNumber(18)
-  set gyroTransformErrorFraction($core.double v) { $_setDouble(13, v); }
+  set gyroTransformErrorFraction($core.double value) => $_setDouble(13, value);
   @$pb.TagNumber(18)
   $core.bool hasGyroTransformErrorFraction() => $_has(13);
   @$pb.TagNumber(18)
@@ -3275,7 +3240,7 @@ class CalibrationData extends $pb.GeneratedMessage {
   @$pb.TagNumber(19)
   $core.String get cameraViewGyroAxis => $_getSZ(14);
   @$pb.TagNumber(19)
-  set cameraViewGyroAxis($core.String v) { $_setString(14, v); }
+  set cameraViewGyroAxis($core.String value) => $_setString(14, value);
   @$pb.TagNumber(19)
   $core.bool hasCameraViewGyroAxis() => $_has(14);
   @$pb.TagNumber(19)
@@ -3284,7 +3249,7 @@ class CalibrationData extends $pb.GeneratedMessage {
   @$pb.TagNumber(20)
   $core.double get cameraViewMisalignment => $_getN(15);
   @$pb.TagNumber(20)
-  set cameraViewMisalignment($core.double v) { $_setDouble(15, v); }
+  set cameraViewMisalignment($core.double value) => $_setDouble(15, value);
   @$pb.TagNumber(20)
   $core.bool hasCameraViewMisalignment() => $_has(15);
   @$pb.TagNumber(20)
@@ -3293,7 +3258,7 @@ class CalibrationData extends $pb.GeneratedMessage {
   @$pb.TagNumber(21)
   $core.String get cameraUpGyroAxis => $_getSZ(16);
   @$pb.TagNumber(21)
-  set cameraUpGyroAxis($core.String v) { $_setString(16, v); }
+  set cameraUpGyroAxis($core.String value) => $_setString(16, value);
   @$pb.TagNumber(21)
   $core.bool hasCameraUpGyroAxis() => $_has(16);
   @$pb.TagNumber(21)
@@ -3302,7 +3267,7 @@ class CalibrationData extends $pb.GeneratedMessage {
   @$pb.TagNumber(22)
   $core.double get cameraUpMisalignment => $_getN(17);
   @$pb.TagNumber(22)
-  set cameraUpMisalignment($core.double v) { $_setDouble(17, v); }
+  set cameraUpMisalignment($core.double value) => $_setDouble(17, value);
   @$pb.TagNumber(22)
   $core.bool hasCameraUpMisalignment() => $_has(17);
   @$pb.TagNumber(22)
@@ -3318,52 +3283,53 @@ class LocationBasedInfo extends $pb.GeneratedMessage {
     $core.double? azimuth,
     $core.double? hourAngle,
   }) {
-    final $result = create();
-    if (zenithRollAngle != null) {
-      $result.zenithRollAngle = zenithRollAngle;
-    }
-    if (altitude != null) {
-      $result.altitude = altitude;
-    }
-    if (azimuth != null) {
-      $result.azimuth = azimuth;
-    }
-    if (hourAngle != null) {
-      $result.hourAngle = hourAngle;
-    }
-    return $result;
+    final result = create();
+    if (zenithRollAngle != null) result.zenithRollAngle = zenithRollAngle;
+    if (altitude != null) result.altitude = altitude;
+    if (azimuth != null) result.azimuth = azimuth;
+    if (hourAngle != null) result.hourAngle = hourAngle;
+    return result;
   }
-  LocationBasedInfo._() : super();
-  factory LocationBasedInfo.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory LocationBasedInfo.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
 
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'LocationBasedInfo', package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'), createEmptyInstance: create)
-    ..a<$core.double>(1, _omitFieldNames ? '' : 'zenithRollAngle', $pb.PbFieldType.OD)
+  LocationBasedInfo._();
+
+  factory LocationBasedInfo.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory LocationBasedInfo.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'LocationBasedInfo',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'),
+      createEmptyInstance: create)
+    ..a<$core.double>(
+        1, _omitFieldNames ? '' : 'zenithRollAngle', $pb.PbFieldType.OD)
     ..a<$core.double>(2, _omitFieldNames ? '' : 'altitude', $pb.PbFieldType.OD)
     ..a<$core.double>(3, _omitFieldNames ? '' : 'azimuth', $pb.PbFieldType.OD)
     ..a<$core.double>(4, _omitFieldNames ? '' : 'hourAngle', $pb.PbFieldType.OD)
-    ..hasRequiredFields = false
-  ;
+    ..hasRequiredFields = false;
 
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
-  'Will be removed in next major version')
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   LocationBasedInfo clone() => LocationBasedInfo()..mergeFromMessage(this);
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
-  'Will be removed in next major version')
-  LocationBasedInfo copyWith(void Function(LocationBasedInfo) updates) => super.copyWith((message) => updates(message as LocationBasedInfo)) as LocationBasedInfo;
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  LocationBasedInfo copyWith(void Function(LocationBasedInfo) updates) =>
+      super.copyWith((message) => updates(message as LocationBasedInfo))
+          as LocationBasedInfo;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static LocationBasedInfo create() => LocationBasedInfo._();
+  @$core.override
   LocationBasedInfo createEmptyInstance() => create();
-  static $pb.PbList<LocationBasedInfo> createRepeated() => $pb.PbList<LocationBasedInfo>();
+  static $pb.PbList<LocationBasedInfo> createRepeated() =>
+      $pb.PbList<LocationBasedInfo>();
   @$core.pragma('dart2js:noInline')
-  static LocationBasedInfo getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<LocationBasedInfo>(create);
+  static LocationBasedInfo getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<LocationBasedInfo>(create);
   static LocationBasedInfo? _defaultInstance;
 
   /// Similar to SolveResult.roll, except gives the position angle of the zenith
@@ -3373,7 +3339,7 @@ class LocationBasedInfo extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $core.double get zenithRollAngle => $_getN(0);
   @$pb.TagNumber(1)
-  set zenithRollAngle($core.double v) { $_setDouble(0, v); }
+  set zenithRollAngle($core.double value) => $_setDouble(0, value);
   @$pb.TagNumber(1)
   $core.bool hasZenithRollAngle() => $_has(0);
   @$pb.TagNumber(1)
@@ -3383,7 +3349,7 @@ class LocationBasedInfo extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $core.double get altitude => $_getN(1);
   @$pb.TagNumber(2)
-  set altitude($core.double v) { $_setDouble(1, v); }
+  set altitude($core.double value) => $_setDouble(1, value);
   @$pb.TagNumber(2)
   $core.bool hasAltitude() => $_has(1);
   @$pb.TagNumber(2)
@@ -3393,7 +3359,7 @@ class LocationBasedInfo extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   $core.double get azimuth => $_getN(2);
   @$pb.TagNumber(3)
-  set azimuth($core.double v) { $_setDouble(2, v); }
+  set azimuth($core.double value) => $_setDouble(2, value);
   @$pb.TagNumber(3)
   $core.bool hasAzimuth() => $_has(2);
   @$pb.TagNumber(3)
@@ -3405,7 +3371,7 @@ class LocationBasedInfo extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   $core.double get hourAngle => $_getN(3);
   @$pb.TagNumber(4)
-  set hourAngle($core.double v) { $_setDouble(3, v); }
+  set hourAngle($core.double value) => $_setDouble(3, value);
   @$pb.TagNumber(4)
   $core.bool hasHourAngle() => $_has(3);
   @$pb.TagNumber(4)
@@ -3424,75 +3390,77 @@ class SlewRequest extends $pb.GeneratedMessage {
     $1.CatalogEntry? targetCatalogEntry,
     $core.double? targetCatalogEntryDistance,
   }) {
-    final $result = create();
-    if (target != null) {
-      $result.target = target;
-    }
-    if (targetDistance != null) {
-      $result.targetDistance = targetDistance;
-    }
-    if (targetAngle != null) {
-      $result.targetAngle = targetAngle;
-    }
-    if (imagePos != null) {
-      $result.imagePos = imagePos;
-    }
-    if (offsetRotationAxis != null) {
-      $result.offsetRotationAxis = offsetRotationAxis;
-    }
-    if (offsetTiltAxis != null) {
-      $result.offsetTiltAxis = offsetTiltAxis;
-    }
-    if (targetCatalogEntry != null) {
-      $result.targetCatalogEntry = targetCatalogEntry;
-    }
-    if (targetCatalogEntryDistance != null) {
-      $result.targetCatalogEntryDistance = targetCatalogEntryDistance;
-    }
-    return $result;
+    final result = create();
+    if (target != null) result.target = target;
+    if (targetDistance != null) result.targetDistance = targetDistance;
+    if (targetAngle != null) result.targetAngle = targetAngle;
+    if (imagePos != null) result.imagePos = imagePos;
+    if (offsetRotationAxis != null)
+      result.offsetRotationAxis = offsetRotationAxis;
+    if (offsetTiltAxis != null) result.offsetTiltAxis = offsetTiltAxis;
+    if (targetCatalogEntry != null)
+      result.targetCatalogEntry = targetCatalogEntry;
+    if (targetCatalogEntryDistance != null)
+      result.targetCatalogEntryDistance = targetCatalogEntryDistance;
+    return result;
   }
-  SlewRequest._() : super();
-  factory SlewRequest.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory SlewRequest.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
 
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'SlewRequest', package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'), createEmptyInstance: create)
-    ..aOM<$4.CelestialCoord>(1, _omitFieldNames ? '' : 'target', subBuilder: $4.CelestialCoord.create)
-    ..a<$core.double>(2, _omitFieldNames ? '' : 'targetDistance', $pb.PbFieldType.OD)
-    ..a<$core.double>(3, _omitFieldNames ? '' : 'targetAngle', $pb.PbFieldType.OD)
-    ..aOM<ImageCoord>(4, _omitFieldNames ? '' : 'imagePos', subBuilder: ImageCoord.create)
-    ..a<$core.double>(5, _omitFieldNames ? '' : 'offsetRotationAxis', $pb.PbFieldType.OD)
-    ..a<$core.double>(6, _omitFieldNames ? '' : 'offsetTiltAxis', $pb.PbFieldType.OD)
-    ..aOM<$1.CatalogEntry>(8, _omitFieldNames ? '' : 'targetCatalogEntry', subBuilder: $1.CatalogEntry.create)
-    ..a<$core.double>(9, _omitFieldNames ? '' : 'targetCatalogEntryDistance', $pb.PbFieldType.OD)
-    ..hasRequiredFields = false
-  ;
+  SlewRequest._();
 
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
-  'Will be removed in next major version')
+  factory SlewRequest.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory SlewRequest.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'SlewRequest',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'),
+      createEmptyInstance: create)
+    ..aOM<$4.CelestialCoord>(1, _omitFieldNames ? '' : 'target',
+        subBuilder: $4.CelestialCoord.create)
+    ..a<$core.double>(
+        2, _omitFieldNames ? '' : 'targetDistance', $pb.PbFieldType.OD)
+    ..a<$core.double>(
+        3, _omitFieldNames ? '' : 'targetAngle', $pb.PbFieldType.OD)
+    ..aOM<ImageCoord>(4, _omitFieldNames ? '' : 'imagePos',
+        subBuilder: ImageCoord.create)
+    ..a<$core.double>(
+        5, _omitFieldNames ? '' : 'offsetRotationAxis', $pb.PbFieldType.OD)
+    ..a<$core.double>(
+        6, _omitFieldNames ? '' : 'offsetTiltAxis', $pb.PbFieldType.OD)
+    ..aOM<$1.CatalogEntry>(8, _omitFieldNames ? '' : 'targetCatalogEntry',
+        subBuilder: $1.CatalogEntry.create)
+    ..a<$core.double>(9, _omitFieldNames ? '' : 'targetCatalogEntryDistance',
+        $pb.PbFieldType.OD)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   SlewRequest clone() => SlewRequest()..mergeFromMessage(this);
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
-  'Will be removed in next major version')
-  SlewRequest copyWith(void Function(SlewRequest) updates) => super.copyWith((message) => updates(message as SlewRequest)) as SlewRequest;
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  SlewRequest copyWith(void Function(SlewRequest) updates) =>
+      super.copyWith((message) => updates(message as SlewRequest))
+          as SlewRequest;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static SlewRequest create() => SlewRequest._();
+  @$core.override
   SlewRequest createEmptyInstance() => create();
   static $pb.PbList<SlewRequest> createRepeated() => $pb.PbList<SlewRequest>();
   @$core.pragma('dart2js:noInline')
-  static SlewRequest getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<SlewRequest>(create);
+  static SlewRequest getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<SlewRequest>(create);
   static SlewRequest? _defaultInstance;
 
   /// Identifies the target coordinate of the telescope motion request.
   @$pb.TagNumber(1)
   $4.CelestialCoord get target => $_getN(0);
   @$pb.TagNumber(1)
-  set target($4.CelestialCoord v) { $_setField(1, v); }
+  set target($4.CelestialCoord value) => $_setField(1, value);
   @$pb.TagNumber(1)
   $core.bool hasTarget() => $_has(0);
   @$pb.TagNumber(1)
@@ -3505,7 +3473,7 @@ class SlewRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $core.double get targetDistance => $_getN(1);
   @$pb.TagNumber(2)
-  set targetDistance($core.double v) { $_setDouble(1, v); }
+  set targetDistance($core.double value) => $_setDouble(1, value);
   @$pb.TagNumber(2)
   $core.bool hasTargetDistance() => $_has(1);
   @$pb.TagNumber(2)
@@ -3520,7 +3488,7 @@ class SlewRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   $core.double get targetAngle => $_getN(2);
   @$pb.TagNumber(3)
-  set targetAngle($core.double v) { $_setDouble(2, v); }
+  set targetAngle($core.double value) => $_setDouble(2, value);
   @$pb.TagNumber(3)
   $core.bool hasTargetAngle() => $_has(2);
   @$pb.TagNumber(3)
@@ -3532,7 +3500,7 @@ class SlewRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   ImageCoord get imagePos => $_getN(3);
   @$pb.TagNumber(4)
-  set imagePos(ImageCoord v) { $_setField(4, v); }
+  set imagePos(ImageCoord value) => $_setField(4, value);
   @$pb.TagNumber(4)
   $core.bool hasImagePos() => $_has(3);
   @$pb.TagNumber(4)
@@ -3549,7 +3517,7 @@ class SlewRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(5)
   $core.double get offsetRotationAxis => $_getN(4);
   @$pb.TagNumber(5)
-  set offsetRotationAxis($core.double v) { $_setDouble(4, v); }
+  set offsetRotationAxis($core.double value) => $_setDouble(4, value);
   @$pb.TagNumber(5)
   $core.bool hasOffsetRotationAxis() => $_has(4);
   @$pb.TagNumber(5)
@@ -3564,7 +3532,7 @@ class SlewRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(6)
   $core.double get offsetTiltAxis => $_getN(5);
   @$pb.TagNumber(6)
-  set offsetTiltAxis($core.double v) { $_setDouble(5, v); }
+  set offsetTiltAxis($core.double value) => $_setDouble(5, value);
   @$pb.TagNumber(6)
   $core.bool hasOffsetTiltAxis() => $_has(5);
   @$pb.TagNumber(6)
@@ -3574,7 +3542,7 @@ class SlewRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(8)
   $1.CatalogEntry get targetCatalogEntry => $_getN(6);
   @$pb.TagNumber(8)
-  set targetCatalogEntry($1.CatalogEntry v) { $_setField(8, v); }
+  set targetCatalogEntry($1.CatalogEntry value) => $_setField(8, value);
   @$pb.TagNumber(8)
   $core.bool hasTargetCatalogEntry() => $_has(6);
   @$pb.TagNumber(8)
@@ -3587,7 +3555,7 @@ class SlewRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(9)
   $core.double get targetCatalogEntryDistance => $_getN(7);
   @$pb.TagNumber(9)
-  set targetCatalogEntryDistance($core.double v) { $_setDouble(7, v); }
+  set targetCatalogEntryDistance($core.double value) => $_setDouble(7, value);
   @$pb.TagNumber(9)
   $core.bool hasTargetCatalogEntryDistance() => $_has(7);
   @$pb.TagNumber(9)
@@ -3604,44 +3572,51 @@ class PolarAlignAdvice extends $pb.GeneratedMessage {
     ErrorBoundedValue? azimuthCorrection,
     ErrorBoundedValue? altitudeCorrection,
   }) {
-    final $result = create();
-    if (azimuthCorrection != null) {
-      $result.azimuthCorrection = azimuthCorrection;
-    }
-    if (altitudeCorrection != null) {
-      $result.altitudeCorrection = altitudeCorrection;
-    }
-    return $result;
+    final result = create();
+    if (azimuthCorrection != null) result.azimuthCorrection = azimuthCorrection;
+    if (altitudeCorrection != null)
+      result.altitudeCorrection = altitudeCorrection;
+    return result;
   }
-  PolarAlignAdvice._() : super();
-  factory PolarAlignAdvice.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory PolarAlignAdvice.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
 
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'PolarAlignAdvice', package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'), createEmptyInstance: create)
-    ..aOM<ErrorBoundedValue>(1, _omitFieldNames ? '' : 'azimuthCorrection', subBuilder: ErrorBoundedValue.create)
-    ..aOM<ErrorBoundedValue>(2, _omitFieldNames ? '' : 'altitudeCorrection', subBuilder: ErrorBoundedValue.create)
-    ..hasRequiredFields = false
-  ;
+  PolarAlignAdvice._();
 
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
-  'Will be removed in next major version')
+  factory PolarAlignAdvice.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory PolarAlignAdvice.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'PolarAlignAdvice',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'),
+      createEmptyInstance: create)
+    ..aOM<ErrorBoundedValue>(1, _omitFieldNames ? '' : 'azimuthCorrection',
+        subBuilder: ErrorBoundedValue.create)
+    ..aOM<ErrorBoundedValue>(2, _omitFieldNames ? '' : 'altitudeCorrection',
+        subBuilder: ErrorBoundedValue.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   PolarAlignAdvice clone() => PolarAlignAdvice()..mergeFromMessage(this);
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
-  'Will be removed in next major version')
-  PolarAlignAdvice copyWith(void Function(PolarAlignAdvice) updates) => super.copyWith((message) => updates(message as PolarAlignAdvice)) as PolarAlignAdvice;
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  PolarAlignAdvice copyWith(void Function(PolarAlignAdvice) updates) =>
+      super.copyWith((message) => updates(message as PolarAlignAdvice))
+          as PolarAlignAdvice;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static PolarAlignAdvice create() => PolarAlignAdvice._();
+  @$core.override
   PolarAlignAdvice createEmptyInstance() => create();
-  static $pb.PbList<PolarAlignAdvice> createRepeated() => $pb.PbList<PolarAlignAdvice>();
+  static $pb.PbList<PolarAlignAdvice> createRepeated() =>
+      $pb.PbList<PolarAlignAdvice>();
   @$core.pragma('dart2js:noInline')
-  static PolarAlignAdvice getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<PolarAlignAdvice>(create);
+  static PolarAlignAdvice getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<PolarAlignAdvice>(create);
   static PolarAlignAdvice? _defaultInstance;
 
   /// The amount by which the mount azimuth should be adjusted, in degrees.
@@ -3650,7 +3625,7 @@ class PolarAlignAdvice extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   ErrorBoundedValue get azimuthCorrection => $_getN(0);
   @$pb.TagNumber(1)
-  set azimuthCorrection(ErrorBoundedValue v) { $_setField(1, v); }
+  set azimuthCorrection(ErrorBoundedValue value) => $_setField(1, value);
   @$pb.TagNumber(1)
   $core.bool hasAzimuthCorrection() => $_has(0);
   @$pb.TagNumber(1)
@@ -3663,7 +3638,7 @@ class PolarAlignAdvice extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   ErrorBoundedValue get altitudeCorrection => $_getN(1);
   @$pb.TagNumber(2)
-  set altitudeCorrection(ErrorBoundedValue v) { $_setField(2, v); }
+  set altitudeCorrection(ErrorBoundedValue value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasAltitudeCorrection() => $_has(1);
   @$pb.TagNumber(2)
@@ -3678,51 +3653,55 @@ class ErrorBoundedValue extends $pb.GeneratedMessage {
     $core.double? value,
     $core.double? error,
   }) {
-    final $result = create();
-    if (value != null) {
-      $result.value = value;
-    }
-    if (error != null) {
-      $result.error = error;
-    }
-    return $result;
+    final result = create();
+    if (value != null) result.value = value;
+    if (error != null) result.error = error;
+    return result;
   }
-  ErrorBoundedValue._() : super();
-  factory ErrorBoundedValue.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory ErrorBoundedValue.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
 
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'ErrorBoundedValue', package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'), createEmptyInstance: create)
+  ErrorBoundedValue._();
+
+  factory ErrorBoundedValue.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ErrorBoundedValue.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ErrorBoundedValue',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'),
+      createEmptyInstance: create)
     ..a<$core.double>(1, _omitFieldNames ? '' : 'value', $pb.PbFieldType.OD)
     ..a<$core.double>(2, _omitFieldNames ? '' : 'error', $pb.PbFieldType.OD)
-    ..hasRequiredFields = false
-  ;
+    ..hasRequiredFields = false;
 
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
-  'Will be removed in next major version')
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   ErrorBoundedValue clone() => ErrorBoundedValue()..mergeFromMessage(this);
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
-  'Will be removed in next major version')
-  ErrorBoundedValue copyWith(void Function(ErrorBoundedValue) updates) => super.copyWith((message) => updates(message as ErrorBoundedValue)) as ErrorBoundedValue;
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ErrorBoundedValue copyWith(void Function(ErrorBoundedValue) updates) =>
+      super.copyWith((message) => updates(message as ErrorBoundedValue))
+          as ErrorBoundedValue;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static ErrorBoundedValue create() => ErrorBoundedValue._();
+  @$core.override
   ErrorBoundedValue createEmptyInstance() => create();
-  static $pb.PbList<ErrorBoundedValue> createRepeated() => $pb.PbList<ErrorBoundedValue>();
+  static $pb.PbList<ErrorBoundedValue> createRepeated() =>
+      $pb.PbList<ErrorBoundedValue>();
   @$core.pragma('dart2js:noInline')
-  static ErrorBoundedValue getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<ErrorBoundedValue>(create);
+  static ErrorBoundedValue getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ErrorBoundedValue>(create);
   static ErrorBoundedValue? _defaultInstance;
 
   /// The estimated value.
   @$pb.TagNumber(1)
   $core.double get value => $_getN(0);
   @$pb.TagNumber(1)
-  set value($core.double v) { $_setDouble(0, v); }
+  set value($core.double value) => $_setDouble(0, value);
   @$pb.TagNumber(1)
   $core.bool hasValue() => $_has(0);
   @$pb.TagNumber(1)
@@ -3732,7 +3711,7 @@ class ErrorBoundedValue extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $core.double get error => $_getN(1);
   @$pb.TagNumber(2)
-  set error($core.double v) { $_setDouble(1, v); }
+  set error($core.double value) => $_setDouble(1, value);
   @$pb.TagNumber(2)
   $core.bool hasError() => $_has(1);
   @$pb.TagNumber(2)
@@ -3746,50 +3725,56 @@ class FovCatalogEntry extends $pb.GeneratedMessage {
     $1.CatalogEntry? entry,
     ImageCoord? imagePos,
   }) {
-    final $result = create();
-    if (entry != null) {
-      $result.entry = entry;
-    }
-    if (imagePos != null) {
-      $result.imagePos = imagePos;
-    }
-    return $result;
+    final result = create();
+    if (entry != null) result.entry = entry;
+    if (imagePos != null) result.imagePos = imagePos;
+    return result;
   }
-  FovCatalogEntry._() : super();
-  factory FovCatalogEntry.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory FovCatalogEntry.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
 
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'FovCatalogEntry', package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'), createEmptyInstance: create)
-    ..aOM<$1.CatalogEntry>(1, _omitFieldNames ? '' : 'entry', subBuilder: $1.CatalogEntry.create)
-    ..aOM<ImageCoord>(2, _omitFieldNames ? '' : 'imagePos', subBuilder: ImageCoord.create)
-    ..hasRequiredFields = false
-  ;
+  FovCatalogEntry._();
 
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
-  'Will be removed in next major version')
+  factory FovCatalogEntry.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory FovCatalogEntry.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'FovCatalogEntry',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'),
+      createEmptyInstance: create)
+    ..aOM<$1.CatalogEntry>(1, _omitFieldNames ? '' : 'entry',
+        subBuilder: $1.CatalogEntry.create)
+    ..aOM<ImageCoord>(2, _omitFieldNames ? '' : 'imagePos',
+        subBuilder: ImageCoord.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   FovCatalogEntry clone() => FovCatalogEntry()..mergeFromMessage(this);
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
-  'Will be removed in next major version')
-  FovCatalogEntry copyWith(void Function(FovCatalogEntry) updates) => super.copyWith((message) => updates(message as FovCatalogEntry)) as FovCatalogEntry;
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  FovCatalogEntry copyWith(void Function(FovCatalogEntry) updates) =>
+      super.copyWith((message) => updates(message as FovCatalogEntry))
+          as FovCatalogEntry;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static FovCatalogEntry create() => FovCatalogEntry._();
+  @$core.override
   FovCatalogEntry createEmptyInstance() => create();
-  static $pb.PbList<FovCatalogEntry> createRepeated() => $pb.PbList<FovCatalogEntry>();
+  static $pb.PbList<FovCatalogEntry> createRepeated() =>
+      $pb.PbList<FovCatalogEntry>();
   @$core.pragma('dart2js:noInline')
-  static FovCatalogEntry getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<FovCatalogEntry>(create);
+  static FovCatalogEntry getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<FovCatalogEntry>(create);
   static FovCatalogEntry? _defaultInstance;
 
   @$pb.TagNumber(1)
   $1.CatalogEntry get entry => $_getN(0);
   @$pb.TagNumber(1)
-  set entry($1.CatalogEntry v) { $_setField(1, v); }
+  set entry($1.CatalogEntry value) => $_setField(1, value);
   @$pb.TagNumber(1)
   $core.bool hasEntry() => $_has(0);
   @$pb.TagNumber(1)
@@ -3800,7 +3785,7 @@ class FovCatalogEntry extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   ImageCoord get imagePos => $_getN(1);
   @$pb.TagNumber(2)
-  set imagePos(ImageCoord v) { $_setField(2, v); }
+  set imagePos(ImageCoord value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasImagePos() => $_has(1);
   @$pb.TagNumber(2)
@@ -3824,84 +3809,76 @@ class ActionRequest extends $pb.GeneratedMessage {
     ImageCoord? designateDaylightFocusRegion,
     $core.bool? crashServer,
   }) {
-    final $result = create();
-    if (captureBoresight != null) {
-      $result.captureBoresight = captureBoresight;
-    }
-    if (designateBoresight != null) {
-      $result.designateBoresight = designateBoresight;
-    }
-    if (shutdownServer != null) {
-      $result.shutdownServer = shutdownServer;
-    }
-    if (stopSlew != null) {
-      $result.stopSlew = stopSlew;
-    }
-    if (saveImage != null) {
-      $result.saveImage = saveImage;
-    }
-    if (initiateSlew != null) {
-      $result.initiateSlew = initiateSlew;
-    }
-    if (updateWifiAccessPoint != null) {
-      $result.updateWifiAccessPoint = updateWifiAccessPoint;
-    }
-    if (restartServer != null) {
-      $result.restartServer = restartServer;
-    }
-    if (cancelCalibration != null) {
-      $result.cancelCalibration = cancelCalibration;
-    }
-    if (clearDontShowItems != null) {
-      $result.clearDontShowItems = clearDontShowItems;
-    }
-    if (designateDaylightFocusRegion != null) {
-      $result.designateDaylightFocusRegion = designateDaylightFocusRegion;
-    }
-    if (crashServer != null) {
-      $result.crashServer = crashServer;
-    }
-    return $result;
+    final result = create();
+    if (captureBoresight != null) result.captureBoresight = captureBoresight;
+    if (designateBoresight != null)
+      result.designateBoresight = designateBoresight;
+    if (shutdownServer != null) result.shutdownServer = shutdownServer;
+    if (stopSlew != null) result.stopSlew = stopSlew;
+    if (saveImage != null) result.saveImage = saveImage;
+    if (initiateSlew != null) result.initiateSlew = initiateSlew;
+    if (updateWifiAccessPoint != null)
+      result.updateWifiAccessPoint = updateWifiAccessPoint;
+    if (restartServer != null) result.restartServer = restartServer;
+    if (cancelCalibration != null) result.cancelCalibration = cancelCalibration;
+    if (clearDontShowItems != null)
+      result.clearDontShowItems = clearDontShowItems;
+    if (designateDaylightFocusRegion != null)
+      result.designateDaylightFocusRegion = designateDaylightFocusRegion;
+    if (crashServer != null) result.crashServer = crashServer;
+    return result;
   }
-  ActionRequest._() : super();
-  factory ActionRequest.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory ActionRequest.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
 
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'ActionRequest', package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'), createEmptyInstance: create)
+  ActionRequest._();
+
+  factory ActionRequest.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ActionRequest.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ActionRequest',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'),
+      createEmptyInstance: create)
     ..aOB(1, _omitFieldNames ? '' : 'captureBoresight')
-    ..aOM<ImageCoord>(2, _omitFieldNames ? '' : 'designateBoresight', subBuilder: ImageCoord.create)
+    ..aOM<ImageCoord>(2, _omitFieldNames ? '' : 'designateBoresight',
+        subBuilder: ImageCoord.create)
     ..aOB(3, _omitFieldNames ? '' : 'shutdownServer')
     ..aOB(4, _omitFieldNames ? '' : 'stopSlew')
     ..aOB(5, _omitFieldNames ? '' : 'saveImage')
-    ..aOM<$4.CelestialCoord>(6, _omitFieldNames ? '' : 'initiateSlew', subBuilder: $4.CelestialCoord.create)
-    ..aOM<WiFiAccessPoint>(7, _omitFieldNames ? '' : 'updateWifiAccessPoint', subBuilder: WiFiAccessPoint.create)
+    ..aOM<$4.CelestialCoord>(6, _omitFieldNames ? '' : 'initiateSlew',
+        subBuilder: $4.CelestialCoord.create)
+    ..aOM<WiFiAccessPoint>(7, _omitFieldNames ? '' : 'updateWifiAccessPoint',
+        subBuilder: WiFiAccessPoint.create)
     ..aOB(8, _omitFieldNames ? '' : 'restartServer')
     ..aOB(9, _omitFieldNames ? '' : 'cancelCalibration')
     ..aOB(10, _omitFieldNames ? '' : 'clearDontShowItems')
-    ..aOM<ImageCoord>(11, _omitFieldNames ? '' : 'designateDaylightFocusRegion', subBuilder: ImageCoord.create)
+    ..aOM<ImageCoord>(11, _omitFieldNames ? '' : 'designateDaylightFocusRegion',
+        subBuilder: ImageCoord.create)
     ..aOB(12, _omitFieldNames ? '' : 'crashServer')
-    ..hasRequiredFields = false
-  ;
+    ..hasRequiredFields = false;
 
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
-  'Will be removed in next major version')
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   ActionRequest clone() => ActionRequest()..mergeFromMessage(this);
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
-  'Will be removed in next major version')
-  ActionRequest copyWith(void Function(ActionRequest) updates) => super.copyWith((message) => updates(message as ActionRequest)) as ActionRequest;
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ActionRequest copyWith(void Function(ActionRequest) updates) =>
+      super.copyWith((message) => updates(message as ActionRequest))
+          as ActionRequest;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static ActionRequest create() => ActionRequest._();
+  @$core.override
   ActionRequest createEmptyInstance() => create();
-  static $pb.PbList<ActionRequest> createRepeated() => $pb.PbList<ActionRequest>();
+  static $pb.PbList<ActionRequest> createRepeated() =>
+      $pb.PbList<ActionRequest>();
   @$core.pragma('dart2js:noInline')
-  static ActionRequest getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<ActionRequest>(create);
+  static ActionRequest getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ActionRequest>(create);
   static ActionRequest? _defaultInstance;
 
   /// The `capture_boresight` function is used during an active slew to target.
@@ -3910,7 +3887,7 @@ class ActionRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $core.bool get captureBoresight => $_getBF(0);
   @$pb.TagNumber(1)
-  set captureBoresight($core.bool v) { $_setBool(0, v); }
+  set captureBoresight($core.bool value) => $_setBool(0, value);
   @$pb.TagNumber(1)
   $core.bool hasCaptureBoresight() => $_has(0);
   @$pb.TagNumber(1)
@@ -3924,7 +3901,7 @@ class ActionRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   ImageCoord get designateBoresight => $_getN(1);
   @$pb.TagNumber(2)
-  set designateBoresight(ImageCoord v) { $_setField(2, v); }
+  set designateBoresight(ImageCoord value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasDesignateBoresight() => $_has(1);
   @$pb.TagNumber(2)
@@ -3937,7 +3914,7 @@ class ActionRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   $core.bool get shutdownServer => $_getBF(2);
   @$pb.TagNumber(3)
-  set shutdownServer($core.bool v) { $_setBool(2, v); }
+  set shutdownServer($core.bool value) => $_setBool(2, value);
   @$pb.TagNumber(3)
   $core.bool hasShutdownServer() => $_has(2);
   @$pb.TagNumber(3)
@@ -3947,7 +3924,7 @@ class ActionRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   $core.bool get stopSlew => $_getBF(3);
   @$pb.TagNumber(4)
-  set stopSlew($core.bool v) { $_setBool(3, v); }
+  set stopSlew($core.bool value) => $_setBool(3, value);
   @$pb.TagNumber(4)
   $core.bool hasStopSlew() => $_has(3);
   @$pb.TagNumber(4)
@@ -3961,7 +3938,7 @@ class ActionRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(5)
   $core.bool get saveImage => $_getBF(4);
   @$pb.TagNumber(5)
-  set saveImage($core.bool v) { $_setBool(4, v); }
+  set saveImage($core.bool value) => $_setBool(4, value);
   @$pb.TagNumber(5)
   $core.bool hasSaveImage() => $_has(4);
   @$pb.TagNumber(5)
@@ -3972,7 +3949,7 @@ class ActionRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(6)
   $4.CelestialCoord get initiateSlew => $_getN(5);
   @$pb.TagNumber(6)
-  set initiateSlew($4.CelestialCoord v) { $_setField(6, v); }
+  set initiateSlew($4.CelestialCoord value) => $_setField(6, value);
   @$pb.TagNumber(6)
   $core.bool hasInitiateSlew() => $_has(5);
   @$pb.TagNumber(6)
@@ -3985,7 +3962,7 @@ class ActionRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(7)
   WiFiAccessPoint get updateWifiAccessPoint => $_getN(6);
   @$pb.TagNumber(7)
-  set updateWifiAccessPoint(WiFiAccessPoint v) { $_setField(7, v); }
+  set updateWifiAccessPoint(WiFiAccessPoint value) => $_setField(7, value);
   @$pb.TagNumber(7)
   $core.bool hasUpdateWifiAccessPoint() => $_has(6);
   @$pb.TagNumber(7)
@@ -3997,7 +3974,7 @@ class ActionRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(8)
   $core.bool get restartServer => $_getBF(7);
   @$pb.TagNumber(8)
-  set restartServer($core.bool v) { $_setBool(7, v); }
+  set restartServer($core.bool value) => $_setBool(7, value);
   @$pb.TagNumber(8)
   $core.bool hasRestartServer() => $_has(7);
   @$pb.TagNumber(8)
@@ -4007,7 +3984,7 @@ class ActionRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(9)
   $core.bool get cancelCalibration => $_getBF(8);
   @$pb.TagNumber(9)
-  set cancelCalibration($core.bool v) { $_setBool(8, v); }
+  set cancelCalibration($core.bool value) => $_setBool(8, value);
   @$pb.TagNumber(9)
   $core.bool hasCancelCalibration() => $_has(8);
   @$pb.TagNumber(9)
@@ -4017,7 +3994,7 @@ class ActionRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(10)
   $core.bool get clearDontShowItems => $_getBF(9);
   @$pb.TagNumber(10)
-  set clearDontShowItems($core.bool v) { $_setBool(9, v); }
+  set clearDontShowItems($core.bool value) => $_setBool(9, value);
   @$pb.TagNumber(10)
   $core.bool hasClearDontShowItems() => $_has(9);
   @$pb.TagNumber(10)
@@ -4029,7 +4006,7 @@ class ActionRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(11)
   ImageCoord get designateDaylightFocusRegion => $_getN(10);
   @$pb.TagNumber(11)
-  set designateDaylightFocusRegion(ImageCoord v) { $_setField(11, v); }
+  set designateDaylightFocusRegion(ImageCoord value) => $_setField(11, value);
   @$pb.TagNumber(11)
   $core.bool hasDesignateDaylightFocusRegion() => $_has(10);
   @$pb.TagNumber(11)
@@ -4041,7 +4018,7 @@ class ActionRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(12)
   $core.bool get crashServer => $_getBF(11);
   @$pb.TagNumber(12)
-  set crashServer($core.bool v) { $_setBool(11, v); }
+  set crashServer($core.bool value) => $_setBool(11, value);
   @$pb.TagNumber(12)
   $core.bool hasCrashServer() => $_has(11);
   @$pb.TagNumber(12)
@@ -4052,47 +4029,53 @@ class ServerLogRequest extends $pb.GeneratedMessage {
   factory ServerLogRequest({
     $core.int? logRequest,
   }) {
-    final $result = create();
-    if (logRequest != null) {
-      $result.logRequest = logRequest;
-    }
-    return $result;
+    final result = create();
+    if (logRequest != null) result.logRequest = logRequest;
+    return result;
   }
-  ServerLogRequest._() : super();
-  factory ServerLogRequest.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory ServerLogRequest.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
 
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'ServerLogRequest', package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'), createEmptyInstance: create)
+  ServerLogRequest._();
+
+  factory ServerLogRequest.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ServerLogRequest.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ServerLogRequest',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'),
+      createEmptyInstance: create)
     ..a<$core.int>(1, _omitFieldNames ? '' : 'logRequest', $pb.PbFieldType.O3)
-    ..hasRequiredFields = false
-  ;
+    ..hasRequiredFields = false;
 
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
-  'Will be removed in next major version')
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   ServerLogRequest clone() => ServerLogRequest()..mergeFromMessage(this);
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
-  'Will be removed in next major version')
-  ServerLogRequest copyWith(void Function(ServerLogRequest) updates) => super.copyWith((message) => updates(message as ServerLogRequest)) as ServerLogRequest;
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ServerLogRequest copyWith(void Function(ServerLogRequest) updates) =>
+      super.copyWith((message) => updates(message as ServerLogRequest))
+          as ServerLogRequest;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static ServerLogRequest create() => ServerLogRequest._();
+  @$core.override
   ServerLogRequest createEmptyInstance() => create();
-  static $pb.PbList<ServerLogRequest> createRepeated() => $pb.PbList<ServerLogRequest>();
+  static $pb.PbList<ServerLogRequest> createRepeated() =>
+      $pb.PbList<ServerLogRequest>();
   @$core.pragma('dart2js:noInline')
-  static ServerLogRequest getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<ServerLogRequest>(create);
+  static ServerLogRequest getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ServerLogRequest>(create);
   static ServerLogRequest? _defaultInstance;
 
   /// Specifies how many bytes (most recent) of the server log to retrieve.
   @$pb.TagNumber(1)
   $core.int get logRequest => $_getIZ(0);
   @$pb.TagNumber(1)
-  set logRequest($core.int v) { $_setSignedInt32(0, v); }
+  set logRequest($core.int value) => $_setSignedInt32(0, value);
   @$pb.TagNumber(1)
   $core.bool hasLogRequest() => $_has(0);
   @$pb.TagNumber(1)
@@ -4103,46 +4086,52 @@ class ServerLogResult extends $pb.GeneratedMessage {
   factory ServerLogResult({
     $core.String? logContent,
   }) {
-    final $result = create();
-    if (logContent != null) {
-      $result.logContent = logContent;
-    }
-    return $result;
+    final result = create();
+    if (logContent != null) result.logContent = logContent;
+    return result;
   }
-  ServerLogResult._() : super();
-  factory ServerLogResult.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory ServerLogResult.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
 
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'ServerLogResult', package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'), createEmptyInstance: create)
+  ServerLogResult._();
+
+  factory ServerLogResult.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ServerLogResult.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ServerLogResult',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'),
+      createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'logContent')
-    ..hasRequiredFields = false
-  ;
+    ..hasRequiredFields = false;
 
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
-  'Will be removed in next major version')
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   ServerLogResult clone() => ServerLogResult()..mergeFromMessage(this);
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
-  'Will be removed in next major version')
-  ServerLogResult copyWith(void Function(ServerLogResult) updates) => super.copyWith((message) => updates(message as ServerLogResult)) as ServerLogResult;
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ServerLogResult copyWith(void Function(ServerLogResult) updates) =>
+      super.copyWith((message) => updates(message as ServerLogResult))
+          as ServerLogResult;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static ServerLogResult create() => ServerLogResult._();
+  @$core.override
   ServerLogResult createEmptyInstance() => create();
-  static $pb.PbList<ServerLogResult> createRepeated() => $pb.PbList<ServerLogResult>();
+  static $pb.PbList<ServerLogResult> createRepeated() =>
+      $pb.PbList<ServerLogResult>();
   @$core.pragma('dart2js:noInline')
-  static ServerLogResult getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<ServerLogResult>(create);
+  static ServerLogResult getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ServerLogResult>(create);
   static ServerLogResult? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get logContent => $_getSZ(0);
   @$pb.TagNumber(1)
-  set logContent($core.String v) { $_setString(0, v); }
+  set logContent($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
   $core.bool hasLogContent() => $_has(0);
   @$pb.TagNumber(1)
@@ -4151,84 +4140,112 @@ class ServerLogResult extends $pb.GeneratedMessage {
 
 class EmptyMessage extends $pb.GeneratedMessage {
   factory EmptyMessage() => create();
-  EmptyMessage._() : super();
-  factory EmptyMessage.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory EmptyMessage.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
 
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'EmptyMessage', package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'), createEmptyInstance: create)
-    ..hasRequiredFields = false
-  ;
+  EmptyMessage._();
 
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
-  'Will be removed in next major version')
+  factory EmptyMessage.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory EmptyMessage.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'EmptyMessage',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'),
+      createEmptyInstance: create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   EmptyMessage clone() => EmptyMessage()..mergeFromMessage(this);
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
-  'Will be removed in next major version')
-  EmptyMessage copyWith(void Function(EmptyMessage) updates) => super.copyWith((message) => updates(message as EmptyMessage)) as EmptyMessage;
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  EmptyMessage copyWith(void Function(EmptyMessage) updates) =>
+      super.copyWith((message) => updates(message as EmptyMessage))
+          as EmptyMessage;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static EmptyMessage create() => EmptyMessage._();
+  @$core.override
   EmptyMessage createEmptyInstance() => create();
-  static $pb.PbList<EmptyMessage> createRepeated() => $pb.PbList<EmptyMessage>();
+  static $pb.PbList<EmptyMessage> createRepeated() =>
+      $pb.PbList<EmptyMessage>();
   @$core.pragma('dart2js:noInline')
-  static EmptyMessage getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<EmptyMessage>(create);
+  static EmptyMessage getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<EmptyMessage>(create);
   static EmptyMessage? _defaultInstance;
 }
 
 class GetBluetoothNameResponse extends $pb.GeneratedMessage {
   factory GetBluetoothNameResponse({
     $core.String? name,
+    $core.String? address,
   }) {
-    final $result = create();
-    if (name != null) {
-      $result.name = name;
-    }
-    return $result;
+    final result = create();
+    if (name != null) result.name = name;
+    if (address != null) result.address = address;
+    return result;
   }
-  GetBluetoothNameResponse._() : super();
-  factory GetBluetoothNameResponse.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory GetBluetoothNameResponse.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
 
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'GetBluetoothNameResponse', package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'), createEmptyInstance: create)
+  GetBluetoothNameResponse._();
+
+  factory GetBluetoothNameResponse.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory GetBluetoothNameResponse.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'GetBluetoothNameResponse',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'),
+      createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'name')
-    ..hasRequiredFields = false
-  ;
+    ..aOS(2, _omitFieldNames ? '' : 'address')
+    ..hasRequiredFields = false;
 
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
-  'Will be removed in next major version')
-  GetBluetoothNameResponse clone() => GetBluetoothNameResponse()..mergeFromMessage(this);
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
-  'Will be removed in next major version')
-  GetBluetoothNameResponse copyWith(void Function(GetBluetoothNameResponse) updates) => super.copyWith((message) => updates(message as GetBluetoothNameResponse)) as GetBluetoothNameResponse;
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GetBluetoothNameResponse clone() =>
+      GetBluetoothNameResponse()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GetBluetoothNameResponse copyWith(
+          void Function(GetBluetoothNameResponse) updates) =>
+      super.copyWith((message) => updates(message as GetBluetoothNameResponse))
+          as GetBluetoothNameResponse;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static GetBluetoothNameResponse create() => GetBluetoothNameResponse._();
+  @$core.override
   GetBluetoothNameResponse createEmptyInstance() => create();
-  static $pb.PbList<GetBluetoothNameResponse> createRepeated() => $pb.PbList<GetBluetoothNameResponse>();
+  static $pb.PbList<GetBluetoothNameResponse> createRepeated() =>
+      $pb.PbList<GetBluetoothNameResponse>();
   @$core.pragma('dart2js:noInline')
-  static GetBluetoothNameResponse getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<GetBluetoothNameResponse>(create);
+  static GetBluetoothNameResponse getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<GetBluetoothNameResponse>(create);
   static GetBluetoothNameResponse? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get name => $_getSZ(0);
   @$pb.TagNumber(1)
-  set name($core.String v) { $_setString(0, v); }
+  set name($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
   $core.bool hasName() => $_has(0);
   @$pb.TagNumber(1)
   void clearName() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get address => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set address($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasAddress() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearAddress() => $_clearField(2);
 }
 
 class StartBondingResponse extends $pb.GeneratedMessage {
@@ -4236,50 +4253,55 @@ class StartBondingResponse extends $pb.GeneratedMessage {
     $core.String? name,
     $core.int? passkey,
   }) {
-    final $result = create();
-    if (name != null) {
-      $result.name = name;
-    }
-    if (passkey != null) {
-      $result.passkey = passkey;
-    }
-    return $result;
+    final result = create();
+    if (name != null) result.name = name;
+    if (passkey != null) result.passkey = passkey;
+    return result;
   }
-  StartBondingResponse._() : super();
-  factory StartBondingResponse.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory StartBondingResponse.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
 
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'StartBondingResponse', package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'), createEmptyInstance: create)
+  StartBondingResponse._();
+
+  factory StartBondingResponse.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory StartBondingResponse.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'StartBondingResponse',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'),
+      createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'name')
     ..a<$core.int>(2, _omitFieldNames ? '' : 'passkey', $pb.PbFieldType.OU3)
-    ..hasRequiredFields = false
-  ;
+    ..hasRequiredFields = false;
 
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
-  'Will be removed in next major version')
-  StartBondingResponse clone() => StartBondingResponse()..mergeFromMessage(this);
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
-  'Will be removed in next major version')
-  StartBondingResponse copyWith(void Function(StartBondingResponse) updates) => super.copyWith((message) => updates(message as StartBondingResponse)) as StartBondingResponse;
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  StartBondingResponse clone() =>
+      StartBondingResponse()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  StartBondingResponse copyWith(void Function(StartBondingResponse) updates) =>
+      super.copyWith((message) => updates(message as StartBondingResponse))
+          as StartBondingResponse;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static StartBondingResponse create() => StartBondingResponse._();
+  @$core.override
   StartBondingResponse createEmptyInstance() => create();
-  static $pb.PbList<StartBondingResponse> createRepeated() => $pb.PbList<StartBondingResponse>();
+  static $pb.PbList<StartBondingResponse> createRepeated() =>
+      $pb.PbList<StartBondingResponse>();
   @$core.pragma('dart2js:noInline')
-  static StartBondingResponse getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<StartBondingResponse>(create);
+  static StartBondingResponse getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<StartBondingResponse>(create);
   static StartBondingResponse? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get name => $_getSZ(0);
   @$pb.TagNumber(1)
-  set name($core.String v) { $_setString(0, v); }
+  set name($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
   $core.bool hasName() => $_has(0);
   @$pb.TagNumber(1)
@@ -4288,7 +4310,7 @@ class StartBondingResponse extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $core.int get passkey => $_getIZ(1);
   @$pb.TagNumber(2)
-  set passkey($core.int v) { $_setUnsignedInt32(1, v); }
+  set passkey($core.int value) => $_setUnsignedInt32(1, value);
   @$pb.TagNumber(2)
   $core.bool hasPasskey() => $_has(1);
   @$pb.TagNumber(2)
@@ -4300,50 +4322,54 @@ class BondedDevice extends $pb.GeneratedMessage {
     $core.String? name,
     $core.String? address,
   }) {
-    final $result = create();
-    if (name != null) {
-      $result.name = name;
-    }
-    if (address != null) {
-      $result.address = address;
-    }
-    return $result;
+    final result = create();
+    if (name != null) result.name = name;
+    if (address != null) result.address = address;
+    return result;
   }
-  BondedDevice._() : super();
-  factory BondedDevice.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory BondedDevice.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
 
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'BondedDevice', package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'), createEmptyInstance: create)
+  BondedDevice._();
+
+  factory BondedDevice.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory BondedDevice.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'BondedDevice',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'),
+      createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'name')
     ..aOS(2, _omitFieldNames ? '' : 'address')
-    ..hasRequiredFields = false
-  ;
+    ..hasRequiredFields = false;
 
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
-  'Will be removed in next major version')
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   BondedDevice clone() => BondedDevice()..mergeFromMessage(this);
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
-  'Will be removed in next major version')
-  BondedDevice copyWith(void Function(BondedDevice) updates) => super.copyWith((message) => updates(message as BondedDevice)) as BondedDevice;
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BondedDevice copyWith(void Function(BondedDevice) updates) =>
+      super.copyWith((message) => updates(message as BondedDevice))
+          as BondedDevice;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static BondedDevice create() => BondedDevice._();
+  @$core.override
   BondedDevice createEmptyInstance() => create();
-  static $pb.PbList<BondedDevice> createRepeated() => $pb.PbList<BondedDevice>();
+  static $pb.PbList<BondedDevice> createRepeated() =>
+      $pb.PbList<BondedDevice>();
   @$core.pragma('dart2js:noInline')
-  static BondedDevice getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<BondedDevice>(create);
+  static BondedDevice getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<BondedDevice>(create);
   static BondedDevice? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get name => $_getSZ(0);
   @$pb.TagNumber(1)
-  set name($core.String v) { $_setString(0, v); }
+  set name($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
   $core.bool hasName() => $_has(0);
   @$pb.TagNumber(1)
@@ -4352,7 +4378,7 @@ class BondedDevice extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $core.String get address => $_getSZ(1);
   @$pb.TagNumber(2)
-  set address($core.String v) { $_setString(1, v); }
+  set address($core.String value) => $_setString(1, value);
   @$pb.TagNumber(2)
   $core.bool hasAddress() => $_has(1);
   @$pb.TagNumber(2)
@@ -4363,40 +4389,49 @@ class GetBondedDevicesResponse extends $pb.GeneratedMessage {
   factory GetBondedDevicesResponse({
     $core.Iterable<BondedDevice>? devices,
   }) {
-    final $result = create();
-    if (devices != null) {
-      $result.devices.addAll(devices);
-    }
-    return $result;
+    final result = create();
+    if (devices != null) result.devices.addAll(devices);
+    return result;
   }
-  GetBondedDevicesResponse._() : super();
-  factory GetBondedDevicesResponse.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory GetBondedDevicesResponse.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
 
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'GetBondedDevicesResponse', package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'), createEmptyInstance: create)
-    ..pc<BondedDevice>(1, _omitFieldNames ? '' : 'devices', $pb.PbFieldType.PM, subBuilder: BondedDevice.create)
-    ..hasRequiredFields = false
-  ;
+  GetBondedDevicesResponse._();
 
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
-  'Will be removed in next major version')
-  GetBondedDevicesResponse clone() => GetBondedDevicesResponse()..mergeFromMessage(this);
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
-  'Will be removed in next major version')
-  GetBondedDevicesResponse copyWith(void Function(GetBondedDevicesResponse) updates) => super.copyWith((message) => updates(message as GetBondedDevicesResponse)) as GetBondedDevicesResponse;
+  factory GetBondedDevicesResponse.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory GetBondedDevicesResponse.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
 
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'GetBondedDevicesResponse',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'),
+      createEmptyInstance: create)
+    ..pc<BondedDevice>(1, _omitFieldNames ? '' : 'devices', $pb.PbFieldType.PM,
+        subBuilder: BondedDevice.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GetBondedDevicesResponse clone() =>
+      GetBondedDevicesResponse()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GetBondedDevicesResponse copyWith(
+          void Function(GetBondedDevicesResponse) updates) =>
+      super.copyWith((message) => updates(message as GetBondedDevicesResponse))
+          as GetBondedDevicesResponse;
+
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static GetBondedDevicesResponse create() => GetBondedDevicesResponse._();
+  @$core.override
   GetBondedDevicesResponse createEmptyInstance() => create();
-  static $pb.PbList<GetBondedDevicesResponse> createRepeated() => $pb.PbList<GetBondedDevicesResponse>();
+  static $pb.PbList<GetBondedDevicesResponse> createRepeated() =>
+      $pb.PbList<GetBondedDevicesResponse>();
   @$core.pragma('dart2js:noInline')
-  static GetBondedDevicesResponse getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<GetBondedDevicesResponse>(create);
+  static GetBondedDevicesResponse getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<GetBondedDevicesResponse>(create);
   static GetBondedDevicesResponse? _defaultInstance;
 
   @$pb.TagNumber(1)
@@ -4407,52 +4442,59 @@ class RemoveBondRequest extends $pb.GeneratedMessage {
   factory RemoveBondRequest({
     $core.String? address,
   }) {
-    final $result = create();
-    if (address != null) {
-      $result.address = address;
-    }
-    return $result;
+    final result = create();
+    if (address != null) result.address = address;
+    return result;
   }
-  RemoveBondRequest._() : super();
-  factory RemoveBondRequest.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory RemoveBondRequest.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
 
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'RemoveBondRequest', package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'), createEmptyInstance: create)
+  RemoveBondRequest._();
+
+  factory RemoveBondRequest.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory RemoveBondRequest.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'RemoveBondRequest',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'),
+      createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'address')
-    ..hasRequiredFields = false
-  ;
+    ..hasRequiredFields = false;
 
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
-  'Will be removed in next major version')
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   RemoveBondRequest clone() => RemoveBondRequest()..mergeFromMessage(this);
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
-  'Will be removed in next major version')
-  RemoveBondRequest copyWith(void Function(RemoveBondRequest) updates) => super.copyWith((message) => updates(message as RemoveBondRequest)) as RemoveBondRequest;
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  RemoveBondRequest copyWith(void Function(RemoveBondRequest) updates) =>
+      super.copyWith((message) => updates(message as RemoveBondRequest))
+          as RemoveBondRequest;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static RemoveBondRequest create() => RemoveBondRequest._();
+  @$core.override
   RemoveBondRequest createEmptyInstance() => create();
-  static $pb.PbList<RemoveBondRequest> createRepeated() => $pb.PbList<RemoveBondRequest>();
+  static $pb.PbList<RemoveBondRequest> createRepeated() =>
+      $pb.PbList<RemoveBondRequest>();
   @$core.pragma('dart2js:noInline')
-  static RemoveBondRequest getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<RemoveBondRequest>(create);
+  static RemoveBondRequest getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<RemoveBondRequest>(create);
   static RemoveBondRequest? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get address => $_getSZ(0);
   @$pb.TagNumber(1)
-  set address($core.String v) { $_setString(0, v); }
+  set address($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
   $core.bool hasAddress() => $_has(0);
   @$pb.TagNumber(1)
   void clearAddress() => $_clearField(1);
 }
 
-
-const _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');
-const _omitMessageNames = $core.bool.fromEnvironment('protobuf.omit_message_names');
+const $core.bool _omitFieldNames =
+    $core.bool.fromEnvironment('protobuf.omit_field_names');
+const $core.bool _omitMessageNames =
+    $core.bool.fromEnvironment('protobuf.omit_message_names');
