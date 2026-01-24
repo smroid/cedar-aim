@@ -507,8 +507,8 @@ class _BluetoothScreenState extends State<BluetoothScreen> {
                 ],
               ] else if (_pairingStep == PairingStep.pairing) ...[
                 if (_isPairingThisDevice)
-                  const Text(
-                    'Attempting to pair this device with your e-finder',
+                  Text(
+                    'Attempting to pair this device with $_deviceName',
                     style: TextStyle(fontSize: 16),
                     textAlign: TextAlign.center,
                   )
@@ -557,7 +557,7 @@ class _BluetoothScreenState extends State<BluetoothScreen> {
               ] else if (_pairingStep == PairingStep.result) ...[
                 if (_pairingErrorMessage != null) ...[
                   const Text(
-                    'Pairing failed.',
+                    'Pairing Failed',
                     style: TextStyle(fontSize: 20, color: Colors.red),
                   ),
                   const SizedBox(height: 16),
@@ -602,7 +602,8 @@ class _BluetoothScreenState extends State<BluetoothScreen> {
                         child: const Text('Dismiss'),
                       ),
               ] else if (_pairingStep == PairingStep.success) ...[
-                Text('Successfully paired with $_deviceName.'),
+                Text('Successfully paired with $_deviceName.',
+                    style: const TextStyle(fontSize: 18)),
                 const SizedBox(height: 30),
                 OutlinedButton(
                   onPressed: _resetPairingState,
