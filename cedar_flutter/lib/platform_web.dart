@@ -93,7 +93,8 @@ void exitAppImpl() {
 
 Future<bool> checkNetworkConnectivityImpl(String host) async {
   // For web platform, we can't do traditional ping, but we can try HTTP request
-  throw UnimplementedError("Network connectivity check not implemented for web");
+  throw UnimplementedError(
+      "Network connectivity check not implemented for web");
 }
 
 Future<bool> isAppUpdateAvailableImpl() async {
@@ -102,4 +103,17 @@ Future<bool> isAppUpdateAvailableImpl() async {
 
 Future<void> startAppUpdateImpl() async {
   // No app store update mechanism for web
+}
+
+void cleanupImpl() {
+  _channel!.shutdown();
+  _channel = null;
+}
+
+Future<List<CedarDevice>> getBluetoothDevicesImpl() async {
+  throw UnimplementedError("Bluetooth not implemented for web");
+}
+
+void setActiveDeviceImpl(CedarDevice device) {
+  throw UnimplementedError("No impl in platform_web");
 }

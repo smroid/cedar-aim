@@ -23,6 +23,7 @@ import 'package:flutter/widgets.dart' as dart_widgets;
 import 'package:grpc/grpc.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sprintf/sprintf.dart';
 import 'cedar.pbgrpc.dart' as cedar_rpc;
 import 'platform.dart';
@@ -508,7 +509,7 @@ class MyHomePageState extends State<MyHomePage> {
   bool _paintPending = false;
   bool _inhibitRefresh = false;
 
-  final DateTime _startTime = DateTime.now();
+  DateTime _startTime = DateTime.now();
   bool _serverConnected = false;
   bool everConnected = false;
   DateTime _lastServerResponseTime = DateTime.now();
@@ -607,6 +608,8 @@ class MyHomePageState extends State<MyHomePage> {
   // define a flag so we can know when it is done.
   bool _transitionToSetup = false;
 
+  CedarDevice _selectedDevice = CedarDevice(address: '192.168.4.1');
+
   Future<void> _initLocation() async {
     _offerMap = isWeb() || !await canGetLocation();
     _tzOffset = DateTime.now().timeZoneOffset; // Get platform timezone.
@@ -623,6 +626,12 @@ class MyHomePageState extends State<MyHomePage> {
 
   cedar_rpc.CedarClient client() {
     return getClient();
+  }
+
+  @override
+  void dispose() {
+    cleanup();
+    super.dispose();
   }
 
   LatLng? get mapPosition => _mapPosition;
@@ -941,6 +950,7 @@ class MyHomePageState extends State<MyHomePage> {
 
   // Issue repeated request/response RPCs.
   Future<void> _refreshStateFromServer() async {
+    await _loadSelectedDevice();
     await Future.doWhile(() async {
       await Future.delayed(const Duration(milliseconds: 100));
       if (!_paintPending && !updateInProgress && !shutdownInProgress) {
@@ -2373,8 +2383,11 @@ class MyHomePageState extends State<MyHomePage> {
     _paintPending = false;
     // Give some time for an initial connection to succeed.
     final elapsed = DateTime.now().difference(_startTime);
-    if (elapsed.inMilliseconds < 1000) {
+    if (elapsed.inMilliseconds < 5000) {
       return const Center(child: CircularProgressIndicator());
+    }
+    if (isDIY && isAndroid()) {
+      return _buildErrorWidget();
     }
     if (isMobile() && !_serverConnected && _wifiClientDialogController != null) {
       SchedulerBinding.instance.addPostFrameCallback((_) {
@@ -2421,6 +2434,154 @@ class MyHomePageState extends State<MyHomePage> {
           ]),
         ),
       ),
+    );
+  }
+
+  Widget _buildErrorWidget() {
+    String errorText = 'No connection to Cedar server';
+    final deviceName = _selectedDevice.name ?? 'Default (WiFi)';
+    final deviceAddr = _selectedDevice.address;
+    errorText += '\n\nDevice: $deviceName\nAddress: $deviceAddr';
+
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              errorText,
+              style: TextStyle(
+                fontSize: 20,
+                color: Theme.of(context).colorScheme.primary,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 16),
+            OutlinedButton(
+              onPressed: _showDeviceSelectionDialog,
+              child: const Text('Choose Another Device'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> _loadSelectedDevice() async {
+    final prefs = await SharedPreferences.getInstance();
+    final deviceName = prefs.getString('selected_device_name');
+    final deviceAddress = prefs.getString('selected_device_address');
+    if (deviceAddress != null) {
+      _selectedDevice = CedarDevice(address: deviceAddress, name: deviceName);
+      setActiveDevice(_selectedDevice);
+    }
+  }
+
+  Future<void> _selectDevice(CedarDevice device) async {
+    setState(() {
+      _startTime = DateTime.now();
+      _selectedDevice = device;
+      setActiveDevice(device);
+    });
+
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('selected_device_address', device.address!);
+    if (device.name == null) {
+      // WiFi
+      await prefs.remove('selected_device_name');
+    } else {
+      await prefs.setString('selected_device_name', device.name!);
+    }
+  }
+
+  void _showDeviceSelectionDialog() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Select Cedar Device'),
+          titleTextStyle: TextStyle(
+            color: Theme.of(context).colorScheme.primary,
+            fontSize: 24,
+          ),
+          content: Container(
+            width: double.maxFinite,
+            child: FutureBuilder<List<CedarDevice>>(
+              future: getBluetoothDevices(),
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                }
+                if (!snapshot.hasData) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+
+                final devices = snapshot.data!;
+                return ListView(
+                  shrinkWrap: true,
+                  children: [
+                    ListTile(
+                      leading: Icon(
+                        Icons.wifi,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                      title: Text(
+                        'Use Wi-Fi (Default)',
+                        style: TextStyle(
+                            color: Theme.of(context).colorScheme.primary),
+                      ),
+                      subtitle: Text(
+                        'Connects to 192.168.4.1',
+                        style: TextStyle(
+                            color: Theme.of(context).colorScheme.secondary),
+                      ),
+                      onTap: () {
+                        Navigator.pop(context);
+                        _selectDevice(CedarDevice(address: '192.168.4.1'));
+                      },
+                    ),
+                    const Divider(),
+                    if (devices.isEmpty)
+                      ListTile(
+                          title: Text(
+                        'No bonded Bluetooth devices found',
+                        style: TextStyle(
+                            color: Theme.of(context).colorScheme.primary),
+                      )),
+                    ...devices.map((device) => ListTile(
+                          leading: Icon(
+                            Icons.bluetooth,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                          title: Text(
+                            device.name ?? 'Unknown',
+                            style: TextStyle(
+                                color: Theme.of(context).colorScheme.primary),
+                          ),
+                          subtitle: Text(
+                            device.address ?? '',
+                            style: TextStyle(
+                                color: Theme.of(context).colorScheme.secondary),
+                          ),
+                          onTap: () {
+                            Navigator.pop(context);
+                            _selectDevice(device);
+                          },
+                        )),
+                  ],
+                );
+              },
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Cancel'),
+            ),
+          ],
+        );
+      },
     );
   }
 } // MyHomePageState
