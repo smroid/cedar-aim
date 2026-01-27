@@ -2386,7 +2386,7 @@ class MyHomePageState extends State<MyHomePage> {
     if (elapsed.inMilliseconds < 5000) {
       return const Center(child: CircularProgressIndicator());
     }
-    if (isAndroid()) {
+    if (isDIY && isAndroid()) {
       return _buildErrorWidget();
     }
     if (isMobile() && !_serverConnected && _wifiClientDialogController != null) {
@@ -2543,8 +2543,12 @@ class MyHomePageState extends State<MyHomePage> {
                     ),
                     const Divider(),
                     if (devices.isEmpty)
-                      const ListTile(
-                          title: Text('No bonded Bluetooth devices found')),
+                      ListTile(
+                          title: Text(
+                        'No bonded Bluetooth devices found',
+                        style: TextStyle(
+                            color: Theme.of(context).colorScheme.primary),
+                      )),
                     ...devices.map((device) => ListTile(
                           leading: Icon(
                             Icons.bluetooth,

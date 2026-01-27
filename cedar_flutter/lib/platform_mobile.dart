@@ -3,6 +3,7 @@
 
 // Mobile impl for platform-specific functions.
 
+import 'dart:async';
 import 'dart:io';
 
 import 'package:cedar_flutter/platform.dart';
@@ -18,7 +19,9 @@ import 'package:flutter/services.dart';
 import 'package:grpc/grpc.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
+// Imports for Bluetooth control functionality
 import 'package:cedar_flutter/bluetooth_proxy.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter_blue_classic/flutter_blue_classic.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -34,7 +37,9 @@ bool isIOSImpl() {
   return Platform.isIOS;
 }
 
+// UUID for Cedar control channel defined in cedar-server
 String _btUuid = "4e5d4c88-2965-423f-9111-28a506720760";
+
 String _wifiAddress = isMobile() ? "192.168.4.1" : "192.168.1.158";
 CedarDevice _activeDevice = CedarDevice(address: _wifiAddress);
 ClientChannel? _channel;
@@ -42,6 +47,9 @@ cedar_rpc.CedarClient? _client;
 BluetoothGrpcProxy? _activeProxy;
 BluetoothConnection? _bluetoothConnection;
 bool _connecting = false;
+DateTime? _startTime;
+// Only request to turn on Bluetooth once while it is off
+bool _requestedBtOn = false;
 
 const _options = ChannelOptions(
   credentials: ChannelCredentials.insecure(),
@@ -50,7 +58,7 @@ const _options = ChannelOptions(
 
 void rpcSucceededImpl() {}
 void rpcFailedImpl() {
-  if (!_connecting) {
+  if (!_connecting || DateTime.now().difference(_startTime!).inSeconds > 5) {
     cleanupImpl();
   }
 }
@@ -62,6 +70,7 @@ CedarClient getClientImpl() {
 
   if (isAndroidImpl() && _activeDevice.name != null) {
     _connecting = true;
+    _startTime = DateTime.now();
     _activeProxy?.stop();
     _bluetoothConnection?.dispose();
 
@@ -234,6 +243,8 @@ void cleanupImpl() {
   _channel = null;
   _activeProxy = null;
   _bluetoothConnection = null;
+  _connecting = false;
+  _startTime = null;
 }
 
 Future<List<CedarDevice>> getBluetoothDevicesImpl() async {
@@ -278,11 +289,31 @@ Future<void> _establishBluetoothConnection(String addr, int localPort) async {
   try {
     if (await _checkBluetoothPermissions() == false) {
       print('Bluetooth permissions denied, cannot connect');
-      // Maintain connecting state here to avoid taking more resources
+      // Maintain connecting state here to avoid polling too frequently
       return;
     }
 
     final flutterBlue = FlutterBlueClassic(usesFineLocation: true);
+    BluetoothAdapterState state = await flutterBlue.adapterStateNow;
+    if (state != BluetoothAdapterState.on) {
+      if (_requestedBtOn) {
+        return;
+      }
+      _requestedBtOn = true;
+      print('Attempting to turn on Bluetooth');
+      flutterBlue.turnOn();
+      try {
+        await flutterBlue.adapterState
+            .timeout(Duration(seconds: 5))
+            .firstWhere((s) => s == BluetoothAdapterState.on);
+      } on TimeoutException catch (_) {
+        print('Timed out waiting for Bluetooth to turn on');
+        // Connecting state will be cleaned up upon next rpcFailed()
+        return;
+      }
+    }
+    _requestedBtOn = false;
+
     print('Attempting to connect to $addr ...');
 
     _bluetoothConnection = await flutterBlue.connect(addr, uuid: _btUuid);
@@ -298,20 +329,27 @@ Future<void> _establishBluetoothConnection(String addr, int localPort) async {
     cleanupImpl();
   }
   _connecting = false;
+  _startTime = null;
 }
 
 Future<bool> _checkBluetoothPermissions() async {
-  // On Android 12+ (API 31+), we need BLUETOOTH_CONNECT and BLUETOOTH_SCAN
   if (Platform.isAndroid) {
-    print('Checking permissions');
-    Map<Permission, PermissionStatus> statuses = await [
-      Permission.bluetoothConnect,
-      Permission.bluetoothScan,
-    ].request();
+    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+    AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+    print('Checking permissions on SDK ${androidInfo.version.sdkInt}');
+    if (androidInfo.version.sdkInt > 30) {
+      // On Android 12+ (API 31+), we need BLUETOOTH_CONNECT and BLUETOOTH_SCAN
+      Map<Permission, PermissionStatus> statuses = await [
+        Permission.bluetoothConnect,
+        Permission.bluetoothScan,
+      ].request();
 
-    if (statuses[Permission.bluetoothConnect]!.isGranted && 
-        statuses[Permission.bluetoothScan]!.isGranted) {
-      return true;
+      if (statuses[Permission.bluetoothConnect]!.isGranted &&
+          statuses[Permission.bluetoothScan]!.isGranted) {
+        return true;
+      }
+    } else {
+      return await Permission.bluetooth.request().isGranted;
     }
   }
   return false;
