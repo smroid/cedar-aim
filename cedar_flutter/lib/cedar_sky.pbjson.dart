@@ -1,13 +1,14 @@
+// This is a generated file - do not edit.
 //
-//  Generated code. Do not modify.
-//  source: cedar_sky.proto
-//
+// Generated from cedar_sky.proto.
+
 // @dart = 3.3
 
 // ignore_for_file: annotate_overrides, camel_case_types, comment_references
-// ignore_for_file: constant_identifier_names, library_prefixes
-// ignore_for_file: non_constant_identifier_names, prefer_final_fields
-// ignore_for_file: unnecessary_import, unnecessary_this, unused_import
+// ignore_for_file: constant_identifier_names
+// ignore_for_file: curly_braces_in_flow_control_structures
+// ignore_for_file: deprecated_member_use_from_same_package, library_prefixes
+// ignore_for_file: non_constant_identifier_names, unused_import
 
 import 'dart:convert' as $convert;
 import 'dart:core' as $core;
@@ -33,13 +34,69 @@ final $typed_data.Uint8List orderingDescriptor = $convert.base64Decode(
 const QueryCatalogRequest$json = {
   '1': 'QueryCatalogRequest',
   '2': [
-    {'1': 'catalog_entry_match', '3': 1, '4': 1, '5': 11, '6': '.cedar_sky.CatalogEntryMatch', '10': 'catalogEntryMatch'},
-    {'1': 'max_distance', '3': 2, '4': 1, '5': 1, '9': 0, '10': 'maxDistance', '17': true},
-    {'1': 'min_elevation', '3': 3, '4': 1, '5': 1, '9': 1, '10': 'minElevation', '17': true},
-    {'1': 'decrowd_distance', '3': 5, '4': 1, '5': 1, '9': 2, '10': 'decrowdDistance', '17': true},
-    {'1': 'ordering', '3': 6, '4': 1, '5': 14, '6': '.cedar_sky.Ordering', '9': 3, '10': 'ordering', '17': true},
-    {'1': 'limit_result', '3': 7, '4': 1, '5': 5, '9': 4, '10': 'limitResult', '17': true},
-    {'1': 'text_search', '3': 8, '4': 1, '5': 9, '9': 5, '10': 'textSearch', '17': true},
+    {
+      '1': 'catalog_entry_match',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.cedar_sky.CatalogEntryMatch',
+      '10': 'catalogEntryMatch'
+    },
+    {
+      '1': 'max_distance',
+      '3': 2,
+      '4': 1,
+      '5': 1,
+      '9': 0,
+      '10': 'maxDistance',
+      '17': true
+    },
+    {
+      '1': 'min_elevation',
+      '3': 3,
+      '4': 1,
+      '5': 1,
+      '9': 1,
+      '10': 'minElevation',
+      '17': true
+    },
+    {
+      '1': 'decrowd_distance',
+      '3': 5,
+      '4': 1,
+      '5': 1,
+      '9': 2,
+      '10': 'decrowdDistance',
+      '17': true
+    },
+    {
+      '1': 'ordering',
+      '3': 6,
+      '4': 1,
+      '5': 14,
+      '6': '.cedar_sky.Ordering',
+      '9': 3,
+      '10': 'ordering',
+      '17': true
+    },
+    {
+      '1': 'limit_result',
+      '3': 7,
+      '4': 1,
+      '5': 5,
+      '9': 4,
+      '10': 'limitResult',
+      '17': true
+    },
+    {
+      '1': 'text_search',
+      '3': 8,
+      '4': 1,
+      '5': 9,
+      '9': 5,
+      '10': 'textSearch',
+      '17': true
+    },
   ],
   '8': [
     {'1': '_max_distance'},
@@ -67,10 +124,30 @@ final $typed_data.Uint8List queryCatalogRequestDescriptor = $convert.base64Decod
 const CatalogEntryMatch$json = {
   '1': 'CatalogEntryMatch',
   '2': [
-    {'1': 'faintest_magnitude', '3': 1, '4': 1, '5': 5, '9': 0, '10': 'faintestMagnitude', '17': true},
-    {'1': 'match_catalog_label', '3': 4, '4': 1, '5': 8, '10': 'matchCatalogLabel'},
+    {
+      '1': 'faintest_magnitude',
+      '3': 1,
+      '4': 1,
+      '5': 5,
+      '9': 0,
+      '10': 'faintestMagnitude',
+      '17': true
+    },
+    {
+      '1': 'match_catalog_label',
+      '3': 4,
+      '4': 1,
+      '5': 8,
+      '10': 'matchCatalogLabel'
+    },
     {'1': 'catalog_label', '3': 2, '4': 3, '5': 9, '10': 'catalogLabel'},
-    {'1': 'match_object_type_label', '3': 5, '4': 1, '5': 8, '10': 'matchObjectTypeLabel'},
+    {
+      '1': 'match_object_type_label',
+      '3': 5,
+      '4': 1,
+      '5': 8,
+      '10': 'matchObjectTypeLabel'
+    },
     {'1': 'object_type_label', '3': 3, '4': 3, '5': 9, '10': 'objectTypeLabel'},
   ],
   '8': [
@@ -91,7 +168,14 @@ final $typed_data.Uint8List catalogEntryMatchDescriptor = $convert.base64Decode(
 const QueryCatalogResponse$json = {
   '1': 'QueryCatalogResponse',
   '2': [
-    {'1': 'entries', '3': 1, '4': 3, '5': 11, '6': '.cedar_sky.SelectedCatalogEntry', '10': 'entries'},
+    {
+      '1': 'entries',
+      '3': 1,
+      '4': 3,
+      '5': 11,
+      '6': '.cedar_sky.SelectedCatalogEntry',
+      '10': 'entries'
+    },
     {'1': 'truncated_count', '3': 2, '4': 1, '5': 5, '10': 'truncatedCount'},
   ],
 };
@@ -106,11 +190,48 @@ final $typed_data.Uint8List queryCatalogResponseDescriptor = $convert.base64Deco
 const SelectedCatalogEntry$json = {
   '1': 'SelectedCatalogEntry',
   '2': [
-    {'1': 'entry', '3': 1, '4': 1, '5': 11, '6': '.cedar_sky.CatalogEntry', '10': 'entry'},
-    {'1': 'deduped_entries', '3': 2, '4': 3, '5': 11, '6': '.cedar_sky.CatalogEntry', '10': 'dedupedEntries'},
-    {'1': 'decrowded_entries', '3': 3, '4': 3, '5': 11, '6': '.cedar_sky.CatalogEntry', '10': 'decrowdedEntries'},
-    {'1': 'altitude', '3': 4, '4': 1, '5': 1, '9': 0, '10': 'altitude', '17': true},
-    {'1': 'azimuth', '3': 5, '4': 1, '5': 1, '9': 1, '10': 'azimuth', '17': true},
+    {
+      '1': 'entry',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.cedar_sky.CatalogEntry',
+      '10': 'entry'
+    },
+    {
+      '1': 'deduped_entries',
+      '3': 2,
+      '4': 3,
+      '5': 11,
+      '6': '.cedar_sky.CatalogEntry',
+      '10': 'dedupedEntries'
+    },
+    {
+      '1': 'decrowded_entries',
+      '3': 3,
+      '4': 3,
+      '5': 11,
+      '6': '.cedar_sky.CatalogEntry',
+      '10': 'decrowdedEntries'
+    },
+    {
+      '1': 'altitude',
+      '3': 4,
+      '4': 1,
+      '5': 1,
+      '9': 0,
+      '10': 'altitude',
+      '17': true
+    },
+    {
+      '1': 'azimuth',
+      '3': 5,
+      '4': 1,
+      '5': 1,
+      '9': 1,
+      '10': 'azimuth',
+      '17': true
+    },
   ],
   '8': [
     {'1': '_altitude'},
@@ -133,12 +254,59 @@ const CatalogEntry$json = {
   '2': [
     {'1': 'catalog_label', '3': 1, '4': 1, '5': 9, '10': 'catalogLabel'},
     {'1': 'catalog_entry', '3': 2, '4': 1, '5': 9, '10': 'catalogEntry'},
-    {'1': 'coord', '3': 3, '4': 1, '5': 11, '6': '.cedar_common.CelestialCoord', '10': 'coord'},
-    {'1': 'constellation', '3': 4, '4': 1, '5': 11, '6': '.cedar_sky.Constellation', '9': 0, '10': 'constellation', '17': true},
-    {'1': 'object_type', '3': 5, '4': 1, '5': 11, '6': '.cedar_sky.ObjectType', '10': 'objectType'},
-    {'1': 'magnitude', '3': 6, '4': 1, '5': 1, '9': 1, '10': 'magnitude', '17': true},
-    {'1': 'angular_size', '3': 7, '4': 1, '5': 9, '9': 2, '10': 'angularSize', '17': true},
-    {'1': 'common_name', '3': 8, '4': 1, '5': 9, '9': 3, '10': 'commonName', '17': true},
+    {
+      '1': 'coord',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.cedar_common.CelestialCoord',
+      '10': 'coord'
+    },
+    {
+      '1': 'constellation',
+      '3': 4,
+      '4': 1,
+      '5': 11,
+      '6': '.cedar_sky.Constellation',
+      '9': 0,
+      '10': 'constellation',
+      '17': true
+    },
+    {
+      '1': 'object_type',
+      '3': 5,
+      '4': 1,
+      '5': 11,
+      '6': '.cedar_sky.ObjectType',
+      '10': 'objectType'
+    },
+    {
+      '1': 'magnitude',
+      '3': 6,
+      '4': 1,
+      '5': 1,
+      '9': 1,
+      '10': 'magnitude',
+      '17': true
+    },
+    {
+      '1': 'angular_size',
+      '3': 7,
+      '4': 1,
+      '5': 9,
+      '9': 2,
+      '10': 'angularSize',
+      '17': true
+    },
+    {
+      '1': 'common_name',
+      '3': 8,
+      '4': 1,
+      '5': 9,
+      '9': 3,
+      '10': 'commonName',
+      '17': true
+    },
     {'1': 'notes', '3': 9, '4': 1, '5': 9, '9': 4, '10': 'notes', '17': true},
   ],
   '8': [
@@ -170,8 +338,24 @@ const CatalogDescription$json = {
     {'1': 'name', '3': 2, '4': 1, '5': 9, '10': 'name'},
     {'1': 'description', '3': 3, '4': 1, '5': 9, '10': 'description'},
     {'1': 'source', '3': 4, '4': 1, '5': 9, '10': 'source'},
-    {'1': 'copyright', '3': 5, '4': 1, '5': 9, '9': 0, '10': 'copyright', '17': true},
-    {'1': 'license', '3': 6, '4': 1, '5': 9, '9': 1, '10': 'license', '17': true},
+    {
+      '1': 'copyright',
+      '3': 5,
+      '4': 1,
+      '5': 9,
+      '9': 0,
+      '10': 'copyright',
+      '17': true
+    },
+    {
+      '1': 'license',
+      '3': 6,
+      '4': 1,
+      '5': 9,
+      '9': 1,
+      '10': 'license',
+      '17': true
+    },
   ],
   '8': [
     {'1': '_copyright'},
@@ -190,14 +374,22 @@ final $typed_data.Uint8List catalogDescriptionDescriptor = $convert.base64Decode
 const CatalogDescriptionResponse$json = {
   '1': 'CatalogDescriptionResponse',
   '2': [
-    {'1': 'catalog_descriptions', '3': 1, '4': 3, '5': 11, '6': '.cedar_sky.CatalogDescription', '10': 'catalogDescriptions'},
+    {
+      '1': 'catalog_descriptions',
+      '3': 1,
+      '4': 3,
+      '5': 11,
+      '6': '.cedar_sky.CatalogDescription',
+      '10': 'catalogDescriptions'
+    },
   ],
 };
 
 /// Descriptor for `CatalogDescriptionResponse`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List catalogDescriptionResponseDescriptor = $convert.base64Decode(
-    'ChpDYXRhbG9nRGVzY3JpcHRpb25SZXNwb25zZRJQChRjYXRhbG9nX2Rlc2NyaXB0aW9ucxgBIA'
-    'MoCzIdLmNlZGFyX3NreS5DYXRhbG9nRGVzY3JpcHRpb25SE2NhdGFsb2dEZXNjcmlwdGlvbnM=');
+final $typed_data.Uint8List catalogDescriptionResponseDescriptor =
+    $convert.base64Decode(
+        'ChpDYXRhbG9nRGVzY3JpcHRpb25SZXNwb25zZRJQChRjYXRhbG9nX2Rlc2NyaXB0aW9ucxgBIA'
+        'MoCzIdLmNlZGFyX3NreS5DYXRhbG9nRGVzY3JpcHRpb25SE2NhdGFsb2dEZXNjcmlwdGlvbnM=');
 
 @$core.Deprecated('Use objectTypeDescriptor instead')
 const ObjectType$json = {
@@ -217,7 +409,14 @@ final $typed_data.Uint8List objectTypeDescriptor = $convert.base64Decode(
 const ObjectTypeResponse$json = {
   '1': 'ObjectTypeResponse',
   '2': [
-    {'1': 'object_types', '3': 1, '4': 3, '5': 11, '6': '.cedar_sky.ObjectType', '10': 'objectTypes'},
+    {
+      '1': 'object_types',
+      '3': 1,
+      '4': 3,
+      '5': 11,
+      '6': '.cedar_sky.ObjectType',
+      '10': 'objectTypes'
+    },
   ],
 };
 
@@ -244,7 +443,14 @@ final $typed_data.Uint8List constellationDescriptor = $convert.base64Decode(
 const ConstellationResponse$json = {
   '1': 'ConstellationResponse',
   '2': [
-    {'1': 'constellations', '3': 1, '4': 3, '5': 11, '6': '.cedar_sky.Constellation', '10': 'constellations'},
+    {
+      '1': 'constellations',
+      '3': 1,
+      '4': 3,
+      '5': 11,
+      '6': '.cedar_sky.Constellation',
+      '10': 'constellations'
+    },
   ],
 };
 
@@ -266,4 +472,3 @@ const CatalogEntryKey$json = {
 final $typed_data.Uint8List catalogEntryKeyDescriptor = $convert.base64Decode(
     'Cg9DYXRhbG9nRW50cnlLZXkSGwoJY2F0X2xhYmVsGAEgASgJUghjYXRMYWJlbBIUCgVlbnRyeR'
     'gCIAEoCVIFZW50cnk=');
-
