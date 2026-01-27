@@ -20,6 +20,7 @@ import 'package:wakelock_plus/wakelock_plus.dart';
 
 import 'package:cedar_flutter/bluetooth_proxy.dart';
 import 'package:flutter_blue_classic/flutter_blue_classic.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 bool isWebImpl() {
   return false;
@@ -275,6 +276,12 @@ void setActiveDeviceImpl(CedarDevice device) {
 
 Future<void> _establishBluetoothConnection(String addr, int localPort) async {
   try {
+    if (await _checkBluetoothPermissions() == false) {
+      print('Bluetooth permissions denied, cannot connect');
+      // Maintain connecting state here to avoid taking more resources
+      return;
+    }
+
     final flutterBlue = FlutterBlueClassic(usesFineLocation: true);
     print('Attempting to connect to $addr ...');
 
@@ -288,6 +295,24 @@ Future<void> _establishBluetoothConnection(String addr, int localPort) async {
     }
   } catch (e) {
     print('Error establishing Bluetooth connection: $e');
+    cleanupImpl();
   }
   _connecting = false;
+}
+
+Future<bool> _checkBluetoothPermissions() async {
+  // On Android 12+ (API 31+), we need BLUETOOTH_CONNECT and BLUETOOTH_SCAN
+  if (Platform.isAndroid) {
+    print('Checking permissions');
+    Map<Permission, PermissionStatus> statuses = await [
+      Permission.bluetoothConnect,
+      Permission.bluetoothScan,
+    ].request();
+
+    if (statuses[Permission.bluetoothConnect]!.isGranted && 
+        statuses[Permission.bluetoothScan]!.isGranted) {
+      return true;
+    }
+  }
+  return false;
 }
