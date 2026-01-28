@@ -2386,7 +2386,7 @@ class MyHomePageState extends State<MyHomePage> {
     if (elapsed.inMilliseconds < 5000) {
       return const Center(child: CircularProgressIndicator());
     }
-    if (isDIY && isAndroid()) {
+    if (isAndroid()) {
       return _buildErrorWidget();
     }
     if (isMobile() && !_serverConnected && _wifiClientDialogController != null) {
