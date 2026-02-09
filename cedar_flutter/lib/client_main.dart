@@ -534,6 +534,7 @@ class MyHomePageState extends State<MyHomePage> {
   bool _setupMode = false;
   bool _focusAid = false;
   bool _daylightMode = false;
+  bool _skipFocusActive = false;
   bool _demoMode = false;
   List<String> _demoFiles = [];
   String _demoFile = "";
@@ -683,6 +684,7 @@ class MyHomePageState extends State<MyHomePage> {
     bool newFocusMode = _setupMode && _focusAid;
     bool newAlignMode = _setupMode && !_focusAid;
     _daylightMode = operationSettings.daylightMode;
+    _skipFocusActive = response.skipFocusActive;
     if (_setupMode) {
       _transitionToSetup = false;
     }
@@ -851,13 +853,14 @@ class MyHomePageState extends State<MyHomePage> {
       _dontShowSetupFinished = dontShowItems.contains('setup_finished');
     }
     if (newFocusMode && !prevFocusMode) {
-      _showFocusIntro = !_dontShowFocusIntro;
+      _showFocusIntro = !_dontShowFocusIntro && !(preferences?.skipFocus ?? false);
     }
     if (newAlignMode && !prevAlignMode) {
-      _showAlignIntro = !_dontShowAlignIntro;
+      _showAlignIntro = !_dontShowAlignIntro && !(preferences?.skipAlignment ?? false);
     }
     if (!_setupMode && prevSetupMode) {
-      _showSetupFinished = !_dontShowSetupFinished;
+      // Only show setup finished if we're not currently in skip-focus active mode
+      _showSetupFinished = !response.skipFocusActive && !_dontShowSetupFinished;
     }
   }
 
@@ -1130,7 +1133,7 @@ class MyHomePageState extends State<MyHomePage> {
           textAlign: TextAlign.center,
           style: TextStyle(fontSize: fontSize),
           textScaler: textScaler(context),
-          _alignTargetTapped ? "Done" : "Skip",
+          "Done",
         ),
         onPressed: () {
           // Transition to aim mode.
@@ -1199,6 +1202,9 @@ class MyHomePageState extends State<MyHomePage> {
       preferences: preferences,
       operationSettings: operationSettings,
       showCatalogBrowser: _showCatalogBrowser != null,
+      skipFocus: preferences?.skipFocus ?? false,
+      skipAlignment: preferences?.skipAlignment ?? false,
+      skipFocusActive: _skipFocusActive,
       onPreferencesUpdate: (prefsDiff) => updatePreferences(prefsDiff),
       onOperationSettingsUpdate: (opSettingsDiff) => updateOperationSettings(opSettingsDiff),
       onGoFullScreen: goFullScreen,
@@ -1207,6 +1213,30 @@ class MyHomePageState extends State<MyHomePage> {
       onSetDaylightMode: (enabled) => setState(() {
         _setDaylightMode(enabled);
       }),
+      onSkipFocusUpdate: (value) {
+        final prefs = cedar_rpc.Preferences()..skipFocus = value;
+        updatePreferences(prefs);
+        // If enabling skip focus, also transition to align mode like the done button
+        if (value) {
+          setState(() {
+            _alignTargetTapped = false;
+            if (!_setupMode) {
+              _transitionToSetup = true;
+            }
+            _setOperatingMode(/*setupMode=*/ true, /*focusAid=*/ false);
+          });
+        }
+      },
+      onSkipAlignmentUpdate: (value) {
+        final prefs = cedar_rpc.Preferences()..skipAlignment = value;
+        updatePreferences(prefs);
+        // If enabling skip alignment, also transition to aim mode like the done button
+        if (value) {
+          setState(() {
+            _setOperatingMode(/*setupMode=*/ false, _focusAid);
+          });
+        }
+      },
       focusDoneButton: ({double? fontSize}) => focusDoneButton(fontSize: fontSize),
       setupAlignSkipOrDoneButton: ({double? fontSize}) => setupAlignSkipOrDoneButton(fontSize: fontSize),
       slewReAlignButton: ({double? fontSize}) => slewReAlignButton(fontSize: fontSize),
@@ -1892,14 +1922,42 @@ class MyHomePageState extends State<MyHomePage> {
 
     final String product =
         serverInformation != null ? serverInformation!.productName : "e-finder";
+    final bool isHopper = product == "Hopper";
 
-    // Show "Hopper is pre-focused" message in focus mode for Hopper.
-    final isHopperFocusMode = _setupMode && _focusAid && !_daylightMode &&
-        product == "Hopper";
+    final isFocusMode = _setupMode && _focusAid && !_skipFocusActive;
+    final isAutoCalibrating = _setupMode && _focusAid && _skipFocusActive;
 
     final isAlignMode = _setupMode && !_focusAid;
 
-    final data = isHopperFocusMode
+    final data = isAutoCalibrating
+        ? RotatedBox(
+            quarterTurns: portrait ? 3 : 0,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  "Auto-calibrating Hopper",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                  textScaler: textScaler(context),
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  "Tap Exit to stop and\nadjust focus manually",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                  textScaler: textScaler(context),
+                ),
+              ],
+            ),
+          )
+        : isFocusMode
         ? GestureDetector(
             onTap: () {
               setState(() {
@@ -1917,7 +1975,7 @@ class MyHomePageState extends State<MyHomePage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    "Hopper is pre-focused",
+                    isHopper ? "Hopper is pre-focused" : "Focus your $product",
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 14,
@@ -2082,6 +2140,8 @@ class MyHomePageState extends State<MyHomePage> {
           updaterInfo: _updaterInfo,
           updateServiceAvailable: updateServiceAvailable,
           wifiAccessPointDialog: _wifiAccessPointDialog,
+          skipFocus: preferences?.skipFocus ?? false,
+          skipAlignment: preferences?.skipAlignment ?? false,
           setOperatingMode: (setupMode, focusAid) async {
             if (!_setupMode && setupMode) {
               setState(() {
@@ -2251,7 +2311,6 @@ class MyHomePageState extends State<MyHomePage> {
           _showTooFewStars = false;
         });
       });
-      return SizedBox.shrink();
     }
     if (_showBrightSky) {
       SchedulerBinding.instance.addPostFrameCallback((_) {
@@ -2266,7 +2325,6 @@ class MyHomePageState extends State<MyHomePage> {
           _showBrightSky = false;
         });
       });
-      return SizedBox.shrink();
     }
     if (_showSolverFailed) {
       SchedulerBinding.instance.addPostFrameCallback((_) {
@@ -2281,7 +2339,6 @@ class MyHomePageState extends State<MyHomePage> {
           _showSolverFailed = false;
         });
       });
-      return SizedBox.shrink();
     }
 
     if (_showSetupFinished) {

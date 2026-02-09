@@ -36,6 +36,8 @@ class CedarDrawerController {
   final UpdaterInfo? updaterInfo;
   final bool updateServiceAvailable;
   final WifiAccessPointDialogFunction? wifiAccessPointDialog;
+  final bool skipFocus;
+  final bool skipAlignment;
 
   // Callbacks
   final Future<void> Function(bool setupMode, bool focusAid) setOperatingMode;
@@ -72,6 +74,8 @@ class CedarDrawerController {
     required this.updaterInfo,
     required this.updateServiceAvailable,
     required this.wifiAccessPointDialog,
+    required this.skipFocus,
+    required this.skipAlignment,
     required this.setOperatingMode,
     required this.setDemoImage,
     required this.saveImage,
@@ -277,59 +281,84 @@ class CedarDrawer extends StatelessWidget {
               alignment: Alignment.center)),
       SizedBox(height: _kDrawerSpacing * textScaleFactor(controller.context)),
 
-      // Mode selection dropdown
-      Align(
-          alignment: Alignment.topLeft,
-          child: Row(
-            children: [
-              Container(width: 15),
-              DropdownMenu<String>(
-                  inputDecorationTheme: InputDecorationTheme(
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 10),
-                    constraints:
-                        BoxConstraints.tight(const Size.fromHeight(40)),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(6),
+      // Mode selection dropdown (hidden if both skip_focus and skip_alignment are set)
+      if (!(controller.skipFocus && controller.skipAlignment)) ...[
+        Align(
+            alignment: Alignment.topLeft,
+            child: Row(
+              children: [
+                Container(width: 15),
+                DropdownMenu<String>(
+                    inputDecorationTheme: InputDecorationTheme(
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 10),
+                      constraints:
+                          BoxConstraints.tight(const Size.fromHeight(40)),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(6),
+                      ),
                     ),
-                  ),
-                  width: 120 * textScaleFactor(controller.context),
-                  requestFocusOnTap: false,
-                  initialSelection: controller.setupMode
-                      ? (controller.focusAid ? "Focus" : "Align")
-                      : "Aim",
-                  label: _primaryText("Mode", size: 12),
-                  dropdownMenuEntries: ["Focus", "Align", "Aim"]
-                      .map<DropdownMenuEntry<String>>((String s) {
-                    return DropdownMenuEntry<String>(
-                      value: s,
-                      label: s,
-                      labelWidget: _primaryText(s),
-                      enabled: true,
-                    );
-                  }).toList(),
-                  textStyle: TextStyle(
-                      fontSize: 12 * textScaleFactor(controller.context),
-                      color: primaryColor),
-                  onSelected: (String? newValue) async {
-                    if (newValue == "Focus") {
-                      await controller.setOperatingMode(true, true);
-                      controller.onStateChanged();
-                    } else if (newValue == "Align") {
-                      await controller.setOperatingMode(true, false);
-                      controller.onStateChanged();
-                    } else {
-                      // Aim.
-                      await controller.setOperatingMode(false, false);
-                      controller.onStateChanged();
-                    }
-                    if (controller.context.mounted) {
-                      Navigator.of(controller.context).pop();
-                    }
-                  }),
-            ],
-          )),
+                    width: 120 * textScaleFactor(controller.context),
+                    requestFocusOnTap: false,
+                    initialSelection: controller.setupMode
+                        ? (controller.focusAid ? "Focus" : "Align")
+                        : "Aim",
+                    label: _primaryText("Mode", size: 12),
+                    dropdownMenuEntries: [
+                      if (!controller.skipFocus) "Focus",
+                      if (!controller.skipAlignment) "Align",
+                      "Aim",
+                    ]
+                        .map<DropdownMenuEntry<String>>((String s) {
+                      return DropdownMenuEntry<String>(
+                        value: s,
+                        label: s,
+                        labelWidget: _primaryText(s),
+                        enabled: true,
+                      );
+                    }).toList(),
+                    textStyle: TextStyle(
+                        fontSize: 12 * textScaleFactor(controller.context),
+                        color: primaryColor),
+                    onSelected: (String? newValue) async {
+                      if (newValue == "Focus") {
+                        await controller.setOperatingMode(true, true);
+                        controller.onStateChanged();
+                      } else if (newValue == "Align") {
+                        await controller.setOperatingMode(true, false);
+                        controller.onStateChanged();
+                      } else {
+                        // Aim.
+                        await controller.setOperatingMode(false, false);
+                        controller.onStateChanged();
+                      }
+                      if (controller.context.mounted) {
+                        Navigator.of(controller.context).pop();
+                      }
+                    }),
+              ],
+            )),
+      ],
 
       SizedBox(height: _kDrawerSpacing * textScaleFactor(controller.context)),
+
+      // Re-enable focus/align steps button (shown if either skip flag is set)
+      if (controller.skipFocus || controller.skipAlignment) ...[
+        Align(
+            alignment: Alignment.topLeft,
+            child: TextButton.icon(
+                label: _scaledText("Re-enable focus/align steps"),
+                icon: const Icon(Icons.undo),
+                onPressed: () async {
+                  final prefs = cedar_rpc.Preferences()
+                    ..skipFocus = false
+                    ..skipAlignment = false;
+                  await controller.updatePreferences(prefs);
+                  if (controller.context.mounted) {
+                    Navigator.of(controller.context).pop();
+                  }
+                })),
+        SizedBox(height: _kDrawerSpacing * textScaleFactor(controller.context)),
+      ],
 
       // Preferences button
       Align(

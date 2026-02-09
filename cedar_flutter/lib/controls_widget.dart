@@ -23,6 +23,9 @@ class ControlsWidget extends StatelessWidget {
   final Preferences? preferences;
   final OperationSettings operationSettings;
   final bool showCatalogBrowser;
+  final bool skipFocus;
+  final bool skipAlignment;
+  final bool skipFocusActive;
 
   // Callbacks.
   final Function(Preferences) onPreferencesUpdate;
@@ -31,6 +34,8 @@ class ControlsWidget extends StatelessWidget {
   final VoidCallback onCancelFullScreen;
   final Function(bool) onSetWakeLock;
   final Function(bool) onSetDaylightMode;
+  final Function(bool) onSkipFocusUpdate;
+  final Function(bool) onSkipAlignmentUpdate;
 
   // Button factories.
   final Widget Function({double? fontSize}) focusDoneButton;
@@ -55,12 +60,17 @@ class ControlsWidget extends StatelessWidget {
     required this.preferences,
     required this.operationSettings,
     required this.showCatalogBrowser,
+    required this.skipFocus,
+    required this.skipAlignment,
+    required this.skipFocusActive,
     required this.onPreferencesUpdate,
     required this.onOperationSettingsUpdate,
     required this.onGoFullScreen,
     required this.onCancelFullScreen,
     required this.onSetWakeLock,
     required this.onSetDaylightMode,
+    required this.onSkipFocusUpdate,
+    required this.onSkipAlignmentUpdate,
     required this.focusDoneButton,
     required this.setupAlignSkipOrDoneButton,
     required this.slewReAlignButton,
@@ -140,9 +150,11 @@ class ControlsWidget extends StatelessWidget {
                   child: Align(
                       alignment: Alignment.center,
                       child: Text(
-                        daylightMode
-                            ? "Tap to select focus area"
-                            : "Adjust focus",
+                        skipFocusActive
+                            ? "Retrying..."
+                            : (daylightMode
+                                ? "Tap to select focus area"
+                                : "Adjust focus"),
                         maxLines: 8,
                         textAlign: TextAlign.center,
                         style: TextStyle(
@@ -192,42 +204,88 @@ class ControlsWidget extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              // Done/Skip button.
-              SizedBox(
-                width: buttonWidth,
-                height: buttonHeight,
-                child: focusAid
-                    ? focusDoneButton(fontSize: buttonFont)
-                    : (canAlign
-                        ? (slewRequest == null
-                            ? setupAlignSkipOrDoneButton(fontSize: buttonFont)
-                            : (boresightImageBytes != null
-                                ? slewReAlignButton(fontSize: buttonFont)
-                                : Container()))
-                        : (slewRequest == null &&
-                                !setupMode &&
-                                !settingsModel.isDIY &&
-                                showCatalogBrowser
-                            ? catalogButton(fontSize: buttonFont)
-                            : Container())),
-              ),
+              // Done/Skip button or Exit button.
+              if (skipFocusActive && focusAid) ...[
+                SizedBox(
+                  width: buttonWidth,
+                  height: buttonHeight,
+                  child: OutlinedButton(
+                    onPressed: () {
+                      onSkipFocusUpdate(false);
+                    },
+                    child: Text(
+                      "Exit",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: buttonFont),
+                      textScaler: textScaler(context),
+                    ),
+                  ),
+                ),
+              ] else if (!skipFocus) ...[
+                SizedBox(
+                  width: buttonWidth,
+                  height: buttonHeight,
+                  child: focusAid
+                      ? focusDoneButton(fontSize: buttonFont)
+                      : (canAlign
+                          ? (slewRequest == null
+                              ? setupAlignSkipOrDoneButton(fontSize: buttonFont)
+                              : (boresightImageBytes != null
+                                  ? slewReAlignButton(fontSize: buttonFont)
+                                  : Container()))
+                          : (slewRequest == null &&
+                                  !setupMode &&
+                                  !settingsModel.isDIY &&
+                                  showCatalogBrowser
+                              ? catalogButton(fontSize: buttonFont)
+                              : Container())),
+                ),
+              ],
 
-              // Day checkbox (only in setup mode).
+              // Skip and Day checkboxes (only in setup mode).
               if (setupMode) ...[
                 Column(
                   children: [
                     SizedBox(height: 10 * panelScaleFactor),
-                    Transform.scale(
-                      scale: panelScaleFactor,
-                      child: TextButton.icon(
-                          label: scaledText("Day"),
-                          icon: daylightMode
-                              ? const Icon(Icons.check)
-                              : const Icon(Icons.check_box_outline_blank),
-                          onPressed: () async {
-                            onSetDaylightMode(!daylightMode);
-                          }),
-                    ),
+                    if (!skipFocus) ...[
+                      Transform.scale(
+                        scale: panelScaleFactor,
+                        child: TextButton.icon(
+                            label: scaledText("Day"),
+                            icon: daylightMode
+                                ? const Icon(Icons.check)
+                                : const Icon(Icons.check_box_outline_blank),
+                            onPressed: () async {
+                              onSetDaylightMode(!daylightMode);
+                            }),
+                      ),
+                    ],
+                    if (focusAid && !daylightMode && !skipFocusActive) ...[
+                      Transform.scale(
+                        scale: panelScaleFactor,
+                        child: TextButton.icon(
+                            label: scaledText("Skip"),
+                            icon: skipFocus
+                                ? const Icon(Icons.check)
+                                : const Icon(Icons.check_box_outline_blank),
+                            onPressed: () {
+                              onSkipFocusUpdate(!skipFocus);
+                            }),
+                      ),
+                    ] else if (canAlign && slewRequest == null &&
+                               !daylightMode && !skipFocusActive) ...[
+                      Transform.scale(
+                        scale: panelScaleFactor,
+                        child: TextButton.icon(
+                            label: scaledText("Skip"),
+                            icon: skipAlignment
+                                ? const Icon(Icons.check)
+                                : const Icon(Icons.check_box_outline_blank),
+                            onPressed: () {
+                              onSkipAlignmentUpdate(!skipAlignment);
+                            }),
+                      ),
+                    ],
                   ],
                 ),
               ],

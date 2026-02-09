@@ -1,14 +1,13 @@
-// This is a generated file - do not edit.
 //
-// Generated from cedar.proto.
-
+//  Generated code. Do not modify.
+//  source: cedar.proto
+//
 // @dart = 3.3
 
 // ignore_for_file: annotate_overrides, camel_case_types, comment_references
-// ignore_for_file: constant_identifier_names
-// ignore_for_file: curly_braces_in_flow_control_structures
-// ignore_for_file: deprecated_member_use_from_same_package, library_prefixes
-// ignore_for_file: non_constant_identifier_names, unused_import
+// ignore_for_file: constant_identifier_names, library_prefixes
+// ignore_for_file: non_constant_identifier_names, prefer_final_fields
+// ignore_for_file: unnecessary_import, unnecessary_this, unused_import
 
 import 'dart:convert' as $convert;
 import 'dart:core' as $core;
@@ -118,10 +117,9 @@ const CalibrationFailureReason$json = {
 };
 
 /// Descriptor for `CalibrationFailureReason`. Decode as a `google.protobuf.EnumDescriptorProto`.
-final $typed_data.Uint8List calibrationFailureReasonDescriptor =
-    $convert.base64Decode(
-        'ChhDYWxpYnJhdGlvbkZhaWx1cmVSZWFzb24SFgoSUkVBU09OX1VOU1BFQ0lGSUVEEAASEQoNVE'
-        '9PX0ZFV19TVEFSUxABEg4KCkJSSUdIVF9TS1kQAhIRCg1TT0xWRVJfRkFJTEVEEAM=');
+final $typed_data.Uint8List calibrationFailureReasonDescriptor = $convert.base64Decode(
+    'ChhDYWxpYnJhdGlvbkZhaWx1cmVSZWFzb24SFgoSUkVBU09OX1VOU1BFQ0lGSUVEEAASEQoNVE'
+    '9PX0ZFV19TVEFSUxABEg4KCkJSSUdIVF9TS1kQAhIRCg1TT0xWRVJfRkFJTEVEEAM=');
 
 @$core.Deprecated('Use serverInformationDescriptor instead')
 const ServerInformation$json = {
@@ -129,91 +127,19 @@ const ServerInformation$json = {
   '2': [
     {'1': 'product_name', '3': 1, '4': 1, '5': 9, '10': 'productName'},
     {'1': 'copyright', '3': 2, '4': 1, '5': 9, '10': 'copyright'},
-    {
-      '1': 'cedar_server_version',
-      '3': 3,
-      '4': 1,
-      '5': 9,
-      '10': 'cedarServerVersion'
-    },
-    {
-      '1': 'feature_level',
-      '3': 4,
-      '4': 1,
-      '5': 14,
-      '6': '.cedar.FeatureLevel',
-      '10': 'featureLevel'
-    },
+    {'1': 'cedar_server_version', '3': 3, '4': 1, '5': 9, '10': 'cedarServerVersion'},
+    {'1': 'feature_level', '3': 4, '4': 1, '5': 14, '6': '.cedar.FeatureLevel', '10': 'featureLevel'},
     {'1': 'processor_model', '3': 5, '4': 1, '5': 9, '10': 'processorModel'},
     {'1': 'os_version', '3': 6, '4': 1, '5': 9, '10': 'osVersion'},
     {'1': 'serial_number', '3': 12, '4': 1, '5': 9, '10': 'serialNumber'},
     {'1': 'cpu_temperature', '3': 7, '4': 1, '5': 2, '10': 'cpuTemperature'},
-    {
-      '1': 'server_time',
-      '3': 8,
-      '4': 1,
-      '5': 11,
-      '6': '.google.protobuf.Timestamp',
-      '10': 'serverTime'
-    },
-    {
-      '1': 'camera',
-      '3': 9,
-      '4': 1,
-      '5': 11,
-      '6': '.cedar.CameraModel',
-      '9': 0,
-      '10': 'camera',
-      '17': true
-    },
-    {
-      '1': 'imu_model',
-      '3': 14,
-      '4': 1,
-      '5': 9,
-      '9': 1,
-      '10': 'imuModel',
-      '17': true
-    },
-    {
-      '1': 'imu',
-      '3': 13,
-      '4': 1,
-      '5': 11,
-      '6': '.cedar.ImuState',
-      '9': 2,
-      '10': 'imu',
-      '17': true
-    },
-    {
-      '1': 'imu_angular_speed',
-      '3': 16,
-      '4': 1,
-      '5': 1,
-      '9': 3,
-      '10': 'imuAngularSpeed',
-      '17': true
-    },
-    {
-      '1': 'imu_tracker_state',
-      '3': 15,
-      '4': 1,
-      '5': 14,
-      '6': '.cedar.ImuTrackerState',
-      '9': 4,
-      '10': 'imuTrackerState',
-      '17': true
-    },
-    {
-      '1': 'wifi_access_point',
-      '3': 10,
-      '4': 1,
-      '5': 11,
-      '6': '.cedar.WiFiAccessPoint',
-      '9': 5,
-      '10': 'wifiAccessPoint',
-      '17': true
-    },
+    {'1': 'server_time', '3': 8, '4': 1, '5': 11, '6': '.google.protobuf.Timestamp', '10': 'serverTime'},
+    {'1': 'camera', '3': 9, '4': 1, '5': 11, '6': '.cedar.CameraModel', '9': 0, '10': 'camera', '17': true},
+    {'1': 'imu_model', '3': 14, '4': 1, '5': 9, '9': 1, '10': 'imuModel', '17': true},
+    {'1': 'imu', '3': 13, '4': 1, '5': 11, '6': '.cedar.ImuState', '9': 2, '10': 'imu', '17': true},
+    {'1': 'imu_angular_speed', '3': 16, '4': 1, '5': 1, '9': 3, '10': 'imuAngularSpeed', '17': true},
+    {'1': 'imu_tracker_state', '3': 15, '4': 1, '5': 14, '6': '.cedar.ImuTrackerState', '9': 4, '10': 'imuTrackerState', '17': true},
+    {'1': 'wifi_access_point', '3': 10, '4': 1, '5': 11, '6': '.cedar.WiFiAccessPoint', '9': 5, '10': 'wifiAccessPoint', '17': true},
     {'1': 'demo_image_names', '3': 11, '4': 3, '5': 9, '10': 'demoImageNames'},
   ],
   '8': [
@@ -250,15 +176,7 @@ const CameraModel$json = {
   '1': 'CameraModel',
   '2': [
     {'1': 'model', '3': 1, '4': 1, '5': 9, '10': 'model'},
-    {
-      '1': 'model_detail',
-      '3': 4,
-      '4': 1,
-      '5': 9,
-      '9': 0,
-      '10': 'modelDetail',
-      '17': true
-    },
+    {'1': 'model_detail', '3': 4, '4': 1, '5': 9, '9': 0, '10': 'modelDetail', '17': true},
     {'1': 'image_width', '3': 2, '4': 1, '5': 5, '10': 'imageWidth'},
     {'1': 'image_height', '3': 3, '4': 1, '5': 5, '10': 'imageHeight'},
   ],
@@ -299,15 +217,7 @@ const WiFiAccessPoint$json = {
   '2': [
     {'1': 'ssid', '3': 1, '4': 1, '5': 9, '9': 0, '10': 'ssid', '17': true},
     {'1': 'psk', '3': 2, '4': 1, '5': 9, '9': 1, '10': 'psk', '17': true},
-    {
-      '1': 'channel',
-      '3': 3,
-      '4': 1,
-      '5': 5,
-      '9': 2,
-      '10': 'channel',
-      '17': true
-    },
+    {'1': 'channel', '3': 3, '4': 1, '5': 5, '9': 2, '10': 'channel', '17': true},
   ],
   '8': [
     {'1': '_ssid'},
@@ -326,45 +236,10 @@ final $typed_data.Uint8List wiFiAccessPointDescriptor = $convert.base64Decode(
 const FixedSettings$json = {
   '1': 'FixedSettings',
   '2': [
-    {
-      '1': 'observer_location',
-      '3': 2,
-      '4': 1,
-      '5': 11,
-      '6': '.cedar.LatLong',
-      '9': 0,
-      '10': 'observerLocation',
-      '17': true
-    },
-    {
-      '1': 'current_time',
-      '3': 4,
-      '4': 1,
-      '5': 11,
-      '6': '.google.protobuf.Timestamp',
-      '9': 1,
-      '10': 'currentTime',
-      '17': true
-    },
-    {
-      '1': 'session_name',
-      '3': 5,
-      '4': 1,
-      '5': 9,
-      '9': 2,
-      '10': 'sessionName',
-      '17': true
-    },
-    {
-      '1': 'max_exposure_time',
-      '3': 6,
-      '4': 1,
-      '5': 11,
-      '6': '.google.protobuf.Duration',
-      '9': 3,
-      '10': 'maxExposureTime',
-      '17': true
-    },
+    {'1': 'observer_location', '3': 2, '4': 1, '5': 11, '6': '.cedar.LatLong', '9': 0, '10': 'observerLocation', '17': true},
+    {'1': 'current_time', '3': 4, '4': 1, '5': 11, '6': '.google.protobuf.Timestamp', '9': 1, '10': 'currentTime', '17': true},
+    {'1': 'session_name', '3': 5, '4': 1, '5': 9, '9': 2, '10': 'sessionName', '17': true},
+    {'1': 'max_exposure_time', '3': 6, '4': 1, '5': 11, '6': '.google.protobuf.Duration', '9': 3, '10': 'maxExposureTime', '17': true},
   ],
   '8': [
     {'1': '_observer_location'},
@@ -402,71 +277,13 @@ final $typed_data.Uint8List latLongDescriptor = $convert.base64Decode(
 const OperationSettings$json = {
   '1': 'OperationSettings',
   '2': [
-    {
-      '1': 'operating_mode',
-      '3': 4,
-      '4': 1,
-      '5': 14,
-      '6': '.cedar.OperatingMode',
-      '9': 0,
-      '10': 'operatingMode',
-      '17': true
-    },
-    {
-      '1': 'daylight_mode',
-      '3': 1,
-      '4': 1,
-      '5': 8,
-      '9': 1,
-      '10': 'daylightMode',
-      '17': true
-    },
-    {
-      '1': 'focus_assist_mode',
-      '3': 14,
-      '4': 1,
-      '5': 8,
-      '9': 2,
-      '10': 'focusAssistMode',
-      '17': true
-    },
-    {
-      '1': 'log_dwelled_positions',
-      '3': 10,
-      '4': 1,
-      '5': 8,
-      '9': 3,
-      '10': 'logDwelledPositions',
-      '17': true
-    },
-    {
-      '1': 'catalog_entry_match',
-      '3': 11,
-      '4': 1,
-      '5': 11,
-      '6': '.cedar_sky.CatalogEntryMatch',
-      '9': 4,
-      '10': 'catalogEntryMatch',
-      '17': true
-    },
-    {
-      '1': 'demo_image_filename',
-      '3': 12,
-      '4': 1,
-      '5': 9,
-      '9': 5,
-      '10': 'demoImageFilename',
-      '17': true
-    },
-    {
-      '1': 'use_imu',
-      '3': 15,
-      '4': 1,
-      '5': 8,
-      '9': 6,
-      '10': 'useImu',
-      '17': true
-    },
+    {'1': 'operating_mode', '3': 4, '4': 1, '5': 14, '6': '.cedar.OperatingMode', '9': 0, '10': 'operatingMode', '17': true},
+    {'1': 'daylight_mode', '3': 1, '4': 1, '5': 8, '9': 1, '10': 'daylightMode', '17': true},
+    {'1': 'focus_assist_mode', '3': 14, '4': 1, '5': 8, '9': 2, '10': 'focusAssistMode', '17': true},
+    {'1': 'log_dwelled_positions', '3': 10, '4': 1, '5': 8, '9': 3, '10': 'logDwelledPositions', '17': true},
+    {'1': 'catalog_entry_match', '3': 11, '4': 1, '5': 11, '6': '.cedar_sky.CatalogEntryMatch', '9': 4, '10': 'catalogEntryMatch', '17': true},
+    {'1': 'demo_image_filename', '3': 12, '4': 1, '5': 9, '9': 5, '10': 'demoImageFilename', '17': true},
+    {'1': 'use_imu', '3': 15, '4': 1, '5': 8, '9': 6, '10': 'useImu', '17': true},
   ],
   '8': [
     {'1': '_operating_mode'},
@@ -504,193 +321,29 @@ final $typed_data.Uint8List operationSettingsDescriptor = $convert.base64Decode(
 const Preferences$json = {
   '1': 'Preferences',
   '2': [
-    {
-      '1': 'celestial_coord_format',
-      '3': 1,
-      '4': 1,
-      '5': 14,
-      '6': '.cedar.CelestialCoordFormat',
-      '9': 0,
-      '10': 'celestialCoordFormat',
-      '17': true
-    },
-    {
-      '1': 'eyepiece_fov',
-      '3': 2,
-      '4': 1,
-      '5': 1,
-      '9': 1,
-      '10': 'eyepieceFov',
-      '17': true
-    },
-    {
-      '1': 'night_vision_theme',
-      '3': 3,
-      '4': 1,
-      '5': 8,
-      '9': 2,
-      '10': 'nightVisionTheme',
-      '17': true
-    },
-    {
-      '1': 'hide_app_bar',
-      '3': 5,
-      '4': 1,
-      '5': 8,
-      '9': 3,
-      '10': 'hideAppBar',
-      '17': true
-    },
-    {
-      '1': 'mount_type',
-      '3': 6,
-      '4': 1,
-      '5': 14,
-      '6': '.cedar.MountType',
-      '9': 4,
-      '10': 'mountType',
-      '17': true
-    },
-    {
-      '1': 'observer_location',
-      '3': 7,
-      '4': 1,
-      '5': 11,
-      '6': '.cedar.LatLong',
-      '9': 5,
-      '10': 'observerLocation',
-      '17': true
-    },
-    {
-      '1': 'catalog_entry_match',
-      '3': 11,
-      '4': 1,
-      '5': 11,
-      '6': '.cedar_sky.CatalogEntryMatch',
-      '9': 6,
-      '10': 'catalogEntryMatch',
-      '17': true
-    },
-    {
-      '1': 'max_distance_active',
-      '3': 15,
-      '4': 1,
-      '5': 8,
-      '9': 7,
-      '10': 'maxDistanceActive',
-      '17': true
-    },
-    {
-      '1': 'max_distance',
-      '3': 12,
-      '4': 1,
-      '5': 1,
-      '9': 8,
-      '10': 'maxDistance',
-      '17': true
-    },
-    {
-      '1': 'min_elevation_active',
-      '3': 16,
-      '4': 1,
-      '5': 8,
-      '9': 9,
-      '10': 'minElevationActive',
-      '17': true
-    },
-    {
-      '1': 'min_elevation',
-      '3': 13,
-      '4': 1,
-      '5': 1,
-      '9': 10,
-      '10': 'minElevation',
-      '17': true
-    },
-    {
-      '1': 'ordering',
-      '3': 14,
-      '4': 1,
-      '5': 14,
-      '6': '.cedar_sky.Ordering',
-      '9': 11,
-      '10': 'ordering',
-      '17': true
-    },
-    {
-      '1': 'advanced',
-      '3': 17,
-      '4': 1,
-      '5': 8,
-      '9': 12,
-      '10': 'advanced',
-      '17': true
-    },
-    {
-      '1': 'text_size_index',
-      '3': 18,
-      '4': 1,
-      '5': 5,
-      '9': 13,
-      '10': 'textSizeIndex',
-      '17': true
-    },
-    {
-      '1': 'boresight_pixel',
-      '3': 19,
-      '4': 1,
-      '5': 11,
-      '6': '.cedar.ImageCoord',
-      '9': 14,
-      '10': 'boresightPixel',
-      '17': true
-    },
-    {
-      '1': 'right_handed',
-      '3': 21,
-      '4': 1,
-      '5': 8,
-      '9': 15,
-      '10': 'rightHanded',
-      '17': true
-    },
-    {
-      '1': 'celestial_coord_choice',
-      '3': 22,
-      '4': 1,
-      '5': 9,
-      '9': 16,
-      '10': 'celestialCoordChoice',
-      '17': true
-    },
-    {
-      '1': 'perf_gauge_choice',
-      '3': 33,
-      '4': 1,
-      '5': 9,
-      '9': 17,
-      '10': 'perfGaugeChoice',
-      '17': true
-    },
-    {
-      '1': 'screen_always_on',
-      '3': 23,
-      '4': 1,
-      '5': 8,
-      '9': 18,
-      '10': 'screenAlwaysOn',
-      '17': true
-    },
+    {'1': 'celestial_coord_format', '3': 1, '4': 1, '5': 14, '6': '.cedar.CelestialCoordFormat', '9': 0, '10': 'celestialCoordFormat', '17': true},
+    {'1': 'eyepiece_fov', '3': 2, '4': 1, '5': 1, '9': 1, '10': 'eyepieceFov', '17': true},
+    {'1': 'night_vision_theme', '3': 3, '4': 1, '5': 8, '9': 2, '10': 'nightVisionTheme', '17': true},
+    {'1': 'hide_app_bar', '3': 5, '4': 1, '5': 8, '9': 3, '10': 'hideAppBar', '17': true},
+    {'1': 'mount_type', '3': 6, '4': 1, '5': 14, '6': '.cedar.MountType', '9': 4, '10': 'mountType', '17': true},
+    {'1': 'observer_location', '3': 7, '4': 1, '5': 11, '6': '.cedar.LatLong', '9': 5, '10': 'observerLocation', '17': true},
+    {'1': 'catalog_entry_match', '3': 11, '4': 1, '5': 11, '6': '.cedar_sky.CatalogEntryMatch', '9': 6, '10': 'catalogEntryMatch', '17': true},
+    {'1': 'max_distance_active', '3': 15, '4': 1, '5': 8, '9': 7, '10': 'maxDistanceActive', '17': true},
+    {'1': 'max_distance', '3': 12, '4': 1, '5': 1, '9': 8, '10': 'maxDistance', '17': true},
+    {'1': 'min_elevation_active', '3': 16, '4': 1, '5': 8, '9': 9, '10': 'minElevationActive', '17': true},
+    {'1': 'min_elevation', '3': 13, '4': 1, '5': 1, '9': 10, '10': 'minElevation', '17': true},
+    {'1': 'ordering', '3': 14, '4': 1, '5': 14, '6': '.cedar_sky.Ordering', '9': 11, '10': 'ordering', '17': true},
+    {'1': 'advanced', '3': 17, '4': 1, '5': 8, '9': 12, '10': 'advanced', '17': true},
+    {'1': 'text_size_index', '3': 18, '4': 1, '5': 5, '9': 13, '10': 'textSizeIndex', '17': true},
+    {'1': 'boresight_pixel', '3': 19, '4': 1, '5': 11, '6': '.cedar.ImageCoord', '9': 14, '10': 'boresightPixel', '17': true},
+    {'1': 'right_handed', '3': 21, '4': 1, '5': 8, '9': 15, '10': 'rightHanded', '17': true},
+    {'1': 'celestial_coord_choice', '3': 22, '4': 1, '5': 9, '9': 16, '10': 'celestialCoordChoice', '17': true},
+    {'1': 'perf_gauge_choice', '3': 33, '4': 1, '5': 9, '9': 17, '10': 'perfGaugeChoice', '17': true},
+    {'1': 'screen_always_on', '3': 23, '4': 1, '5': 8, '9': 18, '10': 'screenAlwaysOn', '17': true},
     {'1': 'dont_show_items', '3': 32, '4': 3, '5': 9, '10': 'dontShowItems'},
-    {
-      '1': 'use_bluetooth',
-      '3': 34,
-      '4': 1,
-      '5': 8,
-      '9': 19,
-      '10': 'useBluetooth',
-      '17': true
-    },
+    {'1': 'skip_focus', '3': 35, '4': 1, '5': 8, '9': 19, '10': 'skipFocus', '17': true},
+    {'1': 'skip_alignment', '3': 36, '4': 1, '5': 8, '9': 20, '10': 'skipAlignment', '17': true},
+    {'1': 'use_bluetooth', '3': 34, '4': 1, '5': 8, '9': 21, '10': 'useBluetooth', '17': true},
   ],
   '8': [
     {'1': '_celestial_coord_format'},
@@ -712,6 +365,8 @@ const Preferences$json = {
     {'1': '_celestial_coord_choice'},
     {'1': '_perf_gauge_choice'},
     {'1': '_screen_always_on'},
+    {'1': '_skip_focus'},
+    {'1': '_skip_alignment'},
     {'1': '_use_bluetooth'},
   ],
   '9': [
@@ -751,49 +406,26 @@ final $typed_data.Uint8List preferencesDescriptor = $convert.base64Decode(
     'FiABKAlIEFIUY2VsZXN0aWFsQ29vcmRDaG9pY2WIAQESLwoRcGVyZl9nYXVnZV9jaG9pY2UYIS'
     'ABKAlIEVIPcGVyZkdhdWdlQ2hvaWNliAEBEi0KEHNjcmVlbl9hbHdheXNfb24YFyABKAhIElIO'
     'c2NyZWVuQWx3YXlzT26IAQESJgoPZG9udF9zaG93X2l0ZW1zGCAgAygJUg1kb250U2hvd0l0ZW'
-    '1zEigKDXVzZV9ibHVldG9vdGgYIiABKAhIE1IMdXNlQmx1ZXRvb3RoiAEBQhkKF19jZWxlc3Rp'
-    'YWxfY29vcmRfZm9ybWF0Qg8KDV9leWVwaWVjZV9mb3ZCFQoTX25pZ2h0X3Zpc2lvbl90aGVtZU'
-    'IPCg1faGlkZV9hcHBfYmFyQg0KC19tb3VudF90eXBlQhQKEl9vYnNlcnZlcl9sb2NhdGlvbkIW'
-    'ChRfY2F0YWxvZ19lbnRyeV9tYXRjaEIWChRfbWF4X2Rpc3RhbmNlX2FjdGl2ZUIPCg1fbWF4X2'
-    'Rpc3RhbmNlQhcKFV9taW5fZWxldmF0aW9uX2FjdGl2ZUIQCg5fbWluX2VsZXZhdGlvbkILCglf'
-    'b3JkZXJpbmdCCwoJX2FkdmFuY2VkQhIKEF90ZXh0X3NpemVfaW5kZXhCEgoQX2JvcmVzaWdodF'
-    '9waXhlbEIPCg1fcmlnaHRfaGFuZGVkQhkKF19jZWxlc3RpYWxfY29vcmRfY2hvaWNlQhQKEl9w'
-    'ZXJmX2dhdWdlX2Nob2ljZUITChFfc2NyZWVuX2Fsd2F5c19vbkIQCg5fdXNlX2JsdWV0b290aE'
-    'oECAQQBUoECAgQCUoECAkQCkoECBQQFUoECBgQGUoECBkQGkoECBoQG0oECBsQHEoECBwQHUoE'
-    'CB0QHkoECB4QH0oECB8QIA==');
+    '1zEiIKCnNraXBfZm9jdXMYIyABKAhIE1IJc2tpcEZvY3VziAEBEioKDnNraXBfYWxpZ25tZW50'
+    'GCQgASgISBRSDXNraXBBbGlnbm1lbnSIAQESKAoNdXNlX2JsdWV0b290aBgiIAEoCEgVUgx1c2'
+    'VCbHVldG9vdGiIAQFCGQoXX2NlbGVzdGlhbF9jb29yZF9mb3JtYXRCDwoNX2V5ZXBpZWNlX2Zv'
+    'dkIVChNfbmlnaHRfdmlzaW9uX3RoZW1lQg8KDV9oaWRlX2FwcF9iYXJCDQoLX21vdW50X3R5cG'
+    'VCFAoSX29ic2VydmVyX2xvY2F0aW9uQhYKFF9jYXRhbG9nX2VudHJ5X21hdGNoQhYKFF9tYXhf'
+    'ZGlzdGFuY2VfYWN0aXZlQg8KDV9tYXhfZGlzdGFuY2VCFwoVX21pbl9lbGV2YXRpb25fYWN0aX'
+    'ZlQhAKDl9taW5fZWxldmF0aW9uQgsKCV9vcmRlcmluZ0ILCglfYWR2YW5jZWRCEgoQX3RleHRf'
+    'c2l6ZV9pbmRleEISChBfYm9yZXNpZ2h0X3BpeGVsQg8KDV9yaWdodF9oYW5kZWRCGQoXX2NlbG'
+    'VzdGlhbF9jb29yZF9jaG9pY2VCFAoSX3BlcmZfZ2F1Z2VfY2hvaWNlQhMKEV9zY3JlZW5fYWx3'
+    'YXlzX29uQg0KC19za2lwX2ZvY3VzQhEKD19za2lwX2FsaWdubWVudEIQCg5fdXNlX2JsdWV0b2'
+    '90aEoECAQQBUoECAgQCUoECAkQCkoECBQQFUoECBgQGUoECBkQGkoECBoQG0oECBsQHEoECBwQ'
+    'HUoECB0QHkoECB4QH0oECB8QIA==');
 
 @$core.Deprecated('Use frameRequestDescriptor instead')
 const FrameRequest$json = {
   '1': 'FrameRequest',
   '2': [
-    {
-      '1': 'prev_frame_id',
-      '3': 1,
-      '4': 1,
-      '5': 5,
-      '9': 0,
-      '10': 'prevFrameId',
-      '17': true
-    },
-    {
-      '1': 'non_blocking',
-      '3': 2,
-      '4': 1,
-      '5': 8,
-      '9': 1,
-      '10': 'nonBlocking',
-      '17': true
-    },
-    {
-      '1': 'display_orientation',
-      '3': 3,
-      '4': 1,
-      '5': 14,
-      '6': '.cedar.DisplayOrientation',
-      '9': 2,
-      '10': 'displayOrientation',
-      '17': true
-    },
+    {'1': 'prev_frame_id', '3': 1, '4': 1, '5': 5, '9': 0, '10': 'prevFrameId', '17': true},
+    {'1': 'non_blocking', '3': 2, '4': 1, '5': 8, '9': 1, '10': 'nonBlocking', '17': true},
+    {'1': 'display_orientation', '3': 3, '4': 1, '5': 14, '6': '.cedar.DisplayOrientation', '9': 2, '10': 'displayOrientation', '17': true},
   ],
   '8': [
     {'1': '_prev_frame_id'},
@@ -814,227 +446,36 @@ final $typed_data.Uint8List frameRequestDescriptor = $convert.base64Decode(
 const FrameResult$json = {
   '1': 'FrameResult',
   '2': [
-    {
-      '1': 'has_result',
-      '3': 34,
-      '4': 1,
-      '5': 8,
-      '9': 0,
-      '10': 'hasResult',
-      '17': true
-    },
+    {'1': 'has_result', '3': 34, '4': 1, '5': 8, '9': 0, '10': 'hasResult', '17': true},
     {'1': 'frame_id', '3': 1, '4': 1, '5': 5, '10': 'frameId'},
-    {
-      '1': 'server_information',
-      '3': 32,
-      '4': 1,
-      '5': 11,
-      '6': '.cedar.ServerInformation',
-      '10': 'serverInformation'
-    },
-    {
-      '1': 'fixed_settings',
-      '3': 27,
-      '4': 1,
-      '5': 11,
-      '6': '.cedar.FixedSettings',
-      '10': 'fixedSettings'
-    },
-    {
-      '1': 'preferences',
-      '3': 25,
-      '4': 1,
-      '5': 11,
-      '6': '.cedar.Preferences',
-      '10': 'preferences'
-    },
-    {
-      '1': 'operation_settings',
-      '3': 2,
-      '4': 1,
-      '5': 11,
-      '6': '.cedar.OperationSettings',
-      '10': 'operationSettings'
-    },
-    {
-      '1': 'calibration_data',
-      '3': 5,
-      '4': 1,
-      '5': 11,
-      '6': '.cedar.CalibrationData',
-      '10': 'calibrationData'
-    },
+    {'1': 'server_information', '3': 32, '4': 1, '5': 11, '6': '.cedar.ServerInformation', '10': 'serverInformation'},
+    {'1': 'fixed_settings', '3': 27, '4': 1, '5': 11, '6': '.cedar.FixedSettings', '10': 'fixedSettings'},
+    {'1': 'preferences', '3': 25, '4': 1, '5': 11, '6': '.cedar.Preferences', '10': 'preferences'},
+    {'1': 'operation_settings', '3': 2, '4': 1, '5': 11, '6': '.cedar.OperationSettings', '10': 'operationSettings'},
+    {'1': 'calibration_data', '3': 5, '4': 1, '5': 11, '6': '.cedar.CalibrationData', '10': 'calibrationData'},
     {'1': 'image', '3': 3, '4': 1, '5': 11, '6': '.cedar.Image', '10': 'image'},
-    {
-      '1': 'exposure_time',
-      '3': 7,
-      '4': 1,
-      '5': 11,
-      '6': '.google.protobuf.Duration',
-      '10': 'exposureTime'
-    },
-    {
-      '1': 'capture_time',
-      '3': 9,
-      '4': 1,
-      '5': 11,
-      '6': '.google.protobuf.Timestamp',
-      '10': 'captureTime'
-    },
-    {
-      '1': 'star_candidates',
-      '3': 4,
-      '4': 3,
-      '5': 11,
-      '6': '.cedar.StarCentroid',
-      '10': 'starCandidates'
-    },
-    {
-      '1': 'star_count_moving_average',
-      '3': 35,
-      '4': 1,
-      '5': 1,
-      '10': 'starCountMovingAverage'
-    },
-    {
-      '1': 'plate_solution',
-      '3': 17,
-      '4': 1,
-      '5': 11,
-      '6': '.cedar.PlateSolution',
-      '9': 1,
-      '10': 'plateSolution',
-      '17': true
-    },
+    {'1': 'exposure_time', '3': 7, '4': 1, '5': 11, '6': '.google.protobuf.Duration', '10': 'exposureTime'},
+    {'1': 'capture_time', '3': 9, '4': 1, '5': 11, '6': '.google.protobuf.Timestamp', '10': 'captureTime'},
+    {'1': 'star_candidates', '3': 4, '4': 3, '5': 11, '6': '.cedar.StarCentroid', '10': 'starCandidates'},
+    {'1': 'star_count_moving_average', '3': 35, '4': 1, '5': 1, '10': 'starCountMovingAverage'},
+    {'1': 'plate_solution', '3': 17, '4': 1, '5': 11, '6': '.cedar.PlateSolution', '9': 1, '10': 'plateSolution', '17': true},
     {'1': 'noise_estimate', '3': 26, '4': 1, '5': 1, '10': 'noiseEstimate'},
-    {
-      '1': 'processing_stats',
-      '3': 8,
-      '4': 1,
-      '5': 11,
-      '6': '.cedar.ProcessingStats',
-      '10': 'processingStats'
-    },
-    {
-      '1': 'boresight_position',
-      '3': 21,
-      '4': 1,
-      '5': 11,
-      '6': '.cedar.ImageCoord',
-      '10': 'boresightPosition'
-    },
+    {'1': 'processing_stats', '3': 8, '4': 1, '5': 11, '6': '.cedar.ProcessingStats', '10': 'processingStats'},
+    {'1': 'boresight_position', '3': 21, '4': 1, '5': 11, '6': '.cedar.ImageCoord', '10': 'boresightPosition'},
     {'1': 'calibrating', '3': 22, '4': 1, '5': 8, '10': 'calibrating'},
-    {
-      '1': 'calibration_progress',
-      '3': 23,
-      '4': 1,
-      '5': 1,
-      '9': 2,
-      '10': 'calibrationProgress',
-      '17': true
-    },
-    {
-      '1': 'center_peak_position',
-      '3': 12,
-      '4': 1,
-      '5': 11,
-      '6': '.cedar.ImageCoord',
-      '9': 3,
-      '10': 'centerPeakPosition',
-      '17': true
-    },
-    {
-      '1': 'center_peak_value',
-      '3': 6,
-      '4': 1,
-      '5': 5,
-      '9': 4,
-      '10': 'centerPeakValue',
-      '17': true
-    },
-    {
-      '1': 'center_peak_image',
-      '3': 13,
-      '4': 1,
-      '5': 11,
-      '6': '.cedar.Image',
-      '9': 5,
-      '10': 'centerPeakImage',
-      '17': true
-    },
-    {
-      '1': 'contrast_ratio',
-      '3': 36,
-      '4': 1,
-      '5': 1,
-      '9': 6,
-      '10': 'contrastRatio',
-      '17': true
-    },
-    {
-      '1': 'daylight_focus_zoom_image',
-      '3': 37,
-      '4': 1,
-      '5': 11,
-      '6': '.cedar.Image',
-      '9': 7,
-      '10': 'daylightFocusZoomImage',
-      '17': true
-    },
-    {
-      '1': 'location_based_info',
-      '3': 29,
-      '4': 1,
-      '5': 11,
-      '6': '.cedar.LocationBasedInfo',
-      '9': 8,
-      '10': 'locationBasedInfo',
-      '17': true
-    },
-    {
-      '1': 'slew_request',
-      '3': 24,
-      '4': 1,
-      '5': 11,
-      '6': '.cedar.SlewRequest',
-      '9': 9,
-      '10': 'slewRequest',
-      '17': true
-    },
-    {
-      '1': 'boresight_image',
-      '3': 28,
-      '4': 1,
-      '5': 11,
-      '6': '.cedar.Image',
-      '9': 10,
-      '10': 'boresightImage',
-      '17': true
-    },
-    {
-      '1': 'polar_align_advice',
-      '3': 30,
-      '4': 1,
-      '5': 11,
-      '6': '.cedar.PolarAlignAdvice',
-      '10': 'polarAlignAdvice'
-    },
-    {
-      '1': 'labeled_catalog_entries',
-      '3': 31,
-      '4': 3,
-      '5': 11,
-      '6': '.cedar.FovCatalogEntry',
-      '10': 'labeledCatalogEntries'
-    },
-    {
-      '1': 'unlabeled_catalog_entries',
-      '3': 33,
-      '4': 3,
-      '5': 11,
-      '6': '.cedar.FovCatalogEntry',
-      '10': 'unlabeledCatalogEntries'
-    },
+    {'1': 'calibration_progress', '3': 23, '4': 1, '5': 1, '9': 2, '10': 'calibrationProgress', '17': true},
+    {'1': 'skip_focus_active', '3': 38, '4': 1, '5': 8, '10': 'skipFocusActive'},
+    {'1': 'center_peak_position', '3': 12, '4': 1, '5': 11, '6': '.cedar.ImageCoord', '9': 3, '10': 'centerPeakPosition', '17': true},
+    {'1': 'center_peak_value', '3': 6, '4': 1, '5': 5, '9': 4, '10': 'centerPeakValue', '17': true},
+    {'1': 'center_peak_image', '3': 13, '4': 1, '5': 11, '6': '.cedar.Image', '9': 5, '10': 'centerPeakImage', '17': true},
+    {'1': 'contrast_ratio', '3': 36, '4': 1, '5': 1, '9': 6, '10': 'contrastRatio', '17': true},
+    {'1': 'daylight_focus_zoom_image', '3': 37, '4': 1, '5': 11, '6': '.cedar.Image', '9': 7, '10': 'daylightFocusZoomImage', '17': true},
+    {'1': 'location_based_info', '3': 29, '4': 1, '5': 11, '6': '.cedar.LocationBasedInfo', '9': 8, '10': 'locationBasedInfo', '17': true},
+    {'1': 'slew_request', '3': 24, '4': 1, '5': 11, '6': '.cedar.SlewRequest', '9': 9, '10': 'slewRequest', '17': true},
+    {'1': 'boresight_image', '3': 28, '4': 1, '5': 11, '6': '.cedar.Image', '9': 10, '10': 'boresightImage', '17': true},
+    {'1': 'polar_align_advice', '3': 30, '4': 1, '5': 11, '6': '.cedar.PolarAlignAdvice', '10': 'polarAlignAdvice'},
+    {'1': 'labeled_catalog_entries', '3': 31, '4': 3, '5': 11, '6': '.cedar.FovCatalogEntry', '10': 'labeledCatalogEntries'},
+    {'1': 'unlabeled_catalog_entries', '3': 33, '4': 3, '5': 11, '6': '.cedar.FovCatalogEntry', '10': 'unlabeledCatalogEntries'},
   ],
   '8': [
     {'1': '_has_result'},
@@ -1075,47 +516,34 @@ final $typed_data.Uint8List frameResultDescriptor = $convert.base64Decode(
     'Vzc2luZ1N0YXRzUg9wcm9jZXNzaW5nU3RhdHMSQAoSYm9yZXNpZ2h0X3Bvc2l0aW9uGBUgASgL'
     'MhEuY2VkYXIuSW1hZ2VDb29yZFIRYm9yZXNpZ2h0UG9zaXRpb24SIAoLY2FsaWJyYXRpbmcYFi'
     'ABKAhSC2NhbGlicmF0aW5nEjYKFGNhbGlicmF0aW9uX3Byb2dyZXNzGBcgASgBSAJSE2NhbGli'
-    'cmF0aW9uUHJvZ3Jlc3OIAQESSAoUY2VudGVyX3BlYWtfcG9zaXRpb24YDCABKAsyES5jZWRhci'
-    '5JbWFnZUNvb3JkSANSEmNlbnRlclBlYWtQb3NpdGlvbogBARIvChFjZW50ZXJfcGVha192YWx1'
-    'ZRgGIAEoBUgEUg9jZW50ZXJQZWFrVmFsdWWIAQESPQoRY2VudGVyX3BlYWtfaW1hZ2UYDSABKA'
-    'syDC5jZWRhci5JbWFnZUgFUg9jZW50ZXJQZWFrSW1hZ2WIAQESKgoOY29udHJhc3RfcmF0aW8Y'
-    'JCABKAFIBlINY29udHJhc3RSYXRpb4gBARJMChlkYXlsaWdodF9mb2N1c196b29tX2ltYWdlGC'
-    'UgASgLMgwuY2VkYXIuSW1hZ2VIB1IWZGF5bGlnaHRGb2N1c1pvb21JbWFnZYgBARJNChNsb2Nh'
-    'dGlvbl9iYXNlZF9pbmZvGB0gASgLMhguY2VkYXIuTG9jYXRpb25CYXNlZEluZm9ICFIRbG9jYX'
-    'Rpb25CYXNlZEluZm+IAQESOgoMc2xld19yZXF1ZXN0GBggASgLMhIuY2VkYXIuU2xld1JlcXVl'
-    'c3RICVILc2xld1JlcXVlc3SIAQESOgoPYm9yZXNpZ2h0X2ltYWdlGBwgASgLMgwuY2VkYXIuSW'
-    '1hZ2VIClIOYm9yZXNpZ2h0SW1hZ2WIAQESRQoScG9sYXJfYWxpZ25fYWR2aWNlGB4gASgLMhcu'
-    'Y2VkYXIuUG9sYXJBbGlnbkFkdmljZVIQcG9sYXJBbGlnbkFkdmljZRJOChdsYWJlbGVkX2NhdG'
-    'Fsb2dfZW50cmllcxgfIAMoCzIWLmNlZGFyLkZvdkNhdGFsb2dFbnRyeVIVbGFiZWxlZENhdGFs'
-    'b2dFbnRyaWVzElIKGXVubGFiZWxlZF9jYXRhbG9nX2VudHJpZXMYISADKAsyFi5jZWRhci5Gb3'
-    'ZDYXRhbG9nRW50cnlSF3VubGFiZWxlZENhdGFsb2dFbnRyaWVzQg0KC19oYXNfcmVzdWx0QhEK'
-    'D19wbGF0ZV9zb2x1dGlvbkIXChVfY2FsaWJyYXRpb25fcHJvZ3Jlc3NCFwoVX2NlbnRlcl9wZW'
-    'FrX3Bvc2l0aW9uQhQKEl9jZW50ZXJfcGVha192YWx1ZUIUChJfY2VudGVyX3BlYWtfaW1hZ2VC'
-    'EQoPX2NvbnRyYXN0X3JhdGlvQhwKGl9kYXlsaWdodF9mb2N1c196b29tX2ltYWdlQhYKFF9sb2'
-    'NhdGlvbl9iYXNlZF9pbmZvQg8KDV9zbGV3X3JlcXVlc3RCEgoQX2JvcmVzaWdodF9pbWFnZUoE'
-    'CAoQC0oECAsQDA==');
+    'cmF0aW9uUHJvZ3Jlc3OIAQESKgoRc2tpcF9mb2N1c19hY3RpdmUYJiABKAhSD3NraXBGb2N1c0'
+    'FjdGl2ZRJIChRjZW50ZXJfcGVha19wb3NpdGlvbhgMIAEoCzIRLmNlZGFyLkltYWdlQ29vcmRI'
+    'A1ISY2VudGVyUGVha1Bvc2l0aW9uiAEBEi8KEWNlbnRlcl9wZWFrX3ZhbHVlGAYgASgFSARSD2'
+    'NlbnRlclBlYWtWYWx1ZYgBARI9ChFjZW50ZXJfcGVha19pbWFnZRgNIAEoCzIMLmNlZGFyLklt'
+    'YWdlSAVSD2NlbnRlclBlYWtJbWFnZYgBARIqCg5jb250cmFzdF9yYXRpbxgkIAEoAUgGUg1jb2'
+    '50cmFzdFJhdGlviAEBEkwKGWRheWxpZ2h0X2ZvY3VzX3pvb21faW1hZ2UYJSABKAsyDC5jZWRh'
+    'ci5JbWFnZUgHUhZkYXlsaWdodEZvY3VzWm9vbUltYWdliAEBEk0KE2xvY2F0aW9uX2Jhc2VkX2'
+    'luZm8YHSABKAsyGC5jZWRhci5Mb2NhdGlvbkJhc2VkSW5mb0gIUhFsb2NhdGlvbkJhc2VkSW5m'
+    'b4gBARI6CgxzbGV3X3JlcXVlc3QYGCABKAsyEi5jZWRhci5TbGV3UmVxdWVzdEgJUgtzbGV3Um'
+    'VxdWVzdIgBARI6Cg9ib3Jlc2lnaHRfaW1hZ2UYHCABKAsyDC5jZWRhci5JbWFnZUgKUg5ib3Jl'
+    'c2lnaHRJbWFnZYgBARJFChJwb2xhcl9hbGlnbl9hZHZpY2UYHiABKAsyFy5jZWRhci5Qb2xhck'
+    'FsaWduQWR2aWNlUhBwb2xhckFsaWduQWR2aWNlEk4KF2xhYmVsZWRfY2F0YWxvZ19lbnRyaWVz'
+    'GB8gAygLMhYuY2VkYXIuRm92Q2F0YWxvZ0VudHJ5UhVsYWJlbGVkQ2F0YWxvZ0VudHJpZXMSUg'
+    'oZdW5sYWJlbGVkX2NhdGFsb2dfZW50cmllcxghIAMoCzIWLmNlZGFyLkZvdkNhdGFsb2dFbnRy'
+    'eVIXdW5sYWJlbGVkQ2F0YWxvZ0VudHJpZXNCDQoLX2hhc19yZXN1bHRCEQoPX3BsYXRlX3NvbH'
+    'V0aW9uQhcKFV9jYWxpYnJhdGlvbl9wcm9ncmVzc0IXChVfY2VudGVyX3BlYWtfcG9zaXRpb25C'
+    'FAoSX2NlbnRlcl9wZWFrX3ZhbHVlQhQKEl9jZW50ZXJfcGVha19pbWFnZUIRCg9fY29udHJhc3'
+    'RfcmF0aW9CHAoaX2RheWxpZ2h0X2ZvY3VzX3pvb21faW1hZ2VCFgoUX2xvY2F0aW9uX2Jhc2Vk'
+    'X2luZm9CDwoNX3NsZXdfcmVxdWVzdEISChBfYm9yZXNpZ2h0X2ltYWdlSgQIChALSgQICxAM');
 
 @$core.Deprecated('Use imageDescriptor instead')
 const Image$json = {
   '1': 'Image',
   '2': [
     {'1': 'binning_factor', '3': 1, '4': 1, '5': 5, '10': 'binningFactor'},
-    {
-      '1': 'rectangle',
-      '3': 2,
-      '4': 1,
-      '5': 11,
-      '6': '.cedar.Rectangle',
-      '10': 'rectangle'
-    },
+    {'1': 'rectangle', '3': 2, '4': 1, '5': 11, '6': '.cedar.Rectangle', '10': 'rectangle'},
     {'1': 'image_data', '3': 3, '4': 1, '5': 12, '10': 'imageData'},
-    {
-      '1': 'rotation_size_ratio',
-      '3': 4,
-      '4': 1,
-      '5': 1,
-      '10': 'rotationSizeRatio'
-    },
+    {'1': 'rotation_size_ratio', '3': 4, '4': 1, '5': 1, '10': 'rotationSizeRatio'},
   ],
 };
 
@@ -1146,14 +574,7 @@ final $typed_data.Uint8List rectangleDescriptor = $convert.base64Decode(
 const StarCentroid$json = {
   '1': 'StarCentroid',
   '2': [
-    {
-      '1': 'centroid_position',
-      '3': 1,
-      '4': 1,
-      '5': 11,
-      '6': '.cedar.ImageCoord',
-      '10': 'centroidPosition'
-    },
+    {'1': 'centroid_position', '3': 1, '4': 1, '5': 11, '6': '.cedar.ImageCoord', '10': 'centroidPosition'},
     {'1': 'brightness', '3': 4, '4': 1, '5': 1, '10': 'brightness'},
     {'1': 'num_saturated', '3': 6, '4': 1, '5': 5, '10': 'numSaturated'},
   ],
@@ -1175,101 +596,32 @@ const ImageCoord$json = {
 };
 
 /// Descriptor for `ImageCoord`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List imageCoordDescriptor = $convert
-    .base64Decode('CgpJbWFnZUNvb3JkEgwKAXgYASABKAFSAXgSDAoBeRgCIAEoAVIBeQ==');
+final $typed_data.Uint8List imageCoordDescriptor = $convert.base64Decode(
+    'CgpJbWFnZUNvb3JkEgwKAXgYASABKAFSAXgSDAoBeRgCIAEoAVIBeQ==');
 
 @$core.Deprecated('Use plateSolutionDescriptor instead')
 const PlateSolution$json = {
   '1': 'PlateSolution',
   '2': [
-    {
-      '1': 'image_sky_coord',
-      '3': 1,
-      '4': 1,
-      '5': 11,
-      '6': '.cedar_common.CelestialCoord',
-      '10': 'imageSkyCoord'
-    },
+    {'1': 'image_sky_coord', '3': 1, '4': 1, '5': 11, '6': '.cedar_common.CelestialCoord', '10': 'imageSkyCoord'},
     {'1': 'roll', '3': 2, '4': 1, '5': 1, '10': 'roll'},
     {'1': 'fov', '3': 3, '4': 1, '5': 1, '10': 'fov'},
-    {
-      '1': 'distortion',
-      '3': 4,
-      '4': 1,
-      '5': 1,
-      '9': 0,
-      '10': 'distortion',
-      '17': true
-    },
+    {'1': 'distortion', '3': 4, '4': 1, '5': 1, '9': 0, '10': 'distortion', '17': true},
     {'1': 'rmse', '3': 5, '4': 1, '5': 1, '10': 'rmse'},
     {'1': 'p90_error', '3': 6, '4': 1, '5': 1, '10': 'p90Error'},
     {'1': 'max_error', '3': 7, '4': 1, '5': 1, '10': 'maxError'},
     {'1': 'num_matches', '3': 8, '4': 1, '5': 5, '10': 'numMatches'},
     {'1': 'prob', '3': 9, '4': 1, '5': 1, '10': 'prob'},
     {'1': 'epoch_equinox', '3': 10, '4': 1, '5': 5, '10': 'epochEquinox'},
-    {
-      '1': 'epoch_proper_motion',
-      '3': 11,
-      '4': 1,
-      '5': 2,
-      '10': 'epochProperMotion'
-    },
-    {
-      '1': 'solve_time',
-      '3': 12,
-      '4': 1,
-      '5': 11,
-      '6': '.google.protobuf.Duration',
-      '10': 'solveTime'
-    },
-    {
-      '1': 'target_sky_coord',
-      '3': 13,
-      '4': 3,
-      '5': 11,
-      '6': '.cedar_common.CelestialCoord',
-      '10': 'targetSkyCoord'
-    },
-    {
-      '1': 'target_pixel',
-      '3': 14,
-      '4': 3,
-      '5': 11,
-      '6': '.cedar.ImageCoord',
-      '10': 'targetPixel'
-    },
-    {
-      '1': 'matched_stars',
-      '3': 15,
-      '4': 3,
-      '5': 11,
-      '6': '.cedar.StarInfo',
-      '10': 'matchedStars'
-    },
-    {
-      '1': 'pattern_centroids',
-      '3': 16,
-      '4': 3,
-      '5': 11,
-      '6': '.cedar.ImageCoord',
-      '10': 'patternCentroids'
-    },
-    {
-      '1': 'catalog_stars',
-      '3': 17,
-      '4': 3,
-      '5': 11,
-      '6': '.cedar.StarInfo',
-      '10': 'catalogStars'
-    },
+    {'1': 'epoch_proper_motion', '3': 11, '4': 1, '5': 2, '10': 'epochProperMotion'},
+    {'1': 'solve_time', '3': 12, '4': 1, '5': 11, '6': '.google.protobuf.Duration', '10': 'solveTime'},
+    {'1': 'target_sky_coord', '3': 13, '4': 3, '5': 11, '6': '.cedar_common.CelestialCoord', '10': 'targetSkyCoord'},
+    {'1': 'target_pixel', '3': 14, '4': 3, '5': 11, '6': '.cedar.ImageCoord', '10': 'targetPixel'},
+    {'1': 'matched_stars', '3': 15, '4': 3, '5': 11, '6': '.cedar.StarInfo', '10': 'matchedStars'},
+    {'1': 'pattern_centroids', '3': 16, '4': 3, '5': 11, '6': '.cedar.ImageCoord', '10': 'patternCentroids'},
+    {'1': 'catalog_stars', '3': 17, '4': 3, '5': 11, '6': '.cedar.StarInfo', '10': 'catalogStars'},
     {'1': 'rotation_matrix', '3': 18, '4': 3, '5': 1, '10': 'rotationMatrix'},
-    {
-      '1': 'solution_from_imu',
-      '3': 19,
-      '4': 1,
-      '5': 8,
-      '10': 'solutionFromImu'
-    },
+    {'1': 'solution_from_imu', '3': 19, '4': 1, '5': 8, '10': 'solutionFromImu'},
   ],
   '8': [
     {'1': '_distortion'},
@@ -1299,22 +651,8 @@ final $typed_data.Uint8List plateSolutionDescriptor = $convert.base64Decode(
 const StarInfo$json = {
   '1': 'StarInfo',
   '2': [
-    {
-      '1': 'pixel',
-      '3': 1,
-      '4': 1,
-      '5': 11,
-      '6': '.cedar.ImageCoord',
-      '10': 'pixel'
-    },
-    {
-      '1': 'sky_coord',
-      '3': 2,
-      '4': 1,
-      '5': 11,
-      '6': '.cedar_common.CelestialCoord',
-      '10': 'skyCoord'
-    },
+    {'1': 'pixel', '3': 1, '4': 1, '5': 11, '6': '.cedar.ImageCoord', '10': 'pixel'},
+    {'1': 'sky_coord', '3': 2, '4': 1, '5': 11, '6': '.cedar_common.CelestialCoord', '10': 'skyCoord'},
     {'1': 'mag', '3': 3, '4': 1, '5': 2, '10': 'mag'},
   ],
 };
@@ -1329,62 +667,13 @@ final $typed_data.Uint8List starInfoDescriptor = $convert.base64Decode(
 const ProcessingStats$json = {
   '1': 'ProcessingStats',
   '2': [
-    {
-      '1': 'acquire_latency',
-      '3': 9,
-      '4': 1,
-      '5': 11,
-      '6': '.cedar.ValueStats',
-      '10': 'acquireLatency'
-    },
-    {
-      '1': 'detect_latency',
-      '3': 3,
-      '4': 1,
-      '5': 11,
-      '6': '.cedar.ValueStats',
-      '10': 'detectLatency'
-    },
-    {
-      '1': 'solve_latency',
-      '3': 4,
-      '4': 1,
-      '5': 11,
-      '6': '.cedar.ValueStats',
-      '10': 'solveLatency'
-    },
-    {
-      '1': 'solve_attempt_fraction',
-      '3': 5,
-      '4': 1,
-      '5': 11,
-      '6': '.cedar.ValueStats',
-      '10': 'solveAttemptFraction'
-    },
-    {
-      '1': 'solve_success_fraction',
-      '3': 6,
-      '4': 1,
-      '5': 11,
-      '6': '.cedar.ValueStats',
-      '10': 'solveSuccessFraction'
-    },
-    {
-      '1': 'serve_latency',
-      '3': 7,
-      '4': 1,
-      '5': 11,
-      '6': '.cedar.ValueStats',
-      '10': 'serveLatency'
-    },
-    {
-      '1': 'solve_interval',
-      '3': 8,
-      '4': 1,
-      '5': 11,
-      '6': '.cedar.ValueStats',
-      '10': 'solveInterval'
-    },
+    {'1': 'acquire_latency', '3': 9, '4': 1, '5': 11, '6': '.cedar.ValueStats', '10': 'acquireLatency'},
+    {'1': 'detect_latency', '3': 3, '4': 1, '5': 11, '6': '.cedar.ValueStats', '10': 'detectLatency'},
+    {'1': 'solve_latency', '3': 4, '4': 1, '5': 11, '6': '.cedar.ValueStats', '10': 'solveLatency'},
+    {'1': 'solve_attempt_fraction', '3': 5, '4': 1, '5': 11, '6': '.cedar.ValueStats', '10': 'solveAttemptFraction'},
+    {'1': 'solve_success_fraction', '3': 6, '4': 1, '5': 11, '6': '.cedar.ValueStats', '10': 'solveSuccessFraction'},
+    {'1': 'serve_latency', '3': 7, '4': 1, '5': 11, '6': '.cedar.ValueStats', '10': 'serveLatency'},
+    {'1': 'solve_interval', '3': 8, '4': 1, '5': 11, '6': '.cedar.ValueStats', '10': 'solveInterval'},
   ],
   '9': [
     {'1': 1, '2': 2},
@@ -1408,26 +697,8 @@ final $typed_data.Uint8List processingStatsDescriptor = $convert.base64Decode(
 const ValueStats$json = {
   '1': 'ValueStats',
   '2': [
-    {
-      '1': 'recent',
-      '3': 1,
-      '4': 1,
-      '5': 11,
-      '6': '.cedar.DescriptiveStats',
-      '9': 0,
-      '10': 'recent',
-      '17': true
-    },
-    {
-      '1': 'session',
-      '3': 2,
-      '4': 1,
-      '5': 11,
-      '6': '.cedar.DescriptiveStats',
-      '9': 1,
-      '10': 'session',
-      '17': true
-    },
+    {'1': 'recent', '3': 1, '4': 1, '5': 11, '6': '.cedar.DescriptiveStats', '9': 0, '10': 'recent', '17': true},
+    {'1': 'session', '3': 2, '4': 1, '5': 11, '6': '.cedar.DescriptiveStats', '9': 1, '10': 'session', '17': true},
   ],
   '8': [
     {'1': '_recent'},
@@ -1450,15 +721,7 @@ const DescriptiveStats$json = {
     {'1': 'mean', '3': 3, '4': 1, '5': 1, '10': 'mean'},
     {'1': 'stddev', '3': 4, '4': 1, '5': 1, '10': 'stddev'},
     {'1': 'median', '3': 5, '4': 1, '5': 1, '9': 0, '10': 'median', '17': true},
-    {
-      '1': 'median_absolute_deviation',
-      '3': 6,
-      '4': 1,
-      '5': 1,
-      '9': 1,
-      '10': 'medianAbsoluteDeviation',
-      '17': true
-    },
+    {'1': 'median_absolute_deviation', '3': 6, '4': 1, '5': 1, '9': 1, '10': 'medianAbsoluteDeviation', '17': true},
   ],
   '8': [
     {'1': '_median'},
@@ -1478,171 +741,24 @@ final $typed_data.Uint8List descriptiveStatsDescriptor = $convert.base64Decode(
 const CalibrationData$json = {
   '1': 'CalibrationData',
   '2': [
-    {
-      '1': 'calibration_time',
-      '3': 1,
-      '4': 1,
-      '5': 11,
-      '6': '.google.protobuf.Timestamp',
-      '9': 0,
-      '10': 'calibrationTime',
-      '17': true
-    },
-    {
-      '1': 'calibration_failure_reason',
-      '3': 12,
-      '4': 1,
-      '5': 14,
-      '6': '.cedar.CalibrationFailureReason',
-      '9': 1,
-      '10': 'calibrationFailureReason',
-      '17': true
-    },
-    {
-      '1': 'target_exposure_time',
-      '3': 2,
-      '4': 1,
-      '5': 11,
-      '6': '.google.protobuf.Duration',
-      '9': 2,
-      '10': 'targetExposureTime',
-      '17': true
-    },
-    {
-      '1': 'camera_offset',
-      '3': 3,
-      '4': 1,
-      '5': 5,
-      '9': 3,
-      '10': 'cameraOffset',
-      '17': true
-    },
-    {
-      '1': 'fov_horizontal',
-      '3': 4,
-      '4': 1,
-      '5': 1,
-      '9': 4,
-      '10': 'fovHorizontal',
-      '17': true
-    },
-    {
-      '1': 'fov_vertical',
-      '3': 11,
-      '4': 1,
-      '5': 1,
-      '9': 5,
-      '10': 'fovVertical',
-      '17': true
-    },
-    {
-      '1': 'lens_distortion',
-      '3': 5,
-      '4': 1,
-      '5': 1,
-      '9': 6,
-      '10': 'lensDistortion',
-      '17': true
-    },
-    {
-      '1': 'match_max_error',
-      '3': 8,
-      '4': 1,
-      '5': 1,
-      '9': 7,
-      '10': 'matchMaxError',
-      '17': true
-    },
-    {
-      '1': 'lens_fl_mm',
-      '3': 6,
-      '4': 1,
-      '5': 1,
-      '9': 8,
-      '10': 'lensFlMm',
-      '17': true
-    },
-    {
-      '1': 'pixel_angular_size',
-      '3': 7,
-      '4': 1,
-      '5': 1,
-      '9': 9,
-      '10': 'pixelAngularSize',
-      '17': true
-    },
-    {
-      '1': 'gyro_zero_bias_x',
-      '3': 15,
-      '4': 1,
-      '5': 1,
-      '9': 10,
-      '10': 'gyroZeroBiasX',
-      '17': true
-    },
-    {
-      '1': 'gyro_zero_bias_y',
-      '3': 16,
-      '4': 1,
-      '5': 1,
-      '9': 11,
-      '10': 'gyroZeroBiasY',
-      '17': true
-    },
-    {
-      '1': 'gyro_zero_bias_z',
-      '3': 17,
-      '4': 1,
-      '5': 1,
-      '9': 12,
-      '10': 'gyroZeroBiasZ',
-      '17': true
-    },
-    {
-      '1': 'gyro_transform_error_fraction',
-      '3': 18,
-      '4': 1,
-      '5': 1,
-      '9': 13,
-      '10': 'gyroTransformErrorFraction',
-      '17': true
-    },
-    {
-      '1': 'camera_view_gyro_axis',
-      '3': 19,
-      '4': 1,
-      '5': 9,
-      '9': 14,
-      '10': 'cameraViewGyroAxis',
-      '17': true
-    },
-    {
-      '1': 'camera_view_misalignment',
-      '3': 20,
-      '4': 1,
-      '5': 1,
-      '9': 15,
-      '10': 'cameraViewMisalignment',
-      '17': true
-    },
-    {
-      '1': 'camera_up_gyro_axis',
-      '3': 21,
-      '4': 1,
-      '5': 9,
-      '9': 16,
-      '10': 'cameraUpGyroAxis',
-      '17': true
-    },
-    {
-      '1': 'camera_up_misalignment',
-      '3': 22,
-      '4': 1,
-      '5': 1,
-      '9': 17,
-      '10': 'cameraUpMisalignment',
-      '17': true
-    },
+    {'1': 'calibration_time', '3': 1, '4': 1, '5': 11, '6': '.google.protobuf.Timestamp', '9': 0, '10': 'calibrationTime', '17': true},
+    {'1': 'calibration_failure_reason', '3': 12, '4': 1, '5': 14, '6': '.cedar.CalibrationFailureReason', '9': 1, '10': 'calibrationFailureReason', '17': true},
+    {'1': 'target_exposure_time', '3': 2, '4': 1, '5': 11, '6': '.google.protobuf.Duration', '9': 2, '10': 'targetExposureTime', '17': true},
+    {'1': 'camera_offset', '3': 3, '4': 1, '5': 5, '9': 3, '10': 'cameraOffset', '17': true},
+    {'1': 'fov_horizontal', '3': 4, '4': 1, '5': 1, '9': 4, '10': 'fovHorizontal', '17': true},
+    {'1': 'fov_vertical', '3': 11, '4': 1, '5': 1, '9': 5, '10': 'fovVertical', '17': true},
+    {'1': 'lens_distortion', '3': 5, '4': 1, '5': 1, '9': 6, '10': 'lensDistortion', '17': true},
+    {'1': 'match_max_error', '3': 8, '4': 1, '5': 1, '9': 7, '10': 'matchMaxError', '17': true},
+    {'1': 'lens_fl_mm', '3': 6, '4': 1, '5': 1, '9': 8, '10': 'lensFlMm', '17': true},
+    {'1': 'pixel_angular_size', '3': 7, '4': 1, '5': 1, '9': 9, '10': 'pixelAngularSize', '17': true},
+    {'1': 'gyro_zero_bias_x', '3': 15, '4': 1, '5': 1, '9': 10, '10': 'gyroZeroBiasX', '17': true},
+    {'1': 'gyro_zero_bias_y', '3': 16, '4': 1, '5': 1, '9': 11, '10': 'gyroZeroBiasY', '17': true},
+    {'1': 'gyro_zero_bias_z', '3': 17, '4': 1, '5': 1, '9': 12, '10': 'gyroZeroBiasZ', '17': true},
+    {'1': 'gyro_transform_error_fraction', '3': 18, '4': 1, '5': 1, '9': 13, '10': 'gyroTransformErrorFraction', '17': true},
+    {'1': 'camera_view_gyro_axis', '3': 19, '4': 1, '5': 9, '9': 14, '10': 'cameraViewGyroAxis', '17': true},
+    {'1': 'camera_view_misalignment', '3': 20, '4': 1, '5': 1, '9': 15, '10': 'cameraViewMisalignment', '17': true},
+    {'1': 'camera_up_gyro_axis', '3': 21, '4': 1, '5': 9, '9': 16, '10': 'cameraUpGyroAxis', '17': true},
+    {'1': 'camera_up_misalignment', '3': 22, '4': 1, '5': 1, '9': 17, '10': 'cameraUpMisalignment', '17': true},
   ],
   '8': [
     {'1': '_calibration_time'},
@@ -1723,79 +839,14 @@ final $typed_data.Uint8List locationBasedInfoDescriptor = $convert.base64Decode(
 const SlewRequest$json = {
   '1': 'SlewRequest',
   '2': [
-    {
-      '1': 'target',
-      '3': 1,
-      '4': 1,
-      '5': 11,
-      '6': '.cedar_common.CelestialCoord',
-      '10': 'target'
-    },
-    {
-      '1': 'target_catalog_entry',
-      '3': 8,
-      '4': 1,
-      '5': 11,
-      '6': '.cedar_sky.CatalogEntry',
-      '9': 0,
-      '10': 'targetCatalogEntry',
-      '17': true
-    },
-    {
-      '1': 'target_catalog_entry_distance',
-      '3': 9,
-      '4': 1,
-      '5': 1,
-      '9': 1,
-      '10': 'targetCatalogEntryDistance',
-      '17': true
-    },
-    {
-      '1': 'target_distance',
-      '3': 2,
-      '4': 1,
-      '5': 1,
-      '9': 2,
-      '10': 'targetDistance',
-      '17': true
-    },
-    {
-      '1': 'target_angle',
-      '3': 3,
-      '4': 1,
-      '5': 1,
-      '9': 3,
-      '10': 'targetAngle',
-      '17': true
-    },
-    {
-      '1': 'offset_rotation_axis',
-      '3': 5,
-      '4': 1,
-      '5': 1,
-      '9': 4,
-      '10': 'offsetRotationAxis',
-      '17': true
-    },
-    {
-      '1': 'offset_tilt_axis',
-      '3': 6,
-      '4': 1,
-      '5': 1,
-      '9': 5,
-      '10': 'offsetTiltAxis',
-      '17': true
-    },
-    {
-      '1': 'image_pos',
-      '3': 4,
-      '4': 1,
-      '5': 11,
-      '6': '.cedar.ImageCoord',
-      '9': 6,
-      '10': 'imagePos',
-      '17': true
-    },
+    {'1': 'target', '3': 1, '4': 1, '5': 11, '6': '.cedar_common.CelestialCoord', '10': 'target'},
+    {'1': 'target_catalog_entry', '3': 8, '4': 1, '5': 11, '6': '.cedar_sky.CatalogEntry', '9': 0, '10': 'targetCatalogEntry', '17': true},
+    {'1': 'target_catalog_entry_distance', '3': 9, '4': 1, '5': 1, '9': 1, '10': 'targetCatalogEntryDistance', '17': true},
+    {'1': 'target_distance', '3': 2, '4': 1, '5': 1, '9': 2, '10': 'targetDistance', '17': true},
+    {'1': 'target_angle', '3': 3, '4': 1, '5': 1, '9': 3, '10': 'targetAngle', '17': true},
+    {'1': 'offset_rotation_axis', '3': 5, '4': 1, '5': 1, '9': 4, '10': 'offsetRotationAxis', '17': true},
+    {'1': 'offset_tilt_axis', '3': 6, '4': 1, '5': 1, '9': 5, '10': 'offsetTiltAxis', '17': true},
+    {'1': 'image_pos', '3': 4, '4': 1, '5': 11, '6': '.cedar.ImageCoord', '9': 6, '10': 'imagePos', '17': true},
   ],
   '8': [
     {'1': '_target_catalog_entry'},
@@ -1830,26 +881,8 @@ final $typed_data.Uint8List slewRequestDescriptor = $convert.base64Decode(
 const PolarAlignAdvice$json = {
   '1': 'PolarAlignAdvice',
   '2': [
-    {
-      '1': 'azimuth_correction',
-      '3': 1,
-      '4': 1,
-      '5': 11,
-      '6': '.cedar.ErrorBoundedValue',
-      '9': 0,
-      '10': 'azimuthCorrection',
-      '17': true
-    },
-    {
-      '1': 'altitude_correction',
-      '3': 2,
-      '4': 1,
-      '5': 11,
-      '6': '.cedar.ErrorBoundedValue',
-      '9': 1,
-      '10': 'altitudeCorrection',
-      '17': true
-    },
+    {'1': 'azimuth_correction', '3': 1, '4': 1, '5': 11, '6': '.cedar.ErrorBoundedValue', '9': 0, '10': 'azimuthCorrection', '17': true},
+    {'1': 'altitude_correction', '3': 2, '4': 1, '5': 11, '6': '.cedar.ErrorBoundedValue', '9': 1, '10': 'altitudeCorrection', '17': true},
   ],
   '8': [
     {'1': '_azimuth_correction'},
@@ -1883,22 +916,8 @@ final $typed_data.Uint8List errorBoundedValueDescriptor = $convert.base64Decode(
 const FovCatalogEntry$json = {
   '1': 'FovCatalogEntry',
   '2': [
-    {
-      '1': 'entry',
-      '3': 1,
-      '4': 1,
-      '5': 11,
-      '6': '.cedar_sky.CatalogEntry',
-      '10': 'entry'
-    },
-    {
-      '1': 'image_pos',
-      '3': 2,
-      '4': 1,
-      '5': 11,
-      '6': '.cedar.ImageCoord',
-      '10': 'imagePos'
-    },
+    {'1': 'entry', '3': 1, '4': 1, '5': 11, '6': '.cedar_sky.CatalogEntry', '10': 'entry'},
+    {'1': 'image_pos', '3': 2, '4': 1, '5': 11, '6': '.cedar.ImageCoord', '10': 'imagePos'},
   ],
 };
 
@@ -1912,118 +931,18 @@ final $typed_data.Uint8List fovCatalogEntryDescriptor = $convert.base64Decode(
 const ActionRequest$json = {
   '1': 'ActionRequest',
   '2': [
-    {
-      '1': 'cancel_calibration',
-      '3': 9,
-      '4': 1,
-      '5': 8,
-      '9': 0,
-      '10': 'cancelCalibration',
-      '17': true
-    },
-    {
-      '1': 'capture_boresight',
-      '3': 1,
-      '4': 1,
-      '5': 8,
-      '9': 1,
-      '10': 'captureBoresight',
-      '17': true
-    },
-    {
-      '1': 'designate_boresight',
-      '3': 2,
-      '4': 1,
-      '5': 11,
-      '6': '.cedar.ImageCoord',
-      '9': 2,
-      '10': 'designateBoresight',
-      '17': true
-    },
-    {
-      '1': 'shutdown_server',
-      '3': 3,
-      '4': 1,
-      '5': 8,
-      '9': 3,
-      '10': 'shutdownServer',
-      '17': true
-    },
-    {
-      '1': 'restart_server',
-      '3': 8,
-      '4': 1,
-      '5': 8,
-      '9': 4,
-      '10': 'restartServer',
-      '17': true
-    },
-    {
-      '1': 'initiate_slew',
-      '3': 6,
-      '4': 1,
-      '5': 11,
-      '6': '.cedar_common.CelestialCoord',
-      '9': 5,
-      '10': 'initiateSlew',
-      '17': true
-    },
-    {
-      '1': 'stop_slew',
-      '3': 4,
-      '4': 1,
-      '5': 8,
-      '9': 6,
-      '10': 'stopSlew',
-      '17': true
-    },
-    {
-      '1': 'save_image',
-      '3': 5,
-      '4': 1,
-      '5': 8,
-      '9': 7,
-      '10': 'saveImage',
-      '17': true
-    },
-    {
-      '1': 'update_wifi_access_point',
-      '3': 7,
-      '4': 1,
-      '5': 11,
-      '6': '.cedar.WiFiAccessPoint',
-      '9': 8,
-      '10': 'updateWifiAccessPoint',
-      '17': true
-    },
-    {
-      '1': 'clear_dont_show_items',
-      '3': 10,
-      '4': 1,
-      '5': 8,
-      '9': 9,
-      '10': 'clearDontShowItems',
-      '17': true
-    },
-    {
-      '1': 'designate_daylight_focus_region',
-      '3': 11,
-      '4': 1,
-      '5': 11,
-      '6': '.cedar.ImageCoord',
-      '9': 10,
-      '10': 'designateDaylightFocusRegion',
-      '17': true
-    },
-    {
-      '1': 'crash_server',
-      '3': 12,
-      '4': 1,
-      '5': 8,
-      '9': 11,
-      '10': 'crashServer',
-      '17': true
-    },
+    {'1': 'cancel_calibration', '3': 9, '4': 1, '5': 8, '9': 0, '10': 'cancelCalibration', '17': true},
+    {'1': 'capture_boresight', '3': 1, '4': 1, '5': 8, '9': 1, '10': 'captureBoresight', '17': true},
+    {'1': 'designate_boresight', '3': 2, '4': 1, '5': 11, '6': '.cedar.ImageCoord', '9': 2, '10': 'designateBoresight', '17': true},
+    {'1': 'shutdown_server', '3': 3, '4': 1, '5': 8, '9': 3, '10': 'shutdownServer', '17': true},
+    {'1': 'restart_server', '3': 8, '4': 1, '5': 8, '9': 4, '10': 'restartServer', '17': true},
+    {'1': 'initiate_slew', '3': 6, '4': 1, '5': 11, '6': '.cedar_common.CelestialCoord', '9': 5, '10': 'initiateSlew', '17': true},
+    {'1': 'stop_slew', '3': 4, '4': 1, '5': 8, '9': 6, '10': 'stopSlew', '17': true},
+    {'1': 'save_image', '3': 5, '4': 1, '5': 8, '9': 7, '10': 'saveImage', '17': true},
+    {'1': 'update_wifi_access_point', '3': 7, '4': 1, '5': 11, '6': '.cedar.WiFiAccessPoint', '9': 8, '10': 'updateWifiAccessPoint', '17': true},
+    {'1': 'clear_dont_show_items', '3': 10, '4': 1, '5': 8, '9': 9, '10': 'clearDontShowItems', '17': true},
+    {'1': 'designate_daylight_focus_region', '3': 11, '4': 1, '5': 11, '6': '.cedar.ImageCoord', '9': 10, '10': 'designateDaylightFocusRegion', '17': true},
+    {'1': 'crash_server', '3': 12, '4': 1, '5': 8, '9': 11, '10': 'crashServer', '17': true},
   ],
   '8': [
     {'1': '_cancel_calibration'},
@@ -2092,23 +1011,15 @@ const EmptyMessage$json = {
 };
 
 /// Descriptor for `EmptyMessage`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List emptyMessageDescriptor =
-    $convert.base64Decode('CgxFbXB0eU1lc3NhZ2U=');
+final $typed_data.Uint8List emptyMessageDescriptor = $convert.base64Decode(
+    'CgxFbXB0eU1lc3NhZ2U=');
 
 @$core.Deprecated('Use getBluetoothNameResponseDescriptor instead')
 const GetBluetoothNameResponse$json = {
   '1': 'GetBluetoothNameResponse',
   '2': [
     {'1': 'name', '3': 1, '4': 1, '5': 9, '10': 'name'},
-    {
-      '1': 'address',
-      '3': 2,
-      '4': 1,
-      '5': 9,
-      '9': 0,
-      '10': 'address',
-      '17': true
-    },
+    {'1': 'address', '3': 2, '4': 1, '5': 9, '9': 0, '10': 'address', '17': true},
   ],
   '8': [
     {'1': '_address'},
@@ -2116,25 +1027,16 @@ const GetBluetoothNameResponse$json = {
 };
 
 /// Descriptor for `GetBluetoothNameResponse`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List getBluetoothNameResponseDescriptor =
-    $convert.base64Decode(
-        'ChhHZXRCbHVldG9vdGhOYW1lUmVzcG9uc2USEgoEbmFtZRgBIAEoCVIEbmFtZRIdCgdhZGRyZX'
-        'NzGAIgASgJSABSB2FkZHJlc3OIAQFCCgoIX2FkZHJlc3M=');
+final $typed_data.Uint8List getBluetoothNameResponseDescriptor = $convert.base64Decode(
+    'ChhHZXRCbHVldG9vdGhOYW1lUmVzcG9uc2USEgoEbmFtZRgBIAEoCVIEbmFtZRIdCgdhZGRyZX'
+    'NzGAIgASgJSABSB2FkZHJlc3OIAQFCCgoIX2FkZHJlc3M=');
 
 @$core.Deprecated('Use startBondingResponseDescriptor instead')
 const StartBondingResponse$json = {
   '1': 'StartBondingResponse',
   '2': [
     {'1': 'name', '3': 1, '4': 1, '5': 9, '9': 0, '10': 'name', '17': true},
-    {
-      '1': 'passkey',
-      '3': 2,
-      '4': 1,
-      '5': 13,
-      '9': 1,
-      '10': 'passkey',
-      '17': true
-    },
+    {'1': 'passkey', '3': 2, '4': 1, '5': 13, '9': 1, '10': 'passkey', '17': true},
   ],
   '8': [
     {'1': '_name'},
@@ -2165,22 +1067,14 @@ final $typed_data.Uint8List bondedDeviceDescriptor = $convert.base64Decode(
 const GetBondedDevicesResponse$json = {
   '1': 'GetBondedDevicesResponse',
   '2': [
-    {
-      '1': 'devices',
-      '3': 1,
-      '4': 3,
-      '5': 11,
-      '6': '.cedar.BondedDevice',
-      '10': 'devices'
-    },
+    {'1': 'devices', '3': 1, '4': 3, '5': 11, '6': '.cedar.BondedDevice', '10': 'devices'},
   ],
 };
 
 /// Descriptor for `GetBondedDevicesResponse`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List getBondedDevicesResponseDescriptor =
-    $convert.base64Decode(
-        'ChhHZXRCb25kZWREZXZpY2VzUmVzcG9uc2USLQoHZGV2aWNlcxgBIAMoCzITLmNlZGFyLkJvbm'
-        'RlZERldmljZVIHZGV2aWNlcw==');
+final $typed_data.Uint8List getBondedDevicesResponseDescriptor = $convert.base64Decode(
+    'ChhHZXRCb25kZWREZXZpY2VzUmVzcG9uc2USLQoHZGV2aWNlcxgBIAMoCzITLmNlZGFyLkJvbm'
+    'RlZERldmljZVIHZGV2aWNlcw==');
 
 @$core.Deprecated('Use removeBondRequestDescriptor instead')
 const RemoveBondRequest$json = {
@@ -2193,3 +1087,4 @@ const RemoveBondRequest$json = {
 /// Descriptor for `RemoveBondRequest`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List removeBondRequestDescriptor = $convert.base64Decode(
     'ChFSZW1vdmVCb25kUmVxdWVzdBIYCgdhZGRyZXNzGAEgASgJUgdhZGRyZXNz');
+
