@@ -4,9 +4,9 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:cedar_flutter/cedar.pb.dart' as cedar_pb;
-import 'package:cedar_flutter/cedar.pbenum.dart';
 import 'package:cedar_flutter/platform.dart';
-import 'package:grpc/grpc.dart';
+
+// Display used in PIP mode.
 
 class GuidanceDisplay extends StatefulWidget {
   const GuidanceDisplay({super.key});
@@ -66,8 +66,8 @@ class _GuidanceDisplayState extends State<GuidanceDisplay> {
   }
 
   Widget _buildContent(ThemeData theme) {
-    // If error, no state, or no slew request -> show progress indicator
-    if (_hasError || _latestFrame == null || !_latestFrame!.hasSlewRequest()) {
+    // If error or no state -> show progress indicator.
+    if (_hasError || _latestFrame == null) {
       return Center(
         child: CircularProgressIndicator(
           color: theme.colorScheme.primary,
@@ -75,9 +75,31 @@ class _GuidanceDisplayState extends State<GuidanceDisplay> {
       );
     }
 
+    // If no slew request -> show "no goto" text.
+    if (!_latestFrame!.hasSlewRequest()) {
+      return Center(
+        child: Transform.scale(
+          scale: 0.5,
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              "no goto",
+              style: theme.textTheme.displayLarge?.copyWith(
+                fontWeight: FontWeight.bold,
+                fontFamily: 'RobotoMono',
+                color: theme.colorScheme.primary,
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
     final slewRequest = _latestFrame!.slewRequest;
     final isAltAz =
         _latestFrame!.preferences.mountType == cedar_pb.MountType.ALT_AZ;
+
+    final hasPlateSolution = slewRequest.hasTargetAngle();
 
     final rot = slewRequest.offsetRotationAxis;
     final tilt = slewRequest.offsetTiltAxis;
@@ -183,7 +205,7 @@ class _GuidanceDisplayState extends State<GuidanceDisplay> {
               // Center Box: Target Arrow
               Expanded(
                 flex: 2,
-                child: (angle.abs() >= 0.05)
+                child: hasPlateSolution
                     ? _TargetArrow(rotationDegrees: angle)
                     : const SizedBox.shrink(),
               ),
@@ -272,7 +294,7 @@ class _DirectionArrow extends StatelessWidget {
   final int rotation;
   final bool alignRight;
 
-  _DirectionArrow({
+  const _DirectionArrow({
     required this.rotation,
     required this.alignRight,
   });
@@ -284,7 +306,7 @@ class _DirectionArrow extends StatelessWidget {
       child: CustomPaint(
         painter: _ArrowPainter(
           rotationDegrees: rotation.toDouble(),
-          alignRight: this.alignRight,
+          alignRight: alignRight,
           color: theme.colorScheme.primary,
         ),
       ),

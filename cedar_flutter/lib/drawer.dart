@@ -397,7 +397,6 @@ class CedarDrawer extends StatelessWidget {
                       MaterialPageRoute(builder: (context) => MapScreen(controller.homePageState)));
                 })),
       ],
-
       SizedBox(height: _kDrawerSpacing * textScaleFactor(controller.context)),
 
       // Advanced toggle
@@ -411,23 +410,7 @@ class CedarDrawer extends StatelessWidget {
               onPressed: () async {
                 await controller.setAdvanced(!controller.advanced);
               })),
-
-      if (isAndroid()) ...[
-        SizedBox(height: _kDrawerSpacing * textScaleFactor(controller.context)),
-
-        // PIP button
-        Align(
-            alignment: Alignment.topLeft,
-            child: TextButton.icon(
-                label: _scaledText("Picture-in-Picture"),
-                icon: const Icon(Icons.picture_in_picture),
-                onPressed: () async {
-                  controller.closeDrawer();
-                  await controller.homePageState.pip.start();
-                })),
-
-        SizedBox(height: _kDrawerSpacing * textScaleFactor(controller.context)),
-      ],
+      SizedBox(height: _kDrawerSpacing * textScaleFactor(controller.context)),
 
       // Shutdown button
       Align(
@@ -439,6 +422,21 @@ class CedarDrawer extends StatelessWidget {
                 controller.closeDrawer();
                 shutdownDialog(controller.homePageState, controller.context);
               })),
+
+      if (isAndroid() && controller.advanced) ...[
+        SizedBox(height: _kDrawerSpacing * textScaleFactor(controller.context)),
+
+        // PIP button.
+        Align(
+            alignment: Alignment.topLeft,
+            child: TextButton.icon(
+                label: _scaledText("Picture-in-Picture"),
+                icon: const Icon(Icons.picture_in_picture),
+                onPressed: () async {
+                  controller.closeDrawer();
+                  await controller.homePageState.pip.start();
+                })),
+      ],
 
       // Demo mode section (conditional)
       if ((controller.advanced || controller.demoMode) && controller.demoFiles.isNotEmpty) ...[
@@ -455,7 +453,6 @@ class CedarDrawer extends StatelessWidget {
                   await controller.setDemoMode(!controller.demoMode);
                 },
               )),
-          const SizedBox(height: 10)
         ]),
       ],
 
