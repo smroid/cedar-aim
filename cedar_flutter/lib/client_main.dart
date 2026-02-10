@@ -619,6 +619,13 @@ class MyHomePageState extends State<MyHomePage> {
     _initPipConfiguration();
   }
 
+  @override
+  void dispose() {
+    pip.unregisterStateChangedObserver();
+    pip.dispose();
+    super.dispose();
+  }
+
   Future<void> _initPipConfiguration() async {
     if (!isAndroid()) {
       // For now only enable PIP on Android
