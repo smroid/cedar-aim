@@ -9,6 +9,7 @@ import 'package:cedar_flutter/draw_slew_target.dart';
 import 'package:cedar_flutter/draw_util.dart';
 import 'package:cedar_flutter/drawer.dart';
 import 'package:cedar_flutter/google/protobuf/timestamp.pb.dart';
+import 'package:cedar_flutter/guidance.dart';
 import 'package:cedar_flutter/interstitial_msg.dart';
 import 'package:cedar_flutter/perf_gauge.dart';
 import 'package:cedar_flutter/settings.dart';
@@ -22,6 +23,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart' as dart_widgets;
 import 'package:grpc/grpc.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:pip/pip.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sprintf/sprintf.dart';
@@ -535,6 +537,7 @@ class MyHomePageState extends State<MyHomePage> {
   bool _setupMode = false;
   bool _focusAid = false;
   bool _daylightMode = false;
+  bool _skipFocusActive = false;
   bool _demoMode = false;
   List<String> _demoFiles = [];
   String _demoFile = "";
@@ -609,6 +612,59 @@ class MyHomePageState extends State<MyHomePage> {
   bool _transitionToSetup = false;
 
   CedarDevice _selectedDevice = CedarDevice(address: '192.168.4.1');
+
+  final Pip pip = Pip();
+  bool _isPipMode = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _initPipConfiguration();
+  }
+
+  @override
+  void dispose() {
+    pip.unregisterStateChangedObserver();
+    pip.dispose();
+    super.dispose();
+  }
+
+  Future<void> _initPipConfiguration() async {
+    if (!isAndroid()) {
+      // For now only enable PIP on Android
+      return;
+    }
+    final options = PipOptions(
+      autoEnterEnabled: true,
+      aspectRatioX: 16,
+      aspectRatioY: 9,
+      sourceRectHintLeft: 0,
+      sourceRectHintTop: 0,
+      sourceRectHintRight: 0,
+      sourceRectHintBottom: 0,
+      seamlessResizeEnabled: true,
+      useExternalStateMonitor: true,
+      externalStateMonitorInterval: 100,
+    );
+    
+    await pip.setup(options);
+
+    pip.registerStateChangedObserver(
+      PipStateChangedObserver(
+        onPipStateChanged: (state, error) {
+          setState(() {
+            _isPipMode = (state == PipState.pipStateStarted);
+            // Go back to the main page when starting or stopping PIP
+            Navigator.popUntil(context, ModalRoute.withName('/'));
+          });
+          
+          if (state == PipState.pipStateFailed) {
+            debugPrint('PiP Failed: $error');
+          }
+        },
+      ),
+    );
+  }
 
   Future<void> _initLocation() async {
     _offerMap = isWeb() || !await canGetLocation();
@@ -692,6 +748,7 @@ class MyHomePageState extends State<MyHomePage> {
     bool newFocusMode = _setupMode && _focusAid;
     bool newAlignMode = _setupMode && !_focusAid;
     _daylightMode = operationSettings.daylightMode;
+    _skipFocusActive = response.skipFocusActive;
     if (_setupMode) {
       _transitionToSetup = false;
     }
@@ -860,13 +917,14 @@ class MyHomePageState extends State<MyHomePage> {
       _dontShowSetupFinished = dontShowItems.contains('setup_finished');
     }
     if (newFocusMode && !prevFocusMode) {
-      _showFocusIntro = !_dontShowFocusIntro;
+      _showFocusIntro = !_dontShowFocusIntro && !(preferences?.skipFocus ?? false);
     }
     if (newAlignMode && !prevAlignMode) {
-      _showAlignIntro = !_dontShowAlignIntro;
+      _showAlignIntro = !_dontShowAlignIntro && !(preferences?.skipAlignment ?? false);
     }
     if (!_setupMode && prevSetupMode) {
-      _showSetupFinished = !_dontShowSetupFinished;
+      // Only show setup finished if we're not currently in skip-focus active mode
+      _showSetupFinished = !response.skipFocusActive && !_dontShowSetupFinished;
     }
   }
 
@@ -1140,7 +1198,7 @@ class MyHomePageState extends State<MyHomePage> {
           textAlign: TextAlign.center,
           style: TextStyle(fontSize: fontSize),
           textScaler: textScaler(context),
-          _alignTargetTapped ? "Done" : "Skip",
+          "Done",
         ),
         onPressed: () {
           // Transition to aim mode.
@@ -1209,6 +1267,9 @@ class MyHomePageState extends State<MyHomePage> {
       preferences: preferences,
       operationSettings: operationSettings,
       showCatalogBrowser: _showCatalogBrowser != null,
+      skipFocus: preferences?.skipFocus ?? false,
+      skipAlignment: preferences?.skipAlignment ?? false,
+      skipFocusActive: _skipFocusActive,
       onPreferencesUpdate: (prefsDiff) => updatePreferences(prefsDiff),
       onOperationSettingsUpdate: (opSettingsDiff) => updateOperationSettings(opSettingsDiff),
       onGoFullScreen: goFullScreen,
@@ -1217,6 +1278,30 @@ class MyHomePageState extends State<MyHomePage> {
       onSetDaylightMode: (enabled) => setState(() {
         _setDaylightMode(enabled);
       }),
+      onSkipFocusUpdate: (value) {
+        final prefs = cedar_rpc.Preferences()..skipFocus = value;
+        updatePreferences(prefs);
+        // If enabling skip focus, also transition to align mode like the done button
+        if (value) {
+          setState(() {
+            _alignTargetTapped = false;
+            if (!_setupMode) {
+              _transitionToSetup = true;
+            }
+            _setOperatingMode(/*setupMode=*/ true, /*focusAid=*/ false);
+          });
+        }
+      },
+      onSkipAlignmentUpdate: (value) {
+        final prefs = cedar_rpc.Preferences()..skipAlignment = value;
+        updatePreferences(prefs);
+        // If enabling skip alignment, also transition to aim mode like the done button
+        if (value) {
+          setState(() {
+            _setOperatingMode(/*setupMode=*/ false, _focusAid);
+          });
+        }
+      },
       focusDoneButton: ({double? fontSize}) => focusDoneButton(fontSize: fontSize),
       setupAlignSkipOrDoneButton: ({double? fontSize}) => setupAlignSkipOrDoneButton(fontSize: fontSize),
       slewReAlignButton: ({double? fontSize}) => slewReAlignButton(fontSize: fontSize),
@@ -1902,14 +1987,42 @@ class MyHomePageState extends State<MyHomePage> {
 
     final String product =
         serverInformation != null ? serverInformation!.productName : "e-finder";
+    final bool isHopper = product == "Hopper";
 
-    // Show "Hopper is pre-focused" message in focus mode for Hopper.
-    final isHopperFocusMode = _setupMode && _focusAid && !_daylightMode &&
-        product == "Hopper";
+    final isFocusMode = _setupMode && _focusAid && !_skipFocusActive;
+    final isAutoCalibrating = _setupMode && _focusAid && _skipFocusActive;
 
     final isAlignMode = _setupMode && !_focusAid;
 
-    final data = isHopperFocusMode
+    final data = isAutoCalibrating
+        ? RotatedBox(
+            quarterTurns: portrait ? 3 : 0,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  "Auto-calibrating Hopper",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                  textScaler: textScaler(context),
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  "Tap Exit to stop and\nadjust focus manually",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                  textScaler: textScaler(context),
+                ),
+              ],
+            ),
+          )
+        : isFocusMode
         ? GestureDetector(
             onTap: () {
               setState(() {
@@ -1927,7 +2040,7 @@ class MyHomePageState extends State<MyHomePage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    "Hopper is pre-focused",
+                    isHopper ? "Hopper is pre-focused" : "Focus your $product",
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 14,
@@ -2092,6 +2205,8 @@ class MyHomePageState extends State<MyHomePage> {
           updaterInfo: _updaterInfo,
           updateServiceAvailable: updateServiceAvailable,
           wifiAccessPointDialog: _wifiAccessPointDialog,
+          skipFocus: preferences?.skipFocus ?? false,
+          skipAlignment: preferences?.skipAlignment ?? false,
           setOperatingMode: (setupMode, focusAid) async {
             if (!_setupMode && setupMode) {
               setState(() {
@@ -2162,6 +2277,11 @@ class MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    if (_isPipMode) {
+      closeDrawer();
+      return GuidanceDisplay();
+    }
+
     if (healthy && _wifiClientDialogController != null) {
       _wifiClientDialogController!.showDialog(/*open=*/ false, this, context);
     }
@@ -2261,7 +2381,6 @@ class MyHomePageState extends State<MyHomePage> {
           _showTooFewStars = false;
         });
       });
-      return SizedBox.shrink();
     }
     if (_showBrightSky) {
       SchedulerBinding.instance.addPostFrameCallback((_) {
@@ -2276,7 +2395,6 @@ class MyHomePageState extends State<MyHomePage> {
           _showBrightSky = false;
         });
       });
-      return SizedBox.shrink();
     }
     if (_showSolverFailed) {
       SchedulerBinding.instance.addPostFrameCallback((_) {
@@ -2291,7 +2409,6 @@ class MyHomePageState extends State<MyHomePage> {
           _showSolverFailed = false;
         });
       });
-      return SizedBox.shrink();
     }
 
     if (_showSetupFinished) {
@@ -2585,3 +2702,4 @@ class MyHomePageState extends State<MyHomePage> {
     );
   }
 } // MyHomePageState
+
