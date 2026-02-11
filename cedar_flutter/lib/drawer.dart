@@ -563,9 +563,8 @@ class CedarDrawer extends StatelessWidget {
 
           SizedBox(height: _kDrawerSpacingCondensed * textScaleFactor(controller.context)),
 
-          // Bluetooth management (not for Hopper).
-          if (controller.useBluetooth
-              && controller.homePageState.serverInformation?.productName != "Hopper") ...[
+          // Bluetooth management.
+          if (controller.useBluetooth) ...[
             Padding(
               padding: const EdgeInsets.only(left: 16),
               child: Align(

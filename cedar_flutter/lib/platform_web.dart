@@ -8,6 +8,7 @@ import 'dart:html';
 import 'dart:js' as js;
 
 import 'package:cedar_flutter/cedar.pbgrpc.dart';
+import 'package:cedar_flutter/platform.dart' show CedarDevice;
 import 'package:flutter/foundation.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:grpc/grpc_web.dart';

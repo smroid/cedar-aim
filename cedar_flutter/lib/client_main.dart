@@ -626,6 +626,7 @@ class MyHomePageState extends State<MyHomePage> {
   void dispose() {
     pip.unregisterStateChangedObserver();
     pip.dispose();
+    cleanup();
     super.dispose();
   }
 
@@ -646,7 +647,7 @@ class MyHomePageState extends State<MyHomePage> {
       useExternalStateMonitor: true,
       externalStateMonitorInterval: 100,
     );
-    
+
     await pip.setup(options);
 
     pip.registerStateChangedObserver(
@@ -657,7 +658,7 @@ class MyHomePageState extends State<MyHomePage> {
             // Go back to the main page when starting or stopping PIP
             Navigator.popUntil(context, ModalRoute.withName('/'));
           });
-          
+
           if (state == PipState.pipStateFailed) {
             debugPrint('PiP Failed: $error');
           }
@@ -682,12 +683,6 @@ class MyHomePageState extends State<MyHomePage> {
 
   cedar_rpc.CedarClient client() {
     return getClient();
-  }
-
-  @override
-  void dispose() {
-    cleanup();
-    super.dispose();
   }
 
   LatLng? get mapPosition => _mapPosition;
@@ -2603,7 +2598,7 @@ class MyHomePageState extends State<MyHomePage> {
     });
 
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('selected_device_address', device.address!);
+    await prefs.setString('selected_device_address', device.address);
     if (device.name == null) {
       // WiFi
       await prefs.remove('selected_device_name');
@@ -2622,7 +2617,7 @@ class MyHomePageState extends State<MyHomePage> {
             color: Theme.of(context).colorScheme.primary,
             fontSize: 24,
           ),
-          content: Container(
+          content: SizedBox(
             width: double.maxFinite,
             child: FutureBuilder<List<CedarDevice>>(
               future: getBluetoothDevices(),
@@ -2677,7 +2672,7 @@ class MyHomePageState extends State<MyHomePage> {
                                 color: Theme.of(context).colorScheme.primary),
                           ),
                           subtitle: Text(
-                            device.address ?? '',
+                            device.address,
                             style: TextStyle(
                                 color: Theme.of(context).colorScheme.secondary),
                           ),

@@ -2,6 +2,7 @@
 // See LICENSE file in root directory for license terms.
 
 import 'package:cedar_flutter/cedar.pbgrpc.dart';
+import 'package:cedar_flutter/platform.dart' show CedarDevice;
 import 'package:geolocator/geolocator.dart';
 
 bool isWebImpl() {
