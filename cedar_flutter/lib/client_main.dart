@@ -919,7 +919,7 @@ class MyHomePageState extends State<MyHomePage> {
     }
     if (!_setupMode && prevSetupMode) {
       // Only show setup finished if we're not currently in skip-focus active mode
-      _showSetupFinished = !response.skipFocusActive && !_dontShowSetupFinished;
+      _showSetupFinished = !_skipFocusActive && !_dontShowSetupFinished;
     }
   }
 

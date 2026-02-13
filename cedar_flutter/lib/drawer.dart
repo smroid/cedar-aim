@@ -131,6 +131,17 @@ class CedarDrawer extends StatelessWidget {
     return path.basenameWithoutExtension(filename);
   }
 
+  // Helper method to generate contextual message for re-enabling focus/align steps.
+  String _getReenableButtonLabel(bool skipFocus, bool skipAlignment) {
+    if (skipFocus && skipAlignment) {
+      return "Re-enable focus/align steps";
+    } else if (skipFocus) {
+      return "Re-enable focus step";
+    } else {
+      return "Re-enable alignment step";
+    }
+  }
+
   // Helper method for Check for Update button.
   Widget? _buildCheckForUpdateButton() {
     if (controller.updaterInfo == null) {
@@ -347,7 +358,8 @@ class CedarDrawer extends StatelessWidget {
         Align(
             alignment: Alignment.topLeft,
             child: TextButton.icon(
-                label: _scaledText("Re-enable focus/align steps"),
+                label: _scaledText(_getReenableButtonLabel(
+                  controller.skipFocus, controller.skipAlignment)),
                 icon: const Icon(Icons.undo),
                 onPressed: () async {
                   final prefs = cedar_rpc.Preferences()
