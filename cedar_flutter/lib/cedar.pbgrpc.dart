@@ -74,10 +74,10 @@ class CedarClient extends $grpc.Client {
       '/cedar.Cedar/GetBluetoothName',
       ($0.EmptyMessage value) => value.writeToBuffer(),
       ($core.List<$core.int> value) => $0.GetBluetoothNameResponse.fromBuffer(value));
-  static final _$startBonding = $grpc.ClientMethod<$0.EmptyMessage, $0.StartBondingResponse>(
-      '/cedar.Cedar/StartBonding',
-      ($0.EmptyMessage value) => value.writeToBuffer(),
-      ($core.List<$core.int> value) => $0.StartBondingResponse.fromBuffer(value));
+  static final _$setPairingMode = $grpc.ClientMethod<$0.SetPairingModeRequest, $0.EmptyMessage>(
+      '/cedar.Cedar/SetPairingMode',
+      ($0.SetPairingModeRequest value) => value.writeToBuffer(),
+      ($core.List<$core.int> value) => $0.EmptyMessage.fromBuffer(value));
   static final _$getBondedDevices = $grpc.ClientMethod<$0.EmptyMessage, $0.GetBondedDevicesResponse>(
       '/cedar.Cedar/GetBondedDevices',
       ($0.EmptyMessage value) => value.writeToBuffer(),
@@ -145,8 +145,8 @@ class CedarClient extends $grpc.Client {
     return $createUnaryCall(_$getBluetoothName, request, options: options);
   }
 
-  $grpc.ResponseFuture<$0.StartBondingResponse> startBonding($0.EmptyMessage request, {$grpc.CallOptions? options}) {
-    return $createUnaryCall(_$startBonding, request, options: options);
+  $grpc.ResponseFuture<$0.EmptyMessage> setPairingMode($0.SetPairingModeRequest request, {$grpc.CallOptions? options}) {
+    return $createUnaryCall(_$setPairingMode, request, options: options);
   }
 
   $grpc.ResponseFuture<$0.GetBondedDevicesResponse> getBondedDevices($0.EmptyMessage request, {$grpc.CallOptions? options}) {
@@ -254,13 +254,13 @@ abstract class CedarServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $0.EmptyMessage.fromBuffer(value),
         ($0.GetBluetoothNameResponse value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.EmptyMessage, $0.StartBondingResponse>(
-        'StartBonding',
-        startBonding_Pre,
+    $addMethod($grpc.ServiceMethod<$0.SetPairingModeRequest, $0.EmptyMessage>(
+        'SetPairingMode',
+        setPairingMode_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $0.EmptyMessage.fromBuffer(value),
-        ($0.StartBondingResponse value) => value.writeToBuffer()));
+        ($core.List<$core.int> value) => $0.SetPairingModeRequest.fromBuffer(value),
+        ($0.EmptyMessage value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.EmptyMessage, $0.GetBondedDevicesResponse>(
         'GetBondedDevices',
         getBondedDevices_Pre,
@@ -329,8 +329,8 @@ abstract class CedarServiceBase extends $grpc.Service {
     return getBluetoothName($call, await $request);
   }
 
-  $async.Future<$0.StartBondingResponse> startBonding_Pre($grpc.ServiceCall $call, $async.Future<$0.EmptyMessage> $request) async {
-    return startBonding($call, await $request);
+  $async.Future<$0.EmptyMessage> setPairingMode_Pre($grpc.ServiceCall $call, $async.Future<$0.SetPairingModeRequest> $request) async {
+    return setPairingMode($call, await $request);
   }
 
   $async.Future<$0.GetBondedDevicesResponse> getBondedDevices_Pre($grpc.ServiceCall $call, $async.Future<$0.EmptyMessage> $request) async {
@@ -354,7 +354,7 @@ abstract class CedarServiceBase extends $grpc.Service {
   $async.Future<$1.ObjectTypeResponse> getObjectTypes($grpc.ServiceCall call, $0.EmptyMessage request);
   $async.Future<$1.ConstellationResponse> getConstellations($grpc.ServiceCall call, $0.EmptyMessage request);
   $async.Future<$0.GetBluetoothNameResponse> getBluetoothName($grpc.ServiceCall call, $0.EmptyMessage request);
-  $async.Future<$0.StartBondingResponse> startBonding($grpc.ServiceCall call, $0.EmptyMessage request);
+  $async.Future<$0.EmptyMessage> setPairingMode($grpc.ServiceCall call, $0.SetPairingModeRequest request);
   $async.Future<$0.GetBondedDevicesResponse> getBondedDevices($grpc.ServiceCall call, $0.EmptyMessage request);
   $async.Future<$0.EmptyMessage> removeBond($grpc.ServiceCall call, $0.RemoveBondRequest request);
 }

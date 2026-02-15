@@ -343,7 +343,6 @@ const Preferences$json = {
     {'1': 'dont_show_items', '3': 32, '4': 3, '5': 9, '10': 'dontShowItems'},
     {'1': 'skip_focus', '3': 35, '4': 1, '5': 8, '9': 19, '10': 'skipFocus', '17': true},
     {'1': 'skip_alignment', '3': 36, '4': 1, '5': 8, '9': 20, '10': 'skipAlignment', '17': true},
-    {'1': 'use_bluetooth', '3': 34, '4': 1, '5': 8, '9': 21, '10': 'useBluetooth', '17': true},
   ],
   '8': [
     {'1': '_celestial_coord_format'},
@@ -367,7 +366,6 @@ const Preferences$json = {
     {'1': '_screen_always_on'},
     {'1': '_skip_focus'},
     {'1': '_skip_alignment'},
-    {'1': '_use_bluetooth'},
   ],
   '9': [
     {'1': 4, '2': 5},
@@ -382,6 +380,7 @@ const Preferences$json = {
     {'1': 29, '2': 30},
     {'1': 30, '2': 31},
     {'1': 31, '2': 32},
+    {'1': 34, '2': 35},
   ],
 };
 
@@ -407,17 +406,16 @@ final $typed_data.Uint8List preferencesDescriptor = $convert.base64Decode(
     'ABKAlIEVIPcGVyZkdhdWdlQ2hvaWNliAEBEi0KEHNjcmVlbl9hbHdheXNfb24YFyABKAhIElIO'
     'c2NyZWVuQWx3YXlzT26IAQESJgoPZG9udF9zaG93X2l0ZW1zGCAgAygJUg1kb250U2hvd0l0ZW'
     '1zEiIKCnNraXBfZm9jdXMYIyABKAhIE1IJc2tpcEZvY3VziAEBEioKDnNraXBfYWxpZ25tZW50'
-    'GCQgASgISBRSDXNraXBBbGlnbm1lbnSIAQESKAoNdXNlX2JsdWV0b290aBgiIAEoCEgVUgx1c2'
-    'VCbHVldG9vdGiIAQFCGQoXX2NlbGVzdGlhbF9jb29yZF9mb3JtYXRCDwoNX2V5ZXBpZWNlX2Zv'
-    'dkIVChNfbmlnaHRfdmlzaW9uX3RoZW1lQg8KDV9oaWRlX2FwcF9iYXJCDQoLX21vdW50X3R5cG'
-    'VCFAoSX29ic2VydmVyX2xvY2F0aW9uQhYKFF9jYXRhbG9nX2VudHJ5X21hdGNoQhYKFF9tYXhf'
-    'ZGlzdGFuY2VfYWN0aXZlQg8KDV9tYXhfZGlzdGFuY2VCFwoVX21pbl9lbGV2YXRpb25fYWN0aX'
-    'ZlQhAKDl9taW5fZWxldmF0aW9uQgsKCV9vcmRlcmluZ0ILCglfYWR2YW5jZWRCEgoQX3RleHRf'
-    'c2l6ZV9pbmRleEISChBfYm9yZXNpZ2h0X3BpeGVsQg8KDV9yaWdodF9oYW5kZWRCGQoXX2NlbG'
-    'VzdGlhbF9jb29yZF9jaG9pY2VCFAoSX3BlcmZfZ2F1Z2VfY2hvaWNlQhMKEV9zY3JlZW5fYWx3'
-    'YXlzX29uQg0KC19za2lwX2ZvY3VzQhEKD19za2lwX2FsaWdubWVudEIQCg5fdXNlX2JsdWV0b2'
-    '90aEoECAQQBUoECAgQCUoECAkQCkoECBQQFUoECBgQGUoECBkQGkoECBoQG0oECBsQHEoECBwQ'
-    'HUoECB0QHkoECB4QH0oECB8QIA==');
+    'GCQgASgISBRSDXNraXBBbGlnbm1lbnSIAQFCGQoXX2NlbGVzdGlhbF9jb29yZF9mb3JtYXRCDw'
+    'oNX2V5ZXBpZWNlX2ZvdkIVChNfbmlnaHRfdmlzaW9uX3RoZW1lQg8KDV9oaWRlX2FwcF9iYXJC'
+    'DQoLX21vdW50X3R5cGVCFAoSX29ic2VydmVyX2xvY2F0aW9uQhYKFF9jYXRhbG9nX2VudHJ5X2'
+    '1hdGNoQhYKFF9tYXhfZGlzdGFuY2VfYWN0aXZlQg8KDV9tYXhfZGlzdGFuY2VCFwoVX21pbl9l'
+    'bGV2YXRpb25fYWN0aXZlQhAKDl9taW5fZWxldmF0aW9uQgsKCV9vcmRlcmluZ0ILCglfYWR2YW'
+    '5jZWRCEgoQX3RleHRfc2l6ZV9pbmRleEISChBfYm9yZXNpZ2h0X3BpeGVsQg8KDV9yaWdodF9o'
+    'YW5kZWRCGQoXX2NlbGVzdGlhbF9jb29yZF9jaG9pY2VCFAoSX3BlcmZfZ2F1Z2VfY2hvaWNlQh'
+    'MKEV9zY3JlZW5fYWx3YXlzX29uQg0KC19za2lwX2ZvY3VzQhEKD19za2lwX2FsaWdubWVudEoE'
+    'CAQQBUoECAgQCUoECAkQCkoECBQQFUoECBgQGUoECBkQGkoECBoQG0oECBsQHEoECBwQHUoECB'
+    '0QHkoECB4QH0oECB8QIEoECCIQIw==');
 
 @$core.Deprecated('Use frameRequestDescriptor instead')
 const FrameRequest$json = {
@@ -1031,24 +1029,6 @@ final $typed_data.Uint8List getBluetoothNameResponseDescriptor = $convert.base64
     'ChhHZXRCbHVldG9vdGhOYW1lUmVzcG9uc2USEgoEbmFtZRgBIAEoCVIEbmFtZRIdCgdhZGRyZX'
     'NzGAIgASgJSABSB2FkZHJlc3OIAQFCCgoIX2FkZHJlc3M=');
 
-@$core.Deprecated('Use startBondingResponseDescriptor instead')
-const StartBondingResponse$json = {
-  '1': 'StartBondingResponse',
-  '2': [
-    {'1': 'name', '3': 1, '4': 1, '5': 9, '9': 0, '10': 'name', '17': true},
-    {'1': 'passkey', '3': 2, '4': 1, '5': 13, '9': 1, '10': 'passkey', '17': true},
-  ],
-  '8': [
-    {'1': '_name'},
-    {'1': '_passkey'},
-  ],
-};
-
-/// Descriptor for `StartBondingResponse`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List startBondingResponseDescriptor = $convert.base64Decode(
-    'ChRTdGFydEJvbmRpbmdSZXNwb25zZRIXCgRuYW1lGAEgASgJSABSBG5hbWWIAQESHQoHcGFzc2'
-    'tleRgCIAEoDUgBUgdwYXNza2V5iAEBQgcKBV9uYW1lQgoKCF9wYXNza2V5');
-
 @$core.Deprecated('Use bondedDeviceDescriptor instead')
 const BondedDevice$json = {
   '1': 'BondedDevice',
@@ -1087,4 +1067,18 @@ const RemoveBondRequest$json = {
 /// Descriptor for `RemoveBondRequest`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List removeBondRequestDescriptor = $convert.base64Decode(
     'ChFSZW1vdmVCb25kUmVxdWVzdBIYCgdhZGRyZXNzGAEgASgJUgdhZGRyZXNz');
+
+@$core.Deprecated('Use setPairingModeRequestDescriptor instead')
+const SetPairingModeRequest$json = {
+  '1': 'SetPairingModeRequest',
+  '2': [
+    {'1': 'enabled', '3': 1, '4': 1, '5': 8, '10': 'enabled'},
+    {'1': 'forever', '3': 2, '4': 1, '5': 8, '10': 'forever'},
+  ],
+};
+
+/// Descriptor for `SetPairingModeRequest`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List setPairingModeRequestDescriptor = $convert.base64Decode(
+    'ChVTZXRQYWlyaW5nTW9kZVJlcXVlc3QSGAoHZW5hYmxlZBgBIAEoCFIHZW5hYmxlZBIYCgdmb3'
+    'JldmVyGAIgASgIUgdmb3JldmVy');
 
