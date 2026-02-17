@@ -4,6 +4,7 @@
 import 'dart:io';
 import 'dart:async';
 import 'dart:typed_data';
+import 'package:flutter/material.dart';
 import 'package:flutter_blue_classic/flutter_blue_classic.dart';
 
 class BluetoothGrpcProxy {
@@ -15,7 +16,7 @@ class BluetoothGrpcProxy {
   BluetoothGrpcProxy(this._connection);
 
   // Starts the proxy server and returns the port to connect to.
-  // 0 (default) indicates a random port.
+  // 0 (default) lets OS assign an available port.
   Future<int> start({int port = 0}) async {
     _server = await ServerSocket.bind(InternetAddress.loopbackIPv4, port);
     _server!.listen((Socket socket) {
@@ -32,12 +33,12 @@ class BluetoothGrpcProxy {
           try {
             _connection.output.add(data);
           } catch (e) {
-            print('Error writing to Bluetooth: $e');
+            debugPrint('Error writing to Bluetooth: $e');
             stop();
           }
         },
         onError: (e) {
-          print('Socket error: $e');
+          debugPrint('Socket error: $e');
           stop();
         },
         onDone: () {
@@ -51,12 +52,12 @@ class BluetoothGrpcProxy {
           try {
             socket.add(data);
           } catch (e) {
-            print('Error writing to Socket: $e');
+            debugPrint('Error writing to Socket: $e');
             stop();
           }
         },
         onError: (e) {
-          print('Bluetooth input error: $e');
+          debugPrint('Bluetooth input error: $e');
           stop();
         },
         onDone: () {
@@ -68,11 +69,12 @@ class BluetoothGrpcProxy {
     return _server!.port;
   }
 
-  void stop() {
-    _bluetoothSubscription?.cancel();
+  Future<void> stop() async {
+    await _bluetoothSubscription?.cancel();
+    _bluetoothSubscription = null;
     _clientSocket?.destroy();
     _clientSocket = null;
-    _server?.close();
+    await _server?.close();
     _server = null;
   }
 }

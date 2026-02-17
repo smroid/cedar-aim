@@ -4,6 +4,7 @@
 import 'dart:math' as math;
 import 'package:cedar_flutter/cedar.pb.dart';
 import 'package:cedar_flutter/cedar_sky.pb.dart';
+import 'package:cedar_flutter/connection_recovery_dialog.dart';
 import 'package:cedar_flutter/controls_widget.dart';
 import 'package:cedar_flutter/draw_slew_target.dart';
 import 'package:cedar_flutter/draw_util.dart';
@@ -25,7 +26,6 @@ import 'package:grpc/grpc.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:pip/pip.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sprintf/sprintf.dart';
 import 'cedar.pbgrpc.dart' as cedar_rpc;
 import 'platform.dart';
@@ -46,24 +46,8 @@ typedef ObjectInfoDialogFunction = void Function(
 typedef WifiAccessPointDialogFunction = void Function(
     MyHomePageState, BuildContext);
 
-/// Controller class for WiFi client dialog functionality
-class WifiClientDialogController {
-  final void Function(bool, MyHomePageState, BuildContext) showDialog;
-  final void Function() hideTemporarily;
-  final void Function(BuildContext) showAfterHiding;
-
-  WifiClientDialogController({
-    required this.showDialog,
-    required this.hideTemporarily,
-    required this.showAfterHiding,
-  });
-}
-
-typedef WifiClientDialogFunction = void Function(
-    bool, MyHomePageState, BuildContext);
-
-typedef UpdateServerSoftwareDialogFunction = void Function(
-    MyHomePageState, BuildContext, {bool filterUpdateFiles});
+typedef UpdateServerSoftwareDialogFunction = void
+    Function(MyHomePageState, BuildContext, {bool filterUpdateFiles});
 
 typedef RestartCedarServerFunction = Future<void> Function();
 
@@ -84,7 +68,6 @@ DrawCatalogEntriesFunction? _drawCatalogEntries;
 ShowCatalogBrowserFunction? _showCatalogBrowser;
 ObjectInfoDialogFunction? _objectInfoDialog;
 WifiAccessPointDialogFunction? _wifiAccessPointDialog;
-WifiClientDialogController? _wifiClientDialogController;
 UpdaterInfo? _updaterInfo;
 bool _updateServiceAvailable = false;
 
@@ -99,7 +82,7 @@ String? getUpdaterVersion() => _updaterInfo?.updaterVersion;
 /// Returns null if unable to connect to server.
 Future<cedar_rpc.ServerInformation?> getServerInformation() async {
   try {
-    final client = getClient();
+    final client = await getClient();
 
     // Make a simple GetFrame request to get server information.
     final request = cedar_rpc.FrameRequest()
@@ -113,17 +96,37 @@ Future<cedar_rpc.ServerInformation?> getServerInformation() async {
 
     // Return the server information (which is always populated).
     return response.serverInformation;
-
   } catch (e) {
     debugPrint('Error getting server information: $e');
     return null;
   }
 }
 
+String? _cachedProductName;
+
+/// Get the product name (e.g., 'Hopper'). Defaults to 'Cedar Box' if
+/// unavailable. Cached after first call.
+Future<String> getProductName() async {
+  if (_cachedProductName != null) {
+    return _cachedProductName!;
+  }
+  try {
+    final serverInfo = await getServerInformation();
+    if (serverInfo != null && serverInfo.productName.isNotEmpty) {
+      _cachedProductName = serverInfo.productName;
+      return _cachedProductName!;
+    }
+  } catch (e) {
+    debugPrint('Error getting product name: $e');
+  }
+  _cachedProductName = 'Cedar Box';
+  return _cachedProductName!;
+}
+
 /// Clear the observer location on the server (revert to unknown).
 Future<void> clearObserverLocation() async {
   try {
-    final client = getClient();
+    final client = await getClient();
     final request = cedar_rpc.EmptyMessage();
     await client.clearObserverLocation(
       request,
@@ -140,14 +143,12 @@ void clientMain(
     ShowCatalogBrowserFunction? showCatalogBrowser,
     ObjectInfoDialogFunction? objectInfoDialog,
     WifiAccessPointDialogFunction? wifiAccessPointDialog,
-    WifiClientDialogController? wifiClientDialogController,
     UpdaterInfo? updaterInfo,
     bool updateServiceAvailable) {
   _drawCatalogEntries = drawCatalogEntries;
   _showCatalogBrowser = showCatalogBrowser;
   _objectInfoDialog = objectInfoDialog;
   _wifiAccessPointDialog = wifiAccessPointDialog;
-  _wifiClientDialogController = wifiClientDialogController;
   _updaterInfo = updaterInfo;
   _updateServiceAvailable = updateServiceAvailable;
 
@@ -258,8 +259,10 @@ class _MainImagePainter extends CustomPainter {
       // Draw box around daylight focus zoom region.
       // Adjust coordinates relative to the displayed image region
       final scaledRect = Rect.fromLTWH(
-        (state._daylightFocusZoomRegion!.left - state._imageRegion.left) * displayScale,
-        (state._daylightFocusZoomRegion!.top - state._imageRegion.top) * displayScale,
+        (state._daylightFocusZoomRegion!.left - state._imageRegion.left) *
+            displayScale,
+        (state._daylightFocusZoomRegion!.top - state._imageRegion.top) *
+            displayScale,
         state._daylightFocusZoomRegion!.width * displayScale,
         state._daylightFocusZoomRegion!.height * displayScale,
       );
@@ -337,8 +340,8 @@ class _MainImagePainter extends CustomPainter {
         var imagePos = slew.imagePos.deepCopy();
         imagePos.x += state._imageRegion.left;
         // Convert full image coordinates to image region coordinates.
-        final fullImagePos = Offset(imagePos.x / state._binFactor,
-                                    imagePos.y / state._binFactor);
+        final fullImagePos = Offset(
+            imagePos.x / state._binFactor, imagePos.y / state._binFactor);
         // Check if the position is within the displayed central square crop.
         if (state._imageRegion.contains(fullImagePos)) {
           // Scale the slew position.
@@ -366,7 +369,8 @@ class _MainImagePainter extends CustomPainter {
           posInImage,
           slew.targetAngle,
           portrait,
-          Size(state._imageRegion.width * displayScale, state._imageRegion.height * displayScale));
+          Size(state._imageRegion.width * displayScale,
+              state._imageRegion.height * displayScale));
     } else if (!state._focusAid &&
         !state._calibrating &&
         !state._transitionToSetup) {
@@ -378,8 +382,8 @@ class _MainImagePainter extends CustomPainter {
       final scaledScopeFov =
           (state._scopeFov / state._rotationSizeRatio / 2) * displayScale;
 
-      drawBullseye(
-          canvas, primaryColor, scaledBoresightPosition, scaledScopeFov, rollAngleRad,
+      drawBullseye(canvas, primaryColor, scaledBoresightPosition,
+          scaledScopeFov, rollAngleRad,
           daylightMode: state._daylightMode);
 
       if (labeledCatalogEntries.isNotEmpty &&
@@ -514,6 +518,7 @@ class MyHomePageState extends State<MyHomePage> {
   DateTime _startTime = DateTime.now();
   bool _serverConnected = false;
   bool everConnected = false;
+  bool _connectionDialogShowing = false;
   DateTime _lastServerResponseTime = DateTime.now();
 
   // State for align mode.
@@ -542,9 +547,9 @@ class MyHomePageState extends State<MyHomePage> {
   List<String> _demoFiles = [];
   String _demoFile = "";
   bool advanced = false;
-  bool useBluetooth = false;
   bool _systemMenuExpanded = false;
   bool _rightHanded = true;
+  String _productName = 'Cedar Box';
   bool _canAlign = false;
   bool updateInProgress = false;
   bool shutdownInProgress = false;
@@ -610,8 +615,6 @@ class MyHomePageState extends State<MyHomePage> {
   // so if the update rate setting is e.g. 1 Hz. We put up a pacifier for this;
   // define a flag so we can know when it is done.
   bool _transitionToSetup = false;
-
-  CedarDevice _selectedDevice = CedarDevice(address: '192.168.4.1');
 
   final Pip pip = Pip();
   bool _isPipMode = false;
@@ -681,10 +684,6 @@ class MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  cedar_rpc.CedarClient client() {
-    return getClient();
-  }
-
   LatLng? get mapPosition => _mapPosition;
   set mapPosition(LatLng? newPos) {
     setState(() {
@@ -723,6 +722,9 @@ class MyHomePageState extends State<MyHomePage> {
       Provider.of<ThemeModel>(context, listen: false).setNormalTheme();
     }
     serverInformation = response.serverInformation;
+    _productName = serverInformation!.productName.isNotEmpty
+        ? serverInformation!.productName
+        : 'Cedar Box';
     _hasCamera = serverInformation!.hasCamera();
     if (_hasCamera) {
       _cameraWidth = serverInformation!.camera.imageWidth;
@@ -778,7 +780,6 @@ class MyHomePageState extends State<MyHomePage> {
     settingsModel.isBasic = isBasic;
     settingsModel.isPlus = isPlus;
     advanced = preferences!.advanced;
-    useBluetooth = preferences!.useBluetooth;
     _rightHanded = preferences!.rightHanded;
     calibrationData =
         response.hasCalibrationData() ? response.calibrationData : null;
@@ -889,10 +890,14 @@ class MyHomePageState extends State<MyHomePage> {
 
       // The rectangle gives us the region in full resolution coordinates.
       _daylightFocusZoomRegion = Rect.fromLTWH(
-          response.daylightFocusZoomImage.rectangle.originX.toDouble() / _binFactor,
-          response.daylightFocusZoomImage.rectangle.originY.toDouble() / _binFactor,
-          response.daylightFocusZoomImage.rectangle.width.toDouble() / _binFactor,
-          response.daylightFocusZoomImage.rectangle.height.toDouble() / _binFactor);
+          response.daylightFocusZoomImage.rectangle.originX.toDouble() /
+              _binFactor,
+          response.daylightFocusZoomImage.rectangle.originY.toDouble() /
+              _binFactor,
+          response.daylightFocusZoomImage.rectangle.width.toDouble() /
+              _binFactor,
+          response.daylightFocusZoomImage.rectangle.height.toDouble() /
+              _binFactor);
     }
     if (response.hasCenterPeakPosition()) {
       var cp = response.centerPeakPosition;
@@ -912,10 +917,12 @@ class MyHomePageState extends State<MyHomePage> {
       _dontShowSetupFinished = dontShowItems.contains('setup_finished');
     }
     if (newFocusMode && !prevFocusMode) {
-      _showFocusIntro = !_dontShowFocusIntro && !(preferences?.skipFocus ?? false);
+      _showFocusIntro =
+          !_dontShowFocusIntro && !(preferences?.skipFocus ?? false);
     }
     if (newAlignMode && !prevAlignMode) {
-      _showAlignIntro = !_dontShowAlignIntro && !(preferences?.skipAlignment ?? false);
+      _showAlignIntro =
+          !_dontShowAlignIntro && !(preferences?.skipAlignment ?? false);
     }
     if (!_setupMode && prevSetupMode) {
       // Only show setup finished if we're not currently in skip-focus active mode
@@ -934,7 +941,8 @@ class MyHomePageState extends State<MyHomePage> {
 
   Future<void> _updateFixedSettings(cedar_rpc.FixedSettings request) async {
     try {
-      await client().updateFixedSettings(request,
+      final c = await getClient();
+      await c.updateFixedSettings(request,
           options: CallOptions(timeout: const Duration(seconds: 2)));
     } catch (e) {
       debugPrint("updateFixedSettings error: $e");
@@ -944,7 +952,8 @@ class MyHomePageState extends State<MyHomePage> {
   Future<void> updateOperationSettings(
       cedar_rpc.OperationSettings request) async {
     try {
-      await client().updateOperationSettings(request,
+      final c = await getClient();
+      await c.updateOperationSettings(request,
           options: CallOptions(timeout: const Duration(seconds: 2)));
     } catch (e) {
       debugPrint("updateOperationSettings error: $e");
@@ -962,7 +971,8 @@ class MyHomePageState extends State<MyHomePage> {
           ? DisplayOrientation.LANDSCAPE
           : DisplayOrientation.PORTRAIT;
     try {
-      final response = await client().getFrame(
+      final c = await getClient();
+      final response = await c.getFrame(
         request,
         options: CallOptions(timeout: const Duration(seconds: 4)),
       );
@@ -1003,7 +1013,6 @@ class MyHomePageState extends State<MyHomePage> {
 
   // Issue repeated request/response RPCs.
   Future<void> _refreshStateFromServer() async {
-    await _loadSelectedDevice();
     await Future.doWhile(() async {
       await Future.delayed(const Duration(milliseconds: 100));
       if (!_paintPending && !updateInProgress && !shutdownInProgress) {
@@ -1015,7 +1024,8 @@ class MyHomePageState extends State<MyHomePage> {
 
   Future<void> initiateAction(cedar_rpc.ActionRequest request) async {
     try {
-      await client().initiateAction(request,
+      final c = await getClient();
+      await c.initiateAction(request,
           options: CallOptions(timeout: const Duration(seconds: 2)));
     } catch (e) {
       debugPrint("initiateAction error: $e");
@@ -1052,7 +1062,8 @@ class MyHomePageState extends State<MyHomePage> {
 
   Future<void> _designateDaylightFocusRegion(Offset pos) async {
     final coord = cedar_rpc.ImageCoord(x: pos.dx, y: pos.dy);
-    final request = cedar_rpc.ActionRequest(designateDaylightFocusRegion: coord);
+    final request =
+        cedar_rpc.ActionRequest(designateDaylightFocusRegion: coord);
     await initiateAction(request);
   }
 
@@ -1084,7 +1095,8 @@ class MyHomePageState extends State<MyHomePage> {
   Future<String> _getServerLogs() async {
     final request = cedar_rpc.ServerLogRequest(logRequest: 20000);
     try {
-      final infoResult = await client().getServerLog(request,
+      final c = await getClient();
+      final infoResult = await c.getServerLog(request,
           options: CallOptions(timeout: const Duration(seconds: 2)));
       return infoResult.logContent;
     } catch (e) {
@@ -1131,7 +1143,8 @@ class MyHomePageState extends State<MyHomePage> {
     final updateWifi = WiFiAccessPoint(ssid: ssid, psk: psk, channel: channel);
     final request = cedar_rpc.ActionRequest(updateWifiAccessPoint: updateWifi);
     // Call RPC directly so errors can propagate to caller.
-    await client().initiateAction(request,
+    final c = await getClient();
+    await c.initiateAction(request,
         options: CallOptions(timeout: const Duration(seconds: 2)));
   }
 
@@ -1142,7 +1155,8 @@ class MyHomePageState extends State<MyHomePage> {
 
   Future<void> updatePreferences(cedar_rpc.Preferences changedPrefs) async {
     try {
-      final newPrefs = await client().updatePreferences(changedPrefs,
+      final c = await getClient();
+      final newPrefs = await c.updatePreferences(changedPrefs,
           options: CallOptions(timeout: const Duration(seconds: 2)));
       setState(() {
         preferences = newPrefs;
@@ -1266,7 +1280,8 @@ class MyHomePageState extends State<MyHomePage> {
       skipAlignment: preferences?.skipAlignment ?? false,
       skipFocusActive: _skipFocusActive,
       onPreferencesUpdate: (prefsDiff) => updatePreferences(prefsDiff),
-      onOperationSettingsUpdate: (opSettingsDiff) => updateOperationSettings(opSettingsDiff),
+      onOperationSettingsUpdate: (opSettingsDiff) =>
+          updateOperationSettings(opSettingsDiff),
       onGoFullScreen: goFullScreen,
       onCancelFullScreen: cancelFullScreen,
       onSetWakeLock: (enabled) => setWakeLock(enabled),
@@ -1297,13 +1312,17 @@ class MyHomePageState extends State<MyHomePage> {
           });
         }
       },
-      focusDoneButton: ({double? fontSize}) => focusDoneButton(fontSize: fontSize),
-      setupAlignSkipOrDoneButton: ({double? fontSize}) => setupAlignSkipOrDoneButton(fontSize: fontSize),
-      slewReAlignButton: ({double? fontSize}) => slewReAlignButton(fontSize: fontSize),
+      focusDoneButton: ({double? fontSize}) =>
+          focusDoneButton(fontSize: fontSize),
+      setupAlignSkipOrDoneButton: ({double? fontSize}) =>
+          setupAlignSkipOrDoneButton(fontSize: fontSize),
+      slewReAlignButton: ({double? fontSize}) =>
+          slewReAlignButton(fontSize: fontSize),
       catalogButton: ({double? fontSize}) => catalogButton(fontSize: fontSize),
       endGotoButton: ({double? fontSize}) => endGotoButton(fontSize: fontSize),
       scaledText: (String text) => _scaledText(text),
-      rowOrColumn: (bool portrait, List<Widget> children) => _rowOrColumn(portrait, children),
+      rowOrColumn: (bool portrait, List<Widget> children) =>
+          _rowOrColumn(portrait, children),
     );
   }
 
@@ -1554,8 +1573,9 @@ class MyHomePageState extends State<MyHomePage> {
     final crossDimension = math.max(coordInfoSize, objectLabelSize);
     final crossDimensionBasedScale = (panelWidth / crossDimension);
 
-    final panelScaleFactor =
-      math.min(mainDimensionBasedScale, crossDimensionBasedScale).clamp(0.5, 1.2);
+    final panelScaleFactor = math
+        .min(mainDimensionBasedScale, crossDimensionBasedScale)
+        .clamp(0.5, 1.2);
 
     var gaugeSize = 45 * panelScaleFactor * textScale;
 
@@ -1714,10 +1734,12 @@ class MyHomePageState extends State<MyHomePage> {
 
                         // Show snackbar with object name if available.
                         if (mounted) {
-                          final objectName = _getCatalogEntryNameForStar(star.centroidPosition);
-                          final message = objectName != null && objectName.isNotEmpty
-                              ? 'Alignment target: $objectName'
-                              : 'Alignment target selected';
+                          final objectName = _getCatalogEntryNameForStar(
+                              star.centroidPosition);
+                          final message =
+                              objectName != null && objectName.isNotEmpty
+                                  ? 'Alignment target: $objectName'
+                                  : 'Alignment target selected';
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text(message),
@@ -1776,9 +1798,11 @@ class MyHomePageState extends State<MyHomePage> {
   String? _getCatalogEntryNameForStar(cedar_rpc.ImageCoord starPos) {
     for (var catEntry in _labeledFovCatalogEntries) {
       // Check if catalog entry is near the star position
-      final distanceSq = (catEntry.imagePos.x - starPos.x) * (catEntry.imagePos.x - starPos.x) +
+      final distanceSq = (catEntry.imagePos.x - starPos.x) *
+              (catEntry.imagePos.x - starPos.x) +
           (catEntry.imagePos.y - starPos.y) * (catEntry.imagePos.y - starPos.y);
-      if (distanceSq < 4) { // Within ~2 pixels
+      if (distanceSq < 4) {
+        // Within ~2 pixels
         return labelForEntry(catEntry.entry);
       }
     }
@@ -1850,7 +1874,10 @@ class MyHomePageState extends State<MyHomePage> {
     // Scale the overlay size with the display scale
     final displayScale = _getDisplayScale();
 
-    if (_setupMode && _focusAid && _daylightMode && _daylightFocusZoomImageBytes != null) {
+    if (_setupMode &&
+        _focusAid &&
+        _daylightMode &&
+        _daylightFocusZoomImageBytes != null) {
       final overlaySize = (_imageRegion.height / 4) * displayScale;
       overlayWidget = dart_widgets.Image.memory(_daylightFocusZoomImageBytes!,
           height: overlaySize,
@@ -1980,8 +2007,7 @@ class MyHomePageState extends State<MyHomePage> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [_buildControlsWidget(containerSize)]);
 
-    final String product =
-        serverInformation != null ? serverInformation!.productName : "e-finder";
+    final String product = _productName;
     final bool isHopper = product == "Hopper";
 
     final isFocusMode = _setupMode && _focusAid && !_skipFocusActive;
@@ -2018,78 +2044,81 @@ class MyHomePageState extends State<MyHomePage> {
             ),
           )
         : isFocusMode
-        ? GestureDetector(
-            onTap: () {
-              setState(() {
-                // Transition to align mode (same as Done button in focus screen).
-                _alignTargetTapped = false;
-                if (!_setupMode) {
-                  _transitionToSetup = true;
-                }
-                _setOperatingMode(/*setupMode=*/ true, /*focusAid=*/ false);
-              });
-            },
-            child: RotatedBox(
-              quarterTurns: portrait ? 3 : 0,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    isHopper ? "Hopper is pre-focused" : "Focus your $product",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-                    textScaler: textScaler(context),
-                  ),
-                  const SizedBox(height: 12),
-                  Text(
-                    "You can tap Done to\nproceed to alignment",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-                    textScaler: textScaler(context),
-                  ),
-                ],
-              ),
-            ),
-          )
-        : isAlignMode
-            ? RotatedBox(
-                quarterTurns: portrait ? 3 : 0,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "Set $product alignment",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 13,
-                        color: Theme.of(context).colorScheme.primary,
+            ? GestureDetector(
+                onTap: () {
+                  setState(() {
+                    // Transition to align mode (same as Done button in focus
+                    // screen).
+                    _alignTargetTapped = false;
+                    if (!_setupMode) {
+                      _transitionToSetup = true;
+                    }
+                    _setOperatingMode(/*setupMode=*/ true, /*focusAid=*/ false);
+                  });
+                },
+                child: RotatedBox(
+                  quarterTurns: portrait ? 3 : 0,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        isHopper
+                            ? "Hopper is pre-focused"
+                            : "Focus your $product",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                        textScaler: textScaler(context),
                       ),
-                      textScaler: textScaler(context),
-                    ),
-                    const SizedBox(height: 12),
-                    Text(
-                      _daylightMode
-                        ? "1. Point your telescope at a distant object"
-                        : "1. Point your telescope at a bright star\n2. Center in eyepiece",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 11,
-                        color: Theme.of(context).colorScheme.primary,
+                      const SizedBox(height: 12),
+                      Text(
+                        "You can tap Done to\nproceed to alignment",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                        textScaler: textScaler(context),
                       ),
-                      textScaler: textScaler(context),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               )
-            : Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: _dataItems(context, containerSize));
+            : isAlignMode
+                ? RotatedBox(
+                    quarterTurns: portrait ? 3 : 0,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Set $product alignment",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                          textScaler: textScaler(context),
+                        ),
+                        const SizedBox(height: 12),
+                        Text(
+                          _daylightMode
+                              ? "1. Point your telescope at a distant object"
+                              : "1. Point your telescope at a bright star\n2. Center in eyepiece",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 11,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                          textScaler: textScaler(context),
+                        ),
+                      ],
+                    ),
+                  )
+                : Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: _dataItems(context, containerSize));
 
     return GestureDetector(
         // On Android, sometimes the system and navigation bars become visible.
@@ -2184,90 +2213,90 @@ class MyHomePageState extends State<MyHomePage> {
 
   Widget _drawer() {
     return CedarDrawer(
-        controller: CedarDrawerController(
-          setupMode: _setupMode,
-          focusAid: _focusAid,
-          offerMap: _offerMap,
-          mapPosition: _mapPosition,
-          advanced: advanced,
-          useBluetooth: useBluetooth,
-          demoMode: _demoMode,
-          demoFiles: _demoFiles,
-          systemMenuExpanded: _systemMenuExpanded,
-          demoFile: _demoFile,
-          isDIY: isDIY,
-          badServerState: !healthy,
-          updaterInfo: _updaterInfo,
-          updateServiceAvailable: updateServiceAvailable,
-          wifiAccessPointDialog: _wifiAccessPointDialog,
-          skipFocus: preferences?.skipFocus ?? false,
-          skipAlignment: preferences?.skipAlignment ?? false,
-          setOperatingMode: (setupMode, focusAid) async {
-            if (!_setupMode && setupMode) {
-              setState(() {
-                _transitionToSetup = true;
-              });
+      controller: CedarDrawerController(
+        setupMode: _setupMode,
+        focusAid: _focusAid,
+        offerMap: _offerMap,
+        mapPosition: _mapPosition,
+        advanced: advanced,
+        demoMode: _demoMode,
+        demoFiles: _demoFiles,
+        systemMenuExpanded: _systemMenuExpanded,
+        demoFile: _demoFile,
+        isDIY: isDIY,
+        badServerState: !healthy,
+        updaterInfo: _updaterInfo,
+        updateServiceAvailable: updateServiceAvailable,
+        wifiAccessPointDialog: _wifiAccessPointDialog,
+        skipFocus: preferences?.skipFocus ?? false,
+        skipAlignment: preferences?.skipAlignment ?? false,
+        productName: _productName,
+        setOperatingMode: (setupMode, focusAid) async {
+          if (!_setupMode && setupMode) {
+            setState(() {
+              _transitionToSetup = true;
+            });
+          }
+          if (setupMode && focusAid) {
+            // Focus mode specific setup
+            setState(() {
+              _alignTargetTapped = false;
+            });
+          } else if (setupMode && !focusAid) {
+            // Align mode specific setup
+            setState(() {
+              _alignTargetTapped = false;
+            });
+          }
+          await _setOperatingMode(setupMode, focusAid);
+        },
+        setDemoImage: (imageFile) async {
+          setState(() {
+            _demoFile = imageFile;
+            _demoMode = imageFile.isNotEmpty;
+          });
+          await _setDemoImage(imageFile);
+        },
+        saveImage: _saveImage,
+        getServerLogs: _getServerLogs,
+        crashServer: _crashServer,
+        restartCedarServer: _restartCedarServer,
+        initiateAction: initiateAction,
+        updatePreferences: updatePreferences,
+        setAdvanced: (value) async {
+          setState(() {
+            advanced = value;
+          });
+          var settingsModel =
+              Provider.of<SettingsModel>(context, listen: false);
+          settingsModel.preferencesProto.advanced = value;
+          var prefs = cedar_rpc.Preferences();
+          prefs.advanced = value;
+          await updatePreferences(prefs);
+        },
+        setDemoMode: (value) async {
+          setState(() {
+            _demoMode = value;
+            if (value && _demoFile.isNotEmpty) {
+              // Turn on demo mode with current file
+              _setDemoImage(_demoFile);
+            } else {
+              // Turn off demo mode
+              _setDemoImage("");
             }
-            if (setupMode && focusAid) {
-              // Focus mode specific setup
-              setState(() {
-                _alignTargetTapped = false;
-              });
-            } else if (setupMode && !focusAid) {
-              // Align mode specific setup
-              setState(() {
-                _alignTargetTapped = false;
-              });
-            }
-            await _setOperatingMode(setupMode, focusAid);
-          },
-          setDemoImage: (imageFile) async {
-            setState(() {
-              _demoFile = imageFile;
-              _demoMode = imageFile.isNotEmpty;
-            });
-            await _setDemoImage(imageFile);
-          },
-          saveImage: _saveImage,
-          getServerLogs: _getServerLogs,
-          crashServer: _crashServer,
-          restartCedarServer: _restartCedarServer,
-          initiateAction: initiateAction,
-          updatePreferences: updatePreferences,
-          setAdvanced: (value) async {
-            setState(() {
-              advanced = value;
-            });
-            var settingsModel =
-                Provider.of<SettingsModel>(context, listen: false);
-            settingsModel.preferencesProto.advanced = value;
-            var prefs = cedar_rpc.Preferences();
-            prefs.advanced = value;
-            await updatePreferences(prefs);
-          },
-          setDemoMode: (value) async {
-            setState(() {
-              _demoMode = value;
-              if (value && _demoFile.isNotEmpty) {
-                // Turn on demo mode with current file
-                _setDemoImage(_demoFile);
-              } else {
-                // Turn off demo mode
-                _setDemoImage("");
-              }
-            });
-          },
-          setSystemMenuExpanded: (value) {
-            setState(() {
-              _systemMenuExpanded = value;
-            });
-          },
-          onStateChanged: () => setState(() {}),
-          closeDrawer: closeDrawer,
-          context: context,
-          homePageState: this,
-        ),
-      );
+          });
+        },
+        setSystemMenuExpanded: (value) {
+          setState(() {
+            _systemMenuExpanded = value;
+          });
+        },
+        onStateChanged: () => setState(() {}),
+        closeDrawer: closeDrawer,
+        context: context,
+        homePageState: this,
+      ),
+    );
   }
 
   @override
@@ -2277,16 +2306,11 @@ class MyHomePageState extends State<MyHomePage> {
       return GuidanceDisplay();
     }
 
-    if (healthy && _wifiClientDialogController != null) {
-      _wifiClientDialogController!.showDialog(/*open=*/ false, this, context);
-    }
-
     // This method is rerun every time setState() is called.
     bool hideAppBar = Provider.of<SettingsModel>(context, listen: false)
         .preferencesProto
         .hideAppBar;
-    final String product =
-        serverInformation != null ? serverInformation!.productName : "e-finder";
+    final String product = _productName;
 
     if (_showWelcome && !_dontShowWelcome) {
       return interstitialDialog(
@@ -2432,47 +2456,57 @@ class MyHomePageState extends State<MyHomePage> {
 
     return Scaffold(
       key: _scaffoldKey,
-      appBar: hideAppBar ? null : AppBar(
-          title: Text(widget.title),
-          foregroundColor: Theme.of(context).colorScheme.primary),
+      appBar: hideAppBar
+          ? null
+          : AppBar(
+              title: Text(widget.title),
+              foregroundColor: Theme.of(context).colorScheme.primary),
       onDrawerChanged: _handleDrawerChanged,
       onEndDrawerChanged: _handleDrawerChanged,
       body: DefaultTextStyle.merge(
           style: const TextStyle(fontFamilyFallback: ["Roboto"]),
           child: hideAppBar
-            ? LayoutBuilder(
-                builder: (context, constraints) {
-                  return SafeArea(
-                    child: Stack(
-                      fit: StackFit.expand,
-                      children: [
-                        healthy ? _orientationLayout(context, Size(constraints.maxWidth, constraints.maxHeight)) : _badServerState(),
-                        // Menu icon positioned at top when in fullscreen mode
-                        Positioned(
-                          left: _rightHanded ? null : 0,
-                          right: _rightHanded ? 0 : null,
-                          top: 0,
-                          child: IconButton(
-                            icon: const Icon(Icons.menu),
-                            onPressed: () {
-                              if (_rightHanded) {
-                                _scaffoldKey.currentState!.openEndDrawer();
-                              } else {
-                                _scaffoldKey.currentState!.openDrawer();
-                              }
-                            },
+              ? LayoutBuilder(
+                  builder: (context, constraints) {
+                    return SafeArea(
+                      child: Stack(
+                        fit: StackFit.expand,
+                        children: [
+                          healthy
+                              ? _orientationLayout(
+                                  context,
+                                  Size(constraints.maxWidth,
+                                      constraints.maxHeight))
+                              : _badServerState(),
+                          // Menu icon positioned at top when in fullscreen mode
+                          Positioned(
+                            left: _rightHanded ? null : 0,
+                            right: _rightHanded ? 0 : null,
+                            top: 0,
+                            child: IconButton(
+                              icon: const Icon(Icons.menu),
+                              onPressed: () {
+                                if (_rightHanded) {
+                                  _scaffoldKey.currentState!.openEndDrawer();
+                                } else {
+                                  _scaffoldKey.currentState!.openDrawer();
+                                }
+                              },
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  );
-                },
-              )
-            : LayoutBuilder(
-                builder: (context, constraints) {
-                  return healthy ? _orientationLayout(context, Size(constraints.maxWidth, constraints.maxHeight)) : _badServerState();
-                },
-              )),
+                        ],
+                      ),
+                    );
+                  },
+                )
+              : LayoutBuilder(
+                  builder: (context, constraints) {
+                    return healthy
+                        ? _orientationLayout(context,
+                            Size(constraints.maxWidth, constraints.maxHeight))
+                        : _badServerState();
+                  },
+                )),
       drawer: _drawer(),
       endDrawer: _drawer(),
       drawerEdgeDragWidth: 100,
@@ -2480,221 +2514,104 @@ class MyHomePageState extends State<MyHomePage> {
   }
 
   void _handleDrawerChanged(bool isOpened) {
-    if (isOpened) {
-      // Drawer opened, hide WiFi dialog temporarily
-      _wifiClientDialogController?.hideTemporarily();
-    } else {
-      // Drawer closed, show WiFi dialog again if it was temporarily hidden
-      _wifiClientDialogController?.showAfterHiding(context);
-    }
     // Prevent jank in demo mode image file selector.
     _inhibitRefresh = isOpened;
   }
 
   Widget _badServerState() {
     _paintPending = false;
-    // Give some time for an initial connection to succeed.
+
+    // If server is connected but camera is not detected.
+    if (_serverConnected) {
+      Color color = Theme.of(context).colorScheme.primary;
+      return Material(
+        color: Colors.black54,
+        child: Center(
+          child: Container(
+            margin: const EdgeInsets.all(40),
+            padding: const EdgeInsets.fromLTRB(10, 5, 10, 10),
+            decoration: BoxDecoration(
+              border: Border(
+                top: BorderSide(color: color),
+                bottom: BorderSide(color: color),
+                left: BorderSide(color: color),
+                right: BorderSide(color: color),
+              ),
+              color: Colors.black,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Column(mainAxisSize: MainAxisSize.min, children: [
+              Text(
+                  maxLines: 10,
+                  style: TextStyle(
+                    fontSize: 20,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                  "Cedar could not detect a camera. "
+                  "Please check the camera connection."),
+            ]),
+          ),
+        ),
+      );
+    }
+
+    // Server not connected - give some time for an initial connection to
+    // succeed.
     final elapsed = DateTime.now().difference(_startTime);
     if (elapsed.inMilliseconds < 5000) {
       return const Center(child: CircularProgressIndicator());
     }
-    if (isAndroid()) {
-      return _buildErrorWidget();
-    }
-    if (isMobile() && !_serverConnected && _wifiClientDialogController != null) {
-      SchedulerBinding.instance.addPostFrameCallback((_) {
-        _wifiClientDialogController!.showDialog(/*open=*/ true, this, context);
-      });
-      return Container();
-    }
-    // If we're still here, we are on Web platform or the camera is not present.
 
-    Color color = Theme.of(context).colorScheme.primary;
-    // If web, put up message
-    final connMessage = everConnected
-        ? "Connection lost to Cedar server"
-        : "No connection to Cedar server";
-    return Material(
-      color: Colors.black54,
-      child: Center(
-        child: Container(
-          margin: const EdgeInsets.all(40),
-          padding: const EdgeInsets.fromLTRB(10, 5, 10, 10),
-          decoration: BoxDecoration(
-            border: Border(
-              top: BorderSide(color: color),
-              bottom: BorderSide(color: color),
-              left: BorderSide(color: color),
-              right: BorderSide(color: color),
-            ),
-            color: Colors.black,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Column(mainAxisSize: MainAxisSize.min, children: [
-            Text(
-                maxLines: 10,
-                style: TextStyle(
-                  fontSize: 20,
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-                _serverConnected
-                    ? "Cedar could not detect a camera. "
-                        "Please check the camera connection."
-                    : "$connMessage. Please ensure that Cedar "
-                        "server is running, connect this device to the Cedar "
-                        "WiFi hotspot, and navigate to http://192.168.4.1."),
-          ]),
-        ),
-      ),
-    );
+    // Show unified connection recovery dialog.
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      _showConnectionRecoveryDialog();
+    });
+    return Container();
   }
 
-  Widget _buildErrorWidget() {
-    String errorText = 'No connection to Cedar server';
-    final deviceName = _selectedDevice.name ?? 'Default (WiFi)';
-    final deviceAddr = _selectedDevice.address;
-    errorText += '\n\nDevice: $deviceName\nAddress: $deviceAddr';
-
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              errorText,
-              style: TextStyle(
-                fontSize: 20,
-                color: Theme.of(context).colorScheme.primary,
-              ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 16),
-            OutlinedButton(
-              onPressed: _showDeviceSelectionDialog,
-              child: const Text('Choose Another Device'),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Future<void> _loadSelectedDevice() async {
-    final prefs = await SharedPreferences.getInstance();
-    final deviceName = prefs.getString('selected_device_name');
-    final deviceAddress = prefs.getString('selected_device_address');
-    if (deviceAddress != null) {
-      _selectedDevice = CedarDevice(address: deviceAddress, name: deviceName);
-      setActiveDevice(_selectedDevice);
-    }
+  /// Reset the connection retry timer. Called when a new device is selected.
+  void resetConnectionTimer() {
+    setState(() {
+      _startTime = DateTime.now();
+    });
   }
 
   Future<void> _selectDevice(CedarDevice device) async {
-    setState(() {
-      _startTime = DateTime.now();
-      _selectedDevice = device;
-      setActiveDevice(device);
-    });
-
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('selected_device_address', device.address);
-    if (device.name == null) {
-      // WiFi
-      await prefs.remove('selected_device_name');
-    } else {
-      await prefs.setString('selected_device_name', device.name!);
-    }
+    resetConnectionTimer();
   }
 
-  void _showDeviceSelectionDialog() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('Select Cedar Device'),
-          titleTextStyle: TextStyle(
-            color: Theme.of(context).colorScheme.primary,
-            fontSize: 24,
-          ),
-          content: SizedBox(
-            width: double.maxFinite,
-            child: FutureBuilder<List<CedarDevice>>(
-              future: getBluetoothDevices(),
-              builder: (context, snapshot) {
-                if (snapshot.hasError) {
-                  return Text('Error: ${snapshot.error}');
-                }
-                if (!snapshot.hasData) {
-                  return const Center(child: CircularProgressIndicator());
-                }
+  Future<void> _showConnectionRecoveryDialog() async {
+    // Prevent showing multiple dialogs.
+    if (_connectionDialogShowing) {
+      return;
+    }
+    _connectionDialogShowing = true;
 
-                final devices = snapshot.data!;
-                return ListView(
-                  shrinkWrap: true,
-                  children: [
-                    ListTile(
-                      leading: Icon(
-                        Icons.wifi,
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
-                      title: Text(
-                        'Use Wi-Fi (Default)',
-                        style: TextStyle(
-                            color: Theme.of(context).colorScheme.primary),
-                      ),
-                      subtitle: Text(
-                        'Connects to 192.168.4.1',
-                        style: TextStyle(
-                            color: Theme.of(context).colorScheme.secondary),
-                      ),
-                      onTap: () {
-                        Navigator.pop(context);
-                        _selectDevice(CedarDevice(address: '192.168.4.1'));
-                      },
-                    ),
-                    const Divider(),
-                    if (devices.isEmpty)
-                      ListTile(
-                          title: Text(
-                        'No bonded Bluetooth devices found',
-                        style: TextStyle(
-                            color: Theme.of(context).colorScheme.primary),
-                      )),
-                    ...devices.map((device) => ListTile(
-                          leading: Icon(
-                            Icons.bluetooth,
-                            color: Theme.of(context).colorScheme.primary,
-                          ),
-                          title: Text(
-                            device.name ?? 'Unknown',
-                            style: TextStyle(
-                                color: Theme.of(context).colorScheme.primary),
-                          ),
-                          subtitle: Text(
-                            device.address,
-                            style: TextStyle(
-                                color: Theme.of(context).colorScheme.secondary),
-                          ),
-                          onTap: () {
-                            Navigator.pop(context);
-                            _selectDevice(device);
-                          },
-                        )),
-                  ],
-                );
-              },
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Cancel'),
-            ),
-          ],
-        );
-      },
+    List<CedarDevice>? deviceList;
+    if (isAndroid()) {
+      deviceList = await getBluetoothDevices();
+    }
+
+    final title = everConnected
+        ? "Connection to $_productName lost"
+        : "Connect to $_productName";
+
+    if (!mounted) {
+      _connectionDialogShowing = false;
+      return;
+    }
+    await showConnectionRecoveryDialog(
+      context: context,
+      config: ConnectionRecoveryConfig(
+        productName: _productName,
+        title: title,
+        devices: deviceList,
+        onDeviceSelected: (device) {
+          _selectDevice(device);
+        },
+        refreshDevices: isAndroid() ? () => getBluetoothDevices() : null,
+      ),
     );
+    _connectionDialogShowing = false;
   }
 } // MyHomePageState
-

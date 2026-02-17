@@ -36,7 +36,7 @@ void rpcFailedImpl() {
   }
 }
 
-CedarClient getClientImpl() {
+Future<CedarClient> getClientImpl() async {
   _channel ??= GrpcWebClientChannel.xhr(Uri.base);
   return CedarClient(_channel!);
 }
@@ -92,11 +92,6 @@ void exitAppImpl() {
   js.context.callMethod('close');
 }
 
-Future<bool> checkNetworkConnectivityImpl(String host) async {
-  // For web platform, we can't do traditional ping, but we can try HTTP request
-  throw UnimplementedError(
-      "Network connectivity check not implemented for web");
-}
 
 Future<bool> isAppUpdateAvailableImpl() async {
   return false; // No app store update mechanism for web
@@ -106,7 +101,7 @@ Future<void> startAppUpdateImpl() async {
   // No app store update mechanism for web
 }
 
-void cleanupImpl() {
+Future<void> cleanupImpl() async {
   _channel!.shutdown();
   _channel = null;
 }
@@ -115,6 +110,6 @@ Future<List<CedarDevice>> getBluetoothDevicesImpl() async {
   throw UnimplementedError("Bluetooth not implemented for web");
 }
 
-void setActiveDeviceImpl(CedarDevice device) {
+Future<void> setActiveDeviceImpl(CedarDevice device) async {
   throw UnimplementedError("No impl in platform_web");
 }

@@ -5,7 +5,6 @@ import 'dart:math';
 
 import 'package:cedar_flutter/cedar.pb.dart';
 import 'package:cedar_flutter/client_main.dart';
-import 'package:cedar_flutter/restart_helper.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -61,11 +60,6 @@ bool diffPreferences(Preferences prev, Preferences curr) {
     hasDiff = true;
   } else {
     curr.clearScreenAlwaysOn();
-  }
-  if (curr.useBluetooth != prev.useBluetooth) {
-    hasDiff = true;
-  } else {
-    curr.clearUseBluetooth();
   }
   return hasDiff;
 }
@@ -145,11 +139,6 @@ class SettingsModel extends ChangeNotifier {
     preferencesProto.screenAlwaysOn = alwaysOn;
     notifyListeners();
   }
-
-  void updateUseBluetooth(bool enable) {
-    preferencesProto.useBluetooth = enable;
-    notifyListeners();
-  }
 }
 
 proto_duration.Duration durationFromMs(int intervalMs) {
@@ -214,7 +203,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final isPlus = provider.isPlus;
     final isDIY = provider.isDIY;
     final rightHanded = prefsProto.rightHanded;
-    final productName = _homePageState.serverInformation?.productName ?? 'Cedar';
 
     final backButton = BackButton(
       style: const ButtonStyle(iconSize: WidgetStatePropertyAll(30)),
@@ -340,54 +328,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       title: scaledText(
                           rightHanded ? 'Right handed' : 'Left handed'),
                     ),
-                    if (advanced)
-                      SettingsTile(
-                        leading: Row(children: <Widget>[
-                          Switch(
-                              value: prefsProto.useBluetooth,
-                              onChanged: (bool value) async {
-                                final currentValue = prefsProto.useBluetooth;
-                                setState(() {
-                                  provider.updateUseBluetooth(value);
-                                });
-                                showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      content: scaledText(
-                                          'A restart is required for Bluetooth changes to take effect'
-                                      ),
-                                      actions: [
-                                        ElevatedButton(
-                                          onPressed: () async {
-                                            Navigator.of(context).pop();
-                                            await performRestart(context, _homePageState, productName);
-                                          },
-                                          style: ElevatedButton.styleFrom(
-                                            backgroundColor: Colors.white10,
-                                          ),
-                                          child: scaledText('Restart'),
-                                        ),
-                                        ElevatedButton(
-                                          onPressed: () {
-                                            setState(() {
-                                              provider.updateUseBluetooth(currentValue);
-                                            });
-                                            Navigator.of(context).pop();
-                                          },
-                                          style: ElevatedButton.styleFrom(
-                                            backgroundColor: Colors.white10,
-                                          ),
-                                          child: scaledText('Cancel'),
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                );
-                              })
-                        ]),
-                        title: scaledText('Bluetooth control'),
-                      ),
                   ]),
                   SettingsSection(title: scaledText('Telescope'), tiles: [
                     SettingsTile(

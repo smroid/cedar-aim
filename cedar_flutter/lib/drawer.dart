@@ -2,7 +2,9 @@
 // See LICENSE file in root directory for license terms.
 
 import 'package:flutter/material.dart';
+import 'package:grpc/grpc.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:open_settings_plus/open_settings_plus.dart';
 import 'package:path/path.dart' as path;
 import 'package:sprintf/sprintf.dart';
 
@@ -27,7 +29,6 @@ class CedarDrawerController {
   final bool offerMap;
   final LatLng? mapPosition;
   final bool advanced;
-  final bool useBluetooth;
   final bool demoMode;
   final List<String> demoFiles;
   final bool systemMenuExpanded;
@@ -39,6 +40,7 @@ class CedarDrawerController {
   final WifiAccessPointDialogFunction? wifiAccessPointDialog;
   final bool skipFocus;
   final bool skipAlignment;
+  final String productName;
 
   // Callbacks
   final Future<void> Function(bool setupMode, bool focusAid) setOperatingMode;
@@ -65,7 +67,6 @@ class CedarDrawerController {
     required this.offerMap,
     required this.mapPosition,
     required this.advanced,
-    required this.useBluetooth,
     required this.demoMode,
     required this.demoFiles,
     required this.systemMenuExpanded,
@@ -77,6 +78,7 @@ class CedarDrawerController {
     required this.wifiAccessPointDialog,
     required this.skipFocus,
     required this.skipAlignment,
+    required this.productName,
     required this.setOperatingMode,
     required this.setDemoImage,
     required this.saveImage,
@@ -576,23 +578,35 @@ class CedarDrawer extends StatelessWidget {
           SizedBox(height: _kDrawerSpacingCondensed * textScaleFactor(controller.context)),
 
           // Bluetooth management.
-          if (controller.useBluetooth) ...[
-            Padding(
-              padding: const EdgeInsets.only(left: 16),
-              child: Align(
-                alignment: Alignment.topLeft,
-                child: TextButton.icon(
-                    label: _scaledText("Bluetooth Devices"),
-                    icon: const Icon(Icons.bluetooth),
-                    onPressed: () {
-                      controller.closeDrawer();
-                      Navigator.push(controller.context,
-                          MaterialPageRoute(builder: (context) => BluetoothScreen(controller.isDIY)));
-                    }),
-              ),
+          Padding(
+            padding: const EdgeInsets.only(left: 16),
+            child: Align(
+              alignment: Alignment.topLeft,
+              child: TextButton.icon(
+                  label: _scaledText("Control pairing on ${controller.productName}"),
+                  icon: const Icon(Icons.bluetooth_searching),
+                  onPressed: () {
+                    controller.closeDrawer();
+                    _controlBluetoothPairing(controller.context, controller.productName);
+                  }),
             ),
-            SizedBox(height: _kDrawerSpacingCondensed * textScaleFactor(controller.context)),
-          ],
+          ),
+          SizedBox(height: _kDrawerSpacingCondensed * textScaleFactor(controller.context)),
+          Padding(
+            padding: const EdgeInsets.only(left: 16),
+            child: Align(
+              alignment: Alignment.topLeft,
+              child: TextButton.icon(
+                  label: _scaledText("Devices paired to ${controller.productName}"),
+                  icon: const Icon(Icons.bluetooth),
+                  onPressed: () {
+                    controller.closeDrawer();
+                    Navigator.push(controller.context,
+                        MaterialPageRoute(builder: (context) => const BluetoothScreen()));
+                  }),
+            ),
+          ),
+          SizedBox(height: _kDrawerSpacingCondensed * textScaleFactor(controller.context)),
 
           // WiFi button.
           if (!controller.isDIY && controller.wifiAccessPointDialog != null) ...[
@@ -665,5 +679,150 @@ class CedarDrawer extends StatelessWidget {
 
       SizedBox(height: _kDrawerSpacing * textScaleFactor(controller.context)),
     ];
+  }
+}
+
+/// Opens the device's Bluetooth settings.
+Future<void> openBluetoothSettings() async {
+  try {
+    await switch (OpenSettingsPlus.shared) {
+      OpenSettingsPlusAndroid settings => settings.bluetooth(),
+      OpenSettingsPlusIOS settings => settings.bluetooth(),
+      _ => throw Exception('Platform not supported'),
+    };
+  } catch (e) {
+    // Silently fail if platform not supported
+    debugPrint('Error opening Bluetooth settings: $e');
+  }
+}
+
+/// Control Bluetooth pairing mode on the Cedar server.
+Future<void> _controlBluetoothPairing(BuildContext context, String productName) async {
+  if (!context.mounted) {
+     return;
+  }
+  try {
+    final client = await getClient();
+    if (!context.mounted) {
+      return;
+    }
+    // Show a dialog to select enable or disable.
+    final choice = await showDialog<String>(
+      context: context,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          title: Text('Control $productName Bluetooth Pairing'),
+          content: Text('Enable or disable pairing on $productName?'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(dialogContext, 'cancel'),
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(dialogContext, 'disable'),
+              child: const Text('Disable'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(dialogContext, 'enable'),
+              child: const Text('Enable'),
+            ),
+          ],
+        );
+      },
+    );
+    if (choice == 'cancel' || !context.mounted) {
+      return;
+    }
+    if (choice == 'disable') {
+      // Disable pairing.
+      await client.setPairingMode(
+        cedar_rpc.SetPairingModeRequest(enabled: false),
+        options: CallOptions(timeout: const Duration(seconds: 5)),
+      );
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Pairing disabled on $productName')),
+        );
+      }
+      return;
+    }
+    // 'enable' selected. Show dialog for forever option
+    bool forever = false;
+    final enableForever = await showDialog<bool>(
+      context: context,
+      builder: (BuildContext dialogContext) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return AlertDialog(
+              title: Text('Enable $productName Pairing'),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  CheckboxListTile(
+                    title: const Text('Keep pairing enabled indefinitely'),
+                    value: forever,
+                    onChanged: (bool? value) {
+                      setState(() {
+                        forever = value ?? false;
+                      });
+                    },
+                  ),
+                ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(dialogContext, null),
+                  child: const Text('Cancel'),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.pop(dialogContext, forever),
+                  child: const Text('Enable'),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+    if (enableForever == null || !context.mounted) {
+      return;
+    }
+    // Get the device's Bluetooth name to show in the confirmation message.
+    final nameResponse = await client.getBluetoothName(cedar_rpc.EmptyMessage(),
+        options: CallOptions(timeout: const Duration(seconds: 5)));
+
+    // Enable pairing mode.
+    await client.setPairingMode(
+      cedar_rpc.SetPairingModeRequest(enabled: true, forever: enableForever),
+      options: CallOptions(timeout: const Duration(seconds: 5)),
+    );
+
+    if (context.mounted) {
+      final durationText = enableForever ? '(indefinitely)' : '(~1 minute)';
+      final isSupported = isAndroid() || isIOS();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Pairing enabled on $productName $durationText — select ${nameResponse.name} in Bluetooth settings',
+          ),
+          duration: const Duration(seconds: 7),
+          action: isSupported
+              ? SnackBarAction(
+                  label: 'Bluetooth Settings',
+                  onPressed: () {
+                    openBluetoothSettings();
+                  },
+                )
+              : null,
+        ),
+      );
+    }
+  } catch (e) {
+    debugPrint('Error controlling Bluetooth pairing: $e');
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to control pairing: $e')),
+      );
+    }
   }
 }

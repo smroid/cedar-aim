@@ -50,9 +50,9 @@ void rpcFailed() {
   }
 }
 
-CedarClient getClient() {
+Future<CedarClient> getClient() async {
   try {
-    return getClientImpl();
+    return await getClientImpl();
   } catch (e) {
     debugPrint('getClient: $e');
     rethrow;
@@ -123,16 +123,6 @@ void exitApp() {
   }
 }
 
-/// Check network connectivity to a specific host (ping-like functionality).
-/// Returns true if the host is reachable, false otherwise.
-Future<bool> checkNetworkConnectivity(String host) async {
-  try {
-    return await checkNetworkConnectivityImpl(host);
-  } catch (e) {
-    debugPrint('checkNetworkConnectivity: $e');
-    return false;
-  }
-}
 
 /// Check if an app update is available on the app store.
 /// Returns true if an update is available, false if on latest version or check fails.
@@ -155,8 +145,8 @@ Future<void> startAppUpdate() async {
   }
 }
 
-void cleanup() {
-  cleanupImpl();
+Future<void> cleanup() async {
+  await cleanupImpl();
 }
 
 Future<List<CedarDevice>> getBluetoothDevices() async {
@@ -168,6 +158,6 @@ Future<List<CedarDevice>> getBluetoothDevices() async {
   }
 }
 
-void setActiveDevice(CedarDevice device) {
-  setActiveDeviceImpl(device);
+Future<void> setActiveDevice(CedarDevice device) async {
+  await setActiveDeviceImpl(device);
 }

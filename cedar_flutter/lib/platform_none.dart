@@ -25,7 +25,7 @@ void rpcFailedImpl() {
   throw UnimplementedError("No impl in platform_none");
 }
 
-CedarClient getClientImpl() {
+Future<CedarClient> getClientImpl() async {
   throw UnimplementedError("No impl in platform_none");
 }
 
@@ -61,10 +61,6 @@ void exitAppImpl() async {
   throw UnimplementedError("No impl in platform_none");
 }
 
-Future<bool> checkNetworkConnectivityImpl(String host) async {
-  throw UnimplementedError("No impl in platform_none");
-}
-
 Future<bool> isAppUpdateAvailableImpl() async {
   throw UnimplementedError("No impl in platform_none");
 }
@@ -73,7 +69,7 @@ Future<void> startAppUpdateImpl() async {
   throw UnimplementedError("No impl in platform_none");
 }
 
-void cleanupImpl() {
+Future<void> cleanupImpl() async {
   throw UnimplementedError("No impl in platform_none");
 }
 
@@ -81,6 +77,6 @@ Future<List<CedarDevice>> getBluetoothDevicesImpl() async {
   throw UnimplementedError("No impl in platform_none");
 }
 
-void setActiveDeviceImpl(CedarDevice device) {
+Future<void> setActiveDeviceImpl(CedarDevice device) async {
   throw UnimplementedError("No impl in platform_none");
 }
