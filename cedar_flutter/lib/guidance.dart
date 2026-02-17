@@ -30,7 +30,8 @@ class _GuidanceDisplayState extends State<GuidanceDisplay> {
       try {
         await Future.delayed(const Duration(milliseconds: 100));
         final request = cedar_pb.FrameRequest()..nonBlocking = true;
-        final response = await getClient().getFrame(request);
+        final client = await getClient();
+        final response = await client.getFrame(request);
         if (mounted) {
           setState(() {
             _latestFrame = response;
