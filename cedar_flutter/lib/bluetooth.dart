@@ -52,7 +52,7 @@ class _BluetoothScreenState extends State<BluetoothScreen> {
     try {
       final client = await getClient();
       final response = await client.getBondedDevices(cedar_pb.EmptyMessage(),
-          options: CallOptions(timeout: const Duration(seconds: 10)));
+          options: CallOptions(timeout: const Duration(seconds: 5)));
 
       if (mounted) {
         setState(() {
