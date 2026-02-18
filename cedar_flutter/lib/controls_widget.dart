@@ -196,7 +196,7 @@ class ControlsWidget extends StatelessWidget {
                   : Container()),
         ),
 
-        const SizedBox(height: 10),
+        SizedBox(height: 5 * panelScaleFactor),
 
         // Main control buttons.
         RotatedBox(
@@ -246,7 +246,7 @@ class ControlsWidget extends StatelessWidget {
               if (setupMode) ...[
                 Column(
                   children: [
-                    SizedBox(height: 10 * panelScaleFactor),
+                    SizedBox(height: 5 * panelScaleFactor),
                     if (!skipFocus) ...[
                       Transform.scale(
                         scale: panelScaleFactor,
@@ -293,7 +293,7 @@ class ControlsWidget extends StatelessWidget {
           ),
         ),
 
-        const SizedBox(height: 10),
+        SizedBox(height: 5 * panelScaleFactor),
 
         // Catalog button during slew.
         if (slewRequest != null && !setupMode && showCatalogBrowser) ...[
@@ -305,7 +305,7 @@ class ControlsWidget extends StatelessWidget {
                   child: catalogButton(fontSize: buttonFont))),
         ],
 
-        const SizedBox(height: 10),
+        SizedBox(height: 5 * panelScaleFactor),
 
         // End goto button.
         if (slewRequest != null && !setupMode) ...[
