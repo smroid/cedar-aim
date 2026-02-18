@@ -1289,9 +1289,9 @@ class MyHomePageState extends State<MyHomePage> {
       onSetDaylightMode: (enabled) => setState(() {
         _setDaylightMode(enabled);
       }),
-      onSkipFocusUpdate: (value) {
+      onSkipFocusUpdate: (value) async {
         final prefs = cedar_rpc.Preferences()..skipFocus = value;
-        updatePreferences(prefs);
+        await updatePreferences(prefs);
         // If enabling skip focus, also transition to align mode like the done button
         if (value) {
           setState(() {
@@ -1303,9 +1303,9 @@ class MyHomePageState extends State<MyHomePage> {
           });
         }
       },
-      onSkipAlignmentUpdate: (value) {
+      onSkipAlignmentUpdate: (value) async {
         final prefs = cedar_rpc.Preferences()..skipAlignment = value;
-        updatePreferences(prefs);
+        await updatePreferences(prefs);
         // If enabling skip alignment, also transition to aim mode like the done button
         if (value) {
           setState(() {
