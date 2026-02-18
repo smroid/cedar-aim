@@ -98,22 +98,38 @@ Widget _buildDeviceSection(
   ConnectionRecoveryConfig config,
   BuildContext dialogContext,
 ) {
+  final theme = Theme.of(dialogContext);
+  final primaryColor = theme.colorScheme.primary;
+
   if (currentDevices == null || currentDevices.isEmpty) {
     return Text(
       'No Bluetooth devices paired. Please pair with '
       '${config.productName} first using Bluetooth settings.',
-      style: const TextStyle(fontSize: 12, fontStyle: FontStyle.italic),
+      style: TextStyle(
+          fontSize: 12, fontStyle: FontStyle.italic, color: primaryColor),
     );
   }
 
   return DropdownButton<CedarDevice>(
     value: null,
-    hint: Text('Use ${config.productName} with Bluetooth'),
+    hint: Text(
+      'Use ${config.productName} with Bluetooth',
+      style: TextStyle(color: primaryColor),
+    ),
+    iconEnabledColor: primaryColor,
+    iconDisabledColor: primaryColor,
+    underline: Container(
+      height: 1,
+      color: primaryColor,
+    ),
     items: currentDevices.map((device) {
       final label = device.name ?? device.address;
       return DropdownMenuItem<CedarDevice>(
         value: device,
-        child: Text(label),
+        child: Text(
+          label,
+          style: TextStyle(color: primaryColor),
+        ),
       );
     }).toList(),
     onChanged: (device) async {
@@ -152,20 +168,45 @@ Future<void> showConnectionRecoveryDialog({
     barrierDismissible: true,
     builder: (BuildContext dialogContext) {
       List<CedarDevice>? currentDevices = config.devices;
+      AppLifecycleListener? lifecycleListener;
+
       return StatefulBuilder(
         builder: (BuildContext context, StateSetter setState) {
           final isLandscape =
               MediaQuery.of(context).orientation == Orientation.landscape;
 
+          final primaryColor = Theme.of(context).colorScheme.primary;
+
+          // Set up lifecycle listener on first build to refresh when app
+          // resumes, i.e. after user returns from the mobile's Bluetooth
+          // settings.
+          if (lifecycleListener == null && config.refreshDevices != null && isAndroid()) {
+            lifecycleListener = AppLifecycleListener(
+              onResume: () async {
+                if (dialogContext.mounted) {
+                  final refreshedDevices = await config.refreshDevices!();
+                  if (dialogContext.mounted) {
+                    setState(() {
+                      currentDevices = refreshedDevices;
+                    });
+                  }
+                }
+              },
+            );
+          }
+
           Widget messageSection = Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(message),
+              Text(
+                message,
+                style: TextStyle(color: primaryColor),
+              ),
               const SizedBox(height: 16),
               Text(
                 helpText,
-                style: const TextStyle(fontSize: 12),
+                style: TextStyle(fontSize: 12, color: primaryColor),
               ),
             ],
           );
@@ -176,7 +217,8 @@ Future<void> showConnectionRecoveryDialog({
             final leftColumnChildren = <Widget>[messageSection];
             if (isAndroid() && currentDevices != null) {
               leftColumnChildren.add(const SizedBox(height: 20));
-              leftColumnChildren.add(_buildDeviceSection(currentDevices, config, dialogContext));
+              leftColumnChildren.add(
+                  _buildDeviceSection(currentDevices, config, dialogContext));
             }
 
             content = Table(
@@ -218,30 +260,18 @@ Future<void> showConnectionRecoveryDialog({
           }
 
           return AlertDialog(
-            title: Text(config.title),
+            title: Text(
+              config.title,
+              style: TextStyle(color: primaryColor),
+            ),
             content: content,
             actions: [
-              // Refresh Devices button (if refresh callback available).
-              if (config.refreshDevices != null)
-                TextButton.icon(
-                  icon: const Icon(Icons.refresh),
-                  label: const Text('Refresh Devices'),
-                  onPressed: () async {
-                    final refreshedDevices = await config.refreshDevices!();
-                    if (context.mounted) {
-                      setState(() {
-                        currentDevices = refreshedDevices;
-                      });
-                    }
-                  },
-                ),
-              // WiFi Settings button (Android/iOS only).
               if (hasSettingsAccess)
                 TextButton.icon(
                   icon: const Icon(Icons.wifi),
                   label: const Text('WiFi Settings'),
-                  onPressed: () {
-                    _openWiFiSettings();
+                  onPressed: () async {
+                    await _openWiFiSettings();
                   },
                 ),
 
@@ -250,8 +280,8 @@ Future<void> showConnectionRecoveryDialog({
                 TextButton.icon(
                   icon: const Icon(Icons.bluetooth),
                   label: const Text('Bluetooth Settings'),
-                  onPressed: () {
-                    _openBluetoothSettings();
+                  onPressed: () async {
+                    await _openBluetoothSettings();
                   },
                 ),
 
