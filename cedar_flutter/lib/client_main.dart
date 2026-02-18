@@ -2023,7 +2023,7 @@ class MyHomePageState extends State<MyHomePage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  "Auto-calibrating Hopper",
+                  "Auto-calibrating $product",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 14,
