@@ -1004,7 +1004,7 @@ class MyHomePageState extends State<MyHomePage> {
       setState(() {
         // Has it been too long since we last succeeded?
         Duration elapsed = DateTime.now().difference(_lastServerResponseTime);
-        if (elapsed.inSeconds > 10) {
+        if (elapsed.inSeconds > 5) {
           _serverConnected = false;
         }
       });
@@ -1015,7 +1015,8 @@ class MyHomePageState extends State<MyHomePage> {
   Future<void> _refreshStateFromServer() async {
     await Future.doWhile(() async {
       await Future.delayed(const Duration(milliseconds: 100));
-      if (!_paintPending && !updateInProgress && !shutdownInProgress) {
+      if (!_paintPending && !updateInProgress && !shutdownInProgress &&
+          !_connectionDialogShowing) {
         await _getFrameFromServer();
       }
       return true; // Forever!
