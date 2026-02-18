@@ -322,7 +322,11 @@ Future<void> _establishBluetoothConnection(String addr) async {
     // Ensure any previous connection is fully cleaned up before starting a new
     // one.
     if (_activeProxy != null) {
-      await _activeProxy!.stop();
+      try {
+        await _activeProxy!.stop().timeout(const Duration(seconds: 2));
+      } catch (e) {
+        debugPrint('Timeout or error stopping proxy: $e');
+      }
       _activeProxy = null;
     }
     _activeProxyPort = null;
@@ -367,7 +371,16 @@ Future<void> _establishBluetoothConnection(String addr) async {
           'Bluetooth Connected. Starting Proxy with OS-assigned port...');
       _activeProxy = BluetoothGrpcProxy(_bluetoothConnection!);
       // Use port 0 to let OS assign an available port.
-      _activeProxyPort = await _activeProxy!.start(port: 0);
+      try {
+        _activeProxyPort = await _activeProxy!.start(port: 0)
+            .timeout(const Duration(seconds: 3), onTimeout: () {
+          throw TimeoutException('Proxy startup timed out');
+        });
+      } catch (e) {
+        debugPrint('Error starting proxy: $e');
+        _activeProxy = null;
+        rethrow;
+      }
       debugPrint('Proxy is ready on port $_activeProxyPort');
       // Give proxy a moment to stabilize before attempting gRPC calls.
       await Future.delayed(Duration(milliseconds: 100));
