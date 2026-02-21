@@ -275,8 +275,8 @@ Future<void> showConnectionRecoveryDialog({
                   },
                 ),
 
-              // Bluetooth Settings button (Android/iOS only).
-              if (hasSettingsAccess)
+              // Bluetooth Settings button (Android only).
+              if (isAndroid())
                 TextButton.icon(
                   icon: const Icon(Icons.bluetooth),
                   label: const Text('Bluetooth Settings'),
