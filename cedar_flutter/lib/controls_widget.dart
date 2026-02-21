@@ -221,7 +221,7 @@ class ControlsWidget extends StatelessWidget {
                     ),
                   ),
                 ),
-              ] else if (!skipFocus || canAlign) ...[
+              ] else if (!skipFocus || canAlign || !setupMode) ...[
                 SizedBox(
                   width: buttonWidth,
                   height: buttonHeight,
