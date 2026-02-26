@@ -3,6 +3,7 @@
 
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
+import 'package:grpc/grpc.dart';
 import 'package:cedar_flutter/cedar.pb.dart' as cedar_pb;
 import 'package:cedar_flutter/platform.dart';
 
@@ -31,7 +32,10 @@ class _GuidanceDisplayState extends State<GuidanceDisplay> {
         await Future.delayed(const Duration(milliseconds: 100));
         final request = cedar_pb.FrameRequest()..nonBlocking = true;
         final client = await getClient();
-        final response = await client.getFrame(request);
+        final response = await client.getFrame(
+          request,
+          options: CallOptions(timeout: const Duration(seconds: 4)),
+        );
         if (mounted) {
           setState(() {
             _latestFrame = response;
