@@ -1224,6 +1224,19 @@ class MyHomePageState extends State<MyHomePage> {
         onPressed: () {
           _wantAlignFeedback = true;
           _captureBoresight(); // Re-align.
+          final catalogEntry = _slewRequest?.targetCatalogEntry;
+          final targetName = catalogEntry != null &&
+                  catalogEntry.catalogLabel.isNotEmpty
+              ? labelForEntry(catalogEntry)
+              : null;
+          final message = targetName != null && targetName.isNotEmpty
+              ? 'Re-aligning on $targetName'
+              : 'Re-aligning';
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(message),
+            ),
+          );
         });
   }
 
