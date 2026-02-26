@@ -32,6 +32,10 @@ ThemeData _nightVisionTheme() {
         onSecondary: Color(0xff404040),
         tertiary: Color(0xff808080),
       ),
+      snackBarTheme: const SnackBarThemeData(
+        backgroundColor: Color(0xffc00000),
+        contentTextStyle: TextStyle(color: Colors.black),
+      ),
       useMaterial3: true);
 }
 
