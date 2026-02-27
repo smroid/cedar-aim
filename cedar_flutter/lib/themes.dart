@@ -13,6 +13,7 @@ ThemeData _normalTheme() {
 
 ThemeData _nightVisionTheme() {
   const Color pureRed = Color.fromARGB(255, 255, 0, 0);
+  const Color darkRed = Color.fromARGB(255, 160, 0, 0);
   return ThemeData(
       primaryColor: pureRed,
       textTheme: const TextTheme(
@@ -32,9 +33,13 @@ ThemeData _nightVisionTheme() {
         onSecondary: Color(0xff404040),
         tertiary: Color(0xff808080),
       ),
-      snackBarTheme: const SnackBarThemeData(
-        backgroundColor: Color(0xffc00000),
-        contentTextStyle: TextStyle(color: Colors.black),
+      snackBarTheme: SnackBarThemeData(
+        backgroundColor: Colors.black,
+        contentTextStyle: const TextStyle(color: pureRed),
+        shape: RoundedRectangleBorder(
+          side: const BorderSide(color: darkRed, width: 4),
+          borderRadius: BorderRadius.circular(4),
+        ),
       ),
       useMaterial3: true);
 }
