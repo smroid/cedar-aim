@@ -1,6 +1,7 @@
 // Copyright (c) 2025 Steven Rosenthal smr@dt3.org
 // See LICENSE file in root directory for license terms.
 
+import 'dart:async';
 import 'dart:math' as math;
 import 'package:cedar_flutter/cedar.pb.dart';
 import 'package:cedar_flutter/cedar_sky.pb.dart';
@@ -88,10 +89,14 @@ Future<cedar_rpc.ServerInformation> getServerInformation() async {
     ..nonBlocking = true
     ..displayOrientation = cedar_rpc.DisplayOrientation.PORTRAIT;
 
-  final response = await client.getFrame(
-    request,
-    options: CallOptions(timeout: const Duration(seconds: 4)),
-  );
+  final response = await client
+      .getFrame(
+        request,
+        options: CallOptions(timeout: const Duration(seconds: 4)),
+      )
+      .timeout(const Duration(seconds: 6), onTimeout: () {
+    throw TimeoutException('getServerInformation timed out');
+  });
 
   // Return the server information (which is always populated).
   return response.serverInformation;
@@ -958,10 +963,14 @@ class MyHomePageState extends State<MyHomePage> {
           : DisplayOrientation.PORTRAIT;
     try {
       final c = await getClient();
-      final response = await c.getFrame(
-        request,
-        options: CallOptions(timeout: const Duration(seconds: 4)),
-      );
+      final response = await c
+          .getFrame(
+            request,
+            options: CallOptions(timeout: const Duration(seconds: 4)),
+          )
+          .timeout(const Duration(seconds: 6), onTimeout: () {
+        throw TimeoutException('getFrame timed out');
+      });
       rpcSucceeded();
       if (!_serverConnected) {
         // Connecting for first time, or reconnecting. Send our time and
