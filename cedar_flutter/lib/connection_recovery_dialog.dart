@@ -11,6 +11,7 @@ class ConnectionRecoveryConfig {
   final List<CedarDevice>? devices;
   final Function(CedarDevice)? onDeviceSelected;
   final Future<List<CedarDevice>> Function()? refreshDevices;
+  final String? errorMessage;
 
   ConnectionRecoveryConfig({
     required this.productName,
@@ -18,6 +19,7 @@ class ConnectionRecoveryConfig {
     this.devices,
     this.onDeviceSelected,
     this.refreshDevices,
+    this.errorMessage,
   });
 }
 
@@ -292,6 +294,30 @@ Future<void> showConnectionRecoveryDialog({
                   label: const Text('Airplane Mode'),
                   onPressed: () {
                     _openAirplaneModeSettings();
+                  },
+                ),
+
+              // Show Error button (only if error message is available).
+              if (config.errorMessage != null)
+                TextButton.icon(
+                  icon: const Icon(Icons.error_outline),
+                  label: const Text('Show Error'),
+                  onPressed: () {
+                    showDialog(
+                      context: dialogContext,
+                      builder: (context) => AlertDialog(
+                        title: const Text('Connection Error'),
+                        content: SingleChildScrollView(
+                          child: SelectableText(config.errorMessage!),
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(context),
+                            child: const Text('OK'),
+                          ),
+                        ],
+                      ),
+                    );
                   },
                 ),
 

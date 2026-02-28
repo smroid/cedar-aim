@@ -119,25 +119,21 @@ Future<CedarClient> getClientImpl() async {
 
   // For Android with Bluetooth device, establish or check connection.
   if (isAndroidImpl() && _activeDevice.name != null) {
-    bool currentlyConnected = _bluetoothConnection?.isConnected ?? false;
-    if (!currentlyConnected) {
-      if (_activeProxyPort == null || !currentlyConnected) {
-        await _establishBluetoothConnection(_activeDevice.address);
-      }
-      if (_activeProxyPort == null) {
-        throw GrpcError.unavailable('Bluetooth connection failed');
-      }
-
-      await _channel?.shutdown();
-      _channel = ClientChannel(
-        InternetAddress.loopbackIPv4.address,
-        port: _activeProxyPort!,
-        options: const ChannelOptions(
-          credentials: ChannelCredentials.insecure(),
-        ),
-      );
-      _client = CedarClient(_channel!);
+    if (_bluetoothConnection?.isConnected == true) {
+      return _client!;
     }
+    if (_activeProxyPort == null) {
+      await _establishBluetoothConnection(_activeDevice.address);
+    }
+    await _channel?.shutdown();
+    _channel = ClientChannel(
+      InternetAddress.loopbackIPv4.address,
+      port: _activeProxyPort!,
+      options: const ChannelOptions(
+        credentials: ChannelCredentials.insecure(),
+      ),
+    );
+    _client = CedarClient(_channel!);
   }
 
   return _client!;
@@ -390,6 +386,7 @@ Future<void> _establishBluetoothConnection(String addr) async {
   } catch (e) {
     debugPrint('Error establishing Bluetooth connection: $e');
     await cleanupImpl();
+    rethrow;
   }
 }
 
