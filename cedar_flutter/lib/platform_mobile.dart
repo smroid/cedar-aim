@@ -63,6 +63,31 @@ void rpcFailedImpl() {
   _client = null;
 }
 
+/// Aggressively cleans up the gRPC channel, with timeout and forced terminate.
+Future<void> _shutdownChannel({int timeoutSeconds = 2}) async {
+  if (_channel == null) {
+    return;
+  }
+  try {
+    await _channel!.shutdown().timeout(
+      Duration(seconds: timeoutSeconds),
+      onTimeout: () {
+        debugPrint('Channel shutdown timed out, forcing terminate');
+      },
+    );
+  } catch (e) {
+    debugPrint('Error during channel shutdown: $e');
+  }
+  try {
+    await _channel!.terminate();
+  } catch (e) {
+    debugPrint('Error during channel terminate: $e');
+  }
+  _channel = null;
+  // Brief pause to let OS release socket resources.
+  await Future.delayed(const Duration(milliseconds: 100));
+}
+
 // Track if we've loaded the selected device from SharedPreferences.
 bool _deviceLoaded = false;
 
@@ -82,17 +107,20 @@ Future<CedarClient> getClientImpl() async {
 
   // Always try WiFi first if we don't have a client.
   if (_client == null) {
-    await _channel?.shutdown();
-    _channel = null;
+    await _shutdownChannel();
     _activeProxy = null;
     _activeProxyPort = null;
     _channel = ClientChannel(_wifiAddress, port: 80, options: _options);
     _client = CedarClient(_channel!);
 
-    // Test the WiFi connection before returning.
+    // Test the WiFi connection before returning. Use getFrame() since it's
+    // been available in all server versions (unlike newer RPCs).
     try {
+      final request = cedar_rpc.FrameRequest()
+        ..nonBlocking = true
+        ..displayOrientation = cedar_rpc.DisplayOrientation.PORTRAIT;
       await _client!
-          .getBluetoothName(cedar_rpc.EmptyMessage(),
+          .getFrame(request,
               options: CallOptions(
                 timeout: const Duration(seconds: 5),
               ))
@@ -107,8 +135,7 @@ Future<CedarClient> getClientImpl() async {
       return _client!;
     } catch (e) {
       _client = null;
-      await _channel?.shutdown();
-      _channel = null;
+      await _shutdownChannel(timeoutSeconds: 1);
       if (!isAndroidImpl() || _activeDevice.name == null) {
         // No Bluetooth fallback available, rethrow the error.
         debugPrint('WiFi connection test failed: $e');
