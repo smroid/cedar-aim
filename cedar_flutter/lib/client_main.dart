@@ -647,12 +647,16 @@ class MyHomePageState extends State<MyHomePage> {
     pip.registerStateChangedObserver(
       PipStateChangedObserver(
         onPipStateChanged: (state, error) {
+          final enteringPipMode = (state == PipState.pipStateStarted);
           setState(() {
-            _isPipMode = (state == PipState.pipStateStarted);
-            // Go back to the main page when starting or stopping PIP
+            _isPipMode = enteringPipMode;
+            // Go back to the main page when starting or stopping PIP.
             Navigator.popUntil(context, ModalRoute.withName('/'));
           });
-
+          if (enteringPipMode) {
+            // Close drawer when entering PIP mode.
+            closeDrawer();
+          }
           if (state == PipState.pipStateFailed) {
             debugPrint('PiP Failed: $error');
           }
@@ -2176,6 +2180,12 @@ class MyHomePageState extends State<MyHomePage> {
               final actualImageSize = calculations['actualImageSize']!;
               final panelWidth = calculations['panelWidth']!;
 
+              // Account for camera cutout in landscape by adding safe area
+              // inset to the affected panel's padding.
+              final safePadding = MediaQuery.of(context).padding;
+              final leftPadding = portrait ? 5.0 : 5.0 + safePadding.left;
+              final rightPadding = portrait ? 5.0 : 5.0 + safePadding.right;
+
               return Center(
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
@@ -2185,7 +2195,7 @@ class MyHomePageState extends State<MyHomePage> {
                     SizedBox(
                       width: panelWidth,
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 5),
+                        padding: EdgeInsets.only(left: leftPadding, right: 5),
                         child: Center(
                           child: (portrait || _rightHanded) ? data : controls,
                         ),
@@ -2201,7 +2211,7 @@ class MyHomePageState extends State<MyHomePage> {
                     SizedBox(
                       width: panelWidth,
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 5),
+                        padding: EdgeInsets.only(left: 5, right: rightPadding),
                         child: Center(
                           child: (portrait || _rightHanded) ? controls : data,
                         ),
@@ -2313,7 +2323,6 @@ class MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     if (_isPipMode) {
-      closeDrawer();
       return GuidanceDisplay();
     }
 
@@ -2479,21 +2488,25 @@ class MyHomePageState extends State<MyHomePage> {
           child: hideAppBar
               ? LayoutBuilder(
                   builder: (context, constraints) {
-                    return SafeArea(
-                      child: Stack(
-                        fit: StackFit.expand,
-                        children: [
-                          healthy
-                              ? _orientationLayout(
-                                  context,
-                                  Size(constraints.maxWidth,
-                                      constraints.maxHeight))
-                              : _badServerState(),
-                          // Menu icon positioned at top when in fullscreen mode
-                          Positioned(
-                            left: _rightHanded ? null : 0,
-                            right: _rightHanded ? 0 : null,
-                            top: 0,
+                    return Stack(
+                      fit: StackFit.expand,
+                      children: [
+                        healthy
+                            ? _orientationLayout(
+                                context,
+                                Size(constraints.maxWidth,
+                                    constraints.maxHeight))
+                            : _badServerState(),
+                        // Menu icon positioned at top when in fullscreen mode
+                        Positioned(
+                          left: _rightHanded ? null : 0,
+                          right: _rightHanded ? 0 : null,
+                          top: 0,
+                          child: SafeArea(
+                            right: _rightHanded,
+                            left: !_rightHanded,
+                            top: true,
+                            bottom: false,
                             child: IconButton(
                               icon: const Icon(Icons.menu),
                               onPressed: () {
@@ -2505,8 +2518,8 @@ class MyHomePageState extends State<MyHomePage> {
                               },
                             ),
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     );
                   },
                 )
