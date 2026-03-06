@@ -247,7 +247,7 @@ class ControlsWidget extends StatelessWidget {
                 Column(
                   children: [
                     SizedBox(height: 5 * panelScaleFactor),
-                    if (!skipFocus) ...[
+                    if (!skipFocus || !focusAid) ...[
                       Transform.scale(
                         scale: panelScaleFactor,
                         child: TextButton.icon(
