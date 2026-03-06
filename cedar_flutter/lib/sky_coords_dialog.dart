@@ -90,10 +90,10 @@ Future<void> skyCoordsDialog(
                   ]),
                   const SizedBox(height: 5),
                   GestureDetector(
-                      onTap: () async {
+                      onTap: () {
                         var prefs = cedar_rpc.Preferences();
                         prefs.celestialCoordChoice = "RA_DEC";
-                        await state.updatePreferences(prefs);
+                        state.updatePreferences(prefs);
                         dialogOverlayEntry!.markNeedsBuild();
                       },
                       child: Column(children: [
@@ -116,10 +116,10 @@ Future<void> skyCoordsDialog(
                       ])),
                   state.locationBasedInfo != null
                       ? GestureDetector(
-                          onTap: () async {
+                          onTap: () {
                             var prefs = cedar_rpc.Preferences();
                             prefs.celestialCoordChoice = "ALT_AZ_HA";
-                            await state.updatePreferences(prefs);
+                            state.updatePreferences(prefs);
                             dialogOverlayEntry!.markNeedsBuild();
                           },
                           child: Column(children: [

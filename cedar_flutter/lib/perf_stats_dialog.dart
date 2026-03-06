@@ -123,11 +123,11 @@ class StatRow extends StatelessWidget {
 Future<void> perfStatsDialog(
     MyHomePageState state, BuildContext context) async {
   // Helper function to update gauge choice
-  Future<void> updateGaugeChoice(String choice) async {
+  void updateGaugeChoice(String choice) {
     // Copy existing preferences and update only the specific field
     var prefs = state.preferences?.deepCopy() ?? cedar_rpc.Preferences();
     prefs.perfGaugeChoice = choice;
-    await state.updatePreferences(prefs);
+    state.updatePreferences(prefs);
   }
 
   OverlayEntry? dialogOverlayEntry;
@@ -194,8 +194,8 @@ Future<void> perfStatsDialog(
                     label: "Exposure time",
                     value: sprintf("%.0f ms", [state.exposureTimeMs]),
                     bold: currentChoice == "exposure_time",
-                    onTap: () async {
-                      await updateGaugeChoice("exposure_time");
+                    onTap: () {
+                      updateGaugeChoice("exposure_time");
                       dialogOverlayEntry!.markNeedsBuild();
                     },
                   ),
@@ -204,8 +204,8 @@ Future<void> perfStatsDialog(
                     label: "Stars",
                     value: sprintf("%d", [state.numStars]),
                     bold: currentChoice == "stars",
-                    onTap: () async {
-                      await updateGaugeChoice("stars");
+                    onTap: () {
+                      updateGaugeChoice("stars");
                       dialogOverlayEntry!.markNeedsBuild();
                     },
                   ),
@@ -269,8 +269,8 @@ Future<void> perfStatsDialog(
                                     .processingStats!.solveInterval.recent.mean)
                               ]),
                               bold: currentChoice == "solve_interval",
-                              onTap: () async {
-                                await updateGaugeChoice("solve_interval");
+                              onTap: () {
+                                updateGaugeChoice("solve_interval");
                                 dialogOverlayEntry!.markNeedsBuild();
                               },
                             ),

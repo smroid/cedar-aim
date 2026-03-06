@@ -43,16 +43,16 @@ class CedarDrawerController {
   final String productName;
 
   // Callbacks
-  final Future<void> Function(bool setupMode, bool focusAid) setOperatingMode;
-  final Future<void> Function(String) setDemoImage;
+  final void Function(bool setupMode, bool focusAid) setOperatingMode;
+  final void Function(String) setDemoImage;
   final Future<void> Function() saveImage;
   final Future<String> Function() getServerLogs;
   final Future<void> Function() crashServer;
   final Future<void> Function() restartCedarServer;
   final Future<void> Function(cedar_rpc.ActionRequest) initiateAction;
   final Future<void> Function(cedar_rpc.Preferences) updatePreferences;
-  final Future<void> Function(bool) setAdvanced;
-  final Future<void> Function(bool) setDemoMode;
+  final void Function(bool) setAdvanced;
+  final void Function(bool) setDemoMode;
   final Function(bool) setSystemMenuExpanded;
   final VoidCallback onStateChanged;
   final VoidCallback closeDrawer;
@@ -333,21 +333,17 @@ class CedarDrawer extends StatelessWidget {
                     textStyle: TextStyle(
                         fontSize: 12 * textScaleFactor(controller.context),
                         color: primaryColor),
-                    onSelected: (String? newValue) async {
+                    onSelected: (String? newValue) {
                       if (newValue == "Focus") {
-                        await controller.setOperatingMode(true, true);
-                        controller.onStateChanged();
+                        controller.setOperatingMode(true, true);
                       } else if (newValue == "Align") {
-                        await controller.setOperatingMode(true, false);
-                        controller.onStateChanged();
+                        controller.setOperatingMode(true, false);
                       } else {
                         // Aim.
-                        await controller.setOperatingMode(false, false);
-                        controller.onStateChanged();
+                        controller.setOperatingMode(false, false);
                       }
-                      if (controller.context.mounted) {
-                        Navigator.of(controller.context).pop();
-                      }
+                      controller.onStateChanged();
+                      Navigator.of(controller.context).pop();
                     }),
               ],
             )),
@@ -363,14 +359,12 @@ class CedarDrawer extends StatelessWidget {
                 label: _scaledText(_getReenableButtonLabel(
                   controller.skipFocus, controller.skipAlignment)),
                 icon: const Icon(Icons.undo),
-                onPressed: () async {
+                onPressed: () {
                   final prefs = cedar_rpc.Preferences()
                     ..skipFocus = false
                     ..skipAlignment = false;
-                  await controller.updatePreferences(prefs);
-                  if (controller.context.mounted) {
-                    Navigator.of(controller.context).pop();
-                  }
+                  controller.updatePreferences(prefs);
+                  Navigator.of(controller.context).pop();
                 })),
         SizedBox(height: _kDrawerSpacing * textScaleFactor(controller.context)),
       ],
@@ -421,8 +415,8 @@ class CedarDrawer extends StatelessWidget {
               icon: controller.advanced
                   ? const Icon(Icons.check)
                   : const Icon(Icons.check_box_outline_blank),
-              onPressed: () async {
-                await controller.setAdvanced(!controller.advanced);
+              onPressed: () {
+                controller.setAdvanced(!controller.advanced);
               })),
       SizedBox(height: _kDrawerSpacing * textScaleFactor(controller.context)),
 
@@ -463,8 +457,8 @@ class CedarDrawer extends StatelessWidget {
                 icon: controller.demoMode
                     ? const Icon(Icons.check)
                     : const Icon(Icons.check_box_outline_blank),
-                onPressed: () async {
-                  await controller.setDemoMode(!controller.demoMode);
+                onPressed: () {
+                  controller.setDemoMode(!controller.demoMode);
                 },
               )),
         ]),
@@ -500,12 +494,10 @@ class CedarDrawer extends StatelessWidget {
                 textStyle: TextStyle(
                     fontSize: 12 * textScaleFactor(controller.context),
                     color: primaryColor),
-                onSelected: (String? newValue) async {
-                  await controller.setDemoImage(newValue!);
+                onSelected: (String? newValue) {
+                  controller.setDemoImage(newValue!);
                   controller.onStateChanged();
-                  if (controller.context.mounted) {
-                    Navigator.of(controller.context).pop();
-                  }
+                  Navigator.of(controller.context).pop();
                 })
           ]),
         ]),
@@ -666,13 +658,11 @@ class CedarDrawer extends StatelessWidget {
               child: TextButton.icon(
                   label: _scaledText("Reset 'Don't show again'"),
                   icon: const Icon(Icons.undo),
-                  onPressed: () async {
+                  onPressed: () {
                     final request =
                         cedar_rpc.ActionRequest(clearDontShowItems: true);
-                    await controller.initiateAction(request);
-                    if (controller.context.mounted) {
-                      Navigator.of(controller.context).pop();
-                    }
+                    controller.initiateAction(request);
+                    Navigator.of(controller.context).pop();
                   }))
         ]),
       ],

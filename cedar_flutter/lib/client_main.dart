@@ -153,6 +153,7 @@ void clientMain(
   _updateServiceAvailable = updateServiceAvailable;
 
   WidgetsFlutterBinding.ensureInitialized();
+  PaintingBinding.instance.imageCache.maximumSize = 0;
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (context) => SettingsModel()),
@@ -191,9 +192,7 @@ class _MainImagePainter extends CustomPainter {
   final MyHomePageState state;
   final BuildContext _context;
 
-  _MainImagePainter(this.state, this._context) {
-    PaintingBinding.instance.imageCache.maximumSize = 0;
-  }
+  _MainImagePainter(this.state, this._context);
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -1196,8 +1195,8 @@ class MyHomePageState extends State<MyHomePage> {
             if (!_setupMode) {
               _transitionToSetup = true;
             }
-            _setOperatingMode(/*setupMode=*/ true, /*focusAid=*/ false);
           });
+          _setOperatingMode(/*setupMode=*/ true, /*focusAid=*/ false);
         });
   }
 
@@ -1213,9 +1212,7 @@ class MyHomePageState extends State<MyHomePage> {
         ),
         onPressed: () {
           // Transition to aim mode.
-          setState(() {
-            _setOperatingMode(/*setupMode=*/ false, _focusAid);
-          });
+          _setOperatingMode(/*setupMode=*/ false, _focusAid);
         });
   }
 
@@ -1722,7 +1719,7 @@ class MyHomePageState extends State<MyHomePage> {
             foregroundPainter: _MainImagePainter(this, context),
             child: GestureDetector(
               child: _loadImage(),
-              onTapDown: (TapDownDetails details) async {
+              onTapDown: (TapDownDetails details) {
                 final displayScale = _getDisplayScale();
                 Offset localPosition = Offset(
                     details.localPosition.dx * _binFactor / displayScale,
@@ -1731,17 +1728,17 @@ class MyHomePageState extends State<MyHomePage> {
                 if (_setupMode) {
                   if (_focusAid && _daylightMode) {
                     // Daylight focus mode - designate focus region.
-                    await _designateDaylightFocusRegion(localPosition);
+                    _designateDaylightFocusRegion(localPosition);
                   } else if (!_focusAid) {
                     // Align mode.
                     if (_daylightMode) {
-                      await _designateBoresight(localPosition);
+                      _designateBoresight(localPosition);
                       _alignTargetTapped = true;
                       _wantAlignFeedback = true;
                     } else {
                       var star = _findStarHit(localPosition, hitTolerance);
                       if (star != null) {
-                        await _designateBoresight(Offset(
+                        _designateBoresight(Offset(
                           star.centroidPosition.x,
                           star.centroidPosition.y,
                         ));
@@ -1749,19 +1746,17 @@ class MyHomePageState extends State<MyHomePage> {
                         _wantAlignFeedback = true;
 
                         // Show snackbar with object name if available.
-                        if (mounted) {
-                          final objectName = _getCatalogEntryNameForStar(
-                              star.centroidPosition);
-                          final message =
-                              objectName != null && objectName.isNotEmpty
-                                  ? 'Alignment target: $objectName'
-                                  : 'Alignment target selected';
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(message),
-                            ),
-                          );
-                        }
+                        final objectName = _getCatalogEntryNameForStar(
+                            star.centroidPosition);
+                        final message =
+                            objectName != null && objectName.isNotEmpty
+                                ? 'Alignment target: $objectName'
+                                : 'Alignment target selected';
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(message),
+                          ),
+                        );
                       }
                     }
                   }
@@ -2069,8 +2064,8 @@ class MyHomePageState extends State<MyHomePage> {
                     if (!_setupMode) {
                       _transitionToSetup = true;
                     }
-                    _setOperatingMode(/*setupMode=*/ true, /*focusAid=*/ false);
                   });
+                  _setOperatingMode(/*setupMode=*/ true, /*focusAid=*/ false);
                 },
                 child: RotatedBox(
                   quarterTurns: portrait ? 3 : 0,
@@ -2253,7 +2248,7 @@ class MyHomePageState extends State<MyHomePage> {
         skipFocus: preferences?.skipFocus ?? false,
         skipAlignment: preferences?.skipAlignment ?? false,
         productName: _productName,
-        setOperatingMode: (setupMode, focusAid) async {
+        setOperatingMode: (setupMode, focusAid) {
           if (!_setupMode && setupMode) {
             setState(() {
               _transitionToSetup = true;
@@ -2270,14 +2265,14 @@ class MyHomePageState extends State<MyHomePage> {
               _alignTargetTapped = false;
             });
           }
-          await _setOperatingMode(setupMode, focusAid);
+          _setOperatingMode(setupMode, focusAid);
         },
-        setDemoImage: (imageFile) async {
+        setDemoImage: (imageFile) {
           setState(() {
             _demoFile = imageFile;
             _demoMode = imageFile.isNotEmpty;
           });
-          await _setDemoImage(imageFile);
+          _setDemoImage(imageFile);
         },
         saveImage: _saveImage,
         getServerLogs: _getServerLogs,
@@ -2285,7 +2280,7 @@ class MyHomePageState extends State<MyHomePage> {
         restartCedarServer: _restartCedarServer,
         initiateAction: initiateAction,
         updatePreferences: updatePreferences,
-        setAdvanced: (value) async {
+        setAdvanced: (value) {
           setState(() {
             advanced = value;
           });
@@ -2294,9 +2289,9 @@ class MyHomePageState extends State<MyHomePage> {
           settingsModel.preferencesProto.advanced = value;
           var prefs = cedar_rpc.Preferences();
           prefs.advanced = value;
-          await updatePreferences(prefs);
+          updatePreferences(prefs);
         },
-        setDemoMode: (value) async {
+        setDemoMode: (value) {
           setState(() {
             _demoMode = value;
             if (value && _demoFile.isNotEmpty) {
