@@ -4,6 +4,8 @@
 import 'dart:async';
 
 import 'package:cedar_flutter/client_main.dart';
+import 'package:cedar_flutter/geolocation.dart';
+import 'package:cedar_flutter/interstitial_msg.dart';
 import 'package:cedar_flutter/settings.dart';
 import 'package:flutter/material.dart';
 import 'cedar.pbgrpc.dart' as cedar_rpc;
@@ -112,7 +114,7 @@ Future<void> skyCoordsDialog(
                                   state.formatDeclination(state.solutionDec)),
                             ])
                       ])),
-                  displayAltAz
+                  state.locationBasedInfo != null
                       ? GestureDetector(
                           onTap: () async {
                             var prefs = cedar_rpc.Preferences();
@@ -150,7 +152,53 @@ Future<void> skyCoordsDialog(
                                       state.locationBasedInfo!.hourAngle))
                                 ]),
                           ]))
-                      : Container(),
+                      : Opacity(
+                          opacity: 0.5,
+                          child: GestureDetector(
+                              onTap: () async {
+                                if (state.offerMap) {
+                                  // Save the root navigator before removing overlay
+                                  final navigator = Navigator.of(context);
+                                  timer.cancel();
+                                  dialogOverlayEntry!.remove();
+                                  await showInterstitial(
+                                      "Observer location is required to display altitude/azimuth coordinates. "
+                                      "Set your location using the map.",
+                                      context,
+                                      showDontShowAgain: false);
+                                  navigator.push(
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              MapScreen(state)));
+                                }
+                              },
+                              child: Column(children: [
+                                const SizedBox(height: 10),
+                                Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      scaledText("Azimuth",
+                                          /*highlight=*/ false),
+                                      state.solveText("—")
+                                    ]),
+                                Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      scaledText("Altitude",
+                                          /*highlight=*/ false),
+                                      state.solveText("—")
+                                    ]),
+                                Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      scaledText("Hour angle",
+                                          /*highlight=*/ false),
+                                      state.solveText("—")
+                                    ]),
+                              ]))),
                 ],
               ),
             ))),

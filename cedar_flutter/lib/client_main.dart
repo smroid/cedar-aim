@@ -1470,6 +1470,7 @@ class MyHomePageState extends State<MyHomePage> {
 
   bool get hasSolution => _hasSolution;
   bool get hasPlateSolution => _hasPlateSolution;
+  bool get offerMap => _offerMap;
 
   Color _solveColor() {
     return _hasPlateSolution
