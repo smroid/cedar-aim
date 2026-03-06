@@ -798,7 +798,7 @@ Future<void> _controlBluetoothPairing(BuildContext context, String productName) 
     );
 
     if (context.mounted) {
-      final durationText = enableForever ? '(indefinitely)' : '(~1 minute)';
+      final durationText = enableForever ? '(indefinitely)' : '(few minutes)';
       final isSupported = isAndroid() || isIOS();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
