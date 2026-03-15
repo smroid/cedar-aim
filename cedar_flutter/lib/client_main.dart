@@ -510,6 +510,7 @@ class MyHomePageState extends State<MyHomePage> {
   bool everConnected = false;
   bool _connectionDialogShowing = false;
   DateTime _lastServerResponseTime = DateTime.now();
+  String? _lastConnectionError;
 
   // State for align mode.
   final _numTargets = 3;
@@ -998,6 +999,7 @@ class MyHomePageState extends State<MyHomePage> {
       }
     } catch (e) {
       debugPrint("getFrame RPC error: $e");
+      _lastConnectionError = e.toString();
       rpcFailed(); // Make a new channel.
       setState(() {
         // Has it been too long since we last succeeded?
@@ -2586,7 +2588,13 @@ class MyHomePageState extends State<MyHomePage> {
     SchedulerBinding.instance.addPostFrameCallback((_) {
       _showConnectionRecoveryDialog();
     });
-    return Container();
+    return Center(
+      child: Text(
+        'Reconnecting to $_productName...',
+        textScaler: textScaler(context),
+        style: TextStyle(color: Theme.of(context).colorScheme.primary),
+      ),
+    );
   }
 
   /// Reset the connection retry timer. Called when a new device is selected.
@@ -2630,6 +2638,7 @@ class MyHomePageState extends State<MyHomePage> {
           _selectDevice(device);
         },
         refreshDevices: isAndroid() ? () => getBluetoothDevices() : null,
+        errorMessage: _lastConnectionError,
       ),
     );
     _connectionDialogShowing = false;
