@@ -40,7 +40,7 @@ bool isIOSImpl() {
 // UUID for Cedar control channel defined in cedar-server
 String _btUuid = "4e5d4c88-2965-423f-9111-28a506720760";
 
-String _wifiAddress = isMobile() ? "192.168.4.1" : "192.168.1.158";
+String _wifiAddress = "cedar.local";
 CedarDevice _activeDevice = CedarDevice(address: _wifiAddress);
 ClientChannel? _channel;
 cedar_rpc.CedarClient? _client;
@@ -110,36 +110,59 @@ Future<CedarClient> getClientImpl() async {
     await _shutdownChannel();
     _activeProxy = null;
     _activeProxyPort = null;
-    _channel = ClientChannel(_wifiAddress, port: 80, options: _options);
-    _client = CedarClient(_channel!);
 
-    // Test the WiFi connection before returning. Use getFrame() since it's
-    // been available in all server versions (unlike newer RPCs).
+    // First, try DNS lookup to check if the address resolves.
+    bool dnsResolved = false;
     try {
-      final request = cedar_rpc.FrameRequest()
-        ..nonBlocking = true
-        ..displayOrientation = cedar_rpc.DisplayOrientation.PORTRAIT;
-      await _client!
-          .getFrame(request,
-              options: CallOptions(
-                timeout: const Duration(seconds: 5),
-              ))
-          .timeout(const Duration(seconds: 7), onTimeout: () {
-        throw TimeoutException('WiFi connection test timed out');
-      });
-      debugPrint('WiFi connection test succeeded');
-      // Update active device to reflect WiFi usage.
-      if (isAndroidImpl()) {
-        _activeDevice = CedarDevice(address: _wifiAddress);
+      final result = await InternetAddress.lookup(_wifiAddress)
+          .timeout(const Duration(seconds: 10));
+      if (result.isEmpty) {
+        throw SocketException('Could not resolve $_wifiAddress');
       }
-      return _client!;
+      debugPrint('DNS lookup for $_wifiAddress succeeded: ${result.first.address}');
+      dnsResolved = true;
     } catch (e) {
-      _client = null;
-      await _shutdownChannel(timeoutSeconds: 1);
+      debugPrint('DNS lookup for $_wifiAddress failed: $e');
       if (!isAndroidImpl() || _activeDevice.name == null) {
         // No Bluetooth fallback available, rethrow the error.
-        debugPrint('WiFi connection test failed: $e');
         rethrow;
+      }
+      // On Android with Bluetooth device, continue to Bluetooth fallback below.
+    }
+
+    // Only attempt RPC if DNS succeeded.
+    if (dnsResolved) {
+      _channel = ClientChannel(_wifiAddress, port: 80, options: _options);
+      _client = CedarClient(_channel!);
+
+      // Test the WiFi connection before returning. Use getFrame() since it's
+      // been available in all server versions (unlike newer RPCs).
+      try {
+        final request = cedar_rpc.FrameRequest()
+          ..nonBlocking = true
+          ..displayOrientation = cedar_rpc.DisplayOrientation.PORTRAIT;
+        await _client!
+            .getFrame(request,
+                options: CallOptions(
+                  timeout: const Duration(seconds: 5),
+                ))
+            .timeout(const Duration(seconds: 7), onTimeout: () {
+          throw TimeoutException('WiFi connection test timed out connecting to $_wifiAddress:80');
+        });
+        debugPrint('WiFi connection test succeeded');
+        // Update active device to reflect WiFi usage.
+        if (isAndroidImpl()) {
+          _activeDevice = CedarDevice(address: _wifiAddress);
+        }
+        return _client!;
+      } catch (e) {
+        _client = null;
+        await _shutdownChannel(timeoutSeconds: 1);
+        if (!isAndroidImpl() || _activeDevice.name == null) {
+          // No Bluetooth fallback available, rethrow the error with context.
+          debugPrint('WiFi connection test failed connecting to $_wifiAddress:80: $e');
+          throw Exception('Failed to connect to Cedar ($_wifiAddress:80): $e');
+        }
       }
     }
   }
