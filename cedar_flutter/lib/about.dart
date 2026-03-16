@@ -221,6 +221,16 @@ Widget systemInfo(MyHomePageState state) {
               child: _scaledText("view"),
             ),
           ]),
+          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+            _scaledText("Connections"),
+            TextButton(
+              style: _viewButtonStyle,
+              onPressed: () {
+                connectionsDialog(serverInfo.connectionStatus);
+              },
+              child: _scaledText("view"),
+            ),
+          ]),
           _sectionDividerSpacing,
           Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -383,10 +393,12 @@ void processorOsDialog(
         child: DefaultTextStyle.merge(
             style: const TextStyle(fontFamilyFallback: ['Roboto']),
             child: Center(
-              child: Container(
-                padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
-                decoration: _dialogDecoration(),
-                child: Column(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 400),
+                child: Container(
+                  padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
+                  decoration: _dialogDecoration(),
+                  child: Column(
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -429,6 +441,91 @@ void processorOsDialog(
                             )),
                           ]),
                     ]),
+                ),
+              ),
+            )),
+      ),
+    );
+  });
+
+  Overlay.of(_context).insert(dialogOverlayEntry);
+}
+
+void connectionsDialog(dynamic connectionStatus) {
+  OverlayEntry? dialogOverlayEntry;
+
+  dialogOverlayEntry = OverlayEntry(builder: (BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        dialogOverlayEntry!.remove();
+      },
+      child: Material(
+        color: Colors.black54,
+        child: DefaultTextStyle.merge(
+            style: const TextStyle(fontFamilyFallback: ['Roboto']),
+            child: Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 400),
+                child: Container(
+                  padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
+                  decoration: _dialogDecoration(),
+                  child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              _scaledText("Cedar WiFi:"),
+                              _dialogRowSpacing,
+                              Expanded(
+                                  child: Text(
+                                connectionStatus.cedarWifi.toString(),
+                                textAlign: TextAlign.right,
+                                style: _dialogTextStyle(),
+                              )),
+                            ]),
+                        _dialogItemSpacing,
+                        Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              _scaledText("Cedar Bluetooth:"),
+                              _dialogRowSpacing,
+                              Expanded(
+                                  child: Text(
+                                connectionStatus.cedarBluetooth.toString(),
+                                textAlign: TextAlign.right,
+                                style: _dialogTextStyle(),
+                              )),
+                            ]),
+                        _dialogItemSpacing,
+                        Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              _scaledText("LX200 WiFi:"),
+                              _dialogRowSpacing,
+                              Expanded(
+                                  child: Text(
+                                connectionStatus.lx200Wifi.toString(),
+                                textAlign: TextAlign.right,
+                                style: _dialogTextStyle(),
+                              )),
+                            ]),
+                        _dialogItemSpacing,
+                        Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              _scaledText("LX200 Bluetooth:"),
+                              _dialogRowSpacing,
+                              Expanded(
+                                  child: Text(
+                                connectionStatus.lx200Bluetooth.toString(),
+                                textAlign: TextAlign.right,
+                                style: _dialogTextStyle(),
+                              )),
+                            ]),
+                      ]),
+                ),
               ),
             )),
       ),
@@ -461,17 +558,19 @@ void versionsDialog(String serverVersion, String? updaterVersion) async {
         child: DefaultTextStyle.merge(
             style: const TextStyle(fontFamilyFallback: ['Roboto']),
             child: Center(
-              child: Container(
-                padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
-                decoration: _dialogDecoration(),
-                child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            _scaledText("Server version:"),
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 400),
+                child: Container(
+                  padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
+                  decoration: _dialogDecoration(),
+                  child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              _scaledText("Server version:"),
                             _dialogRowSpacing,
                             Expanded(
                                 child: Text(
@@ -508,10 +607,11 @@ void versionsDialog(String serverVersion, String? updaterVersion) async {
                               style: _dialogTextStyle(),
                             )),
                           ]),
-                    ]),
+                      ]),
+                  ),
+                ),
               ),
             )),
-      ),
     );
   });
 
@@ -531,17 +631,19 @@ void cameraDialog(dynamic serverInfo, dynamic calData) {
         child: DefaultTextStyle.merge(
             style: const TextStyle(fontFamilyFallback: ['Roboto']),
             child: Center(
-              child: Container(
-                padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
-                decoration: _dialogDecoration(),
-                child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            _scaledText("Model:"),
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 400),
+                child: Container(
+                  padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
+                  decoration: _dialogDecoration(),
+                  child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              _scaledText("Model:"),
                             _dialogRowSpacing,
                             Expanded(
                                 child: Text(
@@ -637,10 +739,11 @@ void cameraDialog(dynamic serverInfo, dynamic calData) {
                               style: _dialogTextStyle(),
                             )),
                           ]),
-                    ]),
+                      ]),
+                  ),
+                ),
               ),
             )),
-      ),
     );
   });
 

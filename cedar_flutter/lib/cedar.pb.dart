@@ -42,6 +42,7 @@ class ServerInformation extends $pb.GeneratedMessage {
     $core.String? imuModel,
     ImuTrackerState? imuTrackerState,
     $core.double? imuAngularSpeed,
+    ConnectionStatus? connectionStatus,
   }) {
     final $result = create();
     if (productName != null) {
@@ -92,6 +93,9 @@ class ServerInformation extends $pb.GeneratedMessage {
     if (imuAngularSpeed != null) {
       $result.imuAngularSpeed = imuAngularSpeed;
     }
+    if (connectionStatus != null) {
+      $result.connectionStatus = connectionStatus;
+    }
     return $result;
   }
   ServerInformation._() : super();
@@ -115,6 +119,7 @@ class ServerInformation extends $pb.GeneratedMessage {
     ..aOS(14, _omitFieldNames ? '' : 'imuModel')
     ..e<ImuTrackerState>(15, _omitFieldNames ? '' : 'imuTrackerState', $pb.PbFieldType.OE, defaultOrMaker: ImuTrackerState.TRACKER_STATE_UNKNOWN, valueOf: ImuTrackerState.valueOf, enumValues: ImuTrackerState.values)
     ..a<$core.double>(16, _omitFieldNames ? '' : 'imuAngularSpeed', $pb.PbFieldType.OD)
+    ..aOM<ConnectionStatus>(17, _omitFieldNames ? '' : 'connectionStatus', subBuilder: ConnectionStatus.create)
     ..hasRequiredFields = false
   ;
 
@@ -225,7 +230,7 @@ class ServerInformation extends $pb.GeneratedMessage {
   @$pb.TagNumber(9)
   CameraModel ensureCamera() => $_ensure(8);
 
-  /// Network info.
+  /// WiFi hotspot info.
   @$pb.TagNumber(10)
   WiFiAccessPoint get wifiAccessPoint => $_getN(9);
   @$pb.TagNumber(10)
@@ -292,6 +297,18 @@ class ServerInformation extends $pb.GeneratedMessage {
   $core.bool hasImuAngularSpeed() => $_has(15);
   @$pb.TagNumber(16)
   void clearImuAngularSpeed() => $_clearField(16);
+
+  /// Information about client connections.
+  @$pb.TagNumber(17)
+  ConnectionStatus get connectionStatus => $_getN(16);
+  @$pb.TagNumber(17)
+  set connectionStatus(ConnectionStatus v) { $_setField(17, v); }
+  @$pb.TagNumber(17)
+  $core.bool hasConnectionStatus() => $_has(16);
+  @$pb.TagNumber(17)
+  void clearConnectionStatus() => $_clearField(17);
+  @$pb.TagNumber(17)
+  ConnectionStatus ensureConnectionStatus() => $_ensure(16);
 }
 
 class CameraModel extends $pb.GeneratedMessage {
@@ -585,6 +602,101 @@ class WiFiAccessPoint extends $pb.GeneratedMessage {
   $core.bool hasChannel() => $_has(2);
   @$pb.TagNumber(3)
   void clearChannel() => $_clearField(3);
+}
+
+/// Number of current client connections.
+class ConnectionStatus extends $pb.GeneratedMessage {
+  factory ConnectionStatus({
+    $core.int? cedarWifi,
+    $core.int? cedarBluetooth,
+    $core.int? lx200Wifi,
+    $core.int? lx200Bluetooth,
+  }) {
+    final $result = create();
+    if (cedarWifi != null) {
+      $result.cedarWifi = cedarWifi;
+    }
+    if (cedarBluetooth != null) {
+      $result.cedarBluetooth = cedarBluetooth;
+    }
+    if (lx200Wifi != null) {
+      $result.lx200Wifi = lx200Wifi;
+    }
+    if (lx200Bluetooth != null) {
+      $result.lx200Bluetooth = lx200Bluetooth;
+    }
+    return $result;
+  }
+  ConnectionStatus._() : super();
+  factory ConnectionStatus.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory ConnectionStatus.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'ConnectionStatus', package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'), createEmptyInstance: create)
+    ..a<$core.int>(1, _omitFieldNames ? '' : 'cedarWifi', $pb.PbFieldType.O3)
+    ..a<$core.int>(2, _omitFieldNames ? '' : 'cedarBluetooth', $pb.PbFieldType.O3)
+    ..a<$core.int>(3, _omitFieldNames ? '' : 'lx200Wifi', $pb.PbFieldType.O3)
+    ..a<$core.int>(4, _omitFieldNames ? '' : 'lx200Bluetooth', $pb.PbFieldType.O3)
+    ..hasRequiredFields = false
+  ;
+
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  ConnectionStatus clone() => ConnectionStatus()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  ConnectionStatus copyWith(void Function(ConnectionStatus) updates) => super.copyWith((message) => updates(message as ConnectionStatus)) as ConnectionStatus;
+
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ConnectionStatus create() => ConnectionStatus._();
+  ConnectionStatus createEmptyInstance() => create();
+  static $pb.PbList<ConnectionStatus> createRepeated() => $pb.PbList<ConnectionStatus>();
+  @$core.pragma('dart2js:noInline')
+  static ConnectionStatus getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<ConnectionStatus>(create);
+  static ConnectionStatus? _defaultInstance;
+
+  /// Number of cedar_server clients.
+  @$pb.TagNumber(1)
+  $core.int get cedarWifi => $_getIZ(0);
+  @$pb.TagNumber(1)
+  set cedarWifi($core.int v) { $_setSignedInt32(0, v); }
+  @$pb.TagNumber(1)
+  $core.bool hasCedarWifi() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearCedarWifi() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.int get cedarBluetooth => $_getIZ(1);
+  @$pb.TagNumber(2)
+  set cedarBluetooth($core.int v) { $_setSignedInt32(1, v); }
+  @$pb.TagNumber(2)
+  $core.bool hasCedarBluetooth() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearCedarBluetooth() => $_clearField(2);
+
+  /// Number of LX200 telescope clients.
+  @$pb.TagNumber(3)
+  $core.int get lx200Wifi => $_getIZ(2);
+  @$pb.TagNumber(3)
+  set lx200Wifi($core.int v) { $_setSignedInt32(2, v); }
+  @$pb.TagNumber(3)
+  $core.bool hasLx200Wifi() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearLx200Wifi() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.int get lx200Bluetooth => $_getIZ(3);
+  @$pb.TagNumber(4)
+  set lx200Bluetooth($core.int v) { $_setSignedInt32(3, v); }
+  @$pb.TagNumber(4)
+  $core.bool hasLx200Bluetooth() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearLx200Bluetooth() => $_clearField(4);
 }
 
 class FixedSettings extends $pb.GeneratedMessage {

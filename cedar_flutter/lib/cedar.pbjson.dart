@@ -140,6 +140,7 @@ const ServerInformation$json = {
     {'1': 'imu_angular_speed', '3': 16, '4': 1, '5': 1, '9': 3, '10': 'imuAngularSpeed', '17': true},
     {'1': 'imu_tracker_state', '3': 15, '4': 1, '5': 14, '6': '.cedar.ImuTrackerState', '9': 4, '10': 'imuTrackerState', '17': true},
     {'1': 'wifi_access_point', '3': 10, '4': 1, '5': 11, '6': '.cedar.WiFiAccessPoint', '9': 5, '10': 'wifiAccessPoint', '17': true},
+    {'1': 'connection_status', '3': 17, '4': 1, '5': 11, '6': '.cedar.ConnectionStatus', '9': 6, '10': 'connectionStatus', '17': true},
     {'1': 'demo_image_names', '3': 11, '4': 3, '5': 9, '10': 'demoImageNames'},
   ],
   '8': [
@@ -149,6 +150,7 @@ const ServerInformation$json = {
     {'1': '_imu_angular_speed'},
     {'1': '_imu_tracker_state'},
     {'1': '_wifi_access_point'},
+    {'1': '_connection_status'},
   ],
 };
 
@@ -167,9 +169,11 @@ final $typed_data.Uint8List serverInformationDescriptor = $convert.base64Decode(
     'Ug9pbXVBbmd1bGFyU3BlZWSIAQESRwoRaW11X3RyYWNrZXJfc3RhdGUYDyABKA4yFi5jZWRhci'
     '5JbXVUcmFja2VyU3RhdGVIBFIPaW11VHJhY2tlclN0YXRliAEBEkcKEXdpZmlfYWNjZXNzX3Bv'
     'aW50GAogASgLMhYuY2VkYXIuV2lGaUFjY2Vzc1BvaW50SAVSD3dpZmlBY2Nlc3NQb2ludIgBAR'
-    'IoChBkZW1vX2ltYWdlX25hbWVzGAsgAygJUg5kZW1vSW1hZ2VOYW1lc0IJCgdfY2FtZXJhQgwK'
-    'Cl9pbXVfbW9kZWxCBgoEX2ltdUIUChJfaW11X2FuZ3VsYXJfc3BlZWRCFAoSX2ltdV90cmFja2'
-    'VyX3N0YXRlQhQKEl93aWZpX2FjY2Vzc19wb2ludA==');
+    'JJChFjb25uZWN0aW9uX3N0YXR1cxgRIAEoCzIXLmNlZGFyLkNvbm5lY3Rpb25TdGF0dXNIBlIQ'
+    'Y29ubmVjdGlvblN0YXR1c4gBARIoChBkZW1vX2ltYWdlX25hbWVzGAsgAygJUg5kZW1vSW1hZ2'
+    'VOYW1lc0IJCgdfY2FtZXJhQgwKCl9pbXVfbW9kZWxCBgoEX2ltdUIUChJfaW11X2FuZ3VsYXJf'
+    'c3BlZWRCFAoSX2ltdV90cmFja2VyX3N0YXRlQhQKEl93aWZpX2FjY2Vzc19wb2ludEIUChJfY2'
+    '9ubmVjdGlvbl9zdGF0dXM=');
 
 @$core.Deprecated('Use cameraModelDescriptor instead')
 const CameraModel$json = {
@@ -231,6 +235,23 @@ final $typed_data.Uint8List wiFiAccessPointDescriptor = $convert.base64Decode(
     'Cg9XaUZpQWNjZXNzUG9pbnQSFwoEc3NpZBgBIAEoCUgAUgRzc2lkiAEBEhUKA3BzaxgCIAEoCU'
     'gBUgNwc2uIAQESHQoHY2hhbm5lbBgDIAEoBUgCUgdjaGFubmVsiAEBQgcKBV9zc2lkQgYKBF9w'
     'c2tCCgoIX2NoYW5uZWw=');
+
+@$core.Deprecated('Use connectionStatusDescriptor instead')
+const ConnectionStatus$json = {
+  '1': 'ConnectionStatus',
+  '2': [
+    {'1': 'cedar_wifi', '3': 1, '4': 1, '5': 5, '10': 'cedarWifi'},
+    {'1': 'cedar_bluetooth', '3': 2, '4': 1, '5': 5, '10': 'cedarBluetooth'},
+    {'1': 'lx200_wifi', '3': 3, '4': 1, '5': 5, '10': 'lx200Wifi'},
+    {'1': 'lx200_bluetooth', '3': 4, '4': 1, '5': 5, '10': 'lx200Bluetooth'},
+  ],
+};
+
+/// Descriptor for `ConnectionStatus`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List connectionStatusDescriptor = $convert.base64Decode(
+    'ChBDb25uZWN0aW9uU3RhdHVzEh0KCmNlZGFyX3dpZmkYASABKAVSCWNlZGFyV2lmaRInCg9jZW'
+    'Rhcl9ibHVldG9vdGgYAiABKAVSDmNlZGFyQmx1ZXRvb3RoEh0KCmx4MjAwX3dpZmkYAyABKAVS'
+    'CWx4MjAwV2lmaRInCg9seDIwMF9ibHVldG9vdGgYBCABKAVSDmx4MjAwQmx1ZXRvb3Ro');
 
 @$core.Deprecated('Use fixedSettingsDescriptor instead')
 const FixedSettings$json = {
