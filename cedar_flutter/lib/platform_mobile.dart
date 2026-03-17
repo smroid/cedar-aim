@@ -112,7 +112,8 @@ Future<CedarClient> getClientImpl() async {
     _activeProxyPort = null;
 
     // First, try DNS lookup to check if the address resolves.
-    bool dnsResolved = false;
+    bool readyToConnect = false;
+    String? addressToTry = _wifiAddress;
     try {
       final result = await InternetAddress.lookup(_wifiAddress)
           .timeout(const Duration(seconds: 10));
@@ -120,19 +121,26 @@ Future<CedarClient> getClientImpl() async {
         throw SocketException('Could not resolve $_wifiAddress');
       }
       debugPrint('DNS lookup for $_wifiAddress succeeded: ${result.first.address}');
-      dnsResolved = true;
+      readyToConnect = true;
     } catch (e) {
       debugPrint('DNS lookup for $_wifiAddress failed: $e');
+      // Some old Android versions don't support mDNS, which is what Cedar
+      // server uses to advertise itself as 'cedar.local'. Try fallback IP
+      // address before giving up.
+      addressToTry = '192.168.4.1';
+      // addressToTry = '192.168.1.158';
+      debugPrint('Trying fallback IP address: $addressToTry');
+      readyToConnect = true; // Attempt with IP fallback.
       if (!isAndroidImpl() || _activeDevice.name == null) {
-        // No Bluetooth fallback available, rethrow the error.
-        rethrow;
+        // No Bluetooth fallback available and DNS failed.
+        // Still try the IP fallback, but if that also fails, rethrow.
       }
-      // On Android with Bluetooth device, continue to Bluetooth fallback below.
+      // On Android with Bluetooth device, we'll also have Bluetooth fallback below.
     }
 
-    // Only attempt RPC if DNS succeeded.
-    if (dnsResolved) {
-      _channel = ClientChannel(_wifiAddress, port: 80, options: _options);
+    // Attempt RPC connection with the resolved address or fallback IP.
+    if (readyToConnect) {
+      _channel = ClientChannel(addressToTry, port: 80, options: _options);
       _client = CedarClient(_channel!);
 
       // Test the WiFi connection before returning. Use getFrame() since it's
@@ -147,12 +155,12 @@ Future<CedarClient> getClientImpl() async {
                   timeout: const Duration(seconds: 5),
                 ))
             .timeout(const Duration(seconds: 7), onTimeout: () {
-          throw TimeoutException('WiFi connection test timed out connecting to $_wifiAddress:80');
+          throw TimeoutException('WiFi connection test timed out connecting to $addressToTry:80');
         });
         debugPrint('WiFi connection test succeeded');
         // Update active device to reflect WiFi usage.
         if (isAndroidImpl()) {
-          _activeDevice = CedarDevice(address: _wifiAddress);
+          _activeDevice = CedarDevice(address: addressToTry);
         }
         return _client!;
       } catch (e) {
@@ -160,8 +168,8 @@ Future<CedarClient> getClientImpl() async {
         await _shutdownChannel(timeoutSeconds: 1);
         if (!isAndroidImpl() || _activeDevice.name == null) {
           // No Bluetooth fallback available, rethrow the error with context.
-          debugPrint('WiFi connection test failed connecting to $_wifiAddress:80: $e');
-          throw Exception('Failed to connect to Cedar ($_wifiAddress:80): $e');
+          debugPrint('WiFi connection test failed connecting to $addressToTry:80: $e');
+          throw Exception('Failed to connect to Cedar ($addressToTry:80): $e');
         }
       }
     }
