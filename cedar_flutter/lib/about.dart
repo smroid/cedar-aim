@@ -451,8 +451,93 @@ void processorOsDialog(
   Overlay.of(_context).insert(dialogOverlayEntry);
 }
 
+String _formatConnectionCount(int count) {
+  if (count == 0) return "none";
+  if (count == 1) return "connected";
+  return "$count connected";
+}
+
 void connectionsDialog(dynamic connectionStatus) {
   OverlayEntry? dialogOverlayEntry;
+
+  List<Widget> rows = [];
+
+  if (connectionStatus.cedarWifi > 0) {
+    rows.add(Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _scaledText("Cedar WiFi:"),
+          _dialogRowSpacing,
+          Expanded(
+              child: Text(
+            _formatConnectionCount(connectionStatus.cedarWifi),
+            textAlign: TextAlign.right,
+            style: _dialogTextStyle(),
+          )),
+        ]));
+  }
+
+  if (connectionStatus.cedarBluetooth > 0) {
+    if (rows.isNotEmpty) {
+      rows.add(_dialogItemSpacing);
+    }
+    rows.add(Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _scaledText("Cedar Bluetooth:"),
+          _dialogRowSpacing,
+          Expanded(
+              child: Text(
+            _formatConnectionCount(connectionStatus.cedarBluetooth),
+            textAlign: TextAlign.right,
+            style: _dialogTextStyle(),
+          )),
+        ]));
+  }
+
+  if (connectionStatus.lx200Wifi > 0) {
+    if (rows.isNotEmpty) {
+      rows.add(_dialogItemSpacing);
+    }
+    rows.add(Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _scaledText("LX200 WiFi:"),
+          _dialogRowSpacing,
+          Expanded(
+              child: Text(
+            _formatConnectionCount(connectionStatus.lx200Wifi),
+            textAlign: TextAlign.right,
+            style: _dialogTextStyle(),
+          )),
+        ]));
+  }
+
+  if (connectionStatus.lx200Bluetooth > 0) {
+    if (rows.isNotEmpty) {
+       rows.add(_dialogItemSpacing);
+    }
+    rows.add(Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _scaledText("LX200 Bluetooth:"),
+          _dialogRowSpacing,
+          Expanded(
+              child: Text(
+            _formatConnectionCount(connectionStatus.lx200Bluetooth),
+            textAlign: TextAlign.right,
+            style: _dialogTextStyle(),
+          )),
+        ]));
+  }
+
+  if (rows.isEmpty) {
+    rows.add(Text(
+      "No active connections",
+      textScaler: textScaler(_context),
+      style: TextStyle(color: Theme.of(_context).colorScheme.primary),
+    ));
+  }
 
   dialogOverlayEntry = OverlayEntry(builder: (BuildContext context) {
     return GestureDetector(
@@ -472,59 +557,7 @@ void connectionsDialog(dynamic connectionStatus) {
                   child: Column(
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              _scaledText("Cedar WiFi:"),
-                              _dialogRowSpacing,
-                              Expanded(
-                                  child: Text(
-                                connectionStatus.cedarWifi.toString(),
-                                textAlign: TextAlign.right,
-                                style: _dialogTextStyle(),
-                              )),
-                            ]),
-                        _dialogItemSpacing,
-                        Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              _scaledText("Cedar Bluetooth:"),
-                              _dialogRowSpacing,
-                              Expanded(
-                                  child: Text(
-                                connectionStatus.cedarBluetooth.toString(),
-                                textAlign: TextAlign.right,
-                                style: _dialogTextStyle(),
-                              )),
-                            ]),
-                        _dialogItemSpacing,
-                        Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              _scaledText("LX200 WiFi:"),
-                              _dialogRowSpacing,
-                              Expanded(
-                                  child: Text(
-                                connectionStatus.lx200Wifi.toString(),
-                                textAlign: TextAlign.right,
-                                style: _dialogTextStyle(),
-                              )),
-                            ]),
-                        _dialogItemSpacing,
-                        Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              _scaledText("LX200 Bluetooth:"),
-                              _dialogRowSpacing,
-                              Expanded(
-                                  child: Text(
-                                connectionStatus.lx200Bluetooth.toString(),
-                                textAlign: TextAlign.right,
-                                style: _dialogTextStyle(),
-                              )),
-                            ]),
-                      ]),
+                      children: rows),
                 ),
               ),
             )),
