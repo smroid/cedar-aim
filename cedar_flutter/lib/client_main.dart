@@ -20,6 +20,7 @@ import 'package:cedar_flutter/slew_directions.dart';
 import 'package:cedar_flutter/themes.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:flutter/material.dart';
+import 'package:protobuf/protobuf.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart' as dart_widgets;

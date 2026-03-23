@@ -7,6 +7,7 @@ import 'package:cedar_flutter/cedar.pb.dart' as cedar_rpc;
 import 'package:cedar_flutter/client_main.dart';
 import 'package:cedar_flutter/settings.dart';
 import 'package:flutter/material.dart';
+import 'package:protobuf/protobuf.dart';
 import 'package:sprintf/sprintf.dart';
 
 // Dialog layout constants.

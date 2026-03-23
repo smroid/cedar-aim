@@ -4,6 +4,7 @@
 import 'package:cedar_flutter/cedar.pb.dart';
 import 'package:cedar_flutter/settings.dart';
 import 'package:flutter/material.dart';
+import 'package:protobuf/protobuf.dart';
 import 'package:provider/provider.dart';
 
 /// Widget that builds the controls interface for the Cedar Aim app. The
