@@ -2,7 +2,7 @@
 //  Generated code. Do not modify.
 //  source: cedar.proto
 //
-// @dart = 3.3
+// @dart = 2.12
 
 // ignore_for_file: annotate_overrides, camel_case_types, comment_references
 // ignore_for_file: constant_identifier_names, library_prefixes
@@ -487,11 +487,10 @@ const FrameResult$json = {
     {'1': 'center_peak_position', '3': 12, '4': 1, '5': 11, '6': '.cedar.ImageCoord', '9': 3, '10': 'centerPeakPosition', '17': true},
     {'1': 'center_peak_value', '3': 6, '4': 1, '5': 5, '9': 4, '10': 'centerPeakValue', '17': true},
     {'1': 'center_peak_image', '3': 13, '4': 1, '5': 11, '6': '.cedar.Image', '9': 5, '10': 'centerPeakImage', '17': true},
-    {'1': 'contrast_ratio', '3': 36, '4': 1, '5': 1, '9': 6, '10': 'contrastRatio', '17': true},
-    {'1': 'daylight_focus_zoom_image', '3': 37, '4': 1, '5': 11, '6': '.cedar.Image', '9': 7, '10': 'daylightFocusZoomImage', '17': true},
-    {'1': 'location_based_info', '3': 29, '4': 1, '5': 11, '6': '.cedar.LocationBasedInfo', '9': 8, '10': 'locationBasedInfo', '17': true},
-    {'1': 'slew_request', '3': 24, '4': 1, '5': 11, '6': '.cedar.SlewRequest', '9': 9, '10': 'slewRequest', '17': true},
-    {'1': 'boresight_image', '3': 28, '4': 1, '5': 11, '6': '.cedar.Image', '9': 10, '10': 'boresightImage', '17': true},
+    {'1': 'daylight_focus_zoom_image', '3': 37, '4': 1, '5': 11, '6': '.cedar.Image', '9': 6, '10': 'daylightFocusZoomImage', '17': true},
+    {'1': 'location_based_info', '3': 29, '4': 1, '5': 11, '6': '.cedar.LocationBasedInfo', '9': 7, '10': 'locationBasedInfo', '17': true},
+    {'1': 'slew_request', '3': 24, '4': 1, '5': 11, '6': '.cedar.SlewRequest', '9': 8, '10': 'slewRequest', '17': true},
+    {'1': 'boresight_image', '3': 28, '4': 1, '5': 11, '6': '.cedar.Image', '9': 9, '10': 'boresightImage', '17': true},
     {'1': 'polar_align_advice', '3': 30, '4': 1, '5': 11, '6': '.cedar.PolarAlignAdvice', '10': 'polarAlignAdvice'},
     {'1': 'labeled_catalog_entries', '3': 31, '4': 3, '5': 11, '6': '.cedar.FovCatalogEntry', '10': 'labeledCatalogEntries'},
     {'1': 'unlabeled_catalog_entries', '3': 33, '4': 3, '5': 11, '6': '.cedar.FovCatalogEntry', '10': 'unlabeledCatalogEntries'},
@@ -503,7 +502,6 @@ const FrameResult$json = {
     {'1': '_center_peak_position'},
     {'1': '_center_peak_value'},
     {'1': '_center_peak_image'},
-    {'1': '_contrast_ratio'},
     {'1': '_daylight_focus_zoom_image'},
     {'1': '_location_based_info'},
     {'1': '_slew_request'},
@@ -512,6 +510,7 @@ const FrameResult$json = {
   '9': [
     {'1': 10, '2': 11},
     {'1': 11, '2': 12},
+    {'1': 36, '2': 37},
   ],
 };
 
@@ -539,21 +538,20 @@ final $typed_data.Uint8List frameResultDescriptor = $convert.base64Decode(
     'FjdGl2ZRJIChRjZW50ZXJfcGVha19wb3NpdGlvbhgMIAEoCzIRLmNlZGFyLkltYWdlQ29vcmRI'
     'A1ISY2VudGVyUGVha1Bvc2l0aW9uiAEBEi8KEWNlbnRlcl9wZWFrX3ZhbHVlGAYgASgFSARSD2'
     'NlbnRlclBlYWtWYWx1ZYgBARI9ChFjZW50ZXJfcGVha19pbWFnZRgNIAEoCzIMLmNlZGFyLklt'
-    'YWdlSAVSD2NlbnRlclBlYWtJbWFnZYgBARIqCg5jb250cmFzdF9yYXRpbxgkIAEoAUgGUg1jb2'
-    '50cmFzdFJhdGlviAEBEkwKGWRheWxpZ2h0X2ZvY3VzX3pvb21faW1hZ2UYJSABKAsyDC5jZWRh'
-    'ci5JbWFnZUgHUhZkYXlsaWdodEZvY3VzWm9vbUltYWdliAEBEk0KE2xvY2F0aW9uX2Jhc2VkX2'
-    'luZm8YHSABKAsyGC5jZWRhci5Mb2NhdGlvbkJhc2VkSW5mb0gIUhFsb2NhdGlvbkJhc2VkSW5m'
-    'b4gBARI6CgxzbGV3X3JlcXVlc3QYGCABKAsyEi5jZWRhci5TbGV3UmVxdWVzdEgJUgtzbGV3Um'
-    'VxdWVzdIgBARI6Cg9ib3Jlc2lnaHRfaW1hZ2UYHCABKAsyDC5jZWRhci5JbWFnZUgKUg5ib3Jl'
-    'c2lnaHRJbWFnZYgBARJFChJwb2xhcl9hbGlnbl9hZHZpY2UYHiABKAsyFy5jZWRhci5Qb2xhck'
-    'FsaWduQWR2aWNlUhBwb2xhckFsaWduQWR2aWNlEk4KF2xhYmVsZWRfY2F0YWxvZ19lbnRyaWVz'
-    'GB8gAygLMhYuY2VkYXIuRm92Q2F0YWxvZ0VudHJ5UhVsYWJlbGVkQ2F0YWxvZ0VudHJpZXMSUg'
-    'oZdW5sYWJlbGVkX2NhdGFsb2dfZW50cmllcxghIAMoCzIWLmNlZGFyLkZvdkNhdGFsb2dFbnRy'
-    'eVIXdW5sYWJlbGVkQ2F0YWxvZ0VudHJpZXNCDQoLX2hhc19yZXN1bHRCEQoPX3BsYXRlX3NvbH'
-    'V0aW9uQhcKFV9jYWxpYnJhdGlvbl9wcm9ncmVzc0IXChVfY2VudGVyX3BlYWtfcG9zaXRpb25C'
-    'FAoSX2NlbnRlcl9wZWFrX3ZhbHVlQhQKEl9jZW50ZXJfcGVha19pbWFnZUIRCg9fY29udHJhc3'
-    'RfcmF0aW9CHAoaX2RheWxpZ2h0X2ZvY3VzX3pvb21faW1hZ2VCFgoUX2xvY2F0aW9uX2Jhc2Vk'
-    'X2luZm9CDwoNX3NsZXdfcmVxdWVzdEISChBfYm9yZXNpZ2h0X2ltYWdlSgQIChALSgQICxAM');
+    'YWdlSAVSD2NlbnRlclBlYWtJbWFnZYgBARJMChlkYXlsaWdodF9mb2N1c196b29tX2ltYWdlGC'
+    'UgASgLMgwuY2VkYXIuSW1hZ2VIBlIWZGF5bGlnaHRGb2N1c1pvb21JbWFnZYgBARJNChNsb2Nh'
+    'dGlvbl9iYXNlZF9pbmZvGB0gASgLMhguY2VkYXIuTG9jYXRpb25CYXNlZEluZm9IB1IRbG9jYX'
+    'Rpb25CYXNlZEluZm+IAQESOgoMc2xld19yZXF1ZXN0GBggASgLMhIuY2VkYXIuU2xld1JlcXVl'
+    'c3RICFILc2xld1JlcXVlc3SIAQESOgoPYm9yZXNpZ2h0X2ltYWdlGBwgASgLMgwuY2VkYXIuSW'
+    '1hZ2VICVIOYm9yZXNpZ2h0SW1hZ2WIAQESRQoScG9sYXJfYWxpZ25fYWR2aWNlGB4gASgLMhcu'
+    'Y2VkYXIuUG9sYXJBbGlnbkFkdmljZVIQcG9sYXJBbGlnbkFkdmljZRJOChdsYWJlbGVkX2NhdG'
+    'Fsb2dfZW50cmllcxgfIAMoCzIWLmNlZGFyLkZvdkNhdGFsb2dFbnRyeVIVbGFiZWxlZENhdGFs'
+    'b2dFbnRyaWVzElIKGXVubGFiZWxlZF9jYXRhbG9nX2VudHJpZXMYISADKAsyFi5jZWRhci5Gb3'
+    'ZDYXRhbG9nRW50cnlSF3VubGFiZWxlZENhdGFsb2dFbnRyaWVzQg0KC19oYXNfcmVzdWx0QhEK'
+    'D19wbGF0ZV9zb2x1dGlvbkIXChVfY2FsaWJyYXRpb25fcHJvZ3Jlc3NCFwoVX2NlbnRlcl9wZW'
+    'FrX3Bvc2l0aW9uQhQKEl9jZW50ZXJfcGVha192YWx1ZUIUChJfY2VudGVyX3BlYWtfaW1hZ2VC'
+    'HAoaX2RheWxpZ2h0X2ZvY3VzX3pvb21faW1hZ2VCFgoUX2xvY2F0aW9uX2Jhc2VkX2luZm9CDw'
+    'oNX3NsZXdfcmVxdWVzdEISChBfYm9yZXNpZ2h0X2ltYWdlSgQIChALSgQICxAMSgQIJBAl');
 
 @$core.Deprecated('Use imageDescriptor instead')
 const Image$json = {
