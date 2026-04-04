@@ -34,7 +34,7 @@ class _GuidanceDisplayState extends State<GuidanceDisplay> {
         final client = await getClient();
         final response = await client.getFrame(
           request,
-          options: CallOptions(timeout: const Duration(seconds: 4)),
+          options: CallOptions(timeout: const Duration(seconds: 5)),
         );
         if (mounted) {
           setState(() {
@@ -48,7 +48,7 @@ class _GuidanceDisplayState extends State<GuidanceDisplay> {
             _hasError = true;
           });
         }
-        // On error wait for additional time before trying again
+        // On error wait for additional time before trying again.
         await Future.delayed(const Duration(milliseconds: 400));
       }
     }
@@ -60,7 +60,8 @@ class _GuidanceDisplayState extends State<GuidanceDisplay> {
     return AspectRatio(
       aspectRatio: 16 / 9,
       child: Card(
-        // Set the card to black, otherwise we'll see a black border around the gray
+        // Set the card to black, otherwise we'll see a black border around the
+        // gray.
         color: Colors.black,
         child: Padding(
           padding: const EdgeInsets.all(8.0),
@@ -125,13 +126,13 @@ class _GuidanceDisplayState extends State<GuidanceDisplay> {
 
     return Column(
       children: [
-        // Top Row: Guidance Text Values
+        // Top Row: Guidance Text Values.
         Expanded(
           flex: 10,
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // Tilt offset (Alt/RA)
+              // Tilt offset (Alt/RA).
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.only(right: 8.0),
@@ -147,7 +148,7 @@ class _GuidanceDisplayState extends State<GuidanceDisplay> {
                   ),
                 ),
               ),
-              // Rotation offset (Az/Dec)
+              // Rotation offset (Az/Dec).
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.only(left: 8.0),
@@ -167,13 +168,13 @@ class _GuidanceDisplayState extends State<GuidanceDisplay> {
           ),
         ),
 
-        // Bottom Row: Indicators
+        // Bottom Row: Indicators.
         Expanded(
           flex: 15,
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // Left Box: Tilt indicator
+              // Left Box: Tilt indicator.
               Expanded(
                 flex: 1,
                 child: Padding(
@@ -207,7 +208,7 @@ class _GuidanceDisplayState extends State<GuidanceDisplay> {
                 ),
               ),
 
-              // Center Box: Target Arrow
+              // Center Box: Target Arrow.
               Expanded(
                 flex: 2,
                 child: hasPlateSolution
@@ -215,7 +216,7 @@ class _GuidanceDisplayState extends State<GuidanceDisplay> {
                     : const SizedBox.shrink(),
               ),
 
-              // Right Box: Rotation indicator
+              // Right Box: Rotation indicator.
               Expanded(
                 flex: 1,
                 child: Padding(
@@ -280,8 +281,8 @@ class _TargetArrow extends StatelessWidget {
     final theme = Theme.of(context);
     return SizedBox.expand(
       child: FittedBox(
-        // 2. BoxFit.contain scales the child to be as large as possible
-        // while staying within the bounds.
+        // BoxFit.contain scales the child to be as large as possible while
+        // staying within the bounds.
         fit: BoxFit.contain,
         child: Transform.rotate(
           angle: -rotationDegrees * (math.pi / 180),
@@ -342,18 +343,18 @@ class _ArrowPainter extends CustomPainter {
     final double shapeCenterY = minDim / 2;
     final center = Offset(shapeCenterX, shapeCenterY);
 
-    // Create an isosceles triangle pointing right, then rotate it
+    // Create an isosceles triangle pointing right, then rotate it.
     final path = Path();
     canvas.save();
 
-    // Rotate around the calculated center
+    // Rotate around the calculated center.
     canvas.translate(center.dx, center.dy);
     canvas.rotate(rotationDegrees * math.pi / 180);
 
-    // Draw triangle pointing Right
+    // Draw triangle pointing Right.
     path.moveTo(radius, 0);
     final xBack = -radius * 0.5;
-    final ySide = radius * 0.866; // approximately sin(60)
+    final ySide = radius * 0.866; // Approximately sin(60).
     path.lineTo(xBack, -ySide);
     path.lineTo(xBack, ySide);
     path.close();
