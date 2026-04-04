@@ -93,9 +93,9 @@ Future<cedar_rpc.ServerInformation> getServerInformation() async {
   final response = await client
       .getFrame(
         request,
-        options: CallOptions(timeout: const Duration(seconds: 4)),
+        options: CallOptions(timeout: const Duration(seconds: 5)),
       )
-      .timeout(const Duration(seconds: 6), onTimeout: () {
+      .timeout(const Duration(seconds: 7), onTimeout: () {
     throw TimeoutException('getServerInformation timed out');
   });
 
@@ -971,9 +971,9 @@ class MyHomePageState extends State<MyHomePage> {
       final response = await c
           .getFrame(
             request,
-            options: CallOptions(timeout: const Duration(seconds: 4)),
+            options: CallOptions(timeout: const Duration(seconds: 5)),
           )
-          .timeout(const Duration(seconds: 6), onTimeout: () {
+          .timeout(const Duration(seconds: 7), onTimeout: () {
         throw TimeoutException('getFrame timed out');
       });
       rpcSucceeded();
