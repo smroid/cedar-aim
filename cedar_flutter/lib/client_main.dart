@@ -1019,7 +1019,8 @@ class MyHomePageState extends State<MyHomePage> {
       if (!_paintPending &&
           !updateInProgress &&
           !shutdownInProgress &&
-          !_connectionDialogShowing) {
+          !_connectionDialogShowing &&
+          !_isPipMode) {
         await _getFrameFromServer();
       }
       return true; // Forever!
