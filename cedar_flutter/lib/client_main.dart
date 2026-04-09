@@ -543,7 +543,16 @@ class MyHomePageState extends State<MyHomePage> {
   bool _rightHanded = true;
   String _productName = 'Cedar Box';
   bool _canAlign = false;
-  bool updateInProgress = false;
+  bool _updateInProgress = false;
+  bool get updateInProgress => _updateInProgress;
+  set updateInProgress(bool value) {
+    if (_updateInProgress && !value) {
+      // Update completed - Cedar may have restarted, so force reconnection
+      // logic to re-send time and location.
+      _serverConnected = false;
+    }
+    _updateInProgress = value;
+  }
   bool shutdownInProgress = false;
 
   // Telescope eyepiece field of view (diameter), in scaled image pixels.
@@ -1017,7 +1026,7 @@ class MyHomePageState extends State<MyHomePage> {
     await Future.doWhile(() async {
       await Future.delayed(const Duration(milliseconds: 100));
       if (!_paintPending &&
-          !updateInProgress &&
+          !_updateInProgress &&
           !shutdownInProgress &&
           !_connectionDialogShowing &&
           !_isPipMode) {
