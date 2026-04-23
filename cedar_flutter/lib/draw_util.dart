@@ -88,7 +88,7 @@ void drawGapCross(
 
 // Draw the text centered at `pos`.
 void drawText(BuildContext context, Canvas canvas, Color color, Offset pos,
-    String text, bool portrait) {
+              String text) {
   final textPainter = TextPainter(
       text: TextSpan(text: text, style: TextStyle(color: color, fontSize: _textFontSize)),
       textDirection: TextDirection.ltr,
@@ -101,17 +101,7 @@ void drawText(BuildContext context, Canvas canvas, Color color, Offset pos,
   Size textSize = textPainter.size;
   final adjustedPos =
       Offset(pos.dx - textSize.width / 2, pos.dy - textSize.height / 2);
-  final pivot = textPainter.size.center(adjustedPos);
-  if (portrait) {
-    canvas.save();
-    canvas.translate(pivot.dx, pivot.dy);
-    canvas.rotate(-math.pi / 2);
-    canvas.translate(-pivot.dx, -pivot.dy);
-  }
   textPainter.paint(canvas, adjustedPos);
-  if (portrait) {
-    canvas.restore();
-  }
 }
 
 // angleRad is counter-clockwise starting from up direction, where y increases

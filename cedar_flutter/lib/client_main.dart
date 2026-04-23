@@ -37,7 +37,7 @@ import 'platform.dart';
 // flutter build apk --release
 
 typedef DrawCatalogEntriesFunction = void Function(BuildContext, Canvas, Color,
-    List<cedar_rpc.FovCatalogEntry>, bool, int, bool);
+    List<cedar_rpc.FovCatalogEntry>, bool, int);
 
 typedef ShowCatalogBrowserFunction = void Function(
     BuildContext, MyHomePageState);
@@ -87,8 +87,7 @@ Future<cedar_rpc.ServerInformation> getServerInformation() async {
 
   // Make a simple GetFrame request to get server information.
   final request = cedar_rpc.FrameRequest()
-    ..nonBlocking = true
-    ..displayOrientation = cedar_rpc.DisplayOrientation.PORTRAIT;
+    ..nonBlocking = true;
 
   final response = await client
       .getFrame(
@@ -389,13 +388,13 @@ class _MainImagePainter extends CustomPainter {
             state._unlabeledFovCatalogEntries, displayScale);
 
         _drawCatalogEntries!(_context, canvas, color, scaledLabeledEntries,
-            /*drawLabel=*/ true, state._binFactor, portrait);
+            /*drawLabel=*/ true, state._binFactor);
         if (dimLabeledCatalogEntries.isNotEmpty) {
           _drawCatalogEntries!(_context, canvas, opaqueColor, scaledDimEntries,
-              /*drawLabel=*/ true, state._binFactor, portrait);
+              /*drawLabel=*/ true, state._binFactor);
         }
         _drawCatalogEntries!(_context, canvas, color, scaledUnlabeledEntries,
-            /*drawLabel=*/ false, state._binFactor, portrait);
+            /*drawLabel=*/ false, state._binFactor);
       }
     }
   }
@@ -967,14 +966,9 @@ class MyHomePageState extends State<MyHomePage> {
 
   // Use request/response style of RPC.
   Future<void> _getFrameFromServer() async {
-    final landscape =
-        MediaQuery.of(context).orientation == Orientation.landscape;
     final request = cedar_rpc.FrameRequest()
       ..prevFrameId = _prevFrameId
-      ..nonBlocking = true
-      ..displayOrientation = landscape
-          ? DisplayOrientation.LANDSCAPE
-          : DisplayOrientation.PORTRAIT;
+      ..nonBlocking = true;
     try {
       final c = await getClient();
       final response = await c
@@ -2211,10 +2205,13 @@ class MyHomePageState extends State<MyHomePage> {
                       ),
                     ),
                     // Center image
-                    SizedBox(
-                      width: actualImageSize,
-                      height: actualImageSize,
-                      child: _imageStack(context),
+                    Transform.rotate(
+                      angle: portrait ? -math.pi / 2 : 0,
+                      child: SizedBox(
+                        width: actualImageSize,
+                        height: actualImageSize,
+                        child: _imageStack(context),
+                      ),
                     ),
                     // Right panel
                     SizedBox(
