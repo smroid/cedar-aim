@@ -69,19 +69,22 @@ class SlewDirectionsWidgets {
         mainAxisAlignment: MainAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.baseline,
-            textBaseline: TextBaseline.alphabetic,
-            children: [
-              Text(axisName,
-                   style: TextStyle(color: color, fontSize: 12 * scaleFactor),
-                   textScaler: textScaler(context)),
-              SizedBox(width: 4 * textScaleFactor(context)),
-              Text("$offsetFormatted°",
-                   style: TextStyle(color: color, fontSize: 20 * scaleFactor, fontWeight: FontWeight.bold),
-                   textScaler: textScaler(context)),
-            ],
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.baseline,
+              textBaseline: TextBaseline.alphabetic,
+              children: [
+                Text(axisName,
+                     style: TextStyle(color: color, fontSize: 12 * scaleFactor),
+                     textScaler: textScaler(context)),
+                SizedBox(width: 4 * textScaleFactor(context)),
+                Text("$offsetFormatted°",
+                     style: TextStyle(color: color, fontSize: 20 * scaleFactor, fontWeight: FontWeight.bold),
+                     textScaler: textScaler(context)),
+              ],
+            ),
           ),
           if (arrowDirection != null)
             Transform.translate(
@@ -98,8 +101,8 @@ class SlewDirectionsWidgets {
               ),
             )
           else
-            Transform.translate(
-              offset: const Offset(0, 0),
+            FittedBox(
+              fit: BoxFit.scaleDown,
               child: Text(directionCue,
                    style: TextStyle(color: color, fontSize: 8 * scaleFactor, fontStyle: FontStyle.italic),
                    textScaler: textScaler(context)),
