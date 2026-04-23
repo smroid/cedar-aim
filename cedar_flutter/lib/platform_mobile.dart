@@ -147,8 +147,7 @@ Future<CedarClient> getClientImpl() async {
       // been available in all server versions (unlike newer RPCs).
       try {
         final request = cedar_rpc.FrameRequest()
-          ..nonBlocking = true
-          ..displayOrientation = cedar_rpc.DisplayOrientation.PORTRAIT;
+          ..nonBlocking = true;
         await _client!
             .getFrame(request,
                 options: CallOptions(
