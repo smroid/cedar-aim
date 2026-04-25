@@ -2513,15 +2513,21 @@ class MyHomePageState extends State<MyHomePage> {
                             left: !_rightHanded,
                             top: true,
                             bottom: false,
-                            child: IconButton(
-                              icon: const Icon(Icons.menu),
-                              onPressed: () {
-                                if (_rightHanded) {
-                                  _scaffoldKey.currentState!.openEndDrawer();
-                                } else {
-                                  _scaffoldKey.currentState!.openDrawer();
-                                }
-                              },
+                            child: Padding(
+                              padding: EdgeInsets.only(
+                                right: (isIOS() && _rightHanded) ? 8.0 : 0.0,
+                                left: (isIOS() && !_rightHanded) ? 8.0 : 0.0,
+                              ),
+                              child: IconButton(
+                                icon: const Icon(Icons.menu),
+                                onPressed: () {
+                                  if (_rightHanded) {
+                                    _scaffoldKey.currentState!.openEndDrawer();
+                                  } else {
+                                    _scaffoldKey.currentState!.openDrawer();
+                                  }
+                                },
+                              ),
                             ),
                           ),
                         ),
