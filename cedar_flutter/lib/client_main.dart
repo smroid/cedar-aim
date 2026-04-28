@@ -1854,37 +1854,34 @@ class MyHomePageState extends State<MyHomePage> {
   }
 
   Widget _pacifier(BuildContext context, bool calibrating) {
-    final portrait = MediaQuery.of(context).orientation == Orientation.portrait;
-    return RotatedBox(
-        quarterTurns: portrait ? 3 : 0,
-        child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              if (calibrating) ...[
-                Text("Calibrating",
-                    textScaler: textScaler(context),
-                    style: TextStyle(
-                        fontSize: 20,
-                        backgroundColor: Colors.black,
-                        color: Theme.of(context).colorScheme.primary)),
-              ],
-              const SizedBox(height: 15),
-              CircularProgressIndicator(
-                  value: calibrating ? _calibrationProgress : null,
-                  color: Theme.of(context).colorScheme.primary),
-              const SizedBox(height: 15),
-              if (calibrating) ...[
-                TextButton(
-                  onPressed: () {
-                    _cancelCalibration();
-                  },
-                  style: TextButton.styleFrom(
-                      backgroundColor: Colors.black,
-                      foregroundColor: Theme.of(context).colorScheme.primary),
-                  child: _scaledText("Cancel"),
-                ),
-              ],
-            ]));
+    return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          if (calibrating) ...[
+            Text("Calibrating",
+                textScaler: textScaler(context),
+                style: TextStyle(
+                    fontSize: 20,
+                    backgroundColor: Colors.black,
+                    color: Theme.of(context).colorScheme.primary)),
+          ],
+          const SizedBox(height: 15),
+          CircularProgressIndicator(
+              value: calibrating ? _calibrationProgress : null,
+              color: Theme.of(context).colorScheme.primary),
+          const SizedBox(height: 15),
+          if (calibrating) ...[
+            TextButton(
+              onPressed: () {
+                _cancelCalibration();
+              },
+              style: TextButton.styleFrom(
+                  backgroundColor: Colors.black,
+                  foregroundColor: Theme.of(context).colorScheme.primary),
+              child: _scaledText("Cancel"),
+            ),
+          ],
+        ]);
   }
 
   Widget _imageStack(BuildContext context) {
