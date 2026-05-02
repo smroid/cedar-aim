@@ -16,6 +16,7 @@ const double _kMaxValue = 10.0;
 const double _kExposureTimeMaxMs = 1000.0;
 const double _kSolveRateMaxHz = 50.0;
 const double _kStarsMax = 100.0;
+const double _kHotPixelsMax = 100.0;
 const double _kValueTopRatio = 0.1;
 const double _kUnitsTopRatio = 0.42;
 const double _kLabelBottomRatio = 0.0;
@@ -124,6 +125,13 @@ class PerfGauge extends StatelessWidget {
           maxValue = _kSolveRateMaxHz;
         }
         break;
+      case "hot_pixels":
+        final hotPixels = state.hotPixelCount;
+        rawValue = hotPixels.toDouble();
+        maxValue = _kHotPixelsMax;
+        displayValue = sprintf("%d", [hotPixels]);
+        displayUnits = null;
+        break;
       case "stars":
       default:
         final stars = state.numStars;
@@ -150,6 +158,8 @@ class PerfGauge extends StatelessWidget {
         return "exp. time";
       case "solve_interval":
         return "solve rate";
+      case "hot_pixels":
+        return "hot pix";
       case "stars":
       default:
         return "stars";

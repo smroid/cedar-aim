@@ -576,6 +576,7 @@ class MyHomePageState extends State<MyHomePage> {
   int _prevFrameId = -1;
   late List<cedar_rpc.StarCentroid> _stars;
   int numStars = 0;
+  int hotPixelCount = 0;
   var exposureTimeMs = 0.0;
 
   // Set to true when there is a solution. This can either be because of a plate
@@ -708,6 +709,7 @@ class MyHomePageState extends State<MyHomePage> {
     _prevFrameId = response.frameId;
     _stars = response.starCandidates;
     numStars = response.starCountMovingAverage.round();
+    hotPixelCount = response.hotPixelCount;
     if (response.fixedSettings.hasObserverLocation()) {
       _mapPosition = LatLng(response.fixedSettings.observerLocation.latitude,
           response.fixedSettings.observerLocation.longitude);
