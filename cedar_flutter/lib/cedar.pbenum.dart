@@ -2,7 +2,7 @@
 //  Generated code. Do not modify.
 //  source: cedar.proto
 //
-// @dart = 2.12
+// @dart = 3.3
 
 // ignore_for_file: annotate_overrides, camel_case_types, comment_references
 // ignore_for_file: constant_identifier_names, library_prefixes
@@ -29,7 +29,7 @@ class FeatureLevel extends $pb.ProtobufEnum {
   static final $core.Map<$core.int, FeatureLevel> _byValue = $pb.ProtobufEnum.initByValue(values);
   static FeatureLevel? valueOf($core.int value) => _byValue[value];
 
-  const FeatureLevel._($core.int v, $core.String n) : super(v, n);
+  const FeatureLevel._(super.v, super.n);
 }
 
 class ImuTrackerState extends $pb.ProtobufEnum {
@@ -48,12 +48,25 @@ class ImuTrackerState extends $pb.ProtobufEnum {
   static final $core.Map<$core.int, ImuTrackerState> _byValue = $pb.ProtobufEnum.initByValue(values);
   static ImuTrackerState? valueOf($core.int value) => _byValue[value];
 
-  const ImuTrackerState._($core.int v, $core.String n) : super(v, n);
+  const ImuTrackerState._(super.v, super.n);
 }
 
 class OperatingMode extends $pb.ProtobufEnum {
   static const OperatingMode MODE_UNSPECIFIED = OperatingMode._(0, _omitEnumNames ? '' : 'MODE_UNSPECIFIED');
+  /// Mode supporting establishment of camera focus and boresight alignment of
+  /// camera and telescope. Auto-exposure behavior is refined by submodes
+  /// daylight_mode and focus_assist_mode:
+  /// * Neither in effect: exposure is metered for star detection and plate
+  ///   solving.
+  /// * daylight_mode: exposure is metered in conventional photographic fashion.
+  /// * focus_assist_mode: Exposure metered based on brightest point in image.
   static const OperatingMode SETUP = OperatingMode._(1, _omitEnumNames ? '' : 'SETUP');
+  /// Main operating mode. Continually updated RA/DEC sent to SkySafari.
+  /// Detection of tracking mount and accumulation of polar alignment advice
+  /// during dwells.
+  /// * Exposure metered based on number of detected stars.
+  /// * Plate solves done using FOV and distortion estimate obtained when
+  ///   leaving SETUP mode.
   static const OperatingMode OPERATE = OperatingMode._(2, _omitEnumNames ? '' : 'OPERATE');
 
   static const $core.List<OperatingMode> values = <OperatingMode> [
@@ -65,12 +78,22 @@ class OperatingMode extends $pb.ProtobufEnum {
   static final $core.Map<$core.int, OperatingMode> _byValue = $pb.ProtobufEnum.initByValue(values);
   static OperatingMode? valueOf($core.int value) => _byValue[value];
 
-  const OperatingMode._($core.int v, $core.String n) : super(v, n);
+  const OperatingMode._(super.v, super.n);
 }
 
 class CelestialCoordFormat extends $pb.ProtobufEnum {
   static const CelestialCoordFormat FORMAT_UNSPECIFIED = CelestialCoordFormat._(0, _omitEnumNames ? '' : 'FORMAT_UNSPECIFIED');
+  /// Both right ascension and declination should be formatted as
+  /// decimal. Right ascension from 0..360, declination from -90..90.
+  /// Example:
+  /// RA  = 182.3345 degrees
+  /// DEC = 34.2351 degrees
   static const CelestialCoordFormat DECIMAL = CelestialCoordFormat._(1, _omitEnumNames ? '' : 'DECIMAL');
+  /// Right ascension should be formatted as hours/minutes/seconds;
+  /// declination as degrees/minutes/seconds. The example values given
+  /// above would be:
+  /// RA  = 12h 9m 20.28s
+  /// DEC = 34d 14m 6.36s
   static const CelestialCoordFormat HMS_DMS = CelestialCoordFormat._(2, _omitEnumNames ? '' : 'HMS_DMS');
 
   static const $core.List<CelestialCoordFormat> values = <CelestialCoordFormat> [
@@ -82,7 +105,7 @@ class CelestialCoordFormat extends $pb.ProtobufEnum {
   static final $core.Map<$core.int, CelestialCoordFormat> _byValue = $pb.ProtobufEnum.initByValue(values);
   static CelestialCoordFormat? valueOf($core.int value) => _byValue[value];
 
-  const CelestialCoordFormat._($core.int v, $core.String n) : super(v, n);
+  const CelestialCoordFormat._(super.v, super.n);
 }
 
 class MountType extends $pb.ProtobufEnum {
@@ -99,10 +122,10 @@ class MountType extends $pb.ProtobufEnum {
   static final $core.Map<$core.int, MountType> _byValue = $pb.ProtobufEnum.initByValue(values);
   static MountType? valueOf($core.int value) => _byValue[value];
 
-  const MountType._($core.int v, $core.String n) : super(v, n);
+  const MountType._(super.v, super.n);
 }
 
-/// The orientation of the client's display.
+/// The orientation of the client's display. Deprecated; see below.
 class DisplayOrientation extends $pb.ProtobufEnum {
   static const DisplayOrientation ORIENTATION_UNSPECIFIED = DisplayOrientation._(0, _omitEnumNames ? '' : 'ORIENTATION_UNSPECIFIED');
   static const DisplayOrientation LANDSCAPE = DisplayOrientation._(1, _omitEnumNames ? '' : 'LANDSCAPE');
@@ -117,13 +140,20 @@ class DisplayOrientation extends $pb.ProtobufEnum {
   static final $core.Map<$core.int, DisplayOrientation> _byValue = $pb.ProtobufEnum.initByValue(values);
   static DisplayOrientation? valueOf($core.int value) => _byValue[value];
 
-  const DisplayOrientation._($core.int v, $core.String n) : super(v, n);
+  const DisplayOrientation._(super.v, super.n);
 }
 
 class CalibrationFailureReason extends $pb.ProtobufEnum {
   static const CalibrationFailureReason REASON_UNSPECIFIED = CalibrationFailureReason._(0, _omitEnumNames ? '' : 'REASON_UNSPECIFIED');
+  /// Exposure calibration failed to find stars at maximum exposure duration.
+  /// Likely causes: lens cover is closed; dark clouds.
   static const CalibrationFailureReason TOO_FEW_STARS = CalibrationFailureReason._(1, _omitEnumNames ? '' : 'TOO_FEW_STARS');
+  /// Exposure calibration reached its mean scene brightness limit before
+  /// detecting the desired number of stars. Likely causes: not pointed at sky;
+  /// bright clouds; twilight too bright; extreme light pollution.
   static const CalibrationFailureReason BRIGHT_SKY = CalibrationFailureReason._(2, _omitEnumNames ? '' : 'BRIGHT_SKY');
+  /// Cedar Solve could not find a solution. If exposure calibration succeeds
+  /// a solver failure is unusual.
   static const CalibrationFailureReason SOLVER_FAILED = CalibrationFailureReason._(3, _omitEnumNames ? '' : 'SOLVER_FAILED');
 
   static const $core.List<CalibrationFailureReason> values = <CalibrationFailureReason> [
@@ -136,7 +166,7 @@ class CalibrationFailureReason extends $pb.ProtobufEnum {
   static final $core.Map<$core.int, CalibrationFailureReason> _byValue = $pb.ProtobufEnum.initByValue(values);
   static CalibrationFailureReason? valueOf($core.int value) => _byValue[value];
 
-  const CalibrationFailureReason._($core.int v, $core.String n) : super(v, n);
+  const CalibrationFailureReason._(super.v, super.n);
 }
 
 

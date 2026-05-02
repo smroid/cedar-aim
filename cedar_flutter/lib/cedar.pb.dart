@@ -2,7 +2,7 @@
 //  Generated code. Do not modify.
 //  source: cedar.proto
 //
-// @dart = 2.12
+// @dart = 3.3
 
 // ignore_for_file: annotate_overrides, camel_case_types, comment_references
 // ignore_for_file: constant_identifier_names, library_prefixes
@@ -14,11 +14,13 @@ import 'dart:core' as $core;
 import 'package:protobuf/protobuf.dart' as $pb;
 
 import 'cedar.pbenum.dart';
-import 'cedar_common.pb.dart' as $2;
+import 'cedar_common.pb.dart' as $4;
 import 'cedar_sky.pb.dart' as $1;
 import 'cedar_sky.pbenum.dart' as $1;
-import 'google/protobuf/duration.pb.dart' as $4;
-import 'google/protobuf/timestamp.pb.dart' as $3;
+import 'google/protobuf/duration.pb.dart' as $3;
+import 'google/protobuf/timestamp.pb.dart' as $2;
+
+export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
 export 'cedar.pbenum.dart';
 
@@ -31,7 +33,7 @@ class ServerInformation extends $pb.GeneratedMessage {
     $core.String? processorModel,
     $core.String? osVersion,
     $core.double? cpuTemperature,
-    $3.Timestamp? serverTime,
+    $2.Timestamp? serverTime,
     CameraModel? camera,
     WiFiAccessPoint? wifiAccessPoint,
     $core.Iterable<$core.String>? demoImageNames,
@@ -108,7 +110,7 @@ class ServerInformation extends $pb.GeneratedMessage {
     ..aOS(5, _omitFieldNames ? '' : 'processorModel')
     ..aOS(6, _omitFieldNames ? '' : 'osVersion')
     ..a<$core.double>(7, _omitFieldNames ? '' : 'cpuTemperature', $pb.PbFieldType.OF)
-    ..aOM<$3.Timestamp>(8, _omitFieldNames ? '' : 'serverTime', subBuilder: $3.Timestamp.create)
+    ..aOM<$2.Timestamp>(8, _omitFieldNames ? '' : 'serverTime', subBuilder: $2.Timestamp.create)
     ..aOM<CameraModel>(9, _omitFieldNames ? '' : 'camera', subBuilder: CameraModel.create)
     ..aOM<WiFiAccessPoint>(10, _omitFieldNames ? '' : 'wifiAccessPoint', subBuilder: WiFiAccessPoint.create)
     ..pPS(11, _omitFieldNames ? '' : 'demoImageNames')
@@ -149,7 +151,7 @@ class ServerInformation extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $core.bool hasProductName() => $_has(0);
   @$pb.TagNumber(1)
-  void clearProductName() => clearField(1);
+  void clearProductName() => $_clearField(1);
 
   @$pb.TagNumber(2)
   $core.String get copyright => $_getSZ(1);
@@ -158,7 +160,7 @@ class ServerInformation extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $core.bool hasCopyright() => $_has(1);
   @$pb.TagNumber(2)
-  void clearCopyright() => clearField(2);
+  void clearCopyright() => $_clearField(2);
 
   @$pb.TagNumber(3)
   $core.String get cedarServerVersion => $_getSZ(2);
@@ -167,16 +169,16 @@ class ServerInformation extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   $core.bool hasCedarServerVersion() => $_has(2);
   @$pb.TagNumber(3)
-  void clearCedarServerVersion() => clearField(3);
+  void clearCedarServerVersion() => $_clearField(3);
 
   @$pb.TagNumber(4)
   FeatureLevel get featureLevel => $_getN(3);
   @$pb.TagNumber(4)
-  set featureLevel(FeatureLevel v) { setField(4, v); }
+  set featureLevel(FeatureLevel v) { $_setField(4, v); }
   @$pb.TagNumber(4)
   $core.bool hasFeatureLevel() => $_has(3);
   @$pb.TagNumber(4)
-  void clearFeatureLevel() => clearField(4);
+  void clearFeatureLevel() => $_clearField(4);
 
   @$pb.TagNumber(5)
   $core.String get processorModel => $_getSZ(4);
@@ -185,7 +187,7 @@ class ServerInformation extends $pb.GeneratedMessage {
   @$pb.TagNumber(5)
   $core.bool hasProcessorModel() => $_has(4);
   @$pb.TagNumber(5)
-  void clearProcessorModel() => clearField(5);
+  void clearProcessorModel() => $_clearField(5);
 
   @$pb.TagNumber(6)
   $core.String get osVersion => $_getSZ(5);
@@ -194,7 +196,7 @@ class ServerInformation extends $pb.GeneratedMessage {
   @$pb.TagNumber(6)
   $core.bool hasOsVersion() => $_has(5);
   @$pb.TagNumber(6)
-  void clearOsVersion() => clearField(6);
+  void clearOsVersion() => $_clearField(6);
 
   @$pb.TagNumber(7)
   $core.double get cpuTemperature => $_getN(6);
@@ -203,28 +205,28 @@ class ServerInformation extends $pb.GeneratedMessage {
   @$pb.TagNumber(7)
   $core.bool hasCpuTemperature() => $_has(6);
   @$pb.TagNumber(7)
-  void clearCpuTemperature() => clearField(7);
+  void clearCpuTemperature() => $_clearField(7);
 
   @$pb.TagNumber(8)
-  $3.Timestamp get serverTime => $_getN(7);
+  $2.Timestamp get serverTime => $_getN(7);
   @$pb.TagNumber(8)
-  set serverTime($3.Timestamp v) { setField(8, v); }
+  set serverTime($2.Timestamp v) { $_setField(8, v); }
   @$pb.TagNumber(8)
   $core.bool hasServerTime() => $_has(7);
   @$pb.TagNumber(8)
-  void clearServerTime() => clearField(8);
+  void clearServerTime() => $_clearField(8);
   @$pb.TagNumber(8)
-  $3.Timestamp ensureServerTime() => $_ensure(7);
+  $2.Timestamp ensureServerTime() => $_ensure(7);
 
   /// Omitted if no camera detected.
   @$pb.TagNumber(9)
   CameraModel get camera => $_getN(8);
   @$pb.TagNumber(9)
-  set camera(CameraModel v) { setField(9, v); }
+  set camera(CameraModel v) { $_setField(9, v); }
   @$pb.TagNumber(9)
   $core.bool hasCamera() => $_has(8);
   @$pb.TagNumber(9)
-  void clearCamera() => clearField(9);
+  void clearCamera() => $_clearField(9);
   @$pb.TagNumber(9)
   CameraModel ensureCamera() => $_ensure(8);
 
@@ -232,17 +234,17 @@ class ServerInformation extends $pb.GeneratedMessage {
   @$pb.TagNumber(10)
   WiFiAccessPoint get wifiAccessPoint => $_getN(9);
   @$pb.TagNumber(10)
-  set wifiAccessPoint(WiFiAccessPoint v) { setField(10, v); }
+  set wifiAccessPoint(WiFiAccessPoint v) { $_setField(10, v); }
   @$pb.TagNumber(10)
   $core.bool hasWifiAccessPoint() => $_has(9);
   @$pb.TagNumber(10)
-  void clearWifiAccessPoint() => clearField(10);
+  void clearWifiAccessPoint() => $_clearField(10);
   @$pb.TagNumber(10)
   WiFiAccessPoint ensureWifiAccessPoint() => $_ensure(9);
 
   /// Filenames of image(s) found in run/demo_images directory.
   @$pb.TagNumber(11)
-  $core.List<$core.String> get demoImageNames => $_getList(10);
+  $pb.PbList<$core.String> get demoImageNames => $_getList(10);
 
   @$pb.TagNumber(12)
   $core.String get serialNumber => $_getSZ(11);
@@ -251,17 +253,17 @@ class ServerInformation extends $pb.GeneratedMessage {
   @$pb.TagNumber(12)
   $core.bool hasSerialNumber() => $_has(11);
   @$pb.TagNumber(12)
-  void clearSerialNumber() => clearField(12);
+  void clearSerialNumber() => $_clearField(12);
 
   /// The most recent raw IMU reading. Omitted if no IMU detected.
   @$pb.TagNumber(13)
   ImuState get imu => $_getN(12);
   @$pb.TagNumber(13)
-  set imu(ImuState v) { setField(13, v); }
+  set imu(ImuState v) { $_setField(13, v); }
   @$pb.TagNumber(13)
   $core.bool hasImu() => $_has(12);
   @$pb.TagNumber(13)
-  void clearImu() => clearField(13);
+  void clearImu() => $_clearField(13);
   @$pb.TagNumber(13)
   ImuState ensureImu() => $_ensure(12);
 
@@ -273,17 +275,17 @@ class ServerInformation extends $pb.GeneratedMessage {
   @$pb.TagNumber(14)
   $core.bool hasImuModel() => $_has(13);
   @$pb.TagNumber(14)
-  void clearImuModel() => clearField(14);
+  void clearImuModel() => $_clearField(14);
 
   /// The current state of the IMU tracking logic. Omitted if no IMU detected.
   @$pb.TagNumber(15)
   ImuTrackerState get imuTrackerState => $_getN(14);
   @$pb.TagNumber(15)
-  set imuTrackerState(ImuTrackerState v) { setField(15, v); }
+  set imuTrackerState(ImuTrackerState v) { $_setField(15, v); }
   @$pb.TagNumber(15)
   $core.bool hasImuTrackerState() => $_has(14);
   @$pb.TagNumber(15)
-  void clearImuTrackerState() => clearField(15);
+  void clearImuTrackerState() => $_clearField(15);
 
   /// The current IMU angular speed, adjusted for the measured zero bias. Omitted
   /// if no IMU detected.
@@ -294,17 +296,17 @@ class ServerInformation extends $pb.GeneratedMessage {
   @$pb.TagNumber(16)
   $core.bool hasImuAngularSpeed() => $_has(15);
   @$pb.TagNumber(16)
-  void clearImuAngularSpeed() => clearField(16);
+  void clearImuAngularSpeed() => $_clearField(16);
 
   /// Information about client connections.
   @$pb.TagNumber(17)
   ConnectionStatus get connectionStatus => $_getN(16);
   @$pb.TagNumber(17)
-  set connectionStatus(ConnectionStatus v) { setField(17, v); }
+  set connectionStatus(ConnectionStatus v) { $_setField(17, v); }
   @$pb.TagNumber(17)
   $core.bool hasConnectionStatus() => $_has(16);
   @$pb.TagNumber(17)
-  void clearConnectionStatus() => clearField(17);
+  void clearConnectionStatus() => $_clearField(17);
   @$pb.TagNumber(17)
   ConnectionStatus ensureConnectionStatus() => $_ensure(16);
 }
@@ -371,7 +373,7 @@ class CameraModel extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $core.bool hasModel() => $_has(0);
   @$pb.TagNumber(1)
-  void clearModel() => clearField(1);
+  void clearModel() => $_clearField(1);
 
   @$pb.TagNumber(2)
   $core.int get imageWidth => $_getIZ(1);
@@ -380,7 +382,7 @@ class CameraModel extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $core.bool hasImageWidth() => $_has(1);
   @$pb.TagNumber(2)
-  void clearImageWidth() => clearField(2);
+  void clearImageWidth() => $_clearField(2);
 
   @$pb.TagNumber(3)
   $core.int get imageHeight => $_getIZ(2);
@@ -389,7 +391,7 @@ class CameraModel extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   $core.bool hasImageHeight() => $_has(2);
   @$pb.TagNumber(3)
-  void clearImageHeight() => clearField(3);
+  void clearImageHeight() => $_clearField(3);
 
   @$pb.TagNumber(4)
   $core.String get modelDetail => $_getSZ(3);
@@ -398,7 +400,7 @@ class CameraModel extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   $core.bool hasModelDetail() => $_has(3);
   @$pb.TagNumber(4)
-  void clearModelDetail() => clearField(4);
+  void clearModelDetail() => $_clearField(4);
 }
 
 class ImuState extends $pb.GeneratedMessage {
@@ -474,7 +476,7 @@ class ImuState extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $core.bool hasAccelX() => $_has(0);
   @$pb.TagNumber(1)
-  void clearAccelX() => clearField(1);
+  void clearAccelX() => $_clearField(1);
 
   @$pb.TagNumber(2)
   $core.double get accelY => $_getN(1);
@@ -483,7 +485,7 @@ class ImuState extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $core.bool hasAccelY() => $_has(1);
   @$pb.TagNumber(2)
-  void clearAccelY() => clearField(2);
+  void clearAccelY() => $_clearField(2);
 
   @$pb.TagNumber(3)
   $core.double get accelZ => $_getN(2);
@@ -492,7 +494,7 @@ class ImuState extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   $core.bool hasAccelZ() => $_has(2);
   @$pb.TagNumber(3)
-  void clearAccelZ() => clearField(3);
+  void clearAccelZ() => $_clearField(3);
 
   /// Degrees per second.
   @$pb.TagNumber(4)
@@ -502,7 +504,7 @@ class ImuState extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   $core.bool hasAngleRateX() => $_has(3);
   @$pb.TagNumber(4)
-  void clearAngleRateX() => clearField(4);
+  void clearAngleRateX() => $_clearField(4);
 
   @$pb.TagNumber(5)
   $core.double get angleRateY => $_getN(4);
@@ -511,7 +513,7 @@ class ImuState extends $pb.GeneratedMessage {
   @$pb.TagNumber(5)
   $core.bool hasAngleRateY() => $_has(4);
   @$pb.TagNumber(5)
-  void clearAngleRateY() => clearField(5);
+  void clearAngleRateY() => $_clearField(5);
 
   @$pb.TagNumber(6)
   $core.double get angleRateZ => $_getN(5);
@@ -520,7 +522,7 @@ class ImuState extends $pb.GeneratedMessage {
   @$pb.TagNumber(6)
   $core.bool hasAngleRateZ() => $_has(5);
   @$pb.TagNumber(6)
-  void clearAngleRateZ() => clearField(6);
+  void clearAngleRateZ() => $_clearField(6);
 }
 
 /// Information about the WiFi access point that Cedar server puts up.
@@ -581,7 +583,7 @@ class WiFiAccessPoint extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $core.bool hasSsid() => $_has(0);
   @$pb.TagNumber(1)
-  void clearSsid() => clearField(1);
+  void clearSsid() => $_clearField(1);
 
   @$pb.TagNumber(2)
   $core.String get psk => $_getSZ(1);
@@ -590,7 +592,7 @@ class WiFiAccessPoint extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $core.bool hasPsk() => $_has(1);
   @$pb.TagNumber(2)
-  void clearPsk() => clearField(2);
+  void clearPsk() => $_clearField(2);
 
   @$pb.TagNumber(3)
   $core.int get channel => $_getIZ(2);
@@ -599,7 +601,7 @@ class WiFiAccessPoint extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   $core.bool hasChannel() => $_has(2);
   @$pb.TagNumber(3)
-  void clearChannel() => clearField(3);
+  void clearChannel() => $_clearField(3);
 }
 
 /// Number of current client connections.
@@ -666,7 +668,7 @@ class ConnectionStatus extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $core.bool hasCedarWifi() => $_has(0);
   @$pb.TagNumber(1)
-  void clearCedarWifi() => clearField(1);
+  void clearCedarWifi() => $_clearField(1);
 
   @$pb.TagNumber(2)
   $core.int get cedarBluetooth => $_getIZ(1);
@@ -675,7 +677,7 @@ class ConnectionStatus extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $core.bool hasCedarBluetooth() => $_has(1);
   @$pb.TagNumber(2)
-  void clearCedarBluetooth() => clearField(2);
+  void clearCedarBluetooth() => $_clearField(2);
 
   /// Number of LX200 telescope clients.
   @$pb.TagNumber(3)
@@ -685,7 +687,7 @@ class ConnectionStatus extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   $core.bool hasLx200Wifi() => $_has(2);
   @$pb.TagNumber(3)
-  void clearLx200Wifi() => clearField(3);
+  void clearLx200Wifi() => $_clearField(3);
 
   @$pb.TagNumber(4)
   $core.int get lx200Bluetooth => $_getIZ(3);
@@ -694,15 +696,15 @@ class ConnectionStatus extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   $core.bool hasLx200Bluetooth() => $_has(3);
   @$pb.TagNumber(4)
-  void clearLx200Bluetooth() => clearField(4);
+  void clearLx200Bluetooth() => $_clearField(4);
 }
 
 class FixedSettings extends $pb.GeneratedMessage {
   factory FixedSettings({
     LatLong? observerLocation,
-    $3.Timestamp? currentTime,
+    $2.Timestamp? currentTime,
     $core.String? sessionName,
-    $4.Duration? maxExposureTime,
+    $3.Duration? maxExposureTime,
   }) {
     final $result = create();
     if (observerLocation != null) {
@@ -725,9 +727,9 @@ class FixedSettings extends $pb.GeneratedMessage {
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'FixedSettings', package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'), createEmptyInstance: create)
     ..aOM<LatLong>(2, _omitFieldNames ? '' : 'observerLocation', subBuilder: LatLong.create)
-    ..aOM<$3.Timestamp>(4, _omitFieldNames ? '' : 'currentTime', subBuilder: $3.Timestamp.create)
+    ..aOM<$2.Timestamp>(4, _omitFieldNames ? '' : 'currentTime', subBuilder: $2.Timestamp.create)
     ..aOS(5, _omitFieldNames ? '' : 'sessionName')
-    ..aOM<$4.Duration>(6, _omitFieldNames ? '' : 'maxExposureTime', subBuilder: $4.Duration.create)
+    ..aOM<$3.Duration>(6, _omitFieldNames ? '' : 'maxExposureTime', subBuilder: $3.Duration.create)
     ..hasRequiredFields = false
   ;
 
@@ -755,11 +757,11 @@ class FixedSettings extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   LatLong get observerLocation => $_getN(0);
   @$pb.TagNumber(2)
-  set observerLocation(LatLong v) { setField(2, v); }
+  set observerLocation(LatLong v) { $_setField(2, v); }
   @$pb.TagNumber(2)
   $core.bool hasObserverLocation() => $_has(0);
   @$pb.TagNumber(2)
-  void clearObserverLocation() => clearField(2);
+  void clearObserverLocation() => $_clearField(2);
   @$pb.TagNumber(2)
   LatLong ensureObserverLocation() => $_ensure(0);
 
@@ -767,15 +769,15 @@ class FixedSettings extends $pb.GeneratedMessage {
   /// this is the server's time). When setting, the server's current time is
   /// updated to match.
   @$pb.TagNumber(4)
-  $3.Timestamp get currentTime => $_getN(1);
+  $2.Timestamp get currentTime => $_getN(1);
   @$pb.TagNumber(4)
-  set currentTime($3.Timestamp v) { setField(4, v); }
+  set currentTime($2.Timestamp v) { $_setField(4, v); }
   @$pb.TagNumber(4)
   $core.bool hasCurrentTime() => $_has(1);
   @$pb.TagNumber(4)
-  void clearCurrentTime() => clearField(4);
+  void clearCurrentTime() => $_clearField(4);
   @$pb.TagNumber(4)
-  $3.Timestamp ensureCurrentTime() => $_ensure(1);
+  $2.Timestamp ensureCurrentTime() => $_ensure(1);
 
   /// The session name is used when storing boresight offset, when logging dwell
   /// positions, and when logging debugging captures (the latter should go
@@ -787,20 +789,20 @@ class FixedSettings extends $pb.GeneratedMessage {
   @$pb.TagNumber(5)
   $core.bool hasSessionName() => $_has(2);
   @$pb.TagNumber(5)
-  void clearSessionName() => clearField(5);
+  void clearSessionName() => $_clearField(5);
 
   /// The configured maximum exposure time. Note that this cannot be changed via
   /// the UpdateFixedSettings() RPC.
   @$pb.TagNumber(6)
-  $4.Duration get maxExposureTime => $_getN(3);
+  $3.Duration get maxExposureTime => $_getN(3);
   @$pb.TagNumber(6)
-  set maxExposureTime($4.Duration v) { setField(6, v); }
+  set maxExposureTime($3.Duration v) { $_setField(6, v); }
   @$pb.TagNumber(6)
   $core.bool hasMaxExposureTime() => $_has(3);
   @$pb.TagNumber(6)
-  void clearMaxExposureTime() => clearField(6);
+  void clearMaxExposureTime() => $_clearField(6);
   @$pb.TagNumber(6)
-  $4.Duration ensureMaxExposureTime() => $_ensure(3);
+  $3.Duration ensureMaxExposureTime() => $_ensure(3);
 }
 
 class LatLong extends $pb.GeneratedMessage {
@@ -856,7 +858,7 @@ class LatLong extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $core.bool hasLatitude() => $_has(0);
   @$pb.TagNumber(1)
-  void clearLatitude() => clearField(1);
+  void clearLatitude() => $_clearField(1);
 
   @$pb.TagNumber(2)
   $core.double get longitude => $_getN(1);
@@ -865,7 +867,7 @@ class LatLong extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $core.bool hasLongitude() => $_has(1);
   @$pb.TagNumber(2)
-  void clearLongitude() => clearField(2);
+  void clearLongitude() => $_clearField(2);
 }
 
 class OperationSettings extends $pb.GeneratedMessage {
@@ -877,6 +879,7 @@ class OperationSettings extends $pb.GeneratedMessage {
     $core.String? demoImageFilename,
     $core.bool? focusAssistMode,
     $core.bool? useImu,
+    $core.bool? useHotPixelMap,
   }) {
     final $result = create();
     if (daylightMode != null) {
@@ -900,6 +903,9 @@ class OperationSettings extends $pb.GeneratedMessage {
     if (useImu != null) {
       $result.useImu = useImu;
     }
+    if (useHotPixelMap != null) {
+      $result.useHotPixelMap = useHotPixelMap;
+    }
     return $result;
   }
   OperationSettings._() : super();
@@ -914,6 +920,7 @@ class OperationSettings extends $pb.GeneratedMessage {
     ..aOS(12, _omitFieldNames ? '' : 'demoImageFilename')
     ..aOB(14, _omitFieldNames ? '' : 'focusAssistMode')
     ..aOB(15, _omitFieldNames ? '' : 'useImu')
+    ..aOB(16, _omitFieldNames ? '' : 'useHotPixelMap')
     ..hasRequiredFields = false
   ;
 
@@ -952,17 +959,17 @@ class OperationSettings extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $core.bool hasDaylightMode() => $_has(0);
   @$pb.TagNumber(1)
-  void clearDaylightMode() => clearField(1);
+  void clearDaylightMode() => $_clearField(1);
 
   /// Defaults to SETUP mode.
   @$pb.TagNumber(4)
   OperatingMode get operatingMode => $_getN(1);
   @$pb.TagNumber(4)
-  set operatingMode(OperatingMode v) { setField(4, v); }
+  set operatingMode(OperatingMode v) { $_setField(4, v); }
   @$pb.TagNumber(4)
   $core.bool hasOperatingMode() => $_has(1);
   @$pb.TagNumber(4)
-  void clearOperatingMode() => clearField(4);
+  void clearOperatingMode() => $_clearField(4);
 
   /// If true, when Cedar detects that the camera is dwelling (motionless) for
   /// more than some number of seconds, the RA/DEC is logged. Note that if the
@@ -976,7 +983,7 @@ class OperationSettings extends $pb.GeneratedMessage {
   @$pb.TagNumber(10)
   $core.bool hasLogDwelledPositions() => $_has(2);
   @$pb.TagNumber(10)
-  void clearLogDwelledPositions() => clearField(10);
+  void clearLogDwelledPositions() => $_clearField(10);
 
   /// In OPERATE mode, if `catalog_entry_match` is present, this is used to
   /// determine the `catalog_entries` returned in each FrameResult. Only the
@@ -988,11 +995,11 @@ class OperationSettings extends $pb.GeneratedMessage {
   @$pb.TagNumber(11)
   $1.CatalogEntryMatch get catalogEntryMatch => $_getN(3);
   @$pb.TagNumber(11)
-  set catalogEntryMatch($1.CatalogEntryMatch v) { setField(11, v); }
+  set catalogEntryMatch($1.CatalogEntryMatch v) { $_setField(11, v); }
   @$pb.TagNumber(11)
   $core.bool hasCatalogEntryMatch() => $_has(3);
   @$pb.TagNumber(11)
-  void clearCatalogEntryMatch() => clearField(11);
+  void clearCatalogEntryMatch() => $_clearField(11);
   @$pb.TagNumber(11)
   $1.CatalogEntryMatch ensureCatalogEntryMatch() => $_ensure(3);
 
@@ -1006,7 +1013,7 @@ class OperationSettings extends $pb.GeneratedMessage {
   @$pb.TagNumber(12)
   $core.bool hasDemoImageFilename() => $_has(4);
   @$pb.TagNumber(12)
-  void clearDemoImageFilename() => clearField(12);
+  void clearDemoImageFilename() => $_clearField(12);
 
   /// Relevant only in SETUP mode. Instead of trying to detect and plate solve
   /// stars (for boresight aligning), Cedar server instead exposes the image for
@@ -1018,7 +1025,7 @@ class OperationSettings extends $pb.GeneratedMessage {
   @$pb.TagNumber(14)
   $core.bool hasFocusAssistMode() => $_has(5);
   @$pb.TagNumber(14)
-  void clearFocusAssistMode() => clearField(14);
+  void clearFocusAssistMode() => $_clearField(14);
 
   /// Controls whether the IMU, if present, is used to estimate camera pointing
   /// when plate solutions are unavailable.
@@ -1029,7 +1036,20 @@ class OperationSettings extends $pb.GeneratedMessage {
   @$pb.TagNumber(15)
   $core.bool hasUseImu() => $_has(6);
   @$pb.TagNumber(15)
-  void clearUseImu() => clearField(15);
+  void clearUseImu() => $_clearField(15);
+
+  /// Controls whether the hot pixel map, if provided, is used for hot pixel
+  /// detection. If false, or no hot pixel map is provided, the legacy hot pixel
+  /// logic in Cedar Detect is used. The initial value of this field is true if
+  /// a hot pixel map is provided.
+  @$pb.TagNumber(16)
+  $core.bool get useHotPixelMap => $_getBF(7);
+  @$pb.TagNumber(16)
+  set useHotPixelMap($core.bool v) { $_setBool(7, v); }
+  @$pb.TagNumber(16)
+  $core.bool hasUseHotPixelMap() => $_has(7);
+  @$pb.TagNumber(16)
+  void clearUseHotPixelMap() => $_clearField(16);
 }
 
 /// User interface preferences and operation settings that are stored durably on
@@ -1183,11 +1203,11 @@ class Preferences extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   CelestialCoordFormat get celestialCoordFormat => $_getN(0);
   @$pb.TagNumber(1)
-  set celestialCoordFormat(CelestialCoordFormat v) { setField(1, v); }
+  set celestialCoordFormat(CelestialCoordFormat v) { $_setField(1, v); }
   @$pb.TagNumber(1)
   $core.bool hasCelestialCoordFormat() => $_has(0);
   @$pb.TagNumber(1)
-  void clearCelestialCoordFormat() => clearField(1);
+  void clearCelestialCoordFormat() => $_clearField(1);
 
   /// Diameter (in degrees) of the boresight circle displayed in operation
   /// mode.
@@ -1198,7 +1218,7 @@ class Preferences extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $core.bool hasEyepieceFov() => $_has(1);
   @$pb.TagNumber(2)
-  void clearEyepieceFov() => clearField(2);
+  void clearEyepieceFov() => $_clearField(2);
 
   /// If true, the UI should favor red highlights instead of white.
   @$pb.TagNumber(3)
@@ -1208,7 +1228,7 @@ class Preferences extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   $core.bool hasNightVisionTheme() => $_has(2);
   @$pb.TagNumber(3)
-  void clearNightVisionTheme() => clearField(3);
+  void clearNightVisionTheme() => $_clearField(3);
 
   /// If true, the UI app bar is hidden to allow full screen operation.
   @$pb.TagNumber(5)
@@ -1218,7 +1238,7 @@ class Preferences extends $pb.GeneratedMessage {
   @$pb.TagNumber(5)
   $core.bool hasHideAppBar() => $_has(3);
   @$pb.TagNumber(5)
-  void clearHideAppBar() => clearField(5);
+  void clearHideAppBar() => $_clearField(5);
 
   /// The kind of telescope mount. This influences the display of the boresight
   /// circle (cross aligned to north for EQUATORIAL or to zenith for ALT_AZ) and
@@ -1226,11 +1246,11 @@ class Preferences extends $pb.GeneratedMessage {
   @$pb.TagNumber(6)
   MountType get mountType => $_getN(4);
   @$pb.TagNumber(6)
-  set mountType(MountType v) { setField(6, v); }
+  set mountType(MountType v) { $_setField(6, v); }
   @$pb.TagNumber(6)
   $core.bool hasMountType() => $_has(4);
   @$pb.TagNumber(6)
-  void clearMountType() => clearField(6);
+  void clearMountType() => $_clearField(6);
 
   /// The saved location. On server startup we use this to initialize the
   /// corresponding FixedSettings field. Note: do not update this via
@@ -1238,11 +1258,11 @@ class Preferences extends $pb.GeneratedMessage {
   @$pb.TagNumber(7)
   LatLong get observerLocation => $_getN(5);
   @$pb.TagNumber(7)
-  set observerLocation(LatLong v) { setField(7, v); }
+  set observerLocation(LatLong v) { $_setField(7, v); }
   @$pb.TagNumber(7)
   $core.bool hasObserverLocation() => $_has(5);
   @$pb.TagNumber(7)
-  void clearObserverLocation() => clearField(7);
+  void clearObserverLocation() => $_clearField(7);
   @$pb.TagNumber(7)
   LatLong ensureObserverLocation() => $_ensure(5);
 
@@ -1252,11 +1272,11 @@ class Preferences extends $pb.GeneratedMessage {
   @$pb.TagNumber(11)
   $1.CatalogEntryMatch get catalogEntryMatch => $_getN(6);
   @$pb.TagNumber(11)
-  set catalogEntryMatch($1.CatalogEntryMatch v) { setField(11, v); }
+  set catalogEntryMatch($1.CatalogEntryMatch v) { $_setField(11, v); }
   @$pb.TagNumber(11)
   $core.bool hasCatalogEntryMatch() => $_has(6);
   @$pb.TagNumber(11)
-  void clearCatalogEntryMatch() => clearField(11);
+  void clearCatalogEntryMatch() => $_clearField(11);
   @$pb.TagNumber(11)
   $1.CatalogEntryMatch ensureCatalogEntryMatch() => $_ensure(6);
 
@@ -1267,7 +1287,7 @@ class Preferences extends $pb.GeneratedMessage {
   @$pb.TagNumber(12)
   $core.bool hasMaxDistance() => $_has(7);
   @$pb.TagNumber(12)
-  void clearMaxDistance() => clearField(12);
+  void clearMaxDistance() => $_clearField(12);
 
   @$pb.TagNumber(13)
   $core.double get minElevation => $_getN(8);
@@ -1276,16 +1296,16 @@ class Preferences extends $pb.GeneratedMessage {
   @$pb.TagNumber(13)
   $core.bool hasMinElevation() => $_has(8);
   @$pb.TagNumber(13)
-  void clearMinElevation() => clearField(13);
+  void clearMinElevation() => $_clearField(13);
 
   @$pb.TagNumber(14)
   $1.Ordering get ordering => $_getN(9);
   @$pb.TagNumber(14)
-  set ordering($1.Ordering v) { setField(14, v); }
+  set ordering($1.Ordering v) { $_setField(14, v); }
   @$pb.TagNumber(14)
   $core.bool hasOrdering() => $_has(9);
   @$pb.TagNumber(14)
-  void clearOrdering() => clearField(14);
+  void clearOrdering() => $_clearField(14);
 
   @$pb.TagNumber(15)
   $core.bool get maxDistanceActive => $_getBF(10);
@@ -1294,7 +1314,7 @@ class Preferences extends $pb.GeneratedMessage {
   @$pb.TagNumber(15)
   $core.bool hasMaxDistanceActive() => $_has(10);
   @$pb.TagNumber(15)
-  void clearMaxDistanceActive() => clearField(15);
+  void clearMaxDistanceActive() => $_clearField(15);
 
   @$pb.TagNumber(16)
   $core.bool get minElevationActive => $_getBF(11);
@@ -1303,7 +1323,7 @@ class Preferences extends $pb.GeneratedMessage {
   @$pb.TagNumber(16)
   $core.bool hasMinElevationActive() => $_has(11);
   @$pb.TagNumber(16)
-  void clearMinElevationActive() => clearField(16);
+  void clearMinElevationActive() => $_clearField(16);
 
   /// Advanced mode vs. basic mode.
   @$pb.TagNumber(17)
@@ -1313,7 +1333,7 @@ class Preferences extends $pb.GeneratedMessage {
   @$pb.TagNumber(17)
   $core.bool hasAdvanced() => $_has(12);
   @$pb.TagNumber(17)
-  void clearAdvanced() => clearField(17);
+  void clearAdvanced() => $_clearField(17);
 
   /// 0: normal; -1: smaller; +1: bigger.
   @$pb.TagNumber(18)
@@ -1323,7 +1343,7 @@ class Preferences extends $pb.GeneratedMessage {
   @$pb.TagNumber(18)
   $core.bool hasTextSizeIndex() => $_has(13);
   @$pb.TagNumber(18)
-  void clearTextSizeIndex() => clearField(18);
+  void clearTextSizeIndex() => $_clearField(18);
 
   /// Saved boresight position. On server startup we use this to initialize the
   /// internal state which appears at FrameResult.boresight_position. Note: do
@@ -1331,11 +1351,11 @@ class Preferences extends $pb.GeneratedMessage {
   @$pb.TagNumber(19)
   ImageCoord get boresightPixel => $_getN(14);
   @$pb.TagNumber(19)
-  set boresightPixel(ImageCoord v) { setField(19, v); }
+  set boresightPixel(ImageCoord v) { $_setField(19, v); }
   @$pb.TagNumber(19)
   $core.bool hasBoresightPixel() => $_has(14);
   @$pb.TagNumber(19)
-  void clearBoresightPixel() => clearField(19);
+  void clearBoresightPixel() => $_clearField(19);
   @$pb.TagNumber(19)
   ImageCoord ensureBoresightPixel() => $_ensure(14);
 
@@ -1347,7 +1367,7 @@ class Preferences extends $pb.GeneratedMessage {
   @$pb.TagNumber(21)
   $core.bool hasRightHanded() => $_has(15);
   @$pb.TagNumber(21)
-  void clearRightHanded() => clearField(21);
+  void clearRightHanded() => $_clearField(21);
 
   /// What the celestial coord display shows. E.g. RA/Dec vs Alt/Az/HA.
   /// Note that this field is used solely by the UI and are not used by server
@@ -1359,7 +1379,7 @@ class Preferences extends $pb.GeneratedMessage {
   @$pb.TagNumber(22)
   $core.bool hasCelestialCoordChoice() => $_has(16);
   @$pb.TagNumber(22)
-  void clearCelestialCoordChoice() => clearField(22);
+  void clearCelestialCoordChoice() => $_clearField(22);
 
   /// Whether mobile screen is kept on while in Cedar Aim.
   @$pb.TagNumber(23)
@@ -1369,7 +1389,7 @@ class Preferences extends $pb.GeneratedMessage {
   @$pb.TagNumber(23)
   $core.bool hasScreenAlwaysOn() => $_has(17);
   @$pb.TagNumber(23)
-  void clearScreenAlwaysOn() => clearField(23);
+  void clearScreenAlwaysOn() => $_clearField(23);
 
   /// Set of UI information items that should not be shown. Each string
   /// identifies a specific piece of information (e.g., "welcome", "focus_intro",
@@ -1378,7 +1398,7 @@ class Preferences extends $pb.GeneratedMessage {
   /// Note that this field is used solely by the UI and are not used by server
   /// logic.
   @$pb.TagNumber(32)
-  $core.List<$core.String> get dontShowItems => $_getList(18);
+  $pb.PbList<$core.String> get dontShowItems => $_getList(18);
 
   /// What value to display in the performance gauge. E.g. star count, exposure
   /// time, etc. Note that this field is used solely by the UI and are not used
@@ -1390,7 +1410,7 @@ class Preferences extends $pb.GeneratedMessage {
   @$pb.TagNumber(33)
   $core.bool hasPerfGaugeChoice() => $_has(19);
   @$pb.TagNumber(33)
-  void clearPerfGaugeChoice() => clearField(33);
+  void clearPerfGaugeChoice() => $_clearField(33);
 
   /// If true, the SETUP focus assist step is skipped. The server attempts to
   /// perform the post-focus calibrations:
@@ -1406,7 +1426,7 @@ class Preferences extends $pb.GeneratedMessage {
   @$pb.TagNumber(35)
   $core.bool hasSkipFocus() => $_has(20);
   @$pb.TagNumber(35)
-  void clearSkipFocus() => clearField(35);
+  void clearSkipFocus() => $_clearField(35);
 
   /// If true, when SETUP focus assist is completed (or skipped), the server
   /// advances to OPERATE mode. If false, the server advances to SETUP alignment
@@ -1418,7 +1438,7 @@ class Preferences extends $pb.GeneratedMessage {
   @$pb.TagNumber(36)
   $core.bool hasSkipAlignment() => $_has(21);
   @$pb.TagNumber(36)
-  void clearSkipAlignment() => clearField(36);
+  void clearSkipAlignment() => $_clearField(36);
 }
 
 class FrameRequest extends $pb.GeneratedMessage {
@@ -1482,7 +1502,7 @@ class FrameRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $core.bool hasPrevFrameId() => $_has(0);
   @$pb.TagNumber(1)
-  void clearPrevFrameId() => clearField(1);
+  void clearPrevFrameId() => $_clearField(1);
 
   /// If true, GetFrame() returns immediately. If the requested frame (a new frame
   /// different from 'prev_frame_id' or the current frame if 'prev_frame_id' is
@@ -1495,23 +1515,27 @@ class FrameRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $core.bool hasNonBlocking() => $_has(1);
   @$pb.TagNumber(2)
-  void clearNonBlocking() => clearField(2);
+  void clearNonBlocking() => $_clearField(2);
 
   /// In most modes, Cedar adjusts the returned image rotation so that the zenith
   /// is towards the top of the image. When doing so, the server needs to know
   /// the client's orientation for the displayed image.
   /// If omitted, LANDSCAPE is assumed.
+  /// Deprecated: Newer clients will always omit this field, causing the server
+  /// to return the image as if for landscape, and the client will adjust for
+  /// portrait as needed; eventually we can remove this field when all clients
+  /// have been updated to not populate it.
   @$pb.TagNumber(3)
   DisplayOrientation get displayOrientation => $_getN(2);
   @$pb.TagNumber(3)
-  set displayOrientation(DisplayOrientation v) { setField(3, v); }
+  set displayOrientation(DisplayOrientation v) { $_setField(3, v); }
   @$pb.TagNumber(3)
   $core.bool hasDisplayOrientation() => $_has(2);
   @$pb.TagNumber(3)
-  void clearDisplayOrientation() => clearField(3);
+  void clearDisplayOrientation() => $_clearField(3);
 }
 
-/// Next tag: 38.
+/// Next tag: 40.
 class FrameResult extends $pb.GeneratedMessage {
   factory FrameResult({
     $core.int? frameId,
@@ -1520,9 +1544,9 @@ class FrameResult extends $pb.GeneratedMessage {
     $core.Iterable<StarCentroid>? starCandidates,
     CalibrationData? calibrationData,
     $core.int? centerPeakValue,
-    $4.Duration? exposureTime,
+    $3.Duration? exposureTime,
     ProcessingStats? processingStats,
-    $3.Timestamp? captureTime,
+    $2.Timestamp? captureTime,
     ImageCoord? centerPeakPosition,
     Image? centerPeakImage,
     PlateSolution? plateSolution,
@@ -1543,6 +1567,7 @@ class FrameResult extends $pb.GeneratedMessage {
     $core.double? starCountMovingAverage,
     Image? daylightFocusZoomImage,
     $core.bool? skipFocusActive,
+    $core.int? hotPixelCount,
   }) {
     final $result = create();
     if (frameId != null) {
@@ -1632,6 +1657,9 @@ class FrameResult extends $pb.GeneratedMessage {
     if (skipFocusActive != null) {
       $result.skipFocusActive = skipFocusActive;
     }
+    if (hotPixelCount != null) {
+      $result.hotPixelCount = hotPixelCount;
+    }
     return $result;
   }
   FrameResult._() : super();
@@ -1645,9 +1673,9 @@ class FrameResult extends $pb.GeneratedMessage {
     ..pc<StarCentroid>(4, _omitFieldNames ? '' : 'starCandidates', $pb.PbFieldType.PM, subBuilder: StarCentroid.create)
     ..aOM<CalibrationData>(5, _omitFieldNames ? '' : 'calibrationData', subBuilder: CalibrationData.create)
     ..a<$core.int>(6, _omitFieldNames ? '' : 'centerPeakValue', $pb.PbFieldType.O3)
-    ..aOM<$4.Duration>(7, _omitFieldNames ? '' : 'exposureTime', subBuilder: $4.Duration.create)
+    ..aOM<$3.Duration>(7, _omitFieldNames ? '' : 'exposureTime', subBuilder: $3.Duration.create)
     ..aOM<ProcessingStats>(8, _omitFieldNames ? '' : 'processingStats', subBuilder: ProcessingStats.create)
-    ..aOM<$3.Timestamp>(9, _omitFieldNames ? '' : 'captureTime', subBuilder: $3.Timestamp.create)
+    ..aOM<$2.Timestamp>(9, _omitFieldNames ? '' : 'captureTime', subBuilder: $2.Timestamp.create)
     ..aOM<ImageCoord>(12, _omitFieldNames ? '' : 'centerPeakPosition', subBuilder: ImageCoord.create)
     ..aOM<Image>(13, _omitFieldNames ? '' : 'centerPeakImage', subBuilder: Image.create)
     ..aOM<PlateSolution>(17, _omitFieldNames ? '' : 'plateSolution', subBuilder: PlateSolution.create)
@@ -1668,6 +1696,7 @@ class FrameResult extends $pb.GeneratedMessage {
     ..a<$core.double>(35, _omitFieldNames ? '' : 'starCountMovingAverage', $pb.PbFieldType.OD)
     ..aOM<Image>(37, _omitFieldNames ? '' : 'daylightFocusZoomImage', subBuilder: Image.create)
     ..aOB(38, _omitFieldNames ? '' : 'skipFocusActive')
+    ..a<$core.int>(39, _omitFieldNames ? '' : 'hotPixelCount', $pb.PbFieldType.O3)
     ..hasRequiredFields = false
   ;
 
@@ -1701,17 +1730,17 @@ class FrameResult extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $core.bool hasFrameId() => $_has(0);
   @$pb.TagNumber(1)
-  void clearFrameId() => clearField(1);
+  void clearFrameId() => $_clearField(1);
 
   /// The Cedar settings in effect for this frame.
   @$pb.TagNumber(2)
   OperationSettings get operationSettings => $_getN(1);
   @$pb.TagNumber(2)
-  set operationSettings(OperationSettings v) { setField(2, v); }
+  set operationSettings(OperationSettings v) { $_setField(2, v); }
   @$pb.TagNumber(2)
   $core.bool hasOperationSettings() => $_has(1);
   @$pb.TagNumber(2)
-  void clearOperationSettings() => clearField(2);
+  void clearOperationSettings() => $_clearField(2);
   @$pb.TagNumber(2)
   OperationSettings ensureOperationSettings() => $_ensure(1);
 
@@ -1724,11 +1753,11 @@ class FrameResult extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   Image get image => $_getN(2);
   @$pb.TagNumber(3)
-  set image(Image v) { setField(3, v); }
+  set image(Image v) { $_setField(3, v); }
   @$pb.TagNumber(3)
   $core.bool hasImage() => $_has(2);
   @$pb.TagNumber(3)
-  void clearImage() => clearField(3);
+  void clearImage() => $_clearField(3);
   @$pb.TagNumber(3)
   Image ensureImage() => $_ensure(2);
 
@@ -1737,17 +1766,17 @@ class FrameResult extends $pb.GeneratedMessage {
   /// the plate solution, with relative `brightness` values derived from
   /// the star catalog magnitudes.
   @$pb.TagNumber(4)
-  $core.List<StarCentroid> get starCandidates => $_getList(3);
+  $pb.PbList<StarCentroid> get starCandidates => $_getList(3);
 
   /// Calibration in effect for this frame.
   @$pb.TagNumber(5)
   CalibrationData get calibrationData => $_getN(4);
   @$pb.TagNumber(5)
-  set calibrationData(CalibrationData v) { setField(5, v); }
+  set calibrationData(CalibrationData v) { $_setField(5, v); }
   @$pb.TagNumber(5)
   $core.bool hasCalibrationData() => $_has(4);
   @$pb.TagNumber(5)
-  void clearCalibrationData() => clearField(5);
+  void clearCalibrationData() => $_clearField(5);
   @$pb.TagNumber(5)
   CalibrationData ensureCalibrationData() => $_ensure(4);
 
@@ -1760,54 +1789,54 @@ class FrameResult extends $pb.GeneratedMessage {
   @$pb.TagNumber(6)
   $core.bool hasCenterPeakValue() => $_has(5);
   @$pb.TagNumber(6)
-  void clearCenterPeakValue() => clearField(6);
+  void clearCenterPeakValue() => $_clearField(6);
 
   /// The camera exposure integration time for `image`.
   @$pb.TagNumber(7)
-  $4.Duration get exposureTime => $_getN(6);
+  $3.Duration get exposureTime => $_getN(6);
   @$pb.TagNumber(7)
-  set exposureTime($4.Duration v) { setField(7, v); }
+  set exposureTime($3.Duration v) { $_setField(7, v); }
   @$pb.TagNumber(7)
   $core.bool hasExposureTime() => $_has(6);
   @$pb.TagNumber(7)
-  void clearExposureTime() => clearField(7);
+  void clearExposureTime() => $_clearField(7);
   @$pb.TagNumber(7)
-  $4.Duration ensureExposureTime() => $_ensure(6);
+  $3.Duration ensureExposureTime() => $_ensure(6);
 
   /// Information about Cedar's performance.
   @$pb.TagNumber(8)
   ProcessingStats get processingStats => $_getN(7);
   @$pb.TagNumber(8)
-  set processingStats(ProcessingStats v) { setField(8, v); }
+  set processingStats(ProcessingStats v) { $_setField(8, v); }
   @$pb.TagNumber(8)
   $core.bool hasProcessingStats() => $_has(7);
   @$pb.TagNumber(8)
-  void clearProcessingStats() => clearField(8);
+  void clearProcessingStats() => $_clearField(8);
   @$pb.TagNumber(8)
   ProcessingStats ensureProcessingStats() => $_ensure(7);
 
   /// The time at which `image` was captured.
   @$pb.TagNumber(9)
-  $3.Timestamp get captureTime => $_getN(8);
+  $2.Timestamp get captureTime => $_getN(8);
   @$pb.TagNumber(9)
-  set captureTime($3.Timestamp v) { setField(9, v); }
+  set captureTime($2.Timestamp v) { $_setField(9, v); }
   @$pb.TagNumber(9)
   $core.bool hasCaptureTime() => $_has(8);
   @$pb.TagNumber(9)
-  void clearCaptureTime() => clearField(9);
+  void clearCaptureTime() => $_clearField(9);
   @$pb.TagNumber(9)
-  $3.Timestamp ensureCaptureTime() => $_ensure(8);
+  $2.Timestamp ensureCaptureTime() => $_ensure(8);
 
   /// This is the estimated position of the brightest point. In full resolution
   /// image coordinates. Only present in `focus_assist_mode`.
   @$pb.TagNumber(12)
   ImageCoord get centerPeakPosition => $_getN(9);
   @$pb.TagNumber(12)
-  set centerPeakPosition(ImageCoord v) { setField(12, v); }
+  set centerPeakPosition(ImageCoord v) { $_setField(12, v); }
   @$pb.TagNumber(12)
   $core.bool hasCenterPeakPosition() => $_has(9);
   @$pb.TagNumber(12)
-  void clearCenterPeakPosition() => clearField(12);
+  void clearCenterPeakPosition() => $_clearField(12);
   @$pb.TagNumber(12)
   ImageCoord ensureCenterPeakPosition() => $_ensure(9);
 
@@ -1818,11 +1847,11 @@ class FrameResult extends $pb.GeneratedMessage {
   @$pb.TagNumber(13)
   Image get centerPeakImage => $_getN(10);
   @$pb.TagNumber(13)
-  set centerPeakImage(Image v) { setField(13, v); }
+  set centerPeakImage(Image v) { $_setField(13, v); }
   @$pb.TagNumber(13)
   $core.bool hasCenterPeakImage() => $_has(10);
   @$pb.TagNumber(13)
-  void clearCenterPeakImage() => clearField(13);
+  void clearCenterPeakImage() => $_clearField(13);
   @$pb.TagNumber(13)
   Image ensureCenterPeakImage() => $_ensure(10);
 
@@ -1834,11 +1863,11 @@ class FrameResult extends $pb.GeneratedMessage {
   @$pb.TagNumber(17)
   PlateSolution get plateSolution => $_getN(11);
   @$pb.TagNumber(17)
-  set plateSolution(PlateSolution v) { setField(17, v); }
+  set plateSolution(PlateSolution v) { $_setField(17, v); }
   @$pb.TagNumber(17)
   $core.bool hasPlateSolution() => $_has(11);
   @$pb.TagNumber(17)
-  void clearPlateSolution() => clearField(17);
+  void clearPlateSolution() => $_clearField(17);
   @$pb.TagNumber(17)
   PlateSolution ensurePlateSolution() => $_ensure(11);
 
@@ -1848,11 +1877,11 @@ class FrameResult extends $pb.GeneratedMessage {
   @$pb.TagNumber(21)
   ImageCoord get boresightPosition => $_getN(12);
   @$pb.TagNumber(21)
-  set boresightPosition(ImageCoord v) { setField(21, v); }
+  set boresightPosition(ImageCoord v) { $_setField(21, v); }
   @$pb.TagNumber(21)
   $core.bool hasBoresightPosition() => $_has(12);
   @$pb.TagNumber(21)
-  void clearBoresightPosition() => clearField(21);
+  void clearBoresightPosition() => $_clearField(21);
   @$pb.TagNumber(21)
   ImageCoord ensureBoresightPosition() => $_ensure(12);
 
@@ -1861,6 +1890,8 @@ class FrameResult extends $pb.GeneratedMessage {
   /// are omitted. Fields present are: server_information, fixed_settings,
   /// preferences, operation_settings, image, calibrating, and
   /// calibration_progress.
+  /// This field also becomes true when ActionRequest.calibrate_dark_frame is
+  /// carried out.
   @$pb.TagNumber(22)
   $core.bool get calibrating => $_getBF(13);
   @$pb.TagNumber(22)
@@ -1868,7 +1899,7 @@ class FrameResult extends $pb.GeneratedMessage {
   @$pb.TagNumber(22)
   $core.bool hasCalibrating() => $_has(13);
   @$pb.TagNumber(22)
-  void clearCalibrating() => clearField(22);
+  void clearCalibrating() => $_clearField(22);
 
   /// When `calibrating` is true, this field is an estimate of the progress of
   /// the calibration, which can take several seconds.
@@ -1879,18 +1910,18 @@ class FrameResult extends $pb.GeneratedMessage {
   @$pb.TagNumber(23)
   $core.bool hasCalibrationProgress() => $_has(14);
   @$pb.TagNumber(23)
-  void clearCalibrationProgress() => clearField(23);
+  void clearCalibrationProgress() => $_clearField(23);
 
   /// If present, SkySafari or Cedar Sky is requesting that the telescope's
   /// pointing should be changed.
   @$pb.TagNumber(24)
   SlewRequest get slewRequest => $_getN(15);
   @$pb.TagNumber(24)
-  set slewRequest(SlewRequest v) { setField(24, v); }
+  set slewRequest(SlewRequest v) { $_setField(24, v); }
   @$pb.TagNumber(24)
   $core.bool hasSlewRequest() => $_has(15);
   @$pb.TagNumber(24)
-  void clearSlewRequest() => clearField(24);
+  void clearSlewRequest() => $_clearField(24);
   @$pb.TagNumber(24)
   SlewRequest ensureSlewRequest() => $_ensure(15);
 
@@ -1898,11 +1929,11 @@ class FrameResult extends $pb.GeneratedMessage {
   @$pb.TagNumber(25)
   Preferences get preferences => $_getN(16);
   @$pb.TagNumber(25)
-  set preferences(Preferences v) { setField(25, v); }
+  set preferences(Preferences v) { $_setField(25, v); }
   @$pb.TagNumber(25)
   $core.bool hasPreferences() => $_has(16);
   @$pb.TagNumber(25)
-  void clearPreferences() => clearField(25);
+  void clearPreferences() => $_clearField(25);
   @$pb.TagNumber(25)
   Preferences ensurePreferences() => $_ensure(16);
 
@@ -1915,17 +1946,17 @@ class FrameResult extends $pb.GeneratedMessage {
   @$pb.TagNumber(26)
   $core.bool hasNoiseEstimate() => $_has(17);
   @$pb.TagNumber(26)
-  void clearNoiseEstimate() => clearField(26);
+  void clearNoiseEstimate() => $_clearField(26);
 
   /// The current FixedSettings on the server.
   @$pb.TagNumber(27)
   FixedSettings get fixedSettings => $_getN(18);
   @$pb.TagNumber(27)
-  set fixedSettings(FixedSettings v) { setField(27, v); }
+  set fixedSettings(FixedSettings v) { $_setField(27, v); }
   @$pb.TagNumber(27)
   $core.bool hasFixedSettings() => $_has(18);
   @$pb.TagNumber(27)
-  void clearFixedSettings() => clearField(27);
+  void clearFixedSettings() => $_clearField(27);
   @$pb.TagNumber(27)
   FixedSettings ensureFixedSettings() => $_ensure(18);
 
@@ -1936,11 +1967,11 @@ class FrameResult extends $pb.GeneratedMessage {
   @$pb.TagNumber(28)
   Image get boresightImage => $_getN(19);
   @$pb.TagNumber(28)
-  set boresightImage(Image v) { setField(28, v); }
+  set boresightImage(Image v) { $_setField(28, v); }
   @$pb.TagNumber(28)
   $core.bool hasBoresightImage() => $_has(19);
   @$pb.TagNumber(28)
-  void clearBoresightImage() => clearField(28);
+  void clearBoresightImage() => $_clearField(28);
   @$pb.TagNumber(28)
   Image ensureBoresightImage() => $_ensure(19);
 
@@ -1953,11 +1984,11 @@ class FrameResult extends $pb.GeneratedMessage {
   @$pb.TagNumber(29)
   LocationBasedInfo get locationBasedInfo => $_getN(20);
   @$pb.TagNumber(29)
-  set locationBasedInfo(LocationBasedInfo v) { setField(29, v); }
+  set locationBasedInfo(LocationBasedInfo v) { $_setField(29, v); }
   @$pb.TagNumber(29)
   $core.bool hasLocationBasedInfo() => $_has(20);
   @$pb.TagNumber(29)
-  void clearLocationBasedInfo() => clearField(29);
+  void clearLocationBasedInfo() => $_clearField(29);
   @$pb.TagNumber(29)
   LocationBasedInfo ensureLocationBasedInfo() => $_ensure(20);
 
@@ -1966,11 +1997,11 @@ class FrameResult extends $pb.GeneratedMessage {
   @$pb.TagNumber(30)
   PolarAlignAdvice get polarAlignAdvice => $_getN(21);
   @$pb.TagNumber(30)
-  set polarAlignAdvice(PolarAlignAdvice v) { setField(30, v); }
+  set polarAlignAdvice(PolarAlignAdvice v) { $_setField(30, v); }
   @$pb.TagNumber(30)
   $core.bool hasPolarAlignAdvice() => $_has(21);
   @$pb.TagNumber(30)
-  void clearPolarAlignAdvice() => clearField(30);
+  void clearPolarAlignAdvice() => $_clearField(30);
   @$pb.TagNumber(30)
   PolarAlignAdvice ensurePolarAlignAdvice() => $_ensure(21);
 
@@ -1982,24 +2013,24 @@ class FrameResult extends $pb.GeneratedMessage {
   /// present.
   /// The FOV catalog entries that dominate their crowd and should be labelled.
   @$pb.TagNumber(31)
-  $core.List<FovCatalogEntry> get labeledCatalogEntries => $_getList(22);
+  $pb.PbList<FovCatalogEntry> get labeledCatalogEntries => $_getList(22);
 
   /// Information about Cedar-server.
   @$pb.TagNumber(32)
   ServerInformation get serverInformation => $_getN(23);
   @$pb.TagNumber(32)
-  set serverInformation(ServerInformation v) { setField(32, v); }
+  set serverInformation(ServerInformation v) { $_setField(32, v); }
   @$pb.TagNumber(32)
   $core.bool hasServerInformation() => $_has(23);
   @$pb.TagNumber(32)
-  void clearServerInformation() => clearField(32);
+  void clearServerInformation() => $_clearField(32);
   @$pb.TagNumber(32)
   ServerInformation ensureServerInformation() => $_ensure(23);
 
   /// The decrowded FOV catalog entries that the UI can display, but should
   /// not label to avoid clutter.
   @$pb.TagNumber(33)
-  $core.List<FovCatalogEntry> get unlabeledCatalogEntries => $_getList(24);
+  $pb.PbList<FovCatalogEntry> get unlabeledCatalogEntries => $_getList(24);
 
   /// If FrameRequest.non_blocking is omitted or false, this field will be
   /// absent. If FrameRequest.non_blocking is true, this field will be true
@@ -2013,7 +2044,7 @@ class FrameResult extends $pb.GeneratedMessage {
   @$pb.TagNumber(34)
   $core.bool hasHasResult() => $_has(25);
   @$pb.TagNumber(34)
-  void clearHasResult() => clearField(34);
+  void clearHasResult() => $_clearField(34);
 
   /// The number of detected stars as a moving average of recent processing
   /// cycles.
@@ -2024,7 +2055,7 @@ class FrameResult extends $pb.GeneratedMessage {
   @$pb.TagNumber(35)
   $core.bool hasStarCountMovingAverage() => $_has(26);
   @$pb.TagNumber(35)
-  void clearStarCountMovingAverage() => clearField(35);
+  void clearStarCountMovingAverage() => $_clearField(35);
 
   /// A small full resolution (usually; 2x binned for color cameras) crop of
   /// `image` centered at a user-designated position (see
@@ -2033,11 +2064,11 @@ class FrameResult extends $pb.GeneratedMessage {
   @$pb.TagNumber(37)
   Image get daylightFocusZoomImage => $_getN(27);
   @$pb.TagNumber(37)
-  set daylightFocusZoomImage(Image v) { setField(37, v); }
+  set daylightFocusZoomImage(Image v) { $_setField(37, v); }
   @$pb.TagNumber(37)
   $core.bool hasDaylightFocusZoomImage() => $_has(27);
   @$pb.TagNumber(37)
-  void clearDaylightFocusZoomImage() => clearField(37);
+  void clearDaylightFocusZoomImage() => $_clearField(37);
   @$pb.TagNumber(37)
   Image ensureDaylightFocusZoomImage() => $_ensure(27);
 
@@ -2050,7 +2081,18 @@ class FrameResult extends $pb.GeneratedMessage {
   @$pb.TagNumber(38)
   $core.bool hasSkipFocusActive() => $_has(28);
   @$pb.TagNumber(38)
-  void clearSkipFocusActive() => clearField(38);
+  void clearSkipFocusActive() => $_clearField(38);
+
+  /// The number of candidates that were rejected as hot pixels. These are not
+  /// included in star_candidates.
+  @$pb.TagNumber(39)
+  $core.int get hotPixelCount => $_getIZ(29);
+  @$pb.TagNumber(39)
+  set hotPixelCount($core.int v) { $_setSignedInt32(29, v); }
+  @$pb.TagNumber(39)
+  $core.bool hasHotPixelCount() => $_has(29);
+  @$pb.TagNumber(39)
+  void clearHotPixelCount() => $_clearField(39);
 }
 
 class Image extends $pb.GeneratedMessage {
@@ -2120,7 +2162,7 @@ class Image extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $core.bool hasBinningFactor() => $_has(0);
   @$pb.TagNumber(1)
-  void clearBinningFactor() => clearField(1);
+  void clearBinningFactor() => $_clearField(1);
 
   /// Specifies what part of the camera sensor this Image corresponds to, in full
   /// resolution units. If binning_factor is B, the `image_data` dimensions are
@@ -2128,11 +2170,11 @@ class Image extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   Rectangle get rectangle => $_getN(1);
   @$pb.TagNumber(2)
-  set rectangle(Rectangle v) { setField(2, v); }
+  set rectangle(Rectangle v) { $_setField(2, v); }
   @$pb.TagNumber(2)
   $core.bool hasRectangle() => $_has(1);
   @$pb.TagNumber(2)
-  void clearRectangle() => clearField(2);
+  void clearRectangle() => $_clearField(2);
   @$pb.TagNumber(2)
   Rectangle ensureRectangle() => $_ensure(1);
 
@@ -2144,7 +2186,7 @@ class Image extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   $core.bool hasImageData() => $_has(2);
   @$pb.TagNumber(3)
-  void clearImageData() => clearField(3);
+  void clearImageData() => $_clearField(3);
 
   @$pb.TagNumber(4)
   $core.double get rotationSizeRatio => $_getN(3);
@@ -2153,7 +2195,7 @@ class Image extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   $core.bool hasRotationSizeRatio() => $_has(3);
   @$pb.TagNumber(4)
-  void clearRotationSizeRatio() => clearField(4);
+  void clearRotationSizeRatio() => $_clearField(4);
 }
 
 /// Describes the position/size of an region within the camera's sensor. In
@@ -2220,7 +2262,7 @@ class Rectangle extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $core.bool hasOriginX() => $_has(0);
   @$pb.TagNumber(1)
-  void clearOriginX() => clearField(1);
+  void clearOriginX() => $_clearField(1);
 
   @$pb.TagNumber(2)
   $core.int get originY => $_getIZ(1);
@@ -2229,7 +2271,7 @@ class Rectangle extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $core.bool hasOriginY() => $_has(1);
   @$pb.TagNumber(2)
-  void clearOriginY() => clearField(2);
+  void clearOriginY() => $_clearField(2);
 
   @$pb.TagNumber(3)
   $core.int get width => $_getIZ(2);
@@ -2238,7 +2280,7 @@ class Rectangle extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   $core.bool hasWidth() => $_has(2);
   @$pb.TagNumber(3)
-  void clearWidth() => clearField(3);
+  void clearWidth() => $_clearField(3);
 
   @$pb.TagNumber(4)
   $core.int get height => $_getIZ(3);
@@ -2247,7 +2289,7 @@ class Rectangle extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   $core.bool hasHeight() => $_has(3);
   @$pb.TagNumber(4)
-  void clearHeight() => clearField(4);
+  void clearHeight() => $_clearField(4);
 }
 
 /// Summarizes a star-like spot found by the CedarDetect algorithm.
@@ -2305,11 +2347,11 @@ class StarCentroid extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   ImageCoord get centroidPosition => $_getN(0);
   @$pb.TagNumber(1)
-  set centroidPosition(ImageCoord v) { setField(1, v); }
+  set centroidPosition(ImageCoord v) { $_setField(1, v); }
   @$pb.TagNumber(1)
   $core.bool hasCentroidPosition() => $_has(0);
   @$pb.TagNumber(1)
-  void clearCentroidPosition() => clearField(1);
+  void clearCentroidPosition() => $_clearField(1);
   @$pb.TagNumber(1)
   ImageCoord ensureCentroidPosition() => $_ensure(0);
 
@@ -2322,7 +2364,7 @@ class StarCentroid extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   $core.bool hasBrightness() => $_has(1);
   @$pb.TagNumber(4)
-  void clearBrightness() => clearField(4);
+  void clearBrightness() => $_clearField(4);
 
   /// Count of saturated pixel values.
   @$pb.TagNumber(6)
@@ -2332,7 +2374,7 @@ class StarCentroid extends $pb.GeneratedMessage {
   @$pb.TagNumber(6)
   $core.bool hasNumSaturated() => $_has(2);
   @$pb.TagNumber(6)
-  void clearNumSaturated() => clearField(6);
+  void clearNumSaturated() => $_clearField(6);
 }
 
 class ImageCoord extends $pb.GeneratedMessage {
@@ -2389,7 +2431,7 @@ class ImageCoord extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $core.bool hasX() => $_has(0);
   @$pb.TagNumber(1)
-  void clearX() => clearField(1);
+  void clearX() => $_clearField(1);
 
   @$pb.TagNumber(2)
   $core.double get y => $_getN(1);
@@ -2398,12 +2440,12 @@ class ImageCoord extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $core.bool hasY() => $_has(1);
   @$pb.TagNumber(2)
-  void clearY() => clearField(2);
+  void clearY() => $_clearField(2);
 }
 
 class PlateSolution extends $pb.GeneratedMessage {
   factory PlateSolution({
-    $2.CelestialCoord? imageSkyCoord,
+    $4.CelestialCoord? imageSkyCoord,
     $core.double? roll,
     $core.double? fov,
     $core.double? distortion,
@@ -2414,8 +2456,8 @@ class PlateSolution extends $pb.GeneratedMessage {
     $core.double? prob,
     $core.int? epochEquinox,
     $core.double? epochProperMotion,
-    $4.Duration? solveTime,
-    $core.Iterable<$2.CelestialCoord>? targetSkyCoord,
+    $3.Duration? solveTime,
+    $core.Iterable<$4.CelestialCoord>? targetSkyCoord,
     $core.Iterable<ImageCoord>? targetPixel,
     $core.Iterable<StarInfo>? matchedStars,
     $core.Iterable<ImageCoord>? patternCentroids,
@@ -2488,7 +2530,7 @@ class PlateSolution extends $pb.GeneratedMessage {
   factory PlateSolution.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'PlateSolution', package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'), createEmptyInstance: create)
-    ..aOM<$2.CelestialCoord>(1, _omitFieldNames ? '' : 'imageSkyCoord', subBuilder: $2.CelestialCoord.create)
+    ..aOM<$4.CelestialCoord>(1, _omitFieldNames ? '' : 'imageSkyCoord', subBuilder: $4.CelestialCoord.create)
     ..a<$core.double>(2, _omitFieldNames ? '' : 'roll', $pb.PbFieldType.OD)
     ..a<$core.double>(3, _omitFieldNames ? '' : 'fov', $pb.PbFieldType.OD)
     ..a<$core.double>(4, _omitFieldNames ? '' : 'distortion', $pb.PbFieldType.OD)
@@ -2499,8 +2541,8 @@ class PlateSolution extends $pb.GeneratedMessage {
     ..a<$core.double>(9, _omitFieldNames ? '' : 'prob', $pb.PbFieldType.OD)
     ..a<$core.int>(10, _omitFieldNames ? '' : 'epochEquinox', $pb.PbFieldType.O3)
     ..a<$core.double>(11, _omitFieldNames ? '' : 'epochProperMotion', $pb.PbFieldType.OF)
-    ..aOM<$4.Duration>(12, _omitFieldNames ? '' : 'solveTime', subBuilder: $4.Duration.create)
-    ..pc<$2.CelestialCoord>(13, _omitFieldNames ? '' : 'targetSkyCoord', $pb.PbFieldType.PM, subBuilder: $2.CelestialCoord.create)
+    ..aOM<$3.Duration>(12, _omitFieldNames ? '' : 'solveTime', subBuilder: $3.Duration.create)
+    ..pc<$4.CelestialCoord>(13, _omitFieldNames ? '' : 'targetSkyCoord', $pb.PbFieldType.PM, subBuilder: $4.CelestialCoord.create)
     ..pc<ImageCoord>(14, _omitFieldNames ? '' : 'targetPixel', $pb.PbFieldType.PM, subBuilder: ImageCoord.create)
     ..pc<StarInfo>(15, _omitFieldNames ? '' : 'matchedStars', $pb.PbFieldType.PM, subBuilder: StarInfo.create)
     ..pc<ImageCoord>(16, _omitFieldNames ? '' : 'patternCentroids', $pb.PbFieldType.PM, subBuilder: ImageCoord.create)
@@ -2533,15 +2575,15 @@ class PlateSolution extends $pb.GeneratedMessage {
 
   /// See tetra3.py for descriptions of fields.
   @$pb.TagNumber(1)
-  $2.CelestialCoord get imageSkyCoord => $_getN(0);
+  $4.CelestialCoord get imageSkyCoord => $_getN(0);
   @$pb.TagNumber(1)
-  set imageSkyCoord($2.CelestialCoord v) { setField(1, v); }
+  set imageSkyCoord($4.CelestialCoord v) { $_setField(1, v); }
   @$pb.TagNumber(1)
   $core.bool hasImageSkyCoord() => $_has(0);
   @$pb.TagNumber(1)
-  void clearImageSkyCoord() => clearField(1);
+  void clearImageSkyCoord() => $_clearField(1);
   @$pb.TagNumber(1)
-  $2.CelestialCoord ensureImageSkyCoord() => $_ensure(0);
+  $4.CelestialCoord ensureImageSkyCoord() => $_ensure(0);
 
   @$pb.TagNumber(2)
   $core.double get roll => $_getN(1);
@@ -2550,7 +2592,7 @@ class PlateSolution extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $core.bool hasRoll() => $_has(1);
   @$pb.TagNumber(2)
-  void clearRoll() => clearField(2);
+  void clearRoll() => $_clearField(2);
 
   @$pb.TagNumber(3)
   $core.double get fov => $_getN(2);
@@ -2559,7 +2601,7 @@ class PlateSolution extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   $core.bool hasFov() => $_has(2);
   @$pb.TagNumber(3)
-  void clearFov() => clearField(3);
+  void clearFov() => $_clearField(3);
 
   @$pb.TagNumber(4)
   $core.double get distortion => $_getN(3);
@@ -2568,7 +2610,7 @@ class PlateSolution extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   $core.bool hasDistortion() => $_has(3);
   @$pb.TagNumber(4)
-  void clearDistortion() => clearField(4);
+  void clearDistortion() => $_clearField(4);
 
   /// Arcseconds.
   @$pb.TagNumber(5)
@@ -2578,7 +2620,7 @@ class PlateSolution extends $pb.GeneratedMessage {
   @$pb.TagNumber(5)
   $core.bool hasRmse() => $_has(4);
   @$pb.TagNumber(5)
-  void clearRmse() => clearField(5);
+  void clearRmse() => $_clearField(5);
 
   @$pb.TagNumber(6)
   $core.double get p90Error => $_getN(5);
@@ -2587,7 +2629,7 @@ class PlateSolution extends $pb.GeneratedMessage {
   @$pb.TagNumber(6)
   $core.bool hasP90Error() => $_has(5);
   @$pb.TagNumber(6)
-  void clearP90Error() => clearField(6);
+  void clearP90Error() => $_clearField(6);
 
   @$pb.TagNumber(7)
   $core.double get maxError => $_getN(6);
@@ -2596,7 +2638,7 @@ class PlateSolution extends $pb.GeneratedMessage {
   @$pb.TagNumber(7)
   $core.bool hasMaxError() => $_has(6);
   @$pb.TagNumber(7)
-  void clearMaxError() => clearField(7);
+  void clearMaxError() => $_clearField(7);
 
   @$pb.TagNumber(8)
   $core.int get numMatches => $_getIZ(7);
@@ -2605,7 +2647,7 @@ class PlateSolution extends $pb.GeneratedMessage {
   @$pb.TagNumber(8)
   $core.bool hasNumMatches() => $_has(7);
   @$pb.TagNumber(8)
-  void clearNumMatches() => clearField(8);
+  void clearNumMatches() => $_clearField(8);
 
   @$pb.TagNumber(9)
   $core.double get prob => $_getN(8);
@@ -2614,7 +2656,7 @@ class PlateSolution extends $pb.GeneratedMessage {
   @$pb.TagNumber(9)
   $core.bool hasProb() => $_has(8);
   @$pb.TagNumber(9)
-  void clearProb() => clearField(9);
+  void clearProb() => $_clearField(9);
 
   @$pb.TagNumber(10)
   $core.int get epochEquinox => $_getIZ(9);
@@ -2623,7 +2665,7 @@ class PlateSolution extends $pb.GeneratedMessage {
   @$pb.TagNumber(10)
   $core.bool hasEpochEquinox() => $_has(9);
   @$pb.TagNumber(10)
-  void clearEpochEquinox() => clearField(10);
+  void clearEpochEquinox() => $_clearField(10);
 
   @$pb.TagNumber(11)
   $core.double get epochProperMotion => $_getN(10);
@@ -2632,40 +2674,40 @@ class PlateSolution extends $pb.GeneratedMessage {
   @$pb.TagNumber(11)
   $core.bool hasEpochProperMotion() => $_has(10);
   @$pb.TagNumber(11)
-  void clearEpochProperMotion() => clearField(11);
+  void clearEpochProperMotion() => $_clearField(11);
 
   @$pb.TagNumber(12)
-  $4.Duration get solveTime => $_getN(11);
+  $3.Duration get solveTime => $_getN(11);
   @$pb.TagNumber(12)
-  set solveTime($4.Duration v) { setField(12, v); }
+  set solveTime($3.Duration v) { $_setField(12, v); }
   @$pb.TagNumber(12)
   $core.bool hasSolveTime() => $_has(11);
   @$pb.TagNumber(12)
-  void clearSolveTime() => clearField(12);
+  void clearSolveTime() => $_clearField(12);
   @$pb.TagNumber(12)
-  $4.Duration ensureSolveTime() => $_ensure(11);
+  $3.Duration ensureSolveTime() => $_ensure(11);
 
   /// Result of SolveExtension.target_pixel.
   @$pb.TagNumber(13)
-  $core.List<$2.CelestialCoord> get targetSkyCoord => $_getList(12);
+  $pb.PbList<$4.CelestialCoord> get targetSkyCoord => $_getList(12);
 
   /// Result of SolveExtension.target_sky_coord. (-1,-1) if sky target is not in
   /// image.
   @$pb.TagNumber(14)
-  $core.List<ImageCoord> get targetPixel => $_getList(13);
+  $pb.PbList<ImageCoord> get targetPixel => $_getList(13);
 
   @$pb.TagNumber(15)
-  $core.List<StarInfo> get matchedStars => $_getList(14);
+  $pb.PbList<StarInfo> get matchedStars => $_getList(14);
 
   @$pb.TagNumber(16)
-  $core.List<ImageCoord> get patternCentroids => $_getList(15);
+  $pb.PbList<ImageCoord> get patternCentroids => $_getList(15);
 
   @$pb.TagNumber(17)
-  $core.List<StarInfo> get catalogStars => $_getList(16);
+  $pb.PbList<StarInfo> get catalogStars => $_getList(16);
 
   /// 3x3 matrix in row-major order.
   @$pb.TagNumber(18)
-  $core.List<$core.double> get rotationMatrix => $_getList(17);
+  $pb.PbList<$core.double> get rotationMatrix => $_getList(17);
 
   /// False: solution is from plate solving.
   /// True: solution is from an IMU estimate of the camera's sky coordinate and
@@ -2677,13 +2719,13 @@ class PlateSolution extends $pb.GeneratedMessage {
   @$pb.TagNumber(19)
   $core.bool hasSolutionFromImu() => $_has(18);
   @$pb.TagNumber(19)
-  void clearSolutionFromImu() => clearField(19);
+  void clearSolutionFromImu() => $_clearField(19);
 }
 
 class StarInfo extends $pb.GeneratedMessage {
   factory StarInfo({
     ImageCoord? pixel,
-    $2.CelestialCoord? skyCoord,
+    $4.CelestialCoord? skyCoord,
     $core.double? mag,
   }) {
     final $result = create();
@@ -2704,7 +2746,7 @@ class StarInfo extends $pb.GeneratedMessage {
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'StarInfo', package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'), createEmptyInstance: create)
     ..aOM<ImageCoord>(1, _omitFieldNames ? '' : 'pixel', subBuilder: ImageCoord.create)
-    ..aOM<$2.CelestialCoord>(2, _omitFieldNames ? '' : 'skyCoord', subBuilder: $2.CelestialCoord.create)
+    ..aOM<$4.CelestialCoord>(2, _omitFieldNames ? '' : 'skyCoord', subBuilder: $4.CelestialCoord.create)
     ..a<$core.double>(3, _omitFieldNames ? '' : 'mag', $pb.PbFieldType.OF)
     ..hasRequiredFields = false
   ;
@@ -2733,24 +2775,24 @@ class StarInfo extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   ImageCoord get pixel => $_getN(0);
   @$pb.TagNumber(1)
-  set pixel(ImageCoord v) { setField(1, v); }
+  set pixel(ImageCoord v) { $_setField(1, v); }
   @$pb.TagNumber(1)
   $core.bool hasPixel() => $_has(0);
   @$pb.TagNumber(1)
-  void clearPixel() => clearField(1);
+  void clearPixel() => $_clearField(1);
   @$pb.TagNumber(1)
   ImageCoord ensurePixel() => $_ensure(0);
 
   @$pb.TagNumber(2)
-  $2.CelestialCoord get skyCoord => $_getN(1);
+  $4.CelestialCoord get skyCoord => $_getN(1);
   @$pb.TagNumber(2)
-  set skyCoord($2.CelestialCoord v) { setField(2, v); }
+  set skyCoord($4.CelestialCoord v) { $_setField(2, v); }
   @$pb.TagNumber(2)
   $core.bool hasSkyCoord() => $_has(1);
   @$pb.TagNumber(2)
-  void clearSkyCoord() => clearField(2);
+  void clearSkyCoord() => $_clearField(2);
   @$pb.TagNumber(2)
-  $2.CelestialCoord ensureSkyCoord() => $_ensure(1);
+  $4.CelestialCoord ensureSkyCoord() => $_ensure(1);
 
   @$pb.TagNumber(3)
   $core.double get mag => $_getN(2);
@@ -2759,7 +2801,7 @@ class StarInfo extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   $core.bool hasMag() => $_has(2);
   @$pb.TagNumber(3)
-  void clearMag() => clearField(3);
+  void clearMag() => $_clearField(3);
 }
 
 /// Diagnostic information summarizing Cedar's performance.
@@ -2837,11 +2879,11 @@ class ProcessingStats extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   ValueStats get detectLatency => $_getN(0);
   @$pb.TagNumber(3)
-  set detectLatency(ValueStats v) { setField(3, v); }
+  set detectLatency(ValueStats v) { $_setField(3, v); }
   @$pb.TagNumber(3)
   $core.bool hasDetectLatency() => $_has(0);
   @$pb.TagNumber(3)
-  void clearDetectLatency() => clearField(3);
+  void clearDetectLatency() => $_clearField(3);
   @$pb.TagNumber(3)
   ValueStats ensureDetectLatency() => $_ensure(0);
 
@@ -2849,11 +2891,11 @@ class ProcessingStats extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   ValueStats get solveLatency => $_getN(1);
   @$pb.TagNumber(4)
-  set solveLatency(ValueStats v) { setField(4, v); }
+  set solveLatency(ValueStats v) { $_setField(4, v); }
   @$pb.TagNumber(4)
   $core.bool hasSolveLatency() => $_has(1);
   @$pb.TagNumber(4)
-  void clearSolveLatency() => clearField(4);
+  void clearSolveLatency() => $_clearField(4);
   @$pb.TagNumber(4)
   ValueStats ensureSolveLatency() => $_ensure(1);
 
@@ -2862,11 +2904,11 @@ class ProcessingStats extends $pb.GeneratedMessage {
   @$pb.TagNumber(5)
   ValueStats get solveAttemptFraction => $_getN(2);
   @$pb.TagNumber(5)
-  set solveAttemptFraction(ValueStats v) { setField(5, v); }
+  set solveAttemptFraction(ValueStats v) { $_setField(5, v); }
   @$pb.TagNumber(5)
   $core.bool hasSolveAttemptFraction() => $_has(2);
   @$pb.TagNumber(5)
-  void clearSolveAttemptFraction() => clearField(5);
+  void clearSolveAttemptFraction() => $_clearField(5);
   @$pb.TagNumber(5)
   ValueStats ensureSolveAttemptFraction() => $_ensure(2);
 
@@ -2875,11 +2917,11 @@ class ProcessingStats extends $pb.GeneratedMessage {
   @$pb.TagNumber(6)
   ValueStats get solveSuccessFraction => $_getN(3);
   @$pb.TagNumber(6)
-  set solveSuccessFraction(ValueStats v) { setField(6, v); }
+  set solveSuccessFraction(ValueStats v) { $_setField(6, v); }
   @$pb.TagNumber(6)
   $core.bool hasSolveSuccessFraction() => $_has(3);
   @$pb.TagNumber(6)
-  void clearSolveSuccessFraction() => clearField(6);
+  void clearSolveSuccessFraction() => $_clearField(6);
   @$pb.TagNumber(6)
   ValueStats ensureSolveSuccessFraction() => $_ensure(3);
 
@@ -2889,11 +2931,11 @@ class ProcessingStats extends $pb.GeneratedMessage {
   @$pb.TagNumber(7)
   ValueStats get serveLatency => $_getN(4);
   @$pb.TagNumber(7)
-  set serveLatency(ValueStats v) { setField(7, v); }
+  set serveLatency(ValueStats v) { $_setField(7, v); }
   @$pb.TagNumber(7)
   $core.bool hasServeLatency() => $_has(4);
   @$pb.TagNumber(7)
-  void clearServeLatency() => clearField(7);
+  void clearServeLatency() => $_clearField(7);
   @$pb.TagNumber(7)
   ValueStats ensureServeLatency() => $_ensure(4);
 
@@ -2901,11 +2943,11 @@ class ProcessingStats extends $pb.GeneratedMessage {
   @$pb.TagNumber(8)
   ValueStats get solveInterval => $_getN(5);
   @$pb.TagNumber(8)
-  set solveInterval(ValueStats v) { setField(8, v); }
+  set solveInterval(ValueStats v) { $_setField(8, v); }
   @$pb.TagNumber(8)
   $core.bool hasSolveInterval() => $_has(5);
   @$pb.TagNumber(8)
-  void clearSolveInterval() => clearField(8);
+  void clearSolveInterval() => $_clearField(8);
   @$pb.TagNumber(8)
   ValueStats ensureSolveInterval() => $_ensure(5);
 
@@ -2915,11 +2957,11 @@ class ProcessingStats extends $pb.GeneratedMessage {
   @$pb.TagNumber(9)
   ValueStats get acquireLatency => $_getN(6);
   @$pb.TagNumber(9)
-  set acquireLatency(ValueStats v) { setField(9, v); }
+  set acquireLatency(ValueStats v) { $_setField(9, v); }
   @$pb.TagNumber(9)
   $core.bool hasAcquireLatency() => $_has(6);
   @$pb.TagNumber(9)
-  void clearAcquireLatency() => clearField(9);
+  void clearAcquireLatency() => $_clearField(9);
   @$pb.TagNumber(9)
   ValueStats ensureAcquireLatency() => $_ensure(6);
 }
@@ -2974,11 +3016,11 @@ class ValueStats extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   DescriptiveStats get recent => $_getN(0);
   @$pb.TagNumber(1)
-  set recent(DescriptiveStats v) { setField(1, v); }
+  set recent(DescriptiveStats v) { $_setField(1, v); }
   @$pb.TagNumber(1)
   $core.bool hasRecent() => $_has(0);
   @$pb.TagNumber(1)
-  void clearRecent() => clearField(1);
+  void clearRecent() => $_clearField(1);
   @$pb.TagNumber(1)
   DescriptiveStats ensureRecent() => $_ensure(0);
 
@@ -2988,11 +3030,11 @@ class ValueStats extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   DescriptiveStats get session => $_getN(1);
   @$pb.TagNumber(2)
-  set session(DescriptiveStats v) { setField(2, v); }
+  set session(DescriptiveStats v) { $_setField(2, v); }
   @$pb.TagNumber(2)
   $core.bool hasSession() => $_has(1);
   @$pb.TagNumber(2)
-  void clearSession() => clearField(2);
+  void clearSession() => $_clearField(2);
   @$pb.TagNumber(2)
   DescriptiveStats ensureSession() => $_ensure(1);
 }
@@ -3070,7 +3112,7 @@ class DescriptiveStats extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $core.bool hasMin() => $_has(0);
   @$pb.TagNumber(1)
-  void clearMin() => clearField(1);
+  void clearMin() => $_clearField(1);
 
   @$pb.TagNumber(2)
   $core.double get max => $_getN(1);
@@ -3079,7 +3121,7 @@ class DescriptiveStats extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $core.bool hasMax() => $_has(1);
   @$pb.TagNumber(2)
-  void clearMax() => clearField(2);
+  void clearMax() => $_clearField(2);
 
   @$pb.TagNumber(3)
   $core.double get mean => $_getN(2);
@@ -3088,7 +3130,7 @@ class DescriptiveStats extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   $core.bool hasMean() => $_has(2);
   @$pb.TagNumber(3)
-  void clearMean() => clearField(3);
+  void clearMean() => $_clearField(3);
 
   @$pb.TagNumber(4)
   $core.double get stddev => $_getN(3);
@@ -3097,7 +3139,7 @@ class DescriptiveStats extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   $core.bool hasStddev() => $_has(3);
   @$pb.TagNumber(4)
-  void clearStddev() => clearField(4);
+  void clearStddev() => $_clearField(4);
 
   /// Omitted for `session` stats.
   @$pb.TagNumber(5)
@@ -3107,7 +3149,7 @@ class DescriptiveStats extends $pb.GeneratedMessage {
   @$pb.TagNumber(5)
   $core.bool hasMedian() => $_has(4);
   @$pb.TagNumber(5)
-  void clearMedian() => clearField(5);
+  void clearMedian() => $_clearField(5);
 
   @$pb.TagNumber(6)
   $core.double get medianAbsoluteDeviation => $_getN(5);
@@ -3116,13 +3158,13 @@ class DescriptiveStats extends $pb.GeneratedMessage {
   @$pb.TagNumber(6)
   $core.bool hasMedianAbsoluteDeviation() => $_has(5);
   @$pb.TagNumber(6)
-  void clearMedianAbsoluteDeviation() => clearField(6);
+  void clearMedianAbsoluteDeviation() => $_clearField(6);
 }
 
 class CalibrationData extends $pb.GeneratedMessage {
   factory CalibrationData({
-    $3.Timestamp? calibrationTime,
-    $4.Duration? targetExposureTime,
+    $2.Timestamp? calibrationTime,
+    $3.Duration? targetExposureTime,
     $core.int? cameraOffset,
     $core.double? fovHorizontal,
     $core.double? lensDistortion,
@@ -3139,6 +3181,7 @@ class CalibrationData extends $pb.GeneratedMessage {
     $core.double? cameraViewMisalignment,
     $core.String? cameraUpGyroAxis,
     $core.double? cameraUpMisalignment,
+    $core.int? hotPixelMapCount,
   }) {
     final $result = create();
     if (calibrationTime != null) {
@@ -3195,6 +3238,9 @@ class CalibrationData extends $pb.GeneratedMessage {
     if (cameraUpMisalignment != null) {
       $result.cameraUpMisalignment = cameraUpMisalignment;
     }
+    if (hotPixelMapCount != null) {
+      $result.hotPixelMapCount = hotPixelMapCount;
+    }
     return $result;
   }
   CalibrationData._() : super();
@@ -3202,8 +3248,8 @@ class CalibrationData extends $pb.GeneratedMessage {
   factory CalibrationData.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'CalibrationData', package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'), createEmptyInstance: create)
-    ..aOM<$3.Timestamp>(1, _omitFieldNames ? '' : 'calibrationTime', subBuilder: $3.Timestamp.create)
-    ..aOM<$4.Duration>(2, _omitFieldNames ? '' : 'targetExposureTime', subBuilder: $4.Duration.create)
+    ..aOM<$2.Timestamp>(1, _omitFieldNames ? '' : 'calibrationTime', subBuilder: $2.Timestamp.create)
+    ..aOM<$3.Duration>(2, _omitFieldNames ? '' : 'targetExposureTime', subBuilder: $3.Duration.create)
     ..a<$core.int>(3, _omitFieldNames ? '' : 'cameraOffset', $pb.PbFieldType.O3)
     ..a<$core.double>(4, _omitFieldNames ? '' : 'fovHorizontal', $pb.PbFieldType.OD)
     ..a<$core.double>(5, _omitFieldNames ? '' : 'lensDistortion', $pb.PbFieldType.OD)
@@ -3220,6 +3266,7 @@ class CalibrationData extends $pb.GeneratedMessage {
     ..a<$core.double>(20, _omitFieldNames ? '' : 'cameraViewMisalignment', $pb.PbFieldType.OD)
     ..aOS(21, _omitFieldNames ? '' : 'cameraUpGyroAxis')
     ..a<$core.double>(22, _omitFieldNames ? '' : 'cameraUpMisalignment', $pb.PbFieldType.OD)
+    ..a<$core.int>(23, _omitFieldNames ? '' : 'hotPixelMapCount', $pb.PbFieldType.O3)
     ..hasRequiredFields = false
   ;
 
@@ -3246,30 +3293,30 @@ class CalibrationData extends $pb.GeneratedMessage {
 
   /// Omitted if a sky/camera calibration has not been attempted.
   @$pb.TagNumber(1)
-  $3.Timestamp get calibrationTime => $_getN(0);
+  $2.Timestamp get calibrationTime => $_getN(0);
   @$pb.TagNumber(1)
-  set calibrationTime($3.Timestamp v) { setField(1, v); }
+  set calibrationTime($2.Timestamp v) { $_setField(1, v); }
   @$pb.TagNumber(1)
   $core.bool hasCalibrationTime() => $_has(0);
   @$pb.TagNumber(1)
-  void clearCalibrationTime() => clearField(1);
+  void clearCalibrationTime() => $_clearField(1);
   @$pb.TagNumber(1)
-  $3.Timestamp ensureCalibrationTime() => $_ensure(0);
+  $2.Timestamp ensureCalibrationTime() => $_ensure(0);
 
   /// Exposure time determined to yield the desired number of star detections
   /// during calibration.
   /// Operation mode varies the exposure duration around this value based on
   /// the current detected star count.
   @$pb.TagNumber(2)
-  $4.Duration get targetExposureTime => $_getN(1);
+  $3.Duration get targetExposureTime => $_getN(1);
   @$pb.TagNumber(2)
-  set targetExposureTime($4.Duration v) { setField(2, v); }
+  set targetExposureTime($3.Duration v) { $_setField(2, v); }
   @$pb.TagNumber(2)
   $core.bool hasTargetExposureTime() => $_has(1);
   @$pb.TagNumber(2)
-  void clearTargetExposureTime() => clearField(2);
+  void clearTargetExposureTime() => $_clearField(2);
   @$pb.TagNumber(2)
-  $4.Duration ensureTargetExposureTime() => $_ensure(1);
+  $3.Duration ensureTargetExposureTime() => $_ensure(1);
 
   /// The camera offset value [0..20] found to be needed to avoid black crush.
   /// Omitted if a sky/camera calibration has not succeeded.
@@ -3280,7 +3327,7 @@ class CalibrationData extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   $core.bool hasCameraOffset() => $_has(2);
   @$pb.TagNumber(3)
-  void clearCameraOffset() => clearField(3);
+  void clearCameraOffset() => $_clearField(3);
 
   /// The angular size (degrees) of the camera's width (longer dimension)
   /// and height projected onto the sky.
@@ -3292,7 +3339,7 @@ class CalibrationData extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   $core.bool hasFovHorizontal() => $_has(3);
   @$pb.TagNumber(4)
-  void clearFovHorizontal() => clearField(4);
+  void clearFovHorizontal() => $_clearField(4);
 
   /// The plate solver's estimate of the lens distortion (pincushion or barrel).
   /// Omitted if a sky/camera calibration has not succeeded.
@@ -3303,7 +3350,7 @@ class CalibrationData extends $pb.GeneratedMessage {
   @$pb.TagNumber(5)
   $core.bool hasLensDistortion() => $_has(4);
   @$pb.TagNumber(5)
-  void clearLensDistortion() => clearField(5);
+  void clearLensDistortion() => $_clearField(5);
 
   /// The lens focal length in millimeters, derived from `fov_horizontal`
   /// together with the camera's sensor's physical size.
@@ -3315,7 +3362,7 @@ class CalibrationData extends $pb.GeneratedMessage {
   @$pb.TagNumber(6)
   $core.bool hasLensFlMm() => $_has(5);
   @$pb.TagNumber(6)
-  void clearLensFlMm() => clearField(6);
+  void clearLensFlMm() => $_clearField(6);
 
   /// The angular size of a pixel, in degrees. This is for the field center, as
   /// the "pinhole" projection of sky angles onto a planar detector causes the
@@ -3328,7 +3375,7 @@ class CalibrationData extends $pb.GeneratedMessage {
   @$pb.TagNumber(7)
   $core.bool hasPixelAngularSize() => $_has(6);
   @$pb.TagNumber(7)
-  void clearPixelAngularSize() => clearField(7);
+  void clearPixelAngularSize() => $_clearField(7);
 
   /// The 'match_max_error' value that we pass to the plate solver.
   @$pb.TagNumber(8)
@@ -3338,7 +3385,7 @@ class CalibrationData extends $pb.GeneratedMessage {
   @$pb.TagNumber(8)
   $core.bool hasMatchMaxError() => $_has(7);
   @$pb.TagNumber(8)
-  void clearMatchMaxError() => clearField(8);
+  void clearMatchMaxError() => $_clearField(8);
 
   @$pb.TagNumber(11)
   $core.double get fovVertical => $_getN(8);
@@ -3347,17 +3394,17 @@ class CalibrationData extends $pb.GeneratedMessage {
   @$pb.TagNumber(11)
   $core.bool hasFovVertical() => $_has(8);
   @$pb.TagNumber(11)
-  void clearFovVertical() => clearField(11);
+  void clearFovVertical() => $_clearField(11);
 
   /// Indicates reason, if any, that the calibration failed.
   @$pb.TagNumber(12)
   CalibrationFailureReason get calibrationFailureReason => $_getN(9);
   @$pb.TagNumber(12)
-  set calibrationFailureReason(CalibrationFailureReason v) { setField(12, v); }
+  set calibrationFailureReason(CalibrationFailureReason v) { $_setField(12, v); }
   @$pb.TagNumber(12)
   $core.bool hasCalibrationFailureReason() => $_has(9);
   @$pb.TagNumber(12)
-  void clearCalibrationFailureReason() => clearField(12);
+  void clearCalibrationFailureReason() => $_clearField(12);
 
   /// Gyro zero bias, degrees per second. Absent if no IMU or if calibration not
   /// yet performed.
@@ -3368,7 +3415,7 @@ class CalibrationData extends $pb.GeneratedMessage {
   @$pb.TagNumber(15)
   $core.bool hasGyroZeroBiasX() => $_has(10);
   @$pb.TagNumber(15)
-  void clearGyroZeroBiasX() => clearField(15);
+  void clearGyroZeroBiasX() => $_clearField(15);
 
   @$pb.TagNumber(16)
   $core.double get gyroZeroBiasY => $_getN(11);
@@ -3377,7 +3424,7 @@ class CalibrationData extends $pb.GeneratedMessage {
   @$pb.TagNumber(16)
   $core.bool hasGyroZeroBiasY() => $_has(11);
   @$pb.TagNumber(16)
-  void clearGyroZeroBiasY() => clearField(16);
+  void clearGyroZeroBiasY() => $_clearField(16);
 
   @$pb.TagNumber(17)
   $core.double get gyroZeroBiasZ => $_getN(12);
@@ -3386,7 +3433,7 @@ class CalibrationData extends $pb.GeneratedMessage {
   @$pb.TagNumber(17)
   $core.bool hasGyroZeroBiasZ() => $_has(12);
   @$pb.TagNumber(17)
-  void clearGyroZeroBiasZ() => clearField(17);
+  void clearGyroZeroBiasZ() => $_clearField(17);
 
   /// Gyro transform fit quality. Absent if no IMU or if calibration not yet
   /// performed. This is the RMS residual angle distance divided by the angle
@@ -3401,7 +3448,7 @@ class CalibrationData extends $pb.GeneratedMessage {
   @$pb.TagNumber(18)
   $core.bool hasGyroTransformErrorFraction() => $_has(13);
   @$pb.TagNumber(18)
-  void clearGyroTransformErrorFraction() => clearField(18);
+  void clearGyroTransformErrorFraction() => $_clearField(18);
 
   @$pb.TagNumber(19)
   $core.String get cameraViewGyroAxis => $_getSZ(14);
@@ -3410,7 +3457,7 @@ class CalibrationData extends $pb.GeneratedMessage {
   @$pb.TagNumber(19)
   $core.bool hasCameraViewGyroAxis() => $_has(14);
   @$pb.TagNumber(19)
-  void clearCameraViewGyroAxis() => clearField(19);
+  void clearCameraViewGyroAxis() => $_clearField(19);
 
   @$pb.TagNumber(20)
   $core.double get cameraViewMisalignment => $_getN(15);
@@ -3419,7 +3466,7 @@ class CalibrationData extends $pb.GeneratedMessage {
   @$pb.TagNumber(20)
   $core.bool hasCameraViewMisalignment() => $_has(15);
   @$pb.TagNumber(20)
-  void clearCameraViewMisalignment() => clearField(20);
+  void clearCameraViewMisalignment() => $_clearField(20);
 
   @$pb.TagNumber(21)
   $core.String get cameraUpGyroAxis => $_getSZ(16);
@@ -3428,7 +3475,7 @@ class CalibrationData extends $pb.GeneratedMessage {
   @$pb.TagNumber(21)
   $core.bool hasCameraUpGyroAxis() => $_has(16);
   @$pb.TagNumber(21)
-  void clearCameraUpGyroAxis() => clearField(21);
+  void clearCameraUpGyroAxis() => $_clearField(21);
 
   @$pb.TagNumber(22)
   $core.double get cameraUpMisalignment => $_getN(17);
@@ -3437,7 +3484,18 @@ class CalibrationData extends $pb.GeneratedMessage {
   @$pb.TagNumber(22)
   $core.bool hasCameraUpMisalignment() => $_has(17);
   @$pb.TagNumber(22)
-  void clearCameraUpMisalignment() => clearField(22);
+  void clearCameraUpMisalignment() => $_clearField(22);
+
+  /// The number of entries in the hot pixel map. Omitted if a hot pixel map is
+  /// not being used or is not yet ready.
+  @$pb.TagNumber(23)
+  $core.int get hotPixelMapCount => $_getIZ(18);
+  @$pb.TagNumber(23)
+  set hotPixelMapCount($core.int v) { $_setSignedInt32(18, v); }
+  @$pb.TagNumber(23)
+  $core.bool hasHotPixelMapCount() => $_has(18);
+  @$pb.TagNumber(23)
+  void clearHotPixelMapCount() => $_clearField(23);
 }
 
 /// When the observer's geographic location is known, the
@@ -3508,7 +3566,7 @@ class LocationBasedInfo extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $core.bool hasZenithRollAngle() => $_has(0);
   @$pb.TagNumber(1)
-  void clearZenithRollAngle() => clearField(1);
+  void clearZenithRollAngle() => $_clearField(1);
 
   /// Altitude (degrees, relative to the local horizon) of the boresight.
   @$pb.TagNumber(2)
@@ -3518,7 +3576,7 @@ class LocationBasedInfo extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $core.bool hasAltitude() => $_has(1);
   @$pb.TagNumber(2)
-  void clearAltitude() => clearField(2);
+  void clearAltitude() => $_clearField(2);
 
   /// Azimuth (degrees, positive clockwise from north) of the boresight.
   @$pb.TagNumber(3)
@@ -3528,7 +3586,7 @@ class LocationBasedInfo extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   $core.bool hasAzimuth() => $_has(2);
   @$pb.TagNumber(3)
-  void clearAzimuth() => clearField(3);
+  void clearAzimuth() => $_clearField(3);
 
   /// Hour angle (degrees, -180..180). Negative hour angle means boresight
   /// is approaching the meridian from east; positive means boresight
@@ -3540,13 +3598,13 @@ class LocationBasedInfo extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   $core.bool hasHourAngle() => $_has(3);
   @$pb.TagNumber(4)
-  void clearHourAngle() => clearField(4);
+  void clearHourAngle() => $_clearField(4);
 }
 
 /// Describes a telescope motion request from SkySafari or Cedar Sky.
 class SlewRequest extends $pb.GeneratedMessage {
   factory SlewRequest({
-    $2.CelestialCoord? target,
+    $4.CelestialCoord? target,
     $core.double? targetDistance,
     $core.double? targetAngle,
     ImageCoord? imagePos,
@@ -3587,7 +3645,7 @@ class SlewRequest extends $pb.GeneratedMessage {
   factory SlewRequest.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'SlewRequest', package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'), createEmptyInstance: create)
-    ..aOM<$2.CelestialCoord>(1, _omitFieldNames ? '' : 'target', subBuilder: $2.CelestialCoord.create)
+    ..aOM<$4.CelestialCoord>(1, _omitFieldNames ? '' : 'target', subBuilder: $4.CelestialCoord.create)
     ..a<$core.double>(2, _omitFieldNames ? '' : 'targetDistance', $pb.PbFieldType.OD)
     ..a<$core.double>(3, _omitFieldNames ? '' : 'targetAngle', $pb.PbFieldType.OD)
     ..aOM<ImageCoord>(4, _omitFieldNames ? '' : 'imagePos', subBuilder: ImageCoord.create)
@@ -3621,15 +3679,15 @@ class SlewRequest extends $pb.GeneratedMessage {
 
   /// Identifies the target coordinate of the telescope motion request.
   @$pb.TagNumber(1)
-  $2.CelestialCoord get target => $_getN(0);
+  $4.CelestialCoord get target => $_getN(0);
   @$pb.TagNumber(1)
-  set target($2.CelestialCoord v) { setField(1, v); }
+  set target($4.CelestialCoord v) { $_setField(1, v); }
   @$pb.TagNumber(1)
   $core.bool hasTarget() => $_has(0);
   @$pb.TagNumber(1)
-  void clearTarget() => clearField(1);
+  void clearTarget() => $_clearField(1);
   @$pb.TagNumber(1)
-  $2.CelestialCoord ensureTarget() => $_ensure(0);
+  $4.CelestialCoord ensureTarget() => $_ensure(0);
 
   /// The distance, in degrees, between the boresight and the target. Omitted
   /// if there is no valid plate solution.
@@ -3640,7 +3698,7 @@ class SlewRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $core.bool hasTargetDistance() => $_has(1);
   @$pb.TagNumber(2)
-  void clearTargetDistance() => clearField(2);
+  void clearTargetDistance() => $_clearField(2);
 
   /// The position angle (degrees) from the boresight to the target. If the
   /// target is above the boresight in image coordinates, the position angle is
@@ -3655,7 +3713,7 @@ class SlewRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   $core.bool hasTargetAngle() => $_has(2);
   @$pb.TagNumber(3)
-  void clearTargetAngle() => clearField(3);
+  void clearTargetAngle() => $_clearField(3);
 
   /// Position of the target in FrameResult.image (in full resolution units).
   /// Omitted if the target is not in the field of view or there is no valid
@@ -3663,11 +3721,11 @@ class SlewRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   ImageCoord get imagePos => $_getN(3);
   @$pb.TagNumber(4)
-  set imagePos(ImageCoord v) { setField(4, v); }
+  set imagePos(ImageCoord v) { $_setField(4, v); }
   @$pb.TagNumber(4)
   $core.bool hasImagePos() => $_has(3);
   @$pb.TagNumber(4)
-  void clearImagePos() => clearField(4);
+  void clearImagePos() => $_clearField(4);
   @$pb.TagNumber(4)
   ImageCoord ensureImagePos() => $_ensure(3);
 
@@ -3684,7 +3742,7 @@ class SlewRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(5)
   $core.bool hasOffsetRotationAxis() => $_has(4);
   @$pb.TagNumber(5)
-  void clearOffsetRotationAxis() => clearField(5);
+  void clearOffsetRotationAxis() => $_clearField(5);
 
   /// To move the boresight to the target, this is the angle by which the
   /// telescope must be moved about the other axis (declination for equatorial
@@ -3699,17 +3757,17 @@ class SlewRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(6)
   $core.bool hasOffsetTiltAxis() => $_has(5);
   @$pb.TagNumber(6)
-  void clearOffsetTiltAxis() => clearField(6);
+  void clearOffsetTiltAxis() => $_clearField(6);
 
   /// The Cedar Sky catalog entry, if any, for `target`.
   @$pb.TagNumber(8)
   $1.CatalogEntry get targetCatalogEntry => $_getN(6);
   @$pb.TagNumber(8)
-  set targetCatalogEntry($1.CatalogEntry v) { setField(8, v); }
+  set targetCatalogEntry($1.CatalogEntry v) { $_setField(8, v); }
   @$pb.TagNumber(8)
   $core.bool hasTargetCatalogEntry() => $_has(6);
   @$pb.TagNumber(8)
-  void clearTargetCatalogEntry() => clearField(8);
+  void clearTargetCatalogEntry() => $_clearField(8);
   @$pb.TagNumber(8)
   $1.CatalogEntry ensureTargetCatalogEntry() => $_ensure(6);
 
@@ -3722,7 +3780,7 @@ class SlewRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(9)
   $core.bool hasTargetCatalogEntryDistance() => $_has(7);
   @$pb.TagNumber(9)
-  void clearTargetCatalogEntryDistance() => clearField(9);
+  void clearTargetCatalogEntryDistance() => $_clearField(9);
 }
 
 /// Estimate of alt/az offset of mount's polar axis from celestial pole. Not
@@ -3781,11 +3839,11 @@ class PolarAlignAdvice extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   ErrorBoundedValue get azimuthCorrection => $_getN(0);
   @$pb.TagNumber(1)
-  set azimuthCorrection(ErrorBoundedValue v) { setField(1, v); }
+  set azimuthCorrection(ErrorBoundedValue v) { $_setField(1, v); }
   @$pb.TagNumber(1)
   $core.bool hasAzimuthCorrection() => $_has(0);
   @$pb.TagNumber(1)
-  void clearAzimuthCorrection() => clearField(1);
+  void clearAzimuthCorrection() => $_clearField(1);
   @$pb.TagNumber(1)
   ErrorBoundedValue ensureAzimuthCorrection() => $_ensure(0);
 
@@ -3794,11 +3852,11 @@ class PolarAlignAdvice extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   ErrorBoundedValue get altitudeCorrection => $_getN(1);
   @$pb.TagNumber(2)
-  set altitudeCorrection(ErrorBoundedValue v) { setField(2, v); }
+  set altitudeCorrection(ErrorBoundedValue v) { $_setField(2, v); }
   @$pb.TagNumber(2)
   $core.bool hasAltitudeCorrection() => $_has(1);
   @$pb.TagNumber(2)
-  void clearAltitudeCorrection() => clearField(2);
+  void clearAltitudeCorrection() => $_clearField(2);
   @$pb.TagNumber(2)
   ErrorBoundedValue ensureAltitudeCorrection() => $_ensure(1);
 }
@@ -3857,7 +3915,7 @@ class ErrorBoundedValue extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $core.bool hasValue() => $_has(0);
   @$pb.TagNumber(1)
-  void clearValue() => clearField(1);
+  void clearValue() => $_clearField(1);
 
   /// Estimate of the RMS error of `value`.
   @$pb.TagNumber(2)
@@ -3867,7 +3925,7 @@ class ErrorBoundedValue extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $core.bool hasError() => $_has(1);
   @$pb.TagNumber(2)
-  void clearError() => clearField(2);
+  void clearError() => $_clearField(2);
 }
 
 /// Represents a Cedar-sky catalog item in the current FOV that satisfies
@@ -3920,22 +3978,22 @@ class FovCatalogEntry extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $1.CatalogEntry get entry => $_getN(0);
   @$pb.TagNumber(1)
-  set entry($1.CatalogEntry v) { setField(1, v); }
+  set entry($1.CatalogEntry v) { $_setField(1, v); }
   @$pb.TagNumber(1)
   $core.bool hasEntry() => $_has(0);
   @$pb.TagNumber(1)
-  void clearEntry() => clearField(1);
+  void clearEntry() => $_clearField(1);
   @$pb.TagNumber(1)
   $1.CatalogEntry ensureEntry() => $_ensure(0);
 
   @$pb.TagNumber(2)
   ImageCoord get imagePos => $_getN(1);
   @$pb.TagNumber(2)
-  set imagePos(ImageCoord v) { setField(2, v); }
+  set imagePos(ImageCoord v) { $_setField(2, v); }
   @$pb.TagNumber(2)
   $core.bool hasImagePos() => $_has(1);
   @$pb.TagNumber(2)
-  void clearImagePos() => clearField(2);
+  void clearImagePos() => $_clearField(2);
   @$pb.TagNumber(2)
   ImageCoord ensureImagePos() => $_ensure(1);
 }
@@ -3947,13 +4005,15 @@ class ActionRequest extends $pb.GeneratedMessage {
     $core.bool? shutdownServer,
     $core.bool? stopSlew,
     $core.bool? saveImage,
-    $2.CelestialCoord? initiateSlew,
+    $4.CelestialCoord? initiateSlew,
     WiFiAccessPoint? updateWifiAccessPoint,
     $core.bool? restartServer,
     $core.bool? cancelCalibration,
     $core.bool? clearDontShowItems,
     ImageCoord? designateDaylightFocusRegion,
     $core.bool? crashServer,
+    $core.bool? calibrateDarkFrame,
+    $core.bool? resetHotPixelMap,
   }) {
     final $result = create();
     if (captureBoresight != null) {
@@ -3992,6 +4052,12 @@ class ActionRequest extends $pb.GeneratedMessage {
     if (crashServer != null) {
       $result.crashServer = crashServer;
     }
+    if (calibrateDarkFrame != null) {
+      $result.calibrateDarkFrame = calibrateDarkFrame;
+    }
+    if (resetHotPixelMap != null) {
+      $result.resetHotPixelMap = resetHotPixelMap;
+    }
     return $result;
   }
   ActionRequest._() : super();
@@ -4004,13 +4070,15 @@ class ActionRequest extends $pb.GeneratedMessage {
     ..aOB(3, _omitFieldNames ? '' : 'shutdownServer')
     ..aOB(4, _omitFieldNames ? '' : 'stopSlew')
     ..aOB(5, _omitFieldNames ? '' : 'saveImage')
-    ..aOM<$2.CelestialCoord>(6, _omitFieldNames ? '' : 'initiateSlew', subBuilder: $2.CelestialCoord.create)
+    ..aOM<$4.CelestialCoord>(6, _omitFieldNames ? '' : 'initiateSlew', subBuilder: $4.CelestialCoord.create)
     ..aOM<WiFiAccessPoint>(7, _omitFieldNames ? '' : 'updateWifiAccessPoint', subBuilder: WiFiAccessPoint.create)
     ..aOB(8, _omitFieldNames ? '' : 'restartServer')
     ..aOB(9, _omitFieldNames ? '' : 'cancelCalibration')
     ..aOB(10, _omitFieldNames ? '' : 'clearDontShowItems')
     ..aOM<ImageCoord>(11, _omitFieldNames ? '' : 'designateDaylightFocusRegion', subBuilder: ImageCoord.create)
     ..aOB(12, _omitFieldNames ? '' : 'crashServer')
+    ..aOB(13, _omitFieldNames ? '' : 'calibrateDarkFrame')
+    ..aOB(14, _omitFieldNames ? '' : 'resetHotPixelMap')
     ..hasRequiredFields = false
   ;
 
@@ -4045,7 +4113,7 @@ class ActionRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $core.bool hasCaptureBoresight() => $_has(0);
   @$pb.TagNumber(1)
-  void clearCaptureBoresight() => clearField(1);
+  void clearCaptureBoresight() => $_clearField(1);
 
   /// In SETUP alignment mode, this conveys which part of the image the user
   /// tapped to designate the telescope's FOV center (in daylight mode) or the
@@ -4055,11 +4123,11 @@ class ActionRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   ImageCoord get designateBoresight => $_getN(1);
   @$pb.TagNumber(2)
-  set designateBoresight(ImageCoord v) { setField(2, v); }
+  set designateBoresight(ImageCoord v) { $_setField(2, v); }
   @$pb.TagNumber(2)
   $core.bool hasDesignateBoresight() => $_has(1);
   @$pb.TagNumber(2)
-  void clearDesignateBoresight() => clearField(2);
+  void clearDesignateBoresight() => $_clearField(2);
   @$pb.TagNumber(2)
   ImageCoord ensureDesignateBoresight() => $_ensure(1);
 
@@ -4072,7 +4140,7 @@ class ActionRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   $core.bool hasShutdownServer() => $_has(2);
   @$pb.TagNumber(3)
-  void clearShutdownServer() => clearField(3);
+  void clearShutdownServer() => $_clearField(3);
 
   /// Tells SkySafari that the slew is finished (or discontinued).
   @$pb.TagNumber(4)
@@ -4082,7 +4150,7 @@ class ActionRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   $core.bool hasStopSlew() => $_has(3);
   @$pb.TagNumber(4)
-  void clearStopSlew() => clearField(4);
+  void clearStopSlew() => $_clearField(4);
 
   /// Save the current image for debugging. The image is saved in the run
   /// directory on the server with the current date/time incorporated into the
@@ -4096,31 +4164,31 @@ class ActionRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(5)
   $core.bool hasSaveImage() => $_has(4);
   @$pb.TagNumber(5)
-  void clearSaveImage() => clearField(5);
+  void clearSaveImage() => $_clearField(5);
 
   /// Cedar-aim is initiating a goto operation. This might be from a Cedar Sky
   /// catalog selection, or it might be a user-entered RA/Dec value.
   @$pb.TagNumber(6)
-  $2.CelestialCoord get initiateSlew => $_getN(5);
+  $4.CelestialCoord get initiateSlew => $_getN(5);
   @$pb.TagNumber(6)
-  set initiateSlew($2.CelestialCoord v) { setField(6, v); }
+  set initiateSlew($4.CelestialCoord v) { $_setField(6, v); }
   @$pb.TagNumber(6)
   $core.bool hasInitiateSlew() => $_has(5);
   @$pb.TagNumber(6)
-  void clearInitiateSlew() => clearField(6);
+  void clearInitiateSlew() => $_clearField(6);
   @$pb.TagNumber(6)
-  $2.CelestialCoord ensureInitiateSlew() => $_ensure(5);
+  $4.CelestialCoord ensureInitiateSlew() => $_ensure(5);
 
   /// Update ssid, psk, and/or channel setting for Cedar server's
   /// WiFi access point.
   @$pb.TagNumber(7)
   WiFiAccessPoint get updateWifiAccessPoint => $_getN(6);
   @$pb.TagNumber(7)
-  set updateWifiAccessPoint(WiFiAccessPoint v) { setField(7, v); }
+  set updateWifiAccessPoint(WiFiAccessPoint v) { $_setField(7, v); }
   @$pb.TagNumber(7)
   $core.bool hasUpdateWifiAccessPoint() => $_has(6);
   @$pb.TagNumber(7)
-  void clearUpdateWifiAccessPoint() => clearField(7);
+  void clearUpdateWifiAccessPoint() => $_clearField(7);
   @$pb.TagNumber(7)
   WiFiAccessPoint ensureUpdateWifiAccessPoint() => $_ensure(6);
 
@@ -4132,7 +4200,7 @@ class ActionRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(8)
   $core.bool hasRestartServer() => $_has(7);
   @$pb.TagNumber(8)
-  void clearRestartServer() => clearField(8);
+  void clearRestartServer() => $_clearField(8);
 
   /// Cancels a calibration; no effect if no calibration is underway.
   @$pb.TagNumber(9)
@@ -4142,7 +4210,7 @@ class ActionRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(9)
   $core.bool hasCancelCalibration() => $_has(8);
   @$pb.TagNumber(9)
-  void clearCancelCalibration() => clearField(9);
+  void clearCancelCalibration() => $_clearField(9);
 
   /// Clear all items from Preferences.dont_show_items.
   @$pb.TagNumber(10)
@@ -4152,7 +4220,7 @@ class ActionRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(10)
   $core.bool hasClearDontShowItems() => $_has(9);
   @$pb.TagNumber(10)
-  void clearClearDontShowItems() => clearField(10);
+  void clearClearDontShowItems() => $_clearField(10);
 
   /// In SETUP daylight focus mode, conveys which part of the image the user
   /// wants magnified for focusing. The image coordinates are in full resolution
@@ -4160,11 +4228,11 @@ class ActionRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(11)
   ImageCoord get designateDaylightFocusRegion => $_getN(10);
   @$pb.TagNumber(11)
-  set designateDaylightFocusRegion(ImageCoord v) { setField(11, v); }
+  set designateDaylightFocusRegion(ImageCoord v) { $_setField(11, v); }
   @$pb.TagNumber(11)
   $core.bool hasDesignateDaylightFocusRegion() => $_has(10);
   @$pb.TagNumber(11)
-  void clearDesignateDaylightFocusRegion() => clearField(11);
+  void clearDesignateDaylightFocusRegion() => $_clearField(11);
   @$pb.TagNumber(11)
   ImageCoord ensureDesignateDaylightFocusRegion() => $_ensure(10);
 
@@ -4176,7 +4244,31 @@ class ActionRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(12)
   $core.bool hasCrashServer() => $_has(11);
   @$pb.TagNumber(12)
-  void clearCrashServer() => clearField(12);
+  void clearCrashServer() => $_clearField(12);
+
+  /// Initiate calibration of dark frame(s). The user must have closed the lens
+  /// cap. FrameResult.calibrating will be true during the dark calibration
+  /// process.
+  @$pb.TagNumber(13)
+  $core.bool get calibrateDarkFrame => $_getBF(12);
+  @$pb.TagNumber(13)
+  set calibrateDarkFrame($core.bool v) { $_setBool(12, v); }
+  @$pb.TagNumber(13)
+  $core.bool hasCalibrateDarkFrame() => $_has(12);
+  @$pb.TagNumber(13)
+  void clearCalibrateDarkFrame() => $_clearField(13);
+
+  /// Discards the hot pixel map and any partial state towards building it.
+  /// After this action, CalibrationData.hot_pixel_map_count will be absent
+  /// until the map is rebuilt.
+  @$pb.TagNumber(14)
+  $core.bool get resetHotPixelMap => $_getBF(13);
+  @$pb.TagNumber(14)
+  set resetHotPixelMap($core.bool v) { $_setBool(13, v); }
+  @$pb.TagNumber(14)
+  $core.bool hasResetHotPixelMap() => $_has(13);
+  @$pb.TagNumber(14)
+  void clearResetHotPixelMap() => $_clearField(14);
 }
 
 class ServerLogRequest extends $pb.GeneratedMessage {
@@ -4227,7 +4319,7 @@ class ServerLogRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $core.bool hasLogRequest() => $_has(0);
   @$pb.TagNumber(1)
-  void clearLogRequest() => clearField(1);
+  void clearLogRequest() => $_clearField(1);
 }
 
 class ServerLogResult extends $pb.GeneratedMessage {
@@ -4277,7 +4369,7 @@ class ServerLogResult extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $core.bool hasLogContent() => $_has(0);
   @$pb.TagNumber(1)
-  void clearLogContent() => clearField(1);
+  void clearLogContent() => $_clearField(1);
 }
 
 class EmptyMessage extends $pb.GeneratedMessage {
@@ -4364,7 +4456,7 @@ class GetBluetoothNameResponse extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $core.bool hasName() => $_has(0);
   @$pb.TagNumber(1)
-  void clearName() => clearField(1);
+  void clearName() => $_clearField(1);
 
   @$pb.TagNumber(2)
   $core.String get address => $_getSZ(1);
@@ -4373,7 +4465,7 @@ class GetBluetoothNameResponse extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $core.bool hasAddress() => $_has(1);
   @$pb.TagNumber(2)
-  void clearAddress() => clearField(2);
+  void clearAddress() => $_clearField(2);
 }
 
 class BondedDevice extends $pb.GeneratedMessage {
@@ -4428,7 +4520,7 @@ class BondedDevice extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $core.bool hasName() => $_has(0);
   @$pb.TagNumber(1)
-  void clearName() => clearField(1);
+  void clearName() => $_clearField(1);
 
   @$pb.TagNumber(2)
   $core.String get address => $_getSZ(1);
@@ -4437,7 +4529,7 @@ class BondedDevice extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $core.bool hasAddress() => $_has(1);
   @$pb.TagNumber(2)
-  void clearAddress() => clearField(2);
+  void clearAddress() => $_clearField(2);
 }
 
 class GetBondedDevicesResponse extends $pb.GeneratedMessage {
@@ -4481,7 +4573,7 @@ class GetBondedDevicesResponse extends $pb.GeneratedMessage {
   static GetBondedDevicesResponse? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.List<BondedDevice> get devices => $_getList(0);
+  $pb.PbList<BondedDevice> get devices => $_getList(0);
 }
 
 class RemoveBondRequest extends $pb.GeneratedMessage {
@@ -4531,7 +4623,7 @@ class RemoveBondRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $core.bool hasAddress() => $_has(0);
   @$pb.TagNumber(1)
-  void clearAddress() => clearField(1);
+  void clearAddress() => $_clearField(1);
 }
 
 class SetPairingModeRequest extends $pb.GeneratedMessage {
@@ -4586,7 +4678,7 @@ class SetPairingModeRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $core.bool hasEnabled() => $_has(0);
   @$pb.TagNumber(1)
-  void clearEnabled() => clearField(1);
+  void clearEnabled() => $_clearField(1);
 
   /// When enabled==true, by default Cedar's bluetooth pairing mode is enabled
   /// for a finite time duration. Setting forever==true keeps pairing enabled
@@ -4598,7 +4690,7 @@ class SetPairingModeRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $core.bool hasForever() => $_has(1);
   @$pb.TagNumber(2)
-  void clearForever() => clearField(2);
+  void clearForever() => $_clearField(2);
 }
 
 
