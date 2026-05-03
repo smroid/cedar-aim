@@ -723,25 +723,74 @@ Future<void> _controlBluetoothPairing(BuildContext context, String productName) 
       context: context,
       builder: (BuildContext dialogContext) {
         final color = Theme.of(dialogContext).colorScheme.primary;
+        final rightButtons = [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext, 'cancel'),
+            child: Text('Cancel', style: TextStyle(color: color)),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext, 'disable'),
+            child: Text('Disable', style: TextStyle(color: color)),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext, 'enable'),
+            child: Text('Enable', style: TextStyle(color: color)),
+          ),
+        ];
         return AlertDialog(
           title: Text('Control $productName Bluetooth Pairing',
               style: TextStyle(color: color)),
-          content: Text('Enable or disable pairing on $productName?',
-              style: TextStyle(color: color)),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(dialogContext, 'cancel'),
-              child: Text('Cancel', style: TextStyle(color: color)),
-            ),
-            TextButton(
-              onPressed: () => Navigator.pop(dialogContext, 'disable'),
-              child: Text('Disable', style: TextStyle(color: color)),
-            ),
-            TextButton(
-              onPressed: () => Navigator.pop(dialogContext, 'enable'),
-              child: Text('Enable', style: TextStyle(color: color)),
-            ),
-          ],
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text('Enable or disable pairing on $productName?',
+                  style: TextStyle(color: color)),
+              if (isIOS()) ...[
+                const SizedBox(height: 8),
+                TextButton(
+                  style: TextButton.styleFrom(
+                      padding: EdgeInsets.zero,
+                      minimumSize: Size.zero,
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap),
+                  onPressed: () {
+                    showDialog<void>(
+                      context: dialogContext,
+                      builder: (BuildContext context) {
+                        final color = Theme.of(context).colorScheme.primary;
+                        return AlertDialog(
+                          title: Text('About Bluetooth Pairing',
+                              style: TextStyle(color: color)),
+                          content: Text(
+                              '$productName can communicate over Bluetooth '
+                              'with Android devices, but not your iOS device.\n\n'
+                              'This item is available on your iOS device to '
+                              'control $productName\'s Bluetooth pairing with '
+                              'Android devices.',
+                              style: TextStyle(color: color)),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.pop(context),
+                              child: Text('OK', style: TextStyle(color: color)),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  },
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.help_outline, size: 16, color: color),
+                      const SizedBox(width: 4),
+                      Text('About', style: TextStyle(color: color)),
+                    ],
+                  ),
+                ),
+              ],
+            ],
+          ),
+          actions: rightButtons,
         );
       },
     );
