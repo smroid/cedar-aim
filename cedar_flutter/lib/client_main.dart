@@ -14,13 +14,13 @@ import 'package:cedar_flutter/google/protobuf/timestamp.pb.dart';
 import 'package:cedar_flutter/guidance.dart';
 import 'package:cedar_flutter/interstitial_msg.dart';
 import 'package:cedar_flutter/perf_gauge.dart';
+import 'package:cedar_flutter/server_log.dart';
 import 'package:cedar_flutter/settings.dart';
 import 'package:cedar_flutter/sky_coords_dialog.dart';
 import 'package:cedar_flutter/slew_directions.dart';
 import 'package:cedar_flutter/themes.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:flutter/material.dart';
-import 'package:protobuf/protobuf.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart' as dart_widgets;
@@ -72,6 +72,7 @@ ObjectInfoDialogFunction? _objectInfoDialog;
 WifiAccessPointDialogFunction? _wifiAccessPointDialog;
 UpdaterInfo? _updaterInfo;
 bool _updateServiceAvailable = false;
+AppLogCallbacks? _appLogCallbacks;
 
 /// Check if the update service is available for showing updater-releated drawer
 /// menu items.
@@ -144,13 +145,15 @@ void clientMain(
     ObjectInfoDialogFunction? objectInfoDialog,
     WifiAccessPointDialogFunction? wifiAccessPointDialog,
     UpdaterInfo? updaterInfo,
-    bool updateServiceAvailable) {
+    bool updateServiceAvailable,
+    {AppLogCallbacks? appLogCallbacks}) {
   _drawCatalogEntries = drawCatalogEntries;
   _showCatalogBrowser = showCatalogBrowser;
   _objectInfoDialog = objectInfoDialog;
   _wifiAccessPointDialog = wifiAccessPointDialog;
   _updaterInfo = updaterInfo;
   _updateServiceAvailable = updateServiceAvailable;
+  _appLogCallbacks = appLogCallbacks;
 
   WidgetsFlutterBinding.ensureInitialized();
   PaintingBinding.instance.imageCache.maximumSize = 0;
@@ -2285,6 +2288,7 @@ class MyHomePageState extends State<MyHomePage> {
         },
         saveImage: _saveImage,
         getServerLogs: _getServerLogs,
+        appLogCallbacks: _appLogCallbacks,
         crashServer: _crashServer,
         restartCedarServer: _restartCedarServer,
         initiateAction: initiateAction,

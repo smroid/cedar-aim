@@ -1,4 +1,4 @@
-// Copyright (c) 2025 Steven Rosenthal smr@dt3.org
+// Copyright (c) 2026 Steven Rosenthal smr@dt3.org
 // See LICENSE file in root directory for license terms.
 
 import 'package:flutter/material.dart';
@@ -43,6 +43,7 @@ class CedarDrawerController {
   final String productName;
 
   // Callbacks
+  final AppLogCallbacks? appLogCallbacks;
   final void Function(bool setupMode, bool focusAid) setOperatingMode;
   final void Function(String) setDemoImage;
   final Future<void> Function() saveImage;
@@ -83,6 +84,7 @@ class CedarDrawerController {
     required this.setDemoImage,
     required this.saveImage,
     required this.getServerLogs,
+    this.appLogCallbacks,
     required this.crashServer,
     required this.restartCedarServer,
     required this.initiateAction,
@@ -548,20 +550,40 @@ class CedarDrawer extends StatelessWidget {
             SizedBox(height: _kDrawerSpacingCondensed * textScaleFactor(controller.context)),
           ],
 
+          // App log button (only shown when app log callbacks are provided).
+          if (controller.appLogCallbacks != null) ...[
+            Padding(
+              padding: const EdgeInsets.only(left: 16),
+              child: Align(
+                alignment: Alignment.topLeft,
+                child: TextButton.icon(
+                    label: _scaledText("Show Cedar Aim log"),
+                    icon: const Icon(Icons.phone_android_outlined),
+                    onPressed: () {
+                      showDialog(
+                          context: controller.context,
+                          builder: (context) => AppLogPopUp(
+                              controller.homePageState, controller.appLogCallbacks!, controller.isDIY));
+                    }),
+              ),
+            ),
+            SizedBox(height: _kDrawerSpacingCondensed * textScaleFactor(controller.context)),
+          ],
+
           // Server log button.
           Padding(
             padding: const EdgeInsets.only(left: 16),
             child: Align(
               alignment: Alignment.topLeft,
               child: TextButton.icon(
-                  label: _scaledText("Show server log"),
+                  label: _scaledText("Show ${controller.productName} log"),
                   icon: const Icon(Icons.text_snippet_outlined),
                   onPressed: () async {
                     var logs = await controller.getServerLogs();
                     if (controller.context.mounted) {
                       showDialog(
                           context: controller.context,
-                          builder: (context) => ServerLogPopUp(controller.homePageState, logs));
+                          builder: (context) => ServerLogPopUp(controller.homePageState, logs, controller.productName, controller.isDIY));
                     }
                   }),
             ),
@@ -700,21 +722,24 @@ Future<void> _controlBluetoothPairing(BuildContext context, String productName) 
     final choice = await showDialog<String>(
       context: context,
       builder: (BuildContext dialogContext) {
+        final color = Theme.of(dialogContext).colorScheme.primary;
         return AlertDialog(
-          title: Text('Control $productName Bluetooth Pairing'),
-          content: Text('Enable or disable pairing on $productName?'),
+          title: Text('Control $productName Bluetooth Pairing',
+              style: TextStyle(color: color)),
+          content: Text('Enable or disable pairing on $productName?',
+              style: TextStyle(color: color)),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(dialogContext, 'cancel'),
-              child: const Text('Cancel'),
+              child: Text('Cancel', style: TextStyle(color: color)),
             ),
             TextButton(
               onPressed: () => Navigator.pop(dialogContext, 'disable'),
-              child: const Text('Disable'),
+              child: Text('Disable', style: TextStyle(color: color)),
             ),
             TextButton(
               onPressed: () => Navigator.pop(dialogContext, 'enable'),
-              child: const Text('Enable'),
+              child: Text('Enable', style: TextStyle(color: color)),
             ),
           ],
         );
@@ -743,13 +768,16 @@ Future<void> _controlBluetoothPairing(BuildContext context, String productName) 
       builder: (BuildContext dialogContext) {
         return StatefulBuilder(
           builder: (BuildContext context, StateSetter setState) {
+            final color = Theme.of(context).colorScheme.primary;
             return AlertDialog(
-              title: Text('Enable $productName Pairing'),
+              title: Text('Enable $productName Pairing',
+                  style: TextStyle(color: color)),
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   CheckboxListTile(
-                    title: const Text('Keep pairing enabled indefinitely'),
+                    title: Text('Keep pairing enabled indefinitely',
+                        style: TextStyle(color: color)),
                     value: forever,
                     onChanged: (bool? value) {
                       setState(() {
@@ -762,11 +790,11 @@ Future<void> _controlBluetoothPairing(BuildContext context, String productName) 
               actions: [
                 TextButton(
                   onPressed: () => Navigator.pop(dialogContext, null),
-                  child: const Text('Cancel'),
+                  child: Text('Cancel', style: TextStyle(color: color)),
                 ),
                 TextButton(
                   onPressed: () => Navigator.pop(dialogContext, forever),
-                  child: const Text('Enable'),
+                  child: Text('Enable', style: TextStyle(color: color)),
                 ),
               ],
             );
