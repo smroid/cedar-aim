@@ -100,10 +100,13 @@ class _BluetoothScreenState extends State<BluetoothScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final color = Theme.of(context).colorScheme.primary;
     return Scaffold(
-      appBar: AppBar(title: const Text('Paired Mobile Devices')),
+      appBar: AppBar(
+          title: Text('Paired Mobile Devices',
+              style: TextStyle(color: color))),
       body: DefaultTextStyle.merge(
-        style: const TextStyle(fontFamilyFallback: ['Roboto']),
+        style: TextStyle(fontFamilyFallback: const ['Roboto'], color: color),
         child: Column(
           children: [
             const SizedBox(height: 20),
@@ -114,14 +117,17 @@ class _BluetoothScreenState extends State<BluetoothScreen> {
                 alignment: Alignment.centerLeft,
                 child: Text(
                   'Devices paired with $_productName',
-                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: color),
                 ),
               ),
             ),
             // Device List
             Expanded(
               child: _isLoadingList
-                  ? const Center(child: CircularProgressIndicator())
+                  ? Center(child: CircularProgressIndicator(color: color))
                   : _bondedDevices.isEmpty
                       ? Center(
                           child: Text('No devices paired with $_productName yet'),
@@ -147,24 +153,24 @@ class _BluetoothScreenState extends State<BluetoothScreen> {
                                           device.name.isEmpty
                                               ? 'Unknown Device'
                                               : device.name,
-                                          style: const TextStyle(fontSize: 18),
+                                          style: TextStyle(fontSize: 18, color: color),
                                         ),
                                         const SizedBox(height: 4),
                                         Text(
                                           device.address,
-                                          style: const TextStyle(
+                                          style: TextStyle(
                                               fontSize: 12,
-                                              color: Colors.grey),
+                                              color: color.withAlpha(153)),
                                         ),
                                       ],
                                     ),
                                   ),
                                   if (_removingDeviceAddress == device.address)
-                                    const SizedBox(
+                                    SizedBox(
                                       width: 24,
                                       height: 24,
                                       child: CircularProgressIndicator(
-                                          strokeWidth: 2),
+                                          strokeWidth: 2, color: color),
                                     )
                                   else
                                     OutlinedButton(
