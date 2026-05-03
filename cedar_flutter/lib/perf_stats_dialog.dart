@@ -210,16 +210,17 @@ Future<void> perfStatsDialog(
                       dialogOverlayEntry!.markNeedsBuild();
                     },
                   ),
-                  StatRow(
-                    context: context,
-                    label: "Hot pixels",
-                    value: sprintf("%d", [state.hotPixelCount]),
-                    bold: currentChoice == "hot_pixels",
-                    onTap: () {
-                      updateGaugeChoice("hot_pixels");
-                      dialogOverlayEntry!.markNeedsBuild();
-                    },
-                  ),
+                  if (state.hotPixelCount != null)
+                    StatRow(
+                      context: context,
+                      label: "Hot pixels",
+                      value: sprintf("%d", [state.hotPixelCount]),
+                      bold: currentChoice == "hot_pixels",
+                      onTap: () {
+                        updateGaugeChoice("hot_pixels");
+                        dialogOverlayEntry!.markNeedsBuild();
+                      },
+                    ),
                   SizedBox(height: groupGap * textScaleFactor(context)),
                   ...[
                     if (state.processingStats != null)

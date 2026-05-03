@@ -126,12 +126,19 @@ class PerfGauge extends StatelessWidget {
         }
         break;
       case "hot_pixels":
-        final hotPixels = state.hotPixelCount;
-        rawValue = hotPixels.toDouble();
-        maxValue = _kHotPixelsMax;
-        displayValue = sprintf("%d", [hotPixels]);
+        if (state.hotPixelCount != null) {
+          final hotPixels = state.hotPixelCount!;
+          rawValue = hotPixels.toDouble();
+          maxValue = _kHotPixelsMax;
+          displayValue = sprintf("%d", [hotPixels]);
+          displayUnits = null;
+          break;
+        }
+        // Field not present; fall through to stars.
+        rawValue = state.numStars.toDouble();
+        maxValue = _kStarsMax;
+        displayValue = sprintf("%d", [state.numStars]);
         displayUnits = null;
-        break;
       case "stars":
       default:
         final stars = state.numStars;
