@@ -81,6 +81,9 @@ bool get updateServiceAvailable => _updateServiceAvailable;
 /// Get the updater version for display in about screen.
 String? getUpdaterVersion() => _updaterInfo?.updaterVersion;
 
+const Duration _rpcTimeout = Duration(seconds: 5);
+const Duration _getFrameRpcTimeout = Duration(seconds: 5);
+
 /// Get server information by making a single GetFrame() RPC.
 /// Throws if unable to connect to server.
 Future<cedar_rpc.ServerInformation> getServerInformation() async {
@@ -93,7 +96,7 @@ Future<cedar_rpc.ServerInformation> getServerInformation() async {
   final response = await client
       .getFrame(
         request,
-        options: CallOptions(timeout: const Duration(seconds: 5)),
+        options: CallOptions(timeout: _getFrameRpcTimeout),
       )
       .timeout(const Duration(seconds: 7), onTimeout: () {
     throw TimeoutException('getServerInformation timed out');
@@ -131,7 +134,7 @@ Future<void> clearObserverLocation() async {
     final request = cedar_rpc.EmptyMessage();
     await client.clearObserverLocation(
       request,
-      options: CallOptions(timeout: const Duration(seconds: 2)),
+      options: CallOptions(timeout: _rpcTimeout),
     );
     debugPrint('Observer location cleared successfully');
   } catch (e) {
@@ -953,9 +956,10 @@ class MyHomePageState extends State<MyHomePage> {
     try {
       final c = await getClient();
       await c.updateFixedSettings(request,
-          options: CallOptions(timeout: const Duration(seconds: 2)));
+          options: CallOptions(timeout: _rpcTimeout));
     } catch (e) {
       debugPrint("updateFixedSettings error: $e");
+      rpcFailed();
     }
   }
 
@@ -964,9 +968,10 @@ class MyHomePageState extends State<MyHomePage> {
     try {
       final c = await getClient();
       await c.updateOperationSettings(request,
-          options: CallOptions(timeout: const Duration(seconds: 2)));
+          options: CallOptions(timeout: _rpcTimeout));
     } catch (e) {
       debugPrint("updateOperationSettings error: $e");
+      rpcFailed();
     }
   }
 
@@ -980,7 +985,7 @@ class MyHomePageState extends State<MyHomePage> {
       final response = await c
           .getFrame(
             request,
-            options: CallOptions(timeout: const Duration(seconds: 5)),
+            options: CallOptions(timeout: _getFrameRpcTimeout),
           )
           .timeout(const Duration(seconds: 7), onTimeout: () {
         throw TimeoutException('getFrame timed out');
@@ -1036,13 +1041,19 @@ class MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  Future<void> initiateAction(cedar_rpc.ActionRequest request) async {
+  Future<String?> initiateAction(cedar_rpc.ActionRequest request) async {
     try {
       final c = await getClient();
       await c.initiateAction(request,
-          options: CallOptions(timeout: const Duration(seconds: 2)));
+          options: CallOptions(timeout: _rpcTimeout));
+      return null;
     } catch (e) {
       debugPrint("initiateAction error: $e");
+      rpcFailed();
+      if (e is GrpcError && e.message != null) {
+        return e.message;
+      }
+      return e.toString();
     }
   }
 
@@ -1111,10 +1122,11 @@ class MyHomePageState extends State<MyHomePage> {
     try {
       final c = await getClient();
       final infoResult = await c.getServerLog(request,
-          options: CallOptions(timeout: const Duration(seconds: 2)));
+          options: CallOptions(timeout: _rpcTimeout));
       return infoResult.logContent;
     } catch (e) {
       debugPrint("getServerLogs error: $e");
+      rpcFailed();
       return "";
     }
   }
@@ -1153,13 +1165,10 @@ class MyHomePageState extends State<MyHomePage> {
     await initiateAction(request);
   }
 
-  Future<void> updateWifi(String ssid, String psk, int channel) async {
+  Future<String?> updateWifi(String ssid, String psk, int channel) async {
     final updateWifi = WiFiAccessPoint(ssid: ssid, psk: psk, channel: channel);
     final request = cedar_rpc.ActionRequest(updateWifiAccessPoint: updateWifi);
-    // Call RPC directly so errors can propagate to caller.
-    final c = await getClient();
-    await c.initiateAction(request,
-        options: CallOptions(timeout: const Duration(seconds: 2)));
+    return initiateAction(request);
   }
 
   Future<void> _cancelCalibration() async {
@@ -1171,7 +1180,7 @@ class MyHomePageState extends State<MyHomePage> {
     try {
       final c = await getClient();
       final newPrefs = await c.updatePreferences(changedPrefs,
-          options: CallOptions(timeout: const Duration(seconds: 2)));
+          options: CallOptions(timeout: _rpcTimeout));
       setState(() {
         preferences = newPrefs;
         if (newPrefs.nightVisionTheme) {
@@ -1184,6 +1193,7 @@ class MyHomePageState extends State<MyHomePage> {
       });
     } catch (e) {
       debugPrint("updatePreferences error: $e");
+      rpcFailed();
     }
   }
 
@@ -1481,6 +1491,8 @@ class MyHomePageState extends State<MyHomePage> {
   bool get hasSolution => _hasSolution;
   bool get hasPlateSolution => _hasPlateSolution;
   bool get offerMap => _offerMap;
+  bool get calibrating => _calibrating;
+  double get calibrationProgress => _calibrationProgress;
 
   Color _solveColor() {
     return _hasPlateSolution
