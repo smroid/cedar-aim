@@ -825,7 +825,6 @@ void calibrateDarkFrameDialog(MyHomePageState state, OverlayEntry cameraDialogEn
   OverlayEntry? dialogOverlayEntry;
   bool started = false;
   bool warmupDone = false;
-  bool isDone = false;
   String? errorMessage;
   Timer? calibrationTimer;
 
@@ -838,10 +837,8 @@ void calibrateDarkFrameDialog(MyHomePageState state, OverlayEntry cameraDialogEn
   }
 
   dialogOverlayEntry = OverlayEntry(builder: (BuildContext context) {
-    return GestureDetector(
-      onTap: isDone ? removeDialog : null,
-      child: Material(
-        color: Colors.black54,
+    return Material(
+      color: Colors.black54,
         child: DefaultTextStyle.merge(
             style: const TextStyle(fontFamilyFallback: ['Roboto']),
             child: Center(
@@ -883,9 +880,7 @@ void calibrateDarkFrameDialog(MyHomePageState state, OverlayEntry cameraDialogEn
                               calibrationTimer = Timer.periodic(
                                   const Duration(seconds: 1), (_) {
                                 if (!state.calibrating) {
-                                  isDone = true;
-                                  calibrationTimer?.cancel();
-                                  calibrationTimer = null;
+                                  removeDialog();
                                 } else if (DateTime.now().difference(startTime) >
                                     _darkFrameCalibrationTimeout) {
                                   errorMessage = "Timed out waiting for calibration to complete.";
@@ -902,7 +897,7 @@ void calibrateDarkFrameDialog(MyHomePageState state, OverlayEntry cameraDialogEn
                         child: _scaledText("Start"),
                       ),
                     ]),
-                  ] else if (!isDone) ...[
+                  ] else ...[
                     _scaledText("Calibrating dark frame..."),
                     const SizedBox(height: 15),
                     CircularProgressIndicator(
@@ -910,18 +905,10 @@ void calibrateDarkFrameDialog(MyHomePageState state, OverlayEntry cameraDialogEn
                             ? state.calibrationProgress
                             : null,
                         color: Theme.of(_context).colorScheme.primary),
-                  ] else ...[
-                    _scaledText("Dark frame calibration complete."),
-                    const SizedBox(height: 15),
-                    TextButton(
-                      onPressed: removeDialog,
-                      child: _scaledText("Done"),
-                    ),
                   ],
                 ]),
               ),
             )),
-      ),
     );
   });
 
