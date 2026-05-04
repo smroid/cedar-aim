@@ -86,6 +86,11 @@ bool diffOperationSettings(OperationSettings prev, OperationSettings curr) {
   } else {
     curr.clearUseImu();
   }
+  if (curr.useHotPixelMap != prev.useHotPixelMap) {
+    hasDiff = true;
+  } else {
+    curr.clearUseHotPixelMap();
+  }
   return hasDiff;
 }
 
@@ -137,6 +142,11 @@ class SettingsModel extends ChangeNotifier {
 
   void updateScreenAlwaysOn(bool alwaysOn) {
     preferencesProto.screenAlwaysOn = alwaysOn;
+    notifyListeners();
+  }
+
+  void updateUseHotPixelMap(bool value) {
+    opSettingsProto.useHotPixelMap = value;
     notifyListeners();
   }
 }
@@ -197,7 +207,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
     final provider = Provider.of<SettingsModel>(context, listen: false);
     final prefsProto = provider.preferencesProto;
-    // final opSettingsProto = provider.opSettingsProto;
+    final opSettingsProto = provider.opSettingsProto;
     final advanced = provider.preferencesProto.advanced;
     // final isBasic = provider.isBasic;
     final isPlus = provider.isPlus;
@@ -328,6 +338,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       title: scaledText(
                           rightHanded ? 'Right handed' : 'Left handed'),
                     ),
+                    // TODO: remove this once we've fully migrated to hot pixel
+                    // map.
+                    if (advanced && !isDIY)
+                      SettingsTile(
+                        leading: Row(children: <Widget>[
+                          Switch(
+                              value: opSettingsProto.useHotPixelMap,
+                              onChanged: (bool value) {
+                                setState(() {
+                                  provider.updateUseHotPixelMap(value);
+                                });
+                              })
+                        ]),
+                        title: scaledText('Use hot pixel map'),
+                      ),
                   ]),
                   SettingsSection(title: scaledText('Telescope'), tiles: [
                     SettingsTile(
