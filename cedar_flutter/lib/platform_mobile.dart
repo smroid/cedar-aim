@@ -53,6 +53,8 @@ bool _requestedBtOn = false;
 const _options = ChannelOptions(
   credentials: ChannelCredentials.insecure(),
   connectTimeout: Duration(seconds: 5),
+  // No max connection age needed on a local network; suppress periodic GOAWAY.
+  connectionTimeout: Duration(days: 365),
 );
 
 void rpcSucceededImpl() {}
