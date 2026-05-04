@@ -4,6 +4,7 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:cedar_flutter/cedar.pb.dart' as cedar_rpc;
 import 'package:cedar_flutter/client_main.dart';
 import 'package:cedar_flutter/platform.dart';
 import 'package:cedar_flutter/settings.dart';
@@ -282,7 +283,7 @@ Widget calibrationInfo(MyHomePageState state) {
             TextButton(
               style: _viewButtonStyle,
               onPressed: () {
-                cameraDialog(serverInfo, calData);
+                cameraDialog(state, serverInfo, calData);
               },
               child: _scaledText("view"),
             ),
@@ -651,14 +652,21 @@ void versionsDialog(String serverVersion, String? updaterVersion) async {
   Overlay.of(_context).insert(dialogOverlayEntry);
 }
 
-void cameraDialog(dynamic serverInfo, dynamic calData) {
+void cameraDialog(MyHomePageState state, dynamic serverInfo, dynamic calData) {
   OverlayEntry? dialogOverlayEntry;
+  Timer? refreshTimer;
+
+  void closeDialog() {
+    refreshTimer?.cancel();
+    refreshTimer = null;
+    dialogOverlayEntry?.remove();
+    dialogOverlayEntry = null;
+  }
 
   dialogOverlayEntry = OverlayEntry(builder: (BuildContext context) {
+    calData = state.calibrationData ?? calData;
     return GestureDetector(
-      onTap: () {
-        dialogOverlayEntry!.remove();
-      },
+      onTap: closeDialog,
       child: Material(
         color: Colors.black54,
         child: DefaultTextStyle.merge(
@@ -772,6 +780,30 @@ void cameraDialog(dynamic serverInfo, dynamic calData) {
                               style: _dialogTextStyle(),
                             )),
                           ]),
+                      _dialogItemSpacing,
+                      Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            _scaledText("Hot pixel count:"),
+                            _dialogRowSpacing,
+                            Expanded(
+                                child: Align(
+                              alignment: Alignment.centerRight,
+                              child: TextButton(
+                                style: _viewButtonStyle,
+                                onPressed: () {
+                                  calibrateDarkFrameDialog(state, dialogOverlayEntry!);
+                                },
+                                child: Text(
+                                  calData.hasHotPixelMapCount()
+                                      ? calData.hotPixelMapCount.toString()
+                                      : "Unavailable",
+                                  textAlign: TextAlign.right,
+                                  style: _dialogTextStyle(),
+                                ),
+                              ),
+                            )),
+                          ]),
                       ]),
                   ),
                 ),
@@ -780,7 +812,120 @@ void cameraDialog(dynamic serverInfo, dynamic calData) {
     );
   });
 
-  Overlay.of(_context).insert(dialogOverlayEntry);
+  Overlay.of(_context).insert(dialogOverlayEntry!);
+  refreshTimer = Timer.periodic(const Duration(seconds: 1), (_) {
+    dialogOverlayEntry?.markNeedsBuild();
+  });
+}
+
+const Duration _darkFrameWarmup = Duration(seconds: 5);
+const Duration _darkFrameCalibrationTimeout = Duration(seconds: 30);
+
+void calibrateDarkFrameDialog(MyHomePageState state, OverlayEntry cameraDialogEntry) {
+  OverlayEntry? dialogOverlayEntry;
+  bool started = false;
+  bool warmupDone = false;
+  bool isDone = false;
+  String? errorMessage;
+  Timer? calibrationTimer;
+
+  void removeDialog() {
+    calibrationTimer?.cancel();
+    calibrationTimer = null;
+    dialogOverlayEntry?.remove();
+    dialogOverlayEntry = null;
+    cameraDialogEntry.markNeedsBuild();
+  }
+
+  dialogOverlayEntry = OverlayEntry(builder: (BuildContext context) {
+    return GestureDetector(
+      onTap: isDone ? removeDialog : null,
+      child: Material(
+        color: Colors.black54,
+        child: DefaultTextStyle.merge(
+            style: const TextStyle(fontFamilyFallback: ['Roboto']),
+            child: Center(
+              child: Container(
+                padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
+                decoration: _dialogDecoration(),
+                child: Column(mainAxisSize: MainAxisSize.min, children: [
+                  if (errorMessage != null) ...[
+                    _scaledText("Error: $errorMessage"),
+                    const SizedBox(height: 15),
+                    TextButton(
+                      onPressed: removeDialog,
+                      child: _scaledText("Dismiss"),
+                    ),
+                  ] else if (!started) ...[
+                    _scaledText("Close the lens cover, then start dark frame calibration."),
+                    const SizedBox(height: 15),
+                    Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+                      TextButton(
+                        style: _viewButtonStyle,
+                        onPressed: removeDialog,
+                        child: _scaledText("Cancel"),
+                      ),
+                      TextButton(
+                        style: _viewButtonStyle,
+                        onPressed: () async {
+                          started = true;
+                          dialogOverlayEntry?.markNeedsBuild();
+                          final error = await state.initiateAction(
+                              cedar_rpc.ActionRequest(calibrateDarkFrame: true));
+                          if (error != null) {
+                            started = false;
+                            errorMessage = error;
+                          } else {
+                            final startTime = DateTime.now();
+                            // Wait for warmup, then poll for calibrating=false.
+                            calibrationTimer = Timer(_darkFrameWarmup, () {
+                              warmupDone = true;
+                              calibrationTimer = Timer.periodic(
+                                  const Duration(seconds: 1), (_) {
+                                if (!state.calibrating) {
+                                  isDone = true;
+                                  calibrationTimer?.cancel();
+                                  calibrationTimer = null;
+                                } else if (DateTime.now().difference(startTime) >
+                                    _darkFrameCalibrationTimeout) {
+                                  errorMessage = "Timed out waiting for calibration to complete.";
+                                  calibrationTimer?.cancel();
+                                  calibrationTimer = null;
+                                }
+                                dialogOverlayEntry?.markNeedsBuild();
+                              });
+                              dialogOverlayEntry?.markNeedsBuild();
+                            });
+                          }
+                          dialogOverlayEntry?.markNeedsBuild();
+                        },
+                        child: _scaledText("Start"),
+                      ),
+                    ]),
+                  ] else if (!isDone) ...[
+                    _scaledText("Calibrating dark frame..."),
+                    const SizedBox(height: 15),
+                    CircularProgressIndicator(
+                        value: warmupDone && state.calibrating
+                            ? state.calibrationProgress
+                            : null,
+                        color: Theme.of(_context).colorScheme.primary),
+                  ] else ...[
+                    _scaledText("Dark frame calibration complete."),
+                    const SizedBox(height: 15),
+                    TextButton(
+                      onPressed: removeDialog,
+                      child: _scaledText("Done"),
+                    ),
+                  ],
+                ]),
+              ),
+            )),
+      ),
+    );
+  });
+
+  Overlay.of(_context).insert(dialogOverlayEntry!);
 }
 
 void imuCalibrationDialog(dynamic serverInfo, dynamic calData) {
