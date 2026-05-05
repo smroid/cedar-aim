@@ -37,6 +37,8 @@ bool isIOSImpl() {
   return Platform.isIOS;
 }
 
+const _networkChannel = MethodChannel('cedar/network');
+
 // UUID for Cedar control channel defined in cedar-server
 String _btUuid = "4e5d4c88-2965-423f-9111-28a506720760";
 
@@ -57,7 +59,20 @@ const _options = ChannelOptions(
   connectionTimeout: Duration(days: 365),
 );
 
-void rpcSucceededImpl() {}
+bool _boundToWifi = false;
+
+void rpcSucceededImpl() {
+  if (Platform.isAndroid && !_boundToWifi && _activeDevice.name == null) {
+    _networkChannel.invokeMethod<bool>('bindToWifi').then((bound) {
+      if (bound == true) {
+        _boundToWifi = true;
+        debugPrint('bindToWifi: bound to WiFi network');
+      }
+    }).catchError((e) {
+      debugPrint('bindToWifi error: $e');
+    });
+  }
+}
 void rpcFailedImpl() {
   // On RPC failure, just clear the client so next getClientImpl() will create
   // a fresh one. Don't call cleanupImpl() here - it can race with device
@@ -318,6 +333,15 @@ Future<void> cleanupImpl() async {
   _activeProxy = null;
   _activeProxyPort = null;
   _bluetoothConnection = null;
+  if (Platform.isAndroid) {
+    _boundToWifi = false;
+    try {
+      await _networkChannel.invokeMethod('unbindNetwork');
+      debugPrint('unbindNetwork: unbound from WiFi network');
+    } catch (e) {
+      debugPrint('unbindNetwork error: $e');
+    }
+  }
 }
 
 Future<List<CedarDevice>> getBluetoothDevicesImpl() async {
