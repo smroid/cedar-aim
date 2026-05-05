@@ -49,19 +49,6 @@ Future<void> _openBluetoothSettings() async {
   }
 }
 
-/// Opens the device's airplane mode settings.
-Future<void> _openAirplaneModeSettings() async {
-  try {
-    await switch (OpenSettingsPlus.shared) {
-      OpenSettingsPlusAndroid settings => settings.airplaneMode(),
-      OpenSettingsPlusIOS settings => settings.general(),
-      _ => throw Exception('Platform not supported'),
-    };
-  } catch (e) {
-    debugPrint('Error opening airplane mode settings: $e');
-  }
-}
-
 /// Generates the connection recovery dialog message.
 String _getConnectionRecoveryMessage(String productName) {
   return "Your mobile device needs to connect to your $productName's WiFi.";
@@ -70,10 +57,9 @@ String _getConnectionRecoveryMessage(String productName) {
 /// Generates the connection recovery dialog help text.
 String _getConnectionRecoveryHelpText(String productName) {
   if (isAndroid()) {
-    return 'You can also pair with $productName via Bluetooth. '
-        'It may help to turn on airplane mode.';
+    return 'You can also pair with $productName via Bluetooth.';
   }
-  return 'It may help to turn on airplane mode.';
+  return '';
 }
 
 /// Selects a device and persists the selection.
@@ -205,11 +191,13 @@ Future<void> showConnectionRecoveryDialog({
                 message,
                 style: TextStyle(color: primaryColor),
               ),
-              const SizedBox(height: 16),
-              Text(
-                helpText,
-                style: TextStyle(fontSize: 12, color: primaryColor),
-              ),
+              if (helpText.isNotEmpty) ...[
+                const SizedBox(height: 16),
+                Text(
+                  helpText,
+                  style: TextStyle(fontSize: 12, color: primaryColor),
+                ),
+              ],
             ],
           );
 
@@ -284,16 +272,6 @@ Future<void> showConnectionRecoveryDialog({
                   label: const Text('Bluetooth Settings'),
                   onPressed: () async {
                     await _openBluetoothSettings();
-                  },
-                ),
-
-              // Airplane Mode button (Android/iOS only).
-              if (hasSettingsAccess)
-                TextButton.icon(
-                  icon: const Icon(Icons.airplanemode_active),
-                  label: const Text('Airplane Mode'),
-                  onPressed: () {
-                    _openAirplaneModeSettings();
                   },
                 ),
 
