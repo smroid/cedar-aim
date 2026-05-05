@@ -181,7 +181,8 @@ Widget systemInfo(MyHomePageState state) {
             TextButton(
               style: _viewButtonStyle,
               onPressed: () {
-                versionsDialog(serverInfo.cedarServerVersion, getUpdaterVersion());
+                versionsDialog(
+                    serverInfo.cedarServerVersion, getUpdaterVersion());
               },
               child: _scaledText("view"),
             ),
@@ -294,18 +295,24 @@ Widget calibrationInfo(MyHomePageState state) {
               onLongPress: () {
                 imuCalibrationDialog(serverInfo, calData);
               },
-              child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                _scaledText("IMU"),
-                Text(
-                  serverInfo.imuModel,
-                  textScaler: textScaler(_context),
-                  style: TextStyle(
-                    color: (calData.hasGyroTransformErrorFraction() || calData.hasGyroZeroBiasX())
-                        ? Theme.of(_context).colorScheme.primary
-                        : Theme.of(_context).colorScheme.primary.withAlpha(128),
-                  ),
-                ),
-              ]),
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    _scaledText("IMU"),
+                    Text(
+                      serverInfo.imuModel,
+                      textScaler: textScaler(_context),
+                      style: TextStyle(
+                        color: (calData.hasGyroTransformErrorFraction() ||
+                                calData.hasGyroZeroBiasX())
+                            ? Theme.of(_context).colorScheme.primary
+                            : Theme.of(_context)
+                                .colorScheme
+                                .primary
+                                .withAlpha(128),
+                      ),
+                    ),
+                  ]),
             ),
           ],
         ]))
@@ -400,48 +407,48 @@ void processorOsDialog(
                   padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
                   decoration: _dialogDecoration(),
                   child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            _scaledText("Processor:"),
-                            _dialogRowSpacing,
-                            Expanded(
-                                child: Text(
-                              cleanProcessor,
-                              textAlign: TextAlign.right,
-                              style: _dialogTextStyle(),
-                            )),
-                          ]),
-                      _dialogItemSpacing,
-                      Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            _scaledText("OS version:"),
-                            _dialogRowSpacing,
-                            Expanded(
-                                child: Text(
-                              cleanOsVersion,
-                              textAlign: TextAlign.right,
-                              style: _dialogTextStyle(),
-                            )),
-                          ]),
-                      _dialogItemSpacing,
-                      Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            _scaledText("Serial #:"),
-                            _dialogRowSpacing,
-                            Expanded(
-                                child: Text(
-                              serialNumber,
-                              textAlign: TextAlign.right,
-                              style: _dialogTextStyle(),
-                            )),
-                          ]),
-                    ]),
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              _scaledText("Processor:"),
+                              _dialogRowSpacing,
+                              Expanded(
+                                  child: Text(
+                                cleanProcessor,
+                                textAlign: TextAlign.right,
+                                style: _dialogTextStyle(),
+                              )),
+                            ]),
+                        _dialogItemSpacing,
+                        Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              _scaledText("OS version:"),
+                              _dialogRowSpacing,
+                              Expanded(
+                                  child: Text(
+                                cleanOsVersion,
+                                textAlign: TextAlign.right,
+                                style: _dialogTextStyle(),
+                              )),
+                            ]),
+                        _dialogItemSpacing,
+                        Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              _scaledText("Serial #:"),
+                              _dialogRowSpacing,
+                              Expanded(
+                                  child: Text(
+                                serialNumber,
+                                textAlign: TextAlign.right,
+                                style: _dialogTextStyle(),
+                              )),
+                            ]),
+                      ]),
                 ),
               ),
             )),
@@ -453,8 +460,12 @@ void processorOsDialog(
 }
 
 String _formatConnectionCount(int count) {
-  if (count == 0) return "none";
-  if (count == 1) return "connected";
+  if (count == 0) {
+     return "none";
+  }
+  if (count == 1) {
+    return "connected";
+  }
   return "$count connected";
 }
 
@@ -464,72 +475,64 @@ void connectionsDialog(dynamic connectionStatus) {
   List<Widget> rows = [];
 
   if (connectionStatus.cedarWifi > 0) {
-    rows.add(Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _scaledText("Cedar WiFi:"),
-          _dialogRowSpacing,
-          Expanded(
-              child: Text(
-            _formatConnectionCount(connectionStatus.cedarWifi),
-            textAlign: TextAlign.right,
-            style: _dialogTextStyle(),
-          )),
-        ]));
+    rows.add(Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      _scaledText("Cedar WiFi:"),
+      _dialogRowSpacing,
+      Expanded(
+          child: Text(
+        _formatConnectionCount(connectionStatus.cedarWifi),
+        textAlign: TextAlign.right,
+        style: _dialogTextStyle(),
+      )),
+    ]));
   }
 
   if (connectionStatus.cedarBluetooth > 0) {
     if (rows.isNotEmpty) {
       rows.add(_dialogItemSpacing);
     }
-    rows.add(Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _scaledText("Cedar Bluetooth:"),
-          _dialogRowSpacing,
-          Expanded(
-              child: Text(
-            _formatConnectionCount(connectionStatus.cedarBluetooth),
-            textAlign: TextAlign.right,
-            style: _dialogTextStyle(),
-          )),
-        ]));
+    rows.add(Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      _scaledText("Cedar Bluetooth:"),
+      _dialogRowSpacing,
+      Expanded(
+          child: Text(
+        _formatConnectionCount(connectionStatus.cedarBluetooth),
+        textAlign: TextAlign.right,
+        style: _dialogTextStyle(),
+      )),
+    ]));
   }
 
   if (connectionStatus.lx200Wifi > 0) {
     if (rows.isNotEmpty) {
       rows.add(_dialogItemSpacing);
     }
-    rows.add(Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _scaledText("LX200 WiFi:"),
-          _dialogRowSpacing,
-          Expanded(
-              child: Text(
-            _formatConnectionCount(connectionStatus.lx200Wifi),
-            textAlign: TextAlign.right,
-            style: _dialogTextStyle(),
-          )),
-        ]));
+    rows.add(Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      _scaledText("LX200 WiFi:"),
+      _dialogRowSpacing,
+      Expanded(
+          child: Text(
+        _formatConnectionCount(connectionStatus.lx200Wifi),
+        textAlign: TextAlign.right,
+        style: _dialogTextStyle(),
+      )),
+    ]));
   }
 
   if (connectionStatus.lx200Bluetooth > 0) {
     if (rows.isNotEmpty) {
-       rows.add(_dialogItemSpacing);
+      rows.add(_dialogItemSpacing);
     }
-    rows.add(Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _scaledText("LX200 Bluetooth:"),
-          _dialogRowSpacing,
-          Expanded(
-              child: Text(
-            _formatConnectionCount(connectionStatus.lx200Bluetooth),
-            textAlign: TextAlign.right,
-            style: _dialogTextStyle(),
-          )),
-        ]));
+    rows.add(Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      _scaledText("LX200 Bluetooth:"),
+      _dialogRowSpacing,
+      Expanded(
+          child: Text(
+        _formatConnectionCount(connectionStatus.lx200Bluetooth),
+        textAlign: TextAlign.right,
+        style: _dialogTextStyle(),
+      )),
+    ]));
   }
 
   if (rows.isEmpty) {
@@ -588,8 +591,8 @@ void versionsDialog(String serverVersion, String? updaterVersion) async {
         dialogOverlayEntry!.remove();
       },
       child: Material(
-        color: Colors.black54,
-        child: DefaultTextStyle.merge(
+          color: Colors.black54,
+          child: DefaultTextStyle.merge(
             style: const TextStyle(fontFamilyFallback: ['Roboto']),
             child: Center(
               child: ConstrainedBox(
@@ -605,47 +608,47 @@ void versionsDialog(String serverVersion, String? updaterVersion) async {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               _scaledText("Server version:"),
-                            _dialogRowSpacing,
-                            Expanded(
-                                child: Text(
-                              serverVersion,
-                              textAlign: TextAlign.right,
-                              style: _dialogTextStyle(),
-                            )),
-                          ]),
-                      _dialogSectionSpacing,
-                      if (updaterVersion != null) ...[
-                        Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              _scaledText("Updater version:"),
                               _dialogRowSpacing,
                               Expanded(
                                   child: Text(
-                                updaterVersion,
+                                serverVersion,
                                 textAlign: TextAlign.right,
                                 style: _dialogTextStyle(),
                               )),
                             ]),
                         _dialogSectionSpacing,
-                      ],
-                      Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            _scaledText("Client version:"),
-                            _dialogRowSpacing,
-                            Expanded(
-                                child: Text(
-                              clientVersion,
-                              textAlign: TextAlign.right,
-                              style: _dialogTextStyle(),
-                            )),
-                          ]),
+                        if (updaterVersion != null) ...[
+                          Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                _scaledText("Updater version:"),
+                                _dialogRowSpacing,
+                                Expanded(
+                                    child: Text(
+                                  updaterVersion,
+                                  textAlign: TextAlign.right,
+                                  style: _dialogTextStyle(),
+                                )),
+                              ]),
+                          _dialogSectionSpacing,
+                        ],
+                        Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              _scaledText("Client version:"),
+                              _dialogRowSpacing,
+                              Expanded(
+                                  child: Text(
+                                clientVersion,
+                                textAlign: TextAlign.right,
+                                style: _dialogTextStyle(),
+                              )),
+                            ]),
                       ]),
-                  ),
                 ),
               ),
-            )),
+            ),
+          )),
     );
   });
 
@@ -668,8 +671,8 @@ void cameraDialog(MyHomePageState state, dynamic serverInfo, dynamic calData) {
     return GestureDetector(
       onTap: closeDialog,
       child: Material(
-        color: Colors.black54,
-        child: DefaultTextStyle.merge(
+          color: Colors.black54,
+          child: DefaultTextStyle.merge(
             style: const TextStyle(fontFamilyFallback: ['Roboto']),
             child: Center(
               child: ConstrainedBox(
@@ -685,130 +688,133 @@ void cameraDialog(MyHomePageState state, dynamic serverInfo, dynamic calData) {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               _scaledText("Model:"),
-                            _dialogRowSpacing,
-                            Expanded(
-                                child: Text(
-                              serverInfo.hasCamera()
-                                  ? serverInfo.camera.model
-                                  : "no camera",
-                              textAlign: TextAlign.right,
-                              style: _dialogTextStyle(),
-                            )),
-                          ]),
-                      _dialogItemSpacing,
-                      Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            _scaledText("Resolution:"),
-                            _dialogRowSpacing,
-                            Expanded(
-                                child: Text(
-                              serverInfo.hasCamera()
-                                  ? sprintf("%d x %d", [
-                                      serverInfo.camera.imageWidth,
-                                      serverInfo.camera.imageHeight
-                                    ])
-                                  : "no camera",
-                              textAlign: TextAlign.right,
-                              style: _dialogTextStyle(),
-                            )),
-                          ]),
-                      _dialogItemSpacing,
-                      Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            _scaledText("Lens focal length:"),
-                            _dialogRowSpacing,
-                            Expanded(
-                                child: Text(
-                              calData.hasLensFlMm()
-                                  ? sprintf("%.1fmm", [calData.lensFlMm])
-                                  : "unknown",
-                              textAlign: TextAlign.right,
-                              style: _dialogTextStyle(),
-                            )),
-                          ]),
-                      _dialogItemSpacing,
-                      Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            _scaledText("FOV:"),
-                            _dialogRowSpacing,
-                            Expanded(
-                                child: Text(
-                              calData.hasFovHorizontal()
-                                  ? sprintf("%.1f° x %.1f°", [
-                                      calData.fovHorizontal,
-                                      calData.fovVertical
-                                    ])
-                                  : "unknown",
-                              textAlign: TextAlign.right,
-                              style: _dialogTextStyle(),
-                            )),
-                          ]),
-                      _dialogItemSpacing,
-                      Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            _scaledText("Pixel angular size:"),
-                            _dialogRowSpacing,
-                            Expanded(
-                                child: Text(
-                              calData.hasPixelAngularSize()
-                                  ? calData.pixelAngularSize > 1.0 / 60
-                                      ? sprintf("%.1f arcmin",
-                                          [calData.pixelAngularSize * 60.0])
-                                      : sprintf("%.0f arcsec",
-                                          [calData.pixelAngularSize * 3600.0])
-                                  : "unknown",
-                              textAlign: TextAlign.right,
-                              style: _dialogTextStyle(),
-                            )),
-                          ]),
-                      _dialogItemSpacing,
-                      Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            _scaledText("Lens distortion:"),
-                            _dialogRowSpacing,
-                            Expanded(
-                                child: Text(
-                              calData.hasLensDistortion()
-                                  ? sprintf("%.3f", [calData.lensDistortion])
-                                  : "unknown",
-                              textAlign: TextAlign.right,
-                              style: _dialogTextStyle(),
-                            )),
-                          ]),
-                      _dialogItemSpacing,
-                      Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            _scaledText("Hot pixel count:"),
-                            _dialogRowSpacing,
-                            Expanded(
-                                child: Align(
-                              alignment: Alignment.centerRight,
-                              child: TextButton(
-                                style: _viewButtonStyle,
-                                onPressed: () {
-                                  calibrateDarkFrameDialog(state, dialogOverlayEntry!);
-                                },
-                                child: Text(
-                                  calData.hasHotPixelMapCount()
-                                      ? calData.hotPixelMapCount.toString()
-                                      : "Unavailable",
-                                  textAlign: TextAlign.right,
-                                  style: _dialogTextStyle(),
-                                ),
-                              ),
-                            )),
-                          ]),
+                              _dialogRowSpacing,
+                              Expanded(
+                                  child: Text(
+                                serverInfo.hasCamera()
+                                    ? serverInfo.camera.model
+                                    : "no camera",
+                                textAlign: TextAlign.right,
+                                style: _dialogTextStyle(),
+                              )),
+                            ]),
+                        _dialogItemSpacing,
+                        Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              _scaledText("Resolution:"),
+                              _dialogRowSpacing,
+                              Expanded(
+                                  child: Text(
+                                serverInfo.hasCamera()
+                                    ? sprintf("%d x %d", [
+                                        serverInfo.camera.imageWidth,
+                                        serverInfo.camera.imageHeight
+                                      ])
+                                    : "no camera",
+                                textAlign: TextAlign.right,
+                                style: _dialogTextStyle(),
+                              )),
+                            ]),
+                        _dialogItemSpacing,
+                        Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              _scaledText("Lens focal length:"),
+                              _dialogRowSpacing,
+                              Expanded(
+                                  child: Text(
+                                calData.hasLensFlMm()
+                                    ? sprintf("%.1fmm", [calData.lensFlMm])
+                                    : "unknown",
+                                textAlign: TextAlign.right,
+                                style: _dialogTextStyle(),
+                              )),
+                            ]),
+                        _dialogItemSpacing,
+                        Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              _scaledText("FOV:"),
+                              _dialogRowSpacing,
+                              Expanded(
+                                  child: Text(
+                                calData.hasFovHorizontal()
+                                    ? sprintf("%.1f° x %.1f°", [
+                                        calData.fovHorizontal,
+                                        calData.fovVertical
+                                      ])
+                                    : "unknown",
+                                textAlign: TextAlign.right,
+                                style: _dialogTextStyle(),
+                              )),
+                            ]),
+                        _dialogItemSpacing,
+                        Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              _scaledText("Pixel angular size:"),
+                              _dialogRowSpacing,
+                              Expanded(
+                                  child: Text(
+                                calData.hasPixelAngularSize()
+                                    ? calData.pixelAngularSize > 1.0 / 60
+                                        ? sprintf("%.1f arcmin",
+                                            [calData.pixelAngularSize * 60.0])
+                                        : sprintf("%.0f arcsec",
+                                            [calData.pixelAngularSize * 3600.0])
+                                    : "unknown",
+                                textAlign: TextAlign.right,
+                                style: _dialogTextStyle(),
+                              )),
+                            ]),
+                        _dialogItemSpacing,
+                        Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              _scaledText("Lens distortion:"),
+                              _dialogRowSpacing,
+                              Expanded(
+                                  child: Text(
+                                calData.hasLensDistortion()
+                                    ? sprintf("%.3f", [calData.lensDistortion])
+                                    : "unknown",
+                                textAlign: TextAlign.right,
+                                style: _dialogTextStyle(),
+                              )),
+                            ]),
+                        if (!state.isDIY) ...[
+                          _dialogItemSpacing,
+                          Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                _scaledText("Hot pixel count:"),
+                                _dialogRowSpacing,
+                                Expanded(
+                                    child: Align(
+                                  alignment: Alignment.centerRight,
+                                  child: TextButton(
+                                    style: _viewButtonStyle,
+                                    onPressed: () {
+                                      calibrateDarkFrameDialog(
+                                          state, dialogOverlayEntry!);
+                                    },
+                                    child: Text(
+                                      calData.hasHotPixelMapCount()
+                                          ? calData.hotPixelMapCount.toString()
+                                          : "Unavailable",
+                                      textAlign: TextAlign.right,
+                                      style: _dialogTextStyle(),
+                                    ),
+                                  ),
+                                )),
+                              ]),
+                        ],
                       ]),
-                  ),
                 ),
               ),
-            )),
+            ),
+          )),
     );
   });
 
@@ -821,7 +827,8 @@ void cameraDialog(MyHomePageState state, dynamic serverInfo, dynamic calData) {
 const Duration _darkFrameWarmup = Duration(seconds: 5);
 const Duration _darkFrameCalibrationTimeout = Duration(seconds: 30);
 
-void calibrateDarkFrameDialog(MyHomePageState state, OverlayEntry cameraDialogEntry) {
+void calibrateDarkFrameDialog(
+    MyHomePageState state, OverlayEntry cameraDialogEntry) {
   OverlayEntry? dialogOverlayEntry;
   bool started = false;
   bool warmupDone = false;
@@ -839,76 +846,82 @@ void calibrateDarkFrameDialog(MyHomePageState state, OverlayEntry cameraDialogEn
   dialogOverlayEntry = OverlayEntry(builder: (BuildContext context) {
     return Material(
       color: Colors.black54,
-        child: DefaultTextStyle.merge(
-            style: const TextStyle(fontFamilyFallback: ['Roboto']),
-            child: Center(
-              child: Container(
-                padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
-                decoration: _dialogDecoration(),
-                child: Column(mainAxisSize: MainAxisSize.min, children: [
-                  if (errorMessage != null) ...[
-                    _scaledText("Error: $errorMessage"),
-                    const SizedBox(height: 15),
-                    TextButton(
-                      onPressed: removeDialog,
-                      child: _scaledText("Dismiss"),
-                    ),
-                  ] else if (!started) ...[
-                    _scaledText("Close the lens cover, then start dark frame calibration."),
-                    const SizedBox(height: 15),
-                    Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-                      TextButton(
-                        style: _viewButtonStyle,
-                        onPressed: removeDialog,
-                        child: _scaledText("Cancel"),
-                      ),
-                      TextButton(
-                        style: _viewButtonStyle,
-                        onPressed: () async {
-                          started = true;
-                          dialogOverlayEntry?.markNeedsBuild();
-                          final error = await state.initiateAction(
-                              cedar_rpc.ActionRequest(calibrateDarkFrame: true));
-                          if (error != null) {
-                            started = false;
-                            errorMessage = error;
-                          } else {
-                            final startTime = DateTime.now();
-                            // Wait for warmup, then poll for calibrating=false.
-                            calibrationTimer = Timer(_darkFrameWarmup, () {
-                              warmupDone = true;
-                              calibrationTimer = Timer.periodic(
-                                  const Duration(seconds: 1), (_) {
-                                if (!state.calibrating) {
-                                  removeDialog();
-                                } else if (DateTime.now().difference(startTime) >
-                                    _darkFrameCalibrationTimeout) {
-                                  errorMessage = "Timed out waiting for calibration to complete.";
-                                  calibrationTimer?.cancel();
-                                  calibrationTimer = null;
-                                }
+      child: DefaultTextStyle.merge(
+          style: const TextStyle(fontFamilyFallback: ['Roboto']),
+          child: Center(
+            child: Container(
+              padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
+              decoration: _dialogDecoration(),
+              child: Column(mainAxisSize: MainAxisSize.min, children: [
+                if (errorMessage != null) ...[
+                  _scaledText("Error: $errorMessage"),
+                  const SizedBox(height: 15),
+                  TextButton(
+                    onPressed: removeDialog,
+                    child: _scaledText("Dismiss"),
+                  ),
+                ] else if (!started) ...[
+                  _scaledText(
+                      "Close the lens cover, then start dark frame calibration."),
+                  const SizedBox(height: 15),
+                  Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        TextButton(
+                          style: _viewButtonStyle,
+                          onPressed: removeDialog,
+                          child: _scaledText("Cancel"),
+                        ),
+                        TextButton(
+                          style: _viewButtonStyle,
+                          onPressed: () async {
+                            started = true;
+                            dialogOverlayEntry?.markNeedsBuild();
+                            final error = await state.initiateAction(
+                                cedar_rpc.ActionRequest(
+                                    calibrateDarkFrame: true));
+                            if (error != null) {
+                              started = false;
+                              errorMessage = error;
+                            } else {
+                              final startTime = DateTime.now();
+                              // Wait for warmup, then poll for calibrating=false.
+                              calibrationTimer = Timer(_darkFrameWarmup, () {
+                                warmupDone = true;
+                                calibrationTimer = Timer.periodic(
+                                    const Duration(seconds: 1), (_) {
+                                  if (!state.calibrating) {
+                                    removeDialog();
+                                  } else if (DateTime.now()
+                                          .difference(startTime) >
+                                      _darkFrameCalibrationTimeout) {
+                                    errorMessage =
+                                        "Timed out waiting for calibration to complete.";
+                                    calibrationTimer?.cancel();
+                                    calibrationTimer = null;
+                                  }
+                                  dialogOverlayEntry?.markNeedsBuild();
+                                });
                                 dialogOverlayEntry?.markNeedsBuild();
                               });
-                              dialogOverlayEntry?.markNeedsBuild();
-                            });
-                          }
-                          dialogOverlayEntry?.markNeedsBuild();
-                        },
-                        child: _scaledText("Start"),
-                      ),
-                    ]),
-                  ] else ...[
-                    _scaledText("Calibrating dark frame..."),
-                    const SizedBox(height: 15),
-                    CircularProgressIndicator(
-                        value: warmupDone && state.calibrating
-                            ? state.calibrationProgress
-                            : null,
-                        color: Theme.of(_context).colorScheme.primary),
-                  ],
-                ]),
-              ),
-            )),
+                            }
+                            dialogOverlayEntry?.markNeedsBuild();
+                          },
+                          child: _scaledText("Start"),
+                        ),
+                      ]),
+                ] else ...[
+                  _scaledText("Calibrating dark frame..."),
+                  const SizedBox(height: 15),
+                  CircularProgressIndicator(
+                      value: warmupDone && state.calibrating
+                          ? state.calibrationProgress
+                          : null,
+                      color: Theme.of(_context).colorScheme.primary),
+                ],
+              ]),
+            ),
+          )),
     );
   });
 
@@ -943,7 +956,9 @@ void imuCalibrationDialog(dynamic serverInfo, dynamic calData) {
                             Expanded(
                                 child: Text(
                               calData.hasGyroTransformErrorFraction()
-                                  ? sprintf("%.1f%%", [calData.gyroTransformErrorFraction * 100])
+                                  ? sprintf("%.1f%%", [
+                                      calData.gyroTransformErrorFraction * 100
+                                    ])
                                   : "unknown",
                               textAlign: TextAlign.right,
                               style: _dialogTextStyle(),
@@ -972,7 +987,8 @@ void imuCalibrationDialog(dynamic serverInfo, dynamic calData) {
                             Expanded(
                                 child: Text(
                               calData.hasCameraViewGyroAxis()
-                                  ? sprintf("%.1f°", [calData.cameraViewMisalignment])
+                                  ? sprintf(
+                                      "%.1f°", [calData.cameraViewMisalignment])
                                   : "unknown",
                               textAlign: TextAlign.right,
                               style: _dialogTextStyle(),
@@ -1001,7 +1017,8 @@ void imuCalibrationDialog(dynamic serverInfo, dynamic calData) {
                             Expanded(
                                 child: Text(
                               calData.hasCameraUpGyroAxis()
-                                  ? sprintf("%.1f°", [calData.cameraUpMisalignment])
+                                  ? sprintf(
+                                      "%.1f°", [calData.cameraUpMisalignment])
                                   : "unknown",
                               textAlign: TextAlign.right,
                               style: _dialogTextStyle(),
