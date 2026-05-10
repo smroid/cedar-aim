@@ -2137,8 +2137,8 @@ class MyHomePageState extends State<MyHomePage> {
                         const SizedBox(height: 12),
                         Text(
                           _daylightMode
-                              ? "1. Point your telescope at a distant object"
-                              : "1. Point your telescope at a bright star\n2. Center in eyepiece",
+                              ? "1. Point your scope at a distant object"
+                              : "1. Point your scope at a bright star\n2. Center in eyepiece",
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 11,
@@ -2379,12 +2379,12 @@ class MyHomePageState extends State<MyHomePage> {
         product == "Hopper"
             ? "We will verify the focus of your $product, which was set "
                 "at the factory and should not need adjustment.\n"
-                "Please point your telescope "
+                "Please point your scope "
                 "towards some stars. At the next screen, one of the stars "
                 "will be magnified; it should be round and compact.\n"
                 "You can select 'Day' to check focus using a daylight scene."
             : "We will check and adjust the focusing of your $product.\nPlease point "
-                "your telescope towards some stars. "
+                "your scope towards some stars. "
                 "At the next screen, adjust the $product lens to make "
                 "the highlighted star image as compact as possible.\n"
                 "You can select 'Day' to adjust focus using a daylight scene.",
@@ -2406,7 +2406,7 @@ class MyHomePageState extends State<MyHomePage> {
     if (_showAlignIntro && !_focusAid && _setupMode) {
       return interstitialDialog(
         "We will set the alignment of your $product "
-        "relative to your telescope.\nStart by pointing your telescope at "
+        "relative to your telescope.\nStart by pointing your scope at "
         "any bright star or planet, preferably one that is the brightest in "
         "its area of the sky. Then, follow the prompt on the next screen.\n"
         "You can select 'Day' to set alignment using a daylight scene.",
