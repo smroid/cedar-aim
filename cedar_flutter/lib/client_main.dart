@@ -1937,7 +1937,7 @@ class MyHomePageState extends State<MyHomePage> {
                   overlaySize / _boresightImageHeight, _binFactor),
               child: overlayImage));
     }
-    return Stack(alignment: Alignment.topRight, children: <Widget>[
+    return Stack(alignment: Alignment.bottomRight, children: <Widget>[
       _prevFrameId != -1
           ? _mainImage()
           : const SizedBox(width: 500, height: 500),
