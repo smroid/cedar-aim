@@ -4,7 +4,6 @@
 import 'package:cedar_flutter/cedar.pb.dart';
 import 'package:cedar_flutter/settings.dart';
 import 'package:flutter/material.dart';
-import 'package:protobuf/protobuf.dart';
 import 'package:provider/provider.dart';
 
 /// Widget that builds the controls interface for the Cedar Aim app. The
@@ -185,7 +184,7 @@ class ControlsWidget extends StatelessWidget {
                               child: Align(
                                   alignment: Alignment.center,
                                   child: Text(
-                                    "3. Tap object telescope is pointed at",
+                                    "3. Tap object scope is pointed at",
                                     maxLines: 8,
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
@@ -246,46 +245,56 @@ class ControlsWidget extends StatelessWidget {
               // Skip and Day checkboxes (only in setup mode).
               if (setupMode) ...[
                 Column(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     SizedBox(height: 5 * panelScaleFactor),
                     if (!skipFocus || !focusAid) ...[
-                      Transform.scale(
-                        scale: panelScaleFactor,
-                        child: TextButton.icon(
-                            label: scaledText("Day"),
-                            icon: daylightMode
-                                ? const Icon(Icons.check)
-                                : const Icon(Icons.check_box_outline_blank),
-                            onPressed: () async {
-                              onSetDaylightMode(!daylightMode);
-                            }),
-                      ),
+                      TextButton.icon(
+                          style: TextButton.styleFrom(
+                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 4 * panelScaleFactor),
+                            iconSize: 18 * panelScaleFactor,
+                          ),
+                          label: scaledText("Day"),
+                          icon: daylightMode
+                              ? const Icon(Icons.check)
+                              : const Icon(Icons.check_box_outline_blank),
+                          onPressed: () async {
+                            onSetDaylightMode(!daylightMode);
+                          }),
                     ],
                     if (focusAid && !daylightMode && !skipFocusActive) ...[
-                      Transform.scale(
-                        scale: panelScaleFactor,
-                        child: TextButton.icon(
-                            label: scaledText("Skip"),
-                            icon: skipFocus
-                                ? const Icon(Icons.check)
-                                : const Icon(Icons.check_box_outline_blank),
-                            onPressed: () {
-                              onSkipFocusUpdate(!skipFocus);
-                            }),
-                      ),
+                      TextButton.icon(
+                          style: TextButton.styleFrom(
+                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 4 * panelScaleFactor),
+                            iconSize: 18 * panelScaleFactor,
+                          ),
+                          label: scaledText("Skip"),
+                          icon: skipFocus
+                              ? const Icon(Icons.check)
+                              : const Icon(Icons.check_box_outline_blank),
+                          onPressed: () {
+                            onSkipFocusUpdate(!skipFocus);
+                          }),
                     ] else if (canAlign && slewRequest == null &&
                                !daylightMode && !skipFocusActive) ...[
-                      Transform.scale(
-                        scale: panelScaleFactor,
-                        child: TextButton.icon(
-                            label: scaledText("Skip"),
-                            icon: skipAlignment
-                                ? const Icon(Icons.check)
-                                : const Icon(Icons.check_box_outline_blank),
-                            onPressed: () {
-                              onSkipAlignmentUpdate(!skipAlignment);
-                            }),
-                      ),
+                      TextButton.icon(
+                          style: TextButton.styleFrom(
+                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 4 * panelScaleFactor),
+                            iconSize: 18 * panelScaleFactor,
+                          ),
+                          label: scaledText("Skip"),
+                          icon: skipAlignment
+                              ? const Icon(Icons.check)
+                              : const Icon(Icons.check_box_outline_blank),
+                          onPressed: () {
+                            onSkipAlignmentUpdate(!skipAlignment);
+                          }),
                     ],
                   ],
                 ),
