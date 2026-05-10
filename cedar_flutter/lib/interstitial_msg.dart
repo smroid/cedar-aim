@@ -73,25 +73,32 @@ class _InterstitialDialogContentState
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: widget.message
-              .split('\n')
-              .map((paragraph) => Padding(
-                    padding: const EdgeInsets.only(
-                        bottom: _paragraphSpacing),
-                    child: Text(
-                      paragraph,
-                      textScaler: textScaler(context),
-                      textAlign: TextAlign.left,
-                      style: TextStyle(
-                        fontSize: _fontSize,
-                        color: Theme.of(context).colorScheme.primary,
-                        height: _lineHeight,
-                      ),
-                    ),
-                  ))
-              .toList(),
+        Flexible(
+          child: Scrollbar(
+            thumbVisibility: true,
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: widget.message
+                    .split('\n')
+                    .map((paragraph) => Padding(
+                          padding: const EdgeInsets.only(
+                              bottom: _paragraphSpacing),
+                          child: Text(
+                            paragraph,
+                            textScaler: textScaler(context),
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                              fontSize: _fontSize,
+                              color: Theme.of(context).colorScheme.primary,
+                              height: _lineHeight,
+                            ),
+                          ),
+                        ))
+                    .toList(),
+              ),
+            ),
+          ),
         ),
         const SizedBox(height: _paragraphSpacing),
         Row(
