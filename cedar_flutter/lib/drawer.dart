@@ -833,6 +833,9 @@ Future<void> _controlBluetoothPairing(BuildContext context, String productName) 
                         forever = value ?? false;
                       });
                     },
+                    activeColor: color,
+                    checkColor: Colors.black,
+                    side: BorderSide(width: 2, color: color),
                   ),
                 ],
               ),

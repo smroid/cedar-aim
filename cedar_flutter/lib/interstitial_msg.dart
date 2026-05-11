@@ -112,6 +112,11 @@ class _InterstitialDialogContentState
                     Checkbox(
                       value: _dontShowAgain,
                       onChanged: (bool? value) => _toggleDontShowAgain(),
+                      activeColor: Theme.of(context).colorScheme.primary,
+                      checkColor: Colors.black,
+                      side: BorderSide(
+                          width: 2,
+                          color: Theme.of(context).colorScheme.primary),
                     ),
                     Flexible(
                       child: GestureDetector(
@@ -135,7 +140,6 @@ class _InterstitialDialogContentState
               onPressed: () {
                 // Call onConfirm first in case it needs to do cleanup
                 widget.onConfirm?.call();
-                
                 if (widget.popContext) {
                   Navigator.of(context).pop(_dontShowAgain);
                 }
