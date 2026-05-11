@@ -921,6 +921,9 @@ class MyHomePageState extends State<MyHomePage> {
     }
     if (preferences != null) {
       final dontShowItems = preferences!.dontShowItems;
+      final prevDontShowWelcome = _dontShowWelcome;
+      final prevDontShowFocusIntro = _dontShowFocusIntro;
+      final prevDontShowAlignIntro = _dontShowAlignIntro;
       _dontShowWelcome = dontShowItems.contains('welcome');
       _dontShowFocusIntro = dontShowItems.contains('focus_intro');
       _dontShowAlignIntro = dontShowItems.contains('align_intro');
@@ -928,6 +931,17 @@ class MyHomePageState extends State<MyHomePage> {
       _dontShowBrightSky = dontShowItems.contains('bright_sky');
       _dontShowSolverFailed = dontShowItems.contains('solver_failed');
       _dontShowSetupFinished = dontShowItems.contains('setup_finished');
+      // If a dontShow flag was cleared, reset the corresponding show flag so
+      // the dialog can appear again.
+      if (prevDontShowWelcome && !_dontShowWelcome) {
+        _showedWelcome = false;
+      }
+      if (prevDontShowFocusIntro && !_dontShowFocusIntro) {
+        _showFocusIntro = true;
+      }
+      if (prevDontShowAlignIntro && !_dontShowAlignIntro) {
+        _showAlignIntro = true;
+      }
     }
     if (newFocusMode && !prevFocusMode) {
       _showFocusIntro =
