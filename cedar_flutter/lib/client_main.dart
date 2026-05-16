@@ -1055,6 +1055,24 @@ class MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  // Returns true if the error is a server-side semantic rejection (the channel
+  // is healthy and should not be recycled).
+  bool _isSemanticGrpcError(dynamic e) {
+    if (e is! GrpcError) return false;
+    switch (e.code) {
+      case StatusCode.failedPrecondition:
+      case StatusCode.invalidArgument:
+      case StatusCode.notFound:
+      case StatusCode.alreadyExists:
+      case StatusCode.permissionDenied:
+      case StatusCode.outOfRange:
+      case StatusCode.unimplemented:
+        return true;
+      default:
+        return false;
+    }
+  }
+
   Future<String?> initiateAction(cedar_rpc.ActionRequest request) async {
     try {
       final c = await getClient();
@@ -1063,7 +1081,9 @@ class MyHomePageState extends State<MyHomePage> {
       return null;
     } catch (e) {
       debugPrint("initiateAction error: $e");
-      rpcFailed();
+      if (!_isSemanticGrpcError(e)) {
+        rpcFailed();
+      }
       if (e is GrpcError && e.message != null) {
         return e.message;
       }
