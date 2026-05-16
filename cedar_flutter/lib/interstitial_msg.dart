@@ -59,6 +59,13 @@ class _InterstitialDialogContent extends StatefulWidget {
 class _InterstitialDialogContentState
     extends State<_InterstitialDialogContent> {
   bool _dontShowAgain = false;
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   void _toggleDontShowAgain() {
     if (!mounted) return;
@@ -76,7 +83,9 @@ class _InterstitialDialogContentState
         Flexible(
           child: Scrollbar(
             thumbVisibility: true,
+            controller: _scrollController,
             child: SingleChildScrollView(
+              controller: _scrollController,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: widget.message
