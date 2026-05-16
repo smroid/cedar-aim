@@ -879,7 +879,6 @@ class OperationSettings extends $pb.GeneratedMessage {
     $core.String? demoImageFilename,
     $core.bool? focusAssistMode,
     $core.bool? useImu,
-    $core.bool? useHotPixelMap,
   }) {
     final $result = create();
     if (daylightMode != null) {
@@ -903,9 +902,6 @@ class OperationSettings extends $pb.GeneratedMessage {
     if (useImu != null) {
       $result.useImu = useImu;
     }
-    if (useHotPixelMap != null) {
-      $result.useHotPixelMap = useHotPixelMap;
-    }
     return $result;
   }
   OperationSettings._() : super();
@@ -920,7 +916,6 @@ class OperationSettings extends $pb.GeneratedMessage {
     ..aOS(12, _omitFieldNames ? '' : 'demoImageFilename')
     ..aOB(14, _omitFieldNames ? '' : 'focusAssistMode')
     ..aOB(15, _omitFieldNames ? '' : 'useImu')
-    ..aOB(16, _omitFieldNames ? '' : 'useHotPixelMap')
     ..hasRequiredFields = false
   ;
 
@@ -1037,19 +1032,6 @@ class OperationSettings extends $pb.GeneratedMessage {
   $core.bool hasUseImu() => $_has(6);
   @$pb.TagNumber(15)
   void clearUseImu() => $_clearField(15);
-
-  /// Controls whether the hot pixel map, if provided, is used for hot pixel
-  /// detection. If false, or no hot pixel map is provided, the legacy hot pixel
-  /// logic in Cedar Detect is used. The initial value of this field is true if
-  /// a hot pixel map is provided.
-  @$pb.TagNumber(16)
-  $core.bool get useHotPixelMap => $_getBF(7);
-  @$pb.TagNumber(16)
-  set useHotPixelMap($core.bool v) { $_setBool(7, v); }
-  @$pb.TagNumber(16)
-  $core.bool hasUseHotPixelMap() => $_has(7);
-  @$pb.TagNumber(16)
-  void clearUseHotPixelMap() => $_clearField(16);
 }
 
 /// User interface preferences and operation settings that are stored durably on
@@ -1345,9 +1327,10 @@ class Preferences extends $pb.GeneratedMessage {
   @$pb.TagNumber(18)
   void clearTextSizeIndex() => $_clearField(18);
 
-  /// Saved boresight position. On server startup we use this to initialize the
-  /// internal state which appears at FrameResult.boresight_position. Note: do
-  /// not update this via UpdatePreferences().
+  /// Saved boresight position, in full sensor resolution coordinates. On server
+  /// startup we use this to initialize the internal state which appears at
+  /// FrameResult.boresight_position. Note: do not update this via
+  /// UpdatePreferences().
   @$pb.TagNumber(19)
   ImageCoord get boresightPixel => $_getN(14);
   @$pb.TagNumber(19)

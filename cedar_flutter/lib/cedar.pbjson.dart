@@ -305,7 +305,6 @@ const OperationSettings$json = {
     {'1': 'catalog_entry_match', '3': 11, '4': 1, '5': 11, '6': '.cedar_sky.CatalogEntryMatch', '9': 4, '10': 'catalogEntryMatch', '17': true},
     {'1': 'demo_image_filename', '3': 12, '4': 1, '5': 9, '9': 5, '10': 'demoImageFilename', '17': true},
     {'1': 'use_imu', '3': 15, '4': 1, '5': 8, '9': 6, '10': 'useImu', '17': true},
-    {'1': 'use_hot_pixel_map', '3': 16, '4': 1, '5': 8, '9': 7, '10': 'useHotPixelMap', '17': true},
   ],
   '8': [
     {'1': '_operating_mode'},
@@ -315,7 +314,6 @@ const OperationSettings$json = {
     {'1': '_catalog_entry_match'},
     {'1': '_demo_image_filename'},
     {'1': '_use_imu'},
-    {'1': '_use_hot_pixel_map'},
   ],
   '9': [
     {'1': 3, '2': 4},
@@ -323,6 +321,7 @@ const OperationSettings$json = {
     {'1': 7, '2': 8},
     {'1': 8, '2': 9},
     {'1': 13, '2': 14},
+    {'1': 16, '2': 17},
   ],
 };
 
@@ -335,11 +334,10 @@ final $typed_data.Uint8List operationSettingsDescriptor = $convert.base64Decode(
     'b3NpdGlvbnOIAQESUQoTY2F0YWxvZ19lbnRyeV9tYXRjaBgLIAEoCzIcLmNlZGFyX3NreS5DYX'
     'RhbG9nRW50cnlNYXRjaEgEUhFjYXRhbG9nRW50cnlNYXRjaIgBARIzChNkZW1vX2ltYWdlX2Zp'
     'bGVuYW1lGAwgASgJSAVSEWRlbW9JbWFnZUZpbGVuYW1liAEBEhwKB3VzZV9pbXUYDyABKAhIBl'
-    'IGdXNlSW11iAEBEi4KEXVzZV9ob3RfcGl4ZWxfbWFwGBAgASgISAdSDnVzZUhvdFBpeGVsTWFw'
-    'iAEBQhEKD19vcGVyYXRpbmdfbW9kZUIQCg5fZGF5bGlnaHRfbW9kZUIUChJfZm9jdXNfYXNzaX'
-    'N0X21vZGVCGAoWX2xvZ19kd2VsbGVkX3Bvc2l0aW9uc0IWChRfY2F0YWxvZ19lbnRyeV9tYXRj'
-    'aEIWChRfZGVtb19pbWFnZV9maWxlbmFtZUIKCghfdXNlX2ltdUIUChJfdXNlX2hvdF9waXhlbF'
-    '9tYXBKBAgDEARKBAgFEAZKBAgHEAhKBAgIEAlKBAgNEA4=');
+    'IGdXNlSW11iAEBQhEKD19vcGVyYXRpbmdfbW9kZUIQCg5fZGF5bGlnaHRfbW9kZUIUChJfZm9j'
+    'dXNfYXNzaXN0X21vZGVCGAoWX2xvZ19kd2VsbGVkX3Bvc2l0aW9uc0IWChRfY2F0YWxvZ19lbn'
+    'RyeV9tYXRjaEIWChRfZGVtb19pbWFnZV9maWxlbmFtZUIKCghfdXNlX2ltdUoECAMQBEoECAUQ'
+    'BkoECAcQCEoECAgQCUoECA0QDkoECBAQEQ==');
 
 @$core.Deprecated('Use preferencesDescriptor instead')
 const Preferences$json = {
