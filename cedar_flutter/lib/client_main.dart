@@ -294,19 +294,9 @@ class _MainImagePainter extends CustomPainter {
         ..color = color
         ..strokeWidth = thick
         ..style = PaintingStyle.stroke;
-      int numTargets = 0;
-      double brightest = state._stars[0].brightness;
-      // We only include stars up to two magnitude fainter.
-      double faintLimit = brightest / state._faintLimit;
-      var targetCoords = List<cedar_rpc.ImageCoord>.empty(growable: true);
-      for (var star in state._stars) {
-        if (star.brightness < faintLimit) {
-          break;
-        }
-        if (++numTargets > state._numTargets) {
-          break;
-        }
-        targetCoords.add(star.centroidPosition);
+      final alignmentStars = state._alignmentTargetStars();
+      var targetCoords = alignmentStars.map((s) => s.centroidPosition).toList();
+      for (var star in alignmentStars) {
         // Scale the star position and rectangle size
         final scaledCenter = Offset(
           (star.centroidPosition.x / state._binFactor) * displayScale,
@@ -520,7 +510,7 @@ class MyHomePageState extends State<MyHomePage> {
 
   // State for align mode.
   final _numTargets = 3;
-  final _faintLimit = 2.512 * 2.512; // Two magnitudes.
+  final _maxAlignBrightnessRatio = 2.5 * 2.5 * 2.5 * 2.5;  // Four magnitudes.
   bool _alignTargetTapped = false;
   bool _wantAlignFeedback = false;
 
@@ -1833,24 +1823,31 @@ class MyHomePageState extends State<MyHomePage> {
             )));
   }
 
-  StarCentroid? _findStarHit(Offset tapPosition, int tolerance) {
+  // Returns the eligible alignment target stars: up to _numTargets brightest,
+  // none fainter than a number of magnitudes below the brightest.
+  List<StarCentroid> _alignmentTargetStars() {
     if (_stars.isEmpty) {
-      return null;
+      return [];
     }
-    StarCentroid? closest;
-    double closestDistance = 0;
-    double brightest = _stars[0].brightness;
-    // We only include stars up to two magnitude fainter.
-    double faintLimit = brightest / _faintLimit;
-
-    int numTargets = 0;
+    final brightest = _stars[0].brightness;
+    final faintLimit = brightest / _maxAlignBrightnessRatio;
+    final result = <StarCentroid>[];
     for (var star in _stars) {
       if (star.brightness < faintLimit) {
         break;
       }
-      if (++numTargets > _numTargets) {
+      if (result.length >= _numTargets) {
         break;
       }
+      result.add(star);
+    }
+    return result;
+  }
+
+  StarCentroid? _findStarHit(Offset tapPosition, int tolerance) {
+    StarCentroid? closest;
+    double closestDistance = 0;
+    for (var star in _alignmentTargetStars()) {
       Offset imagePos =
           Offset(star.centroidPosition.x, star.centroidPosition.y);
       var distance = (imagePos - tapPosition).distance;
