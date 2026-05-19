@@ -509,8 +509,6 @@ class MyHomePageState extends State<MyHomePage> {
   String? _lastConnectionError;
 
   // State for align mode.
-  final _numTargets = 3;
-  final _maxAlignBrightnessRatio = 2.5 * 2.5 * 2.5 * 2.5;  // Four magnitudes.
   bool _alignTargetTapped = false;
   bool _wantAlignFeedback = false;
 
@@ -1823,23 +1821,31 @@ class MyHomePageState extends State<MyHomePage> {
             )));
   }
 
-  // Returns the eligible alignment target stars: up to _numTargets brightest,
-  // none fainter than a number of magnitudes below the brightest.
+  // Returns the eligible alignment target stars: up to numTargets brightest,
+  // none fainter than a number of magnitudes below the brightest, but always
+  // including stars brighter than brightMagnitudeThreshold.
   List<StarCentroid> _alignmentTargetStars() {
     if (_stars.isEmpty) {
-      return [];
+       return [];
     }
+    const numTargets = 3;
+    const maxAlignBrightnessRatio = 2.5 * 2.5; // Two magnitudes.
+    const brightMagnitudeThreshold = 2.0;
     final brightest = _stars[0].brightness;
-    final faintLimit = brightest / _maxAlignBrightnessRatio;
+    final faintLimit = brightest / maxAlignBrightnessRatio;
+
     final result = <StarCentroid>[];
     for (var star in _stars) {
-      if (star.brightness < faintLimit) {
-        break;
-      }
-      if (result.length >= _numTargets) {
+      final withinRatio = star.brightness >= faintLimit;
+      final catalogBright =
+          star.hasMagnitude() && star.magnitude <= brightMagnitudeThreshold;
+      if (!withinRatio && !catalogBright) {
         break;
       }
       result.add(star);
+      if (result.length >= numTargets) {
+        break;
+      }
     }
     return result;
   }
