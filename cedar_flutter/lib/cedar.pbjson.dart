@@ -599,6 +599,10 @@ const StarCentroid$json = {
     {'1': 'centroid_position', '3': 1, '4': 1, '5': 11, '6': '.cedar.ImageCoord', '10': 'centroidPosition'},
     {'1': 'brightness', '3': 4, '4': 1, '5': 1, '10': 'brightness'},
     {'1': 'num_saturated', '3': 6, '4': 1, '5': 5, '10': 'numSaturated'},
+    {'1': 'magnitude', '3': 7, '4': 1, '5': 1, '9': 0, '10': 'magnitude', '17': true},
+  ],
+  '8': [
+    {'1': '_magnitude'},
   ],
 };
 
@@ -606,7 +610,8 @@ const StarCentroid$json = {
 final $typed_data.Uint8List starCentroidDescriptor = $convert.base64Decode(
     'CgxTdGFyQ2VudHJvaWQSPgoRY2VudHJvaWRfcG9zaXRpb24YASABKAsyES5jZWRhci5JbWFnZU'
     'Nvb3JkUhBjZW50cm9pZFBvc2l0aW9uEh4KCmJyaWdodG5lc3MYBCABKAFSCmJyaWdodG5lc3MS'
-    'IwoNbnVtX3NhdHVyYXRlZBgGIAEoBVIMbnVtU2F0dXJhdGVk');
+    'IwoNbnVtX3NhdHVyYXRlZBgGIAEoBVIMbnVtU2F0dXJhdGVkEiEKCW1hZ25pdHVkZRgHIAEoAU'
+    'gAUgltYWduaXR1ZGWIAQFCDAoKX21hZ25pdHVkZQ==');
 
 @$core.Deprecated('Use imageCoordDescriptor instead')
 const ImageCoord$json = {

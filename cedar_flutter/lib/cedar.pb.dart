@@ -1745,9 +1745,9 @@ class FrameResult extends $pb.GeneratedMessage {
   Image ensureImage() => $_ensure(2);
 
   /// The star candidates detected by CedarDetect; ordered by brightest
-  /// first. In SETUP alignment mode, these are the catalog stars from
-  /// the plate solution, with relative `brightness` values derived from
-  /// the star catalog magnitudes.
+  /// first. In SETUP alignment mode, these are the catalog stars and planets
+  /// from the plate solution, with relative `brightness` values derived from the
+  /// star catalog magnitudes.
   @$pb.TagNumber(4)
   $pb.PbList<StarCentroid> get starCandidates => $_getList(3);
 
@@ -2281,6 +2281,7 @@ class StarCentroid extends $pb.GeneratedMessage {
     ImageCoord? centroidPosition,
     $core.double? brightness,
     $core.int? numSaturated,
+    $core.double? magnitude,
   }) {
     final $result = create();
     if (centroidPosition != null) {
@@ -2292,6 +2293,9 @@ class StarCentroid extends $pb.GeneratedMessage {
     if (numSaturated != null) {
       $result.numSaturated = numSaturated;
     }
+    if (magnitude != null) {
+      $result.magnitude = magnitude;
+    }
     return $result;
   }
   StarCentroid._() : super();
@@ -2302,6 +2306,7 @@ class StarCentroid extends $pb.GeneratedMessage {
     ..aOM<ImageCoord>(1, _omitFieldNames ? '' : 'centroidPosition', subBuilder: ImageCoord.create)
     ..a<$core.double>(4, _omitFieldNames ? '' : 'brightness', $pb.PbFieldType.OD)
     ..a<$core.int>(6, _omitFieldNames ? '' : 'numSaturated', $pb.PbFieldType.O3)
+    ..a<$core.double>(7, _omitFieldNames ? '' : 'magnitude', $pb.PbFieldType.OD)
     ..hasRequiredFields = false
   ;
 
@@ -2358,6 +2363,18 @@ class StarCentroid extends $pb.GeneratedMessage {
   $core.bool hasNumSaturated() => $_has(2);
   @$pb.TagNumber(6)
   void clearNumSaturated() => $_clearField(6);
+
+  /// Apparent magnitude. Usually absent, except when
+  /// FrameResult.star_candidates is populated in SETUP alignment mode,
+  /// in which case the magnitudes are present.
+  @$pb.TagNumber(7)
+  $core.double get magnitude => $_getN(3);
+  @$pb.TagNumber(7)
+  set magnitude($core.double v) { $_setDouble(3, v); }
+  @$pb.TagNumber(7)
+  $core.bool hasMagnitude() => $_has(3);
+  @$pb.TagNumber(7)
+  void clearMagnitude() => $_clearField(7);
 }
 
 class ImageCoord extends $pb.GeneratedMessage {
