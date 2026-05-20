@@ -29,6 +29,7 @@ class CedarDrawerController {
   final bool offerMap;
   final LatLng? mapPosition;
   final bool advanced;
+  final bool expert;
   final bool demoMode;
   final List<String> demoFiles;
   final bool systemMenuExpanded;
@@ -53,6 +54,7 @@ class CedarDrawerController {
   final Future<void> Function(cedar_rpc.ActionRequest) initiateAction;
   final Future<void> Function(cedar_rpc.Preferences) updatePreferences;
   final void Function(bool) setAdvanced;
+  final void Function(bool) setExpert;
   final void Function(bool) setDemoMode;
   final Function(bool) setSystemMenuExpanded;
   final VoidCallback onStateChanged;
@@ -68,6 +70,7 @@ class CedarDrawerController {
     required this.offerMap,
     required this.mapPosition,
     required this.advanced,
+    required this.expert,
     required this.demoMode,
     required this.demoFiles,
     required this.systemMenuExpanded,
@@ -90,6 +93,7 @@ class CedarDrawerController {
     required this.initiateAction,
     required this.updatePreferences,
     required this.setAdvanced,
+    required this.setExpert,
     required this.setDemoMode,
     required this.setSystemMenuExpanded,
     required this.onStateChanged,
@@ -409,17 +413,29 @@ class CedarDrawer extends StatelessWidget {
       ],
       SizedBox(height: _kDrawerSpacing * textScaleFactor(controller.context)),
 
-      // Advanced toggle
+      // Advanced/Expert toggle
       Align(
           alignment: Alignment.topLeft,
-          child: TextButton.icon(
-              label: _scaledText("Advanced"),
-              icon: controller.advanced
-                  ? const Icon(Icons.check)
-                  : const Icon(Icons.check_box_outline_blank),
-              onPressed: () {
-                controller.setAdvanced(!controller.advanced);
-              })),
+          child: GestureDetector(
+              onLongPress: () {
+                if (controller.advanced) {
+                  controller.setExpert(true);
+                }
+              },
+              child: TextButton.icon(
+                  label: _scaledText(
+                      controller.expert ? "Expert" : "Advanced"),
+                  icon: controller.advanced
+                      ? const Icon(Icons.check)
+                      : const Icon(Icons.check_box_outline_blank),
+                  onPressed: () {
+                    if (controller.advanced) {
+                      controller.setAdvanced(false);
+                      controller.setExpert(false);
+                    } else {
+                      controller.setAdvanced(true);
+                    }
+                  }))),
       SizedBox(height: _kDrawerSpacing * textScaleFactor(controller.context)),
 
       // Shutdown button

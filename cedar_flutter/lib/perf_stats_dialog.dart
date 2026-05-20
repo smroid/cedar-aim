@@ -210,7 +210,7 @@ Future<void> perfStatsDialog(
                       dialogOverlayEntry!.markNeedsBuild();
                     },
                   ),
-                  if (state.hotPixelCount != null && state.advanced)
+                  if (state.hotPixelCount != null && state.expert)
                     StatRow(
                       context: context,
                       label: "Hot pixels",

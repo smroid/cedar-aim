@@ -532,6 +532,7 @@ class MyHomePageState extends State<MyHomePage> {
   List<String> _demoFiles = [];
   String _demoFile = "";
   bool advanced = false;
+  bool expert = false;
   bool _systemMenuExpanded = false;
   bool _rightHanded = true;
   String _productName = 'Cedar Box';
@@ -2298,6 +2299,7 @@ class MyHomePageState extends State<MyHomePage> {
         offerMap: _offerMap,
         mapPosition: _mapPosition,
         advanced: advanced,
+        expert: expert,
         demoMode: _demoMode,
         demoFiles: _demoFiles,
         systemMenuExpanded: _systemMenuExpanded,
@@ -2353,6 +2355,11 @@ class MyHomePageState extends State<MyHomePage> {
           var prefs = cedar_rpc.Preferences();
           prefs.advanced = value;
           updatePreferences(prefs);
+        },
+        setExpert: (value) {
+          setState(() {
+            expert = value;
+          });
         },
         setDemoMode: (value) {
           setState(() {
