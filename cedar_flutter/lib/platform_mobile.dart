@@ -78,6 +78,15 @@ void rpcFailedImpl() {
   // a fresh one. Don't call cleanupImpl() here - it can race with device
   // selection which also calls cleanup.
   _client = null;
+  // Unbind from the network so that on reconnect we rebind to the (possibly
+  // new) network handle. Without this, returning to Hopper's WiFi after a
+  // disconnect fails with "Machine is not on the network".
+  if (Platform.isAndroid && _boundToWifi) {
+    _boundToWifi = false;
+    _networkChannel.invokeMethod('unbindNetwork').catchError((e) {
+      debugPrint('unbindNetwork error: $e');
+    });
+  }
 }
 
 /// Aggressively cleans up the gRPC channel, with timeout and forced terminate.
