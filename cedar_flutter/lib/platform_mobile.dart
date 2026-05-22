@@ -61,6 +61,31 @@ const _options = ChannelOptions(
 
 bool _boundToWifi = false;
 
+// Cached result of the cedar.local DNS lookup.
+String? _resolvedCedarHost;
+
+/// Resolves 'cedar.local', caching the result. Falls back to 192.168.4.1
+/// if mDNS fails. Subsequent calls return the cached result immediately.
+Future<String> resolveCedarHostImpl() async {
+  if (_resolvedCedarHost != null) {
+    return _resolvedCedarHost!;
+  }
+  try {
+    final result = await InternetAddress.lookup('cedar.local')
+        .timeout(const Duration(seconds: 10));
+    if (result.isEmpty) {
+      throw SocketException('Could not resolve cedar.local');
+    }
+    debugPrint('DNS lookup for cedar.local succeeded: ${result.first.address}');
+    _resolvedCedarHost = 'cedar.local';
+  } catch (e) {
+    debugPrint('DNS lookup for cedar.local failed: $e');
+    _resolvedCedarHost = '192.168.4.1';
+    debugPrint('Using fallback IP address: $_resolvedCedarHost');
+  }
+  return _resolvedCedarHost!;
+}
+
 void rpcSucceededImpl() {
   if (Platform.isAndroid && !_boundToWifi && _activeDevice.name == null) {
     _networkChannel.invokeMethod<bool>('bindToWifi').then((bound) {
@@ -78,6 +103,10 @@ void rpcFailedImpl() {
   // a fresh one. Don't call cleanupImpl() here - it can race with device
   // selection which also calls cleanup.
   _client = null;
+  // Invalidate cached DNS so the next connection attempt re-resolves
+  // cedar.local — the device may have switched to a different WiFi network
+  // where Hopper is at a different IP.
+  _resolvedCedarHost = null;
   // Unbind from the network so that on reconnect we rebind to the (possibly
   // new) network handle. Without this, returning to Hopper's WiFi after a
   // disconnect fails with "Machine is not on the network".
@@ -137,32 +166,9 @@ Future<CedarClient> getClientImpl() async {
     _activeProxy = null;
     _activeProxyPort = null;
 
-    // First, try DNS lookup to check if the address resolves.
-    bool readyToConnect = false;
-    String? addressToTry = _wifiAddress;
-    try {
-      final result = await InternetAddress.lookup(_wifiAddress)
-          .timeout(const Duration(seconds: 10));
-      if (result.isEmpty) {
-        throw SocketException('Could not resolve $_wifiAddress');
-      }
-      debugPrint('DNS lookup for $_wifiAddress succeeded: ${result.first.address}');
-      readyToConnect = true;
-    } catch (e) {
-      debugPrint('DNS lookup for $_wifiAddress failed: $e');
-      // Some old Android versions don't support mDNS, which is what Cedar
-      // server uses to advertise itself as 'cedar.local'. Try fallback IP
-      // address before giving up.
-      addressToTry = '192.168.4.1';
-      // addressToTry = '192.168.1.158';
-      debugPrint('Trying fallback IP address: $addressToTry');
-      readyToConnect = true; // Attempt with IP fallback.
-      if (!isAndroidImpl() || _activeDevice.name == null) {
-        // No Bluetooth fallback available and DNS failed.
-        // Still try the IP fallback, but if that also fails, rethrow.
-      }
-      // On Android with Bluetooth device, we'll also have Bluetooth fallback below.
-    }
+    // Resolve cedar.local, using cached result if available.
+    final addressToTry = await resolveCedarHostImpl();
+    const readyToConnect = true;
 
     // Attempt RPC connection with the resolved address or fallback IP.
     if (readyToConnect) {

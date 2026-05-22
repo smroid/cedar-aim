@@ -80,3 +80,7 @@ Future<List<CedarDevice>> getBluetoothDevicesImpl() async {
 Future<void> setActiveDeviceImpl(CedarDevice device) async {
   throw UnimplementedError("No impl in platform_none");
 }
+
+Future<String> resolveCedarHostImpl() async {
+  throw UnimplementedError("No impl in platform_none");
+}

@@ -113,3 +113,7 @@ Future<List<CedarDevice>> getBluetoothDevicesImpl() async {
 Future<void> setActiveDeviceImpl(CedarDevice device) async {
   throw UnimplementedError("No impl in platform_web");
 }
+
+Future<String> resolveCedarHostImpl() async {
+  return 'cedar.local'; // Web doesn't need mDNS fallback.
+}

@@ -161,3 +161,9 @@ Future<List<CedarDevice>> getBluetoothDevices() async {
 Future<void> setActiveDevice(CedarDevice device) async {
   await setActiveDeviceImpl(device);
 }
+
+/// Resolves 'cedar.local', caching the result. Falls back to 192.168.4.1
+/// if mDNS fails. Subsequent calls return the cached result immediately.
+Future<String> resolveCedarHost() async {
+  return resolveCedarHostImpl();
+}
