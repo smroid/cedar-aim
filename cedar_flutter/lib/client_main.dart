@@ -1335,12 +1335,6 @@ class MyHomePageState extends State<MyHomePage> {
       skipFocus: preferences?.skipFocus ?? false,
       skipAlignment: preferences?.skipAlignment ?? false,
       skipFocusActive: _skipFocusActive,
-      onPreferencesUpdate: (prefsDiff) => updatePreferences(prefsDiff),
-      onOperationSettingsUpdate: (opSettingsDiff) =>
-          updateOperationSettings(opSettingsDiff),
-      onGoFullScreen: goFullScreen,
-      onCancelFullScreen: cancelFullScreen,
-      onSetWakeLock: (enabled) => setWakeLock(enabled),
       onSetDaylightMode: (enabled) => setState(() {
         _setDaylightMode(enabled);
       }),
@@ -2006,6 +2000,36 @@ class MyHomePageState extends State<MyHomePage> {
 
   Widget _orientationLayout(BuildContext context, [Size? containerSize]) {
     final portrait = MediaQuery.of(context).orientation == Orientation.portrait;
+
+    // Watch SettingsModel for preference/operation-settings changes and
+    // propagate diffs to the server. Doing this here (rather than inside
+    // ControlsWidget) keeps the layout column free of Consumer overhead.
+    final settingsModel = Provider.of<SettingsModel>(context);
+    final newPrefs = settingsModel.preferencesProto;
+    final prefsDiff = newPrefs.deepCopy();
+    if (preferences != null && diffPreferences(preferences!, prefsDiff)) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        updatePreferences(prefsDiff);
+      });
+      if (prefsDiff.hasHideAppBar()) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          prefsDiff.hideAppBar ? goFullScreen() : cancelFullScreen();
+        });
+      }
+      if (prefsDiff.hasScreenAlwaysOn()) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          setWakeLock(prefsDiff.screenAlwaysOn);
+        });
+      }
+    }
+    final newOpSettings = settingsModel.opSettingsProto;
+    final opSettingsDiff = newOpSettings.deepCopy();
+    if (diffOperationSettings(operationSettings, opSettingsDiff)) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        updateOperationSettings(opSettingsDiff);
+      });
+    }
+
     final controls = _buildControlsWidget(containerSize);
 
     final String product = _productName;

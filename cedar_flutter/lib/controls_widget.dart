@@ -30,11 +30,6 @@ class ControlsWidget extends StatelessWidget {
   final bool skipFocusActive;
 
   // Callbacks.
-  final Function(Preferences) onPreferencesUpdate;
-  final Function(OperationSettings) onOperationSettingsUpdate;
-  final VoidCallback onGoFullScreen;
-  final VoidCallback onCancelFullScreen;
-  final Function(bool) onSetWakeLock;
   final Function(bool) onSetDaylightMode;
   final Function(bool) onSkipFocusUpdate;
   final Function(bool) onSkipAlignmentUpdate;
@@ -66,11 +61,6 @@ class ControlsWidget extends StatelessWidget {
     required this.skipFocus,
     required this.skipAlignment,
     required this.skipFocusActive,
-    required this.onPreferencesUpdate,
-    required this.onOperationSettingsUpdate,
-    required this.onGoFullScreen,
-    required this.onCancelFullScreen,
-    required this.onSetWakeLock,
     required this.onSetDaylightMode,
     required this.onSkipFocusUpdate,
     required this.onSkipAlignmentUpdate,
@@ -110,62 +100,68 @@ class ControlsWidget extends StatelessWidget {
     final buttonHeight = 20 * panelScaleFactor * textScale;
     final buttonFont = 11.0 * panelScaleFactor;
 
+    final rightHanded = settingsModel.preferencesProto.rightHanded;
+
+    // Builds the instruction text widget for focus/align setup modes.
+    Widget instructionText() => RotatedBox(
+          quarterTurns: portrait ? 3 : 0,
+          child: focusAid
+              ? SizedBox(
+                  width: textBoxWidth,
+                  height: textBoxHeight,
+                  child: Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        skipFocusActive
+                            ? "Retrying..."
+                            : (daylightMode
+                                ? "Tap to select focus area"
+                                : "Adjust focus"),
+                        maxLines: 8,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            color: color, fontSize: 11 * panelScaleFactor),
+                        textScaler: textScaler(context),
+                      )))
+              : daylightMode
+                  ? SizedBox(
+                      width: textBoxWidth,
+                      height: textBoxHeight,
+                      child: Align(
+                          alignment: Alignment.center,
+                          child: Text(
+                            "2. Tap image where scope is pointed",
+                            maxLines: 8,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                color: color,
+                                fontSize: 12 * panelScaleFactor),
+                            textScaler: textScaler(context),
+                          )))
+                  : rowOrColumn(portrait, [
+                      SizedBox(
+                          width: textBoxWidth,
+                          height: textBoxHeight,
+                          child: Align(
+                              alignment: Alignment.center,
+                              child: Text(
+                                "3. Tap object scope is pointed at",
+                                maxLines: 8,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    color: color,
+                                    fontSize: 12 * panelScaleFactor),
+                                textScaler: textScaler(context),
+                              ))),
+                    ]),
+        );
+
     final controlWidgets = <Widget>[
-        // Main instruction text (setup modes only; omitted in mission mode so
-        // it doesn't consume a spaceEvenly slot).
-        if (focusAid || (canAlign && slewRequest == null)) ...[
-          RotatedBox(
-            quarterTurns: portrait ? 3 : 0,
-            child: focusAid
-                ? SizedBox(
-                    width: textBoxWidth,
-                    height: textBoxHeight,
-                    child: Align(
-                        alignment: Alignment.center,
-                        child: Text(
-                          skipFocusActive
-                              ? "Retrying..."
-                              : (daylightMode
-                                  ? "Tap to select focus area"
-                                  : "Adjust focus"),
-                          maxLines: 8,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              color: color, fontSize: 11 * panelScaleFactor),
-                          textScaler: textScaler(context),
-                        )))
-                : daylightMode
-                    ? SizedBox(
-                        width: textBoxWidth,
-                        height: textBoxHeight,
-                        child: Align(
-                            alignment: Alignment.center,
-                            child: Text(
-                              "2. Tap image where scope is pointed",
-                              maxLines: 8,
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  color: color,
-                                  fontSize: 12 * panelScaleFactor),
-                              textScaler: textScaler(context),
-                            )))
-                    : rowOrColumn(portrait, [
-                        SizedBox(
-                            width: textBoxWidth,
-                            height: textBoxHeight,
-                            child: Align(
-                                alignment: Alignment.center,
-                                child: Text(
-                                  "3. Tap object scope is pointed at",
-                                  maxLines: 8,
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      color: color,
-                                      fontSize: 12 * panelScaleFactor),
-                                  textScaler: textScaler(context),
-                                ))),
-                      ]),
-          ),
+        // Instruction text slot A: shown before buttons in landscape and
+        // right-handed portrait (buttons end up on the right after reversal).
+        if ((focusAid || (canAlign && slewRequest == null)) &&
+            (!portrait || rightHanded)) ...[
+          instructionText(),
         ],
 
         // In mission mode, the gauge and catalog button are adjacent. Their
@@ -180,7 +176,7 @@ class ControlsWidget extends StatelessWidget {
 
         // Slot A: gauge (mission mode, landscape or right-handed portrait).
         if (!setupMode && slewRequest == null &&
-            (!portrait || settingsModel.preferencesProto.rightHanded)) ...[
+            (!portrait || rightHanded)) ...[
           RotatedBox(
             quarterTurns: portrait ? 3 : 0,
             child: perfGauge(45 * panelScaleFactor * textScale, panelScaleFactor),
@@ -292,9 +288,16 @@ class ControlsWidget extends StatelessWidget {
           ),
         ),
 
+        // Instruction text slot B: left-handed portrait only (buttons end up
+        // on the left after reversal, instruction text on the right).
+        if ((focusAid || (canAlign && slewRequest == null)) &&
+            portrait && !rightHanded) ...[
+          instructionText(),
+        ],
+
         // Slot B: gauge (mission mode, left-handed portrait only).
         if (!setupMode && slewRequest == null &&
-            portrait && !settingsModel.preferencesProto.rightHanded) ...[
+            portrait && !rightHanded) ...[
           RotatedBox(
             quarterTurns: 3,
             child: perfGauge(45 * panelScaleFactor * textScale, panelScaleFactor),
@@ -322,49 +325,9 @@ class ControlsWidget extends StatelessWidget {
         ],
     ];
 
-    return Stack(
-      children: [
-        // Consumer watches settings changes but takes no layout space.
-        Consumer<SettingsModel>(
-          builder: (context, settings, child) {
-            final newPrefs = settings.preferencesProto;
-            var prefsDiff = newPrefs.deepCopy();
-            if (preferences != null && diffPreferences(preferences!, prefsDiff)) {
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                onPreferencesUpdate(prefsDiff);
-              });
-              if (prefsDiff.hasHideAppBar()) {
-                if (prefsDiff.hideAppBar) {
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    onGoFullScreen();
-                  });
-                } else {
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    onCancelFullScreen();
-                  });
-                }
-              }
-              if (prefsDiff.hasScreenAlwaysOn()) {
-                WidgetsBinding.instance.addPostFrameCallback((_) {
-                  onSetWakeLock(prefsDiff.screenAlwaysOn);
-                });
-              }
-            }
-            final newOpSettings = settings.opSettingsProto;
-            var opSettingsDiff = newOpSettings.deepCopy();
-            if (diffOperationSettings(operationSettings, opSettingsDiff)) {
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                onOperationSettingsUpdate(opSettingsDiff);
-              });
-            }
-            return const SizedBox.shrink();
-          },
-        ),
-        Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: portrait ? controlWidgets.reversed.toList() : controlWidgets,
-        ),
-      ],
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: portrait ? controlWidgets.reversed.toList() : controlWidgets,
     );
   }
 }
