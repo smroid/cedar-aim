@@ -599,7 +599,6 @@ class MyHomePageState extends State<MyHomePage> {
   cedar_rpc.ProcessingStats? processingStats;
   cedar_rpc.SlewRequest? _slewRequest;
   cedar_rpc.Preferences? preferences;
-  cedar_rpc.PolarAlignAdvice? _polarAlignAdvice;
   List<cedar_rpc.FovCatalogEntry> _labeledFovCatalogEntries = List.empty();
   List<cedar_rpc.FovCatalogEntry> _unlabeledFovCatalogEntries = List.empty();
 
@@ -772,7 +771,6 @@ class MyHomePageState extends State<MyHomePage> {
       }
     }
     preferences = response.preferences;
-    _polarAlignAdvice = response.polarAlignAdvice;
     _labeledFovCatalogEntries = response.labeledCatalogEntries;
     _unlabeledFovCatalogEntries = response.unlabeledCatalogEntries;
     var settingsModel = Provider.of<SettingsModel>(context, listen: false);
@@ -1493,24 +1491,6 @@ class MyHomePageState extends State<MyHomePage> {
         : sprintf("%s %.2f°", [dir, az]);
   }
 
-  String _format2places(double val) {
-    if (val.abs() >= 10.0) {
-      return sprintf("%.0f", [val]);
-    }
-    if (val.abs() >= 1.0) {
-      return sprintf("%.1f", [val]);
-    }
-    return sprintf("%.2f", [val]);
-  }
-
-  String _formatAdvice(cedar_rpc.ErrorBoundedValue? ebv) {
-    if (ebv == null) {
-      return "null";
-    }
-    return sprintf(
-        "%s°±%s", [_format2places(ebv.value), _format2places(ebv.error)]);
-  }
-
   bool get hasSolution => _hasSolution;
   bool get hasPlateSolution => _hasPlateSolution;
   bool get offerMap => _offerMap;
@@ -1521,18 +1501,6 @@ class MyHomePageState extends State<MyHomePage> {
     return _hasPlateSolution
         ? Theme.of(context).colorScheme.primary
         : const Color(0xff606060);
-  }
-
-  Text _primaryText(String val, {double? size = 16, bool underline = false}) {
-    return Text(
-      val,
-      style: TextStyle(
-        color: Theme.of(context).colorScheme.primary,
-        fontSize: size,
-        decoration: underline ? TextDecoration.underline : null,
-      ),
-      textScaler: textScaler(context),
-    );
   }
 
   Text solveText(String val, {double? size = 14, bool underline = false}) {
@@ -1546,14 +1514,6 @@ class MyHomePageState extends State<MyHomePage> {
           decorationColor: underline ? color : null),
       textScaler: textScaler(context),
     );
-  }
-
-  bool _hasPolarAdvice() {
-    if (_polarAlignAdvice == null) {
-      return false;
-    }
-    return _polarAlignAdvice!.hasAltitudeCorrection() ||
-        _polarAlignAdvice!.hasAzimuthCorrection();
   }
 
   List<Widget> _raDec(double panelScaleFactor) {
@@ -1598,11 +1558,6 @@ class MyHomePageState extends State<MyHomePage> {
     } else {
       return _azAlt(panelScaleFactor);
     }
-  }
-
-  Widget _selectIcon(double value, IconData positive, IconData negative) {
-    Color color = Theme.of(context).colorScheme.primary;
-    return Icon(value > 0 ? positive : negative, color: color);
   }
 
   List<Widget> _dataItems(BuildContext context, [Size? containerSize]) {
@@ -1719,35 +1674,6 @@ class MyHomePageState extends State<MyHomePage> {
                     children: _coordInfo(panelScaleFactor),
                   ),
                 ))),
-      ],
-      if (_hasPolarAdvice() && !_setupMode && (isPlus || isDIY)) ...[
-        RotatedBox(
-            quarterTurns: portrait ? 3 : 0,
-            child: SizedBox(
-              width: 70 * panelScaleFactor * textScaleFactor(context),
-              height: 60 * panelScaleFactor * textScaleFactor(context),
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    _primaryText("Eq. Mount",
-                        size: 10 * panelScaleFactor, underline: true),
-                    solveText(
-                        _formatAdvice(_polarAlignAdvice!.hasAltitudeCorrection()
-                            ? _polarAlignAdvice!.altitudeCorrection
-                            : _polarAlignAdvice!.azimuthCorrection),
-                        size: 10 * panelScaleFactor),
-                    _polarAlignAdvice!.hasAltitudeCorrection()
-                        ? _selectIcon(
-                            _polarAlignAdvice!.altitudeCorrection.value,
-                            Icons.north,
-                            Icons.south)
-                        : _selectIcon(
-                            _polarAlignAdvice!.azimuthCorrection.value,
-                            Icons.rotate_right,
-                            Icons.rotate_left),
-                  ]),
-            )),
       ],
     ];
   }
