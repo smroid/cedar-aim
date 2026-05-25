@@ -1,4 +1,4 @@
-// Copyright (c) 2025 Steven Rosenthal smr@dt3.org
+// Copyright (c) 2026 Steven Rosenthal smr@dt3.org
 // See LICENSE file in root directory for license terms.
 
 import 'dart:async';
@@ -1376,6 +1376,12 @@ class MyHomePageState extends State<MyHomePage> {
           slewReAlignButton(fontSize: fontSize),
       catalogButton: ({double? fontSize}) => catalogButton(fontSize: fontSize),
       endGotoButton: ({double? fontSize}) => endGotoButton(fontSize: fontSize),
+      perfGauge: (double size, double scaleFactor) => PerfGauge(
+        state: this,
+        size: size,
+        textFactor: scaleFactor,
+        thicknessFactor: scaleFactor,
+      ),
       scaledText: (String text) => _scaledText(text),
       rowOrColumn: (bool portrait, List<Widget> children) =>
           _rowOrColumn(portrait, children),
@@ -1643,21 +1649,21 @@ class MyHomePageState extends State<MyHomePage> {
     return <Widget>[
       RotatedBox(
           quarterTurns: portrait ? 3 : 0,
-          child: _setupMode
-              ? SizedBox(
-                  width: gaugeSize,
-                  height: gaugeSize,
-                )
-              : Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                      PerfGauge(
-                        state: this,
-                        size: gaugeSize,
-                        textFactor: panelScaleFactor,
-                        thicknessFactor: panelScaleFactor,
+          child: SizedBox(
+              width: gaugeSize,
+              height: gaugeSize,
+              child: _setupMode
+                  ? null
+                  : Center(
+                      child: Text(
+                        "[TBD]",
+                        style: TextStyle(
+                          fontSize: 11 * panelScaleFactor,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                        textScaler: textScaler(context),
                       ),
-                    ])),
+                    ))),
       if (!_setupMode) ...[
         RotatedBox(
             quarterTurns: portrait ? 3 : 0,
@@ -2000,9 +2006,7 @@ class MyHomePageState extends State<MyHomePage> {
 
   Widget _orientationLayout(BuildContext context, [Size? containerSize]) {
     final portrait = MediaQuery.of(context).orientation == Orientation.portrait;
-    final controls = Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [_buildControlsWidget(containerSize)]);
+    final controls = _buildControlsWidget(containerSize);
 
     final String product = _productName;
     final bool isHopper = product == "Hopper";

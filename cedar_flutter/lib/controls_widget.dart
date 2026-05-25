@@ -1,5 +1,7 @@
-// Copyright (c) 2025 Steven Rosenthal smr@dt3.org
+// Copyright (c) 2026 Steven Rosenthal smr@dt3.org
 // See LICENSE file in root directory for license terms.
+
+import 'dart:math' as math;
 
 import 'package:cedar_flutter/cedar.pb.dart';
 import 'package:cedar_flutter/settings.dart';
@@ -43,6 +45,7 @@ class ControlsWidget extends StatelessWidget {
   final Widget Function({double? fontSize}) slewReAlignButton;
   final Widget Function({double? fontSize}) catalogButton;
   final Widget Function({double? fontSize}) endGotoButton;
+  final Widget Function(double size, double scaleFactor) perfGauge;
 
   // Helper functions.
   final Widget Function(String) scaledText;
@@ -76,6 +79,7 @@ class ControlsWidget extends StatelessWidget {
     required this.slewReAlignButton,
     required this.catalogButton,
     required this.endGotoButton,
+    required this.perfGauge,
     required this.scaledText,
     required this.rowOrColumn,
   });
@@ -86,14 +90,18 @@ class ControlsWidget extends StatelessWidget {
     final portrait = MediaQuery.of(context).orientation == Orientation.portrait;
     final color = Theme.of(context).colorScheme.primary;
 
-    // Scale widgets based on constraining dimension
-    final constraints = MediaQuery.of(context).size;
-    final constrainingDimension = portrait ? constraints.width : constraints.height;
-    const referenceSize = 400.0;
-    final dimensionBasedScale = (constrainingDimension / referenceSize).clamp(0.5, 1.0);
-
-    final panelScaleFactor = dimensionBasedScale;
     final textScale = textScaleFactor(context);
+
+    // Use the same panelScaleFactor formula as _dataItems so that sizing
+    // tracks available panel space consistently across both panels.
+    final constraints = MediaQuery.of(context).size;
+    final shortDimension = portrait ? constraints.width : constraints.height;
+    final panelWidth = layoutCalculations['panelWidth']!;
+    final coordInfoSize = 85.0 * textScale;
+    final objectLabelSize = 60.0 * textScale;
+    final mainDimensionBasedScale = shortDimension / (2.0 * coordInfoSize + objectLabelSize);
+    final crossDimensionBasedScale = panelWidth / math.max(coordInfoSize, objectLabelSize);
+    final panelScaleFactor = math.min(mainDimensionBasedScale, crossDimensionBasedScale).clamp(0.5, 1.2);
 
     // Calculate responsive sizes based on panel scale and text scale.
     final textBoxWidth = 90 * panelScaleFactor * textScale;
@@ -103,100 +111,81 @@ class ControlsWidget extends StatelessWidget {
     final buttonFont = 11.0 * panelScaleFactor;
 
     final controlWidgets = <Widget>[
-        // Settings consumer - handles preference updates.
-        Consumer<SettingsModel>(
-          builder: (context, settings, child) {
-            final newPrefs = settings.preferencesProto;
-            var prefsDiff = newPrefs.deepCopy();
-            if (preferences != null && diffPreferences(preferences!, prefsDiff)) {
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                onPreferencesUpdate(prefsDiff);
-              });
-              if (prefsDiff.hasHideAppBar()) {
-                if (prefsDiff.hideAppBar) {
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    onGoFullScreen();
-                  });
-                } else {
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    onCancelFullScreen();
-                  });
-                }
-              }
-              if (prefsDiff.hasScreenAlwaysOn()) {
-                WidgetsBinding.instance.addPostFrameCallback((_) {
-                  onSetWakeLock(prefsDiff.screenAlwaysOn);
-                });
-              }
-            }
-            final newOpSettings = settings.opSettingsProto;
-            var opSettingsDiff = newOpSettings.deepCopy();
-            if (diffOperationSettings(operationSettings, opSettingsDiff)) {
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                onOperationSettingsUpdate(opSettingsDiff);
-              });
-            }
-            return Container();
-          },
-        ),
+        // Main instruction text (setup modes only; omitted in mission mode so
+        // it doesn't consume a spaceEvenly slot).
+        if (focusAid || (canAlign && slewRequest == null)) ...[
+          RotatedBox(
+            quarterTurns: portrait ? 3 : 0,
+            child: focusAid
+                ? SizedBox(
+                    width: textBoxWidth,
+                    height: textBoxHeight,
+                    child: Align(
+                        alignment: Alignment.center,
+                        child: Text(
+                          skipFocusActive
+                              ? "Retrying..."
+                              : (daylightMode
+                                  ? "Tap to select focus area"
+                                  : "Adjust focus"),
+                          maxLines: 8,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              color: color, fontSize: 11 * panelScaleFactor),
+                          textScaler: textScaler(context),
+                        )))
+                : daylightMode
+                    ? SizedBox(
+                        width: textBoxWidth,
+                        height: textBoxHeight,
+                        child: Align(
+                            alignment: Alignment.center,
+                            child: Text(
+                              "2. Tap image where scope is pointed",
+                              maxLines: 8,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  color: color,
+                                  fontSize: 12 * panelScaleFactor),
+                              textScaler: textScaler(context),
+                            )))
+                    : rowOrColumn(portrait, [
+                        SizedBox(
+                            width: textBoxWidth,
+                            height: textBoxHeight,
+                            child: Align(
+                                alignment: Alignment.center,
+                                child: Text(
+                                  "3. Tap object scope is pointed at",
+                                  maxLines: 8,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      color: color,
+                                      fontSize: 12 * panelScaleFactor),
+                                  textScaler: textScaler(context),
+                                ))),
+                      ]),
+          ),
+        ],
 
-        // Main instruction text
-        RotatedBox(
-          quarterTurns: portrait ? 3 : 0,
-          child: focusAid
-              ? SizedBox(
-                  width: textBoxWidth,
-                  height: textBoxHeight,
-                  child: Align(
-                      alignment: Alignment.center,
-                      child: Text(
-                        skipFocusActive
-                            ? "Retrying..."
-                            : (daylightMode
-                                ? "Tap to select focus area"
-                                : "Adjust focus"),
-                        maxLines: 8,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            color: color, fontSize: 11 * panelScaleFactor),
-                        textScaler: textScaler(context),
-                      )))
-              : (canAlign && slewRequest == null
-                  ? daylightMode
-                      ? SizedBox(
-                          width: textBoxWidth,
-                          height: textBoxHeight,
-                          child: Align(
-                              alignment: Alignment.center,
-                              child: Text(
-                                "2. Tap image where scope is pointed",
-                                maxLines: 8,
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                    color: color,
-                                    fontSize: 12 * panelScaleFactor),
-                                textScaler: textScaler(context),
-                              )))
-                      : rowOrColumn(portrait, [
-                          SizedBox(
-                              width: textBoxWidth,
-                              height: textBoxHeight,
-                              child: Align(
-                                  alignment: Alignment.center,
-                                  child: Text(
-                                    "3. Tap object scope is pointed at",
-                                    maxLines: 8,
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                        color: color,
-                                        fontSize: 12 * panelScaleFactor),
-                                    textScaler: textScaler(context),
-                                  ))),
-                        ])
-                  : Container()),
-        ),
+        // In mission mode, the gauge and catalog button are adjacent. Their
+        // order depends on orientation and handedness:
+        //   Landscape: gauge above, catalog below (gauge earlier in list).
+        //   Portrait right-handed: catalog on right, gauge on left
+        //     → catalog earlier in list (list is reversed for portrait).
+        //   Portrait left-handed: gauge on right, catalog on left
+        //     → gauge earlier in list.
+        // So: gauge comes before catalog in list UNLESS portrait + right-handed.
+        // We split the main button block and gauge into two ordered slots.
 
-        SizedBox(height: 5 * panelScaleFactor),
+        // Slot A: gauge (mission mode, landscape or right-handed portrait).
+        if (!setupMode && slewRequest == null &&
+            (!portrait || settingsModel.preferencesProto.rightHanded)) ...[
+          RotatedBox(
+            quarterTurns: portrait ? 3 : 0,
+            child: perfGauge(45 * panelScaleFactor * textScale, panelScaleFactor),
+          ),
+        ],
 
         // Main control buttons.
         RotatedBox(
@@ -303,7 +292,14 @@ class ControlsWidget extends StatelessWidget {
           ),
         ),
 
-        SizedBox(height: 5 * panelScaleFactor),
+        // Slot B: gauge (mission mode, left-handed portrait only).
+        if (!setupMode && slewRequest == null &&
+            portrait && !settingsModel.preferencesProto.rightHanded) ...[
+          RotatedBox(
+            quarterTurns: 3,
+            child: perfGauge(45 * panelScaleFactor * textScale, panelScaleFactor),
+          ),
+        ],
 
         // Catalog button during slew.
         if (slewRequest != null && !setupMode && showCatalogBrowser) ...[
@@ -314,8 +310,6 @@ class ControlsWidget extends StatelessWidget {
                   height: buttonHeight,
                   child: catalogButton(fontSize: buttonFont))),
         ],
-
-        SizedBox(height: 5 * panelScaleFactor),
 
         // End goto button.
         if (slewRequest != null && !setupMode) ...[
@@ -328,9 +322,49 @@ class ControlsWidget extends StatelessWidget {
         ],
     ];
 
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: portrait ? controlWidgets.reversed.toList() : controlWidgets,
+    return Stack(
+      children: [
+        // Consumer watches settings changes but takes no layout space.
+        Consumer<SettingsModel>(
+          builder: (context, settings, child) {
+            final newPrefs = settings.preferencesProto;
+            var prefsDiff = newPrefs.deepCopy();
+            if (preferences != null && diffPreferences(preferences!, prefsDiff)) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                onPreferencesUpdate(prefsDiff);
+              });
+              if (prefsDiff.hasHideAppBar()) {
+                if (prefsDiff.hideAppBar) {
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    onGoFullScreen();
+                  });
+                } else {
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    onCancelFullScreen();
+                  });
+                }
+              }
+              if (prefsDiff.hasScreenAlwaysOn()) {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  onSetWakeLock(prefsDiff.screenAlwaysOn);
+                });
+              }
+            }
+            final newOpSettings = settings.opSettingsProto;
+            var opSettingsDiff = newOpSettings.deepCopy();
+            if (diffOperationSettings(operationSettings, opSettingsDiff)) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                onOperationSettingsUpdate(opSettingsDiff);
+              });
+            }
+            return const SizedBox.shrink();
+          },
+        ),
+        Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: portrait ? controlWidgets.reversed.toList() : controlWidgets,
+        ),
+      ],
     );
   }
 }
