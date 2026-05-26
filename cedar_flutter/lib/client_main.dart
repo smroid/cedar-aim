@@ -1658,14 +1658,13 @@ class MyHomePageState extends State<MyHomePage> {
     }
 
     return <Widget>[
+      if (!isDIY && !_setupMode) ...[
       RotatedBox(
           quarterTurns: portrait ? 3 : 0,
           child: SizedBox(
               width: 60 * panelScaleFactor * textScale,
               height: 60 * panelScaleFactor * textScale,
-              child: _setupMode
-                  ? null
-                  : Center(
+              child: Center(
                       child: boresightCatalogEntryInFov
                           ? GestureDetector(
                               onTap: _objectInfoDialog == null ? null : () {
@@ -1709,6 +1708,7 @@ class MyHomePageState extends State<MyHomePage> {
                                 )
                               : null),
                     ))),
+      ],
       if (!_setupMode) ...[
         RotatedBox(
             quarterTurns: portrait ? 3 : 0,

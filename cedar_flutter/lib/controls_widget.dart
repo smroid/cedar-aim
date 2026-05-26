@@ -183,7 +183,10 @@ class ControlsWidget extends StatelessWidget {
           ),
         ],
 
-        // Main control buttons.
+        // Main control buttons (omitted entirely on DIY mission mode with no
+        // visible button, so the gauge centers via spaceEvenly).
+        if (focusAid || canAlign ||
+            (!setupMode && !settingsModel.isDIY && showCatalogBrowser)) ...[
         RotatedBox(
           quarterTurns: portrait ? 3 : 0,
           child: Column(
@@ -287,6 +290,7 @@ class ControlsWidget extends StatelessWidget {
             ],
           ),
         ),
+        ],
 
         // Instruction text slot B: left-handed portrait only (buttons end up
         // on the left after reversal, instruction text on the right).
