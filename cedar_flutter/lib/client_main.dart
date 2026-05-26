@@ -1661,32 +1661,38 @@ class MyHomePageState extends State<MyHomePage> {
                   : Center(
                       child: (boresightCatalogEntry != null &&
                               (boresightCatalogEntryDistance ?? 2.0) <= 1.0)
-                          ? FittedBox(
-                              fit: BoxFit.scaleDown,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  solveText(
-                                      labelForEntry(boresightCatalogEntry!.entry),
-                                      size: 11 * panelScaleFactor),
-                                  if (commonNameForEntry(boresightCatalogEntry!.entry).isNotEmpty)
-                                  solveText(
-                                      commonNameForEntry(boresightCatalogEntry!.entry),
-                                      size: 9 * panelScaleFactor),
-                                  solveText(
-                                      boresightCatalogEntry!.entry.hasConstellation()
-                                          ? "${boresightCatalogEntry!.entry.objectType.label} in ${boresightCatalogEntry!.entry.constellation.label}"
-                                          : boresightCatalogEntry!.entry.objectType.label,
-                                      size: 9 * panelScaleFactor),
-                                  if (boresightCatalogEntry!.entry.hasMagnitude())
+                          ? GestureDetector(
+                              onTap: _objectInfoDialog == null ? null : () {
+                                _objectInfoDialog!(this, context,
+                                    SelectedCatalogEntry(entry: boresightCatalogEntry!.entry));
+                              },
+                              child: FittedBox(
+                                fit: BoxFit.scaleDown,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
                                     solveText(
-                                        sprintf("mag %.2f", [boresightCatalogEntry!.entry.magnitude]),
-                                        size: 9 * panelScaleFactor),
-                                  if (boresightCatalogEntry!.entry.angularSize.isNotEmpty)
+                                        labelForEntry(boresightCatalogEntry!.entry),
+                                        size: 11 * panelScaleFactor),
+                                    if (commonNameForEntry(boresightCatalogEntry!.entry).isNotEmpty)
                                     solveText(
-                                        "${boresightCatalogEntry!.entry.angularSize}′",
+                                        commonNameForEntry(boresightCatalogEntry!.entry),
                                         size: 9 * panelScaleFactor),
-                                ],
+                                    solveText(
+                                        boresightCatalogEntry!.entry.hasConstellation()
+                                            ? "${boresightCatalogEntry!.entry.objectType.label} in ${boresightCatalogEntry!.entry.constellation.label}"
+                                            : boresightCatalogEntry!.entry.objectType.label,
+                                        size: 9 * panelScaleFactor),
+                                    if (boresightCatalogEntry!.entry.hasMagnitude())
+                                      solveText(
+                                          sprintf("mag %.2f", [boresightCatalogEntry!.entry.magnitude]),
+                                          size: 9 * panelScaleFactor),
+                                    if (boresightCatalogEntry!.entry.angularSize.isNotEmpty)
+                                      solveText(
+                                          "${boresightCatalogEntry!.entry.angularSize}′",
+                                          size: 9 * panelScaleFactor),
+                                  ],
+                                ),
                               ),
                             )
                           : (boresightConstellation != null
