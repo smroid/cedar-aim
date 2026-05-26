@@ -37,7 +37,7 @@ import 'platform.dart';
 // flutter build apk --release
 
 typedef DrawCatalogEntriesFunction = void Function(BuildContext, Canvas, Color,
-    List<cedar_rpc.FovCatalogEntry>, bool, int);
+    List<cedar_rpc.FovCatalogEntry>, bool, int, cedar_rpc.FovCatalogEntry?);
 
 typedef ShowCatalogBrowserFunction = void Function(
     BuildContext, MyHomePageState);
@@ -383,14 +383,18 @@ class _MainImagePainter extends CustomPainter {
         final scaledUnlabeledEntries = _createScaledCatalogEntries(
             state._unlabeledFovCatalogEntries, displayScale);
 
+        final boldEntry = state.boresightCatalogEntryInFov
+            ? state.boresightCatalogEntry
+            : null;
+
         _drawCatalogEntries!(_context, canvas, color, scaledLabeledEntries,
-            /*drawLabel=*/ true, state._binFactor);
+            /*drawLabel=*/ true, state._binFactor, boldEntry);
+        _drawCatalogEntries!(_context, canvas, color, scaledUnlabeledEntries,
+            /*drawLabel=*/ false, state._binFactor, boldEntry);
         if (dimLabeledCatalogEntries.isNotEmpty) {
           _drawCatalogEntries!(_context, canvas, opaqueColor, scaledDimEntries,
-              /*drawLabel=*/ true, state._binFactor);
+              /*drawLabel=*/ true, state._binFactor, null);
         }
-        _drawCatalogEntries!(_context, canvas, color, scaledUnlabeledEntries,
-            /*drawLabel=*/ false, state._binFactor);
       }
     }
   }
@@ -597,6 +601,9 @@ class MyHomePageState extends State<MyHomePage> {
   Constellation? boresightConstellation;
   cedar_rpc.FovCatalogEntry? boresightCatalogEntry;
   double? boresightCatalogEntryDistance;
+
+  bool get boresightCatalogEntryInFov =>
+      boresightCatalogEntry != null && (boresightCatalogEntryDistance ?? 2.0) <= 1.0;
 
   cedar_rpc.CalibrationData? calibrationData;
   cedar_rpc.ProcessingStats? processingStats;
@@ -1659,8 +1666,7 @@ class MyHomePageState extends State<MyHomePage> {
               child: _setupMode
                   ? null
                   : Center(
-                      child: (boresightCatalogEntry != null &&
-                              (boresightCatalogEntryDistance ?? 2.0) <= 1.0)
+                      child: boresightCatalogEntryInFov
                           ? GestureDetector(
                               onTap: _objectInfoDialog == null ? null : () {
                                 _objectInfoDialog!(this, context,
