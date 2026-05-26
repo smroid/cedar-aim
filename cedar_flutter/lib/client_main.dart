@@ -1683,20 +1683,20 @@ class MyHomePageState extends State<MyHomePage> {
                                     if (commonNameForEntry(boresightCatalogEntry!.entry).isNotEmpty)
                                     solveText(
                                         commonNameForEntry(boresightCatalogEntry!.entry),
-                                        size: 9 * panelScaleFactor),
+                                        size: 10 * panelScaleFactor),
                                     solveText(
                                         boresightCatalogEntry!.entry.hasConstellation()
                                             ? "${boresightCatalogEntry!.entry.objectType.label} in ${boresightCatalogEntry!.entry.constellation.label}"
                                             : boresightCatalogEntry!.entry.objectType.label,
-                                        size: 9 * panelScaleFactor),
+                                        size: 10 * panelScaleFactor),
                                     if (boresightCatalogEntry!.entry.hasMagnitude())
                                       solveText(
                                           sprintf("mag %.2f", [boresightCatalogEntry!.entry.magnitude]),
-                                          size: 9 * panelScaleFactor),
+                                          size: 10 * panelScaleFactor),
                                     if (boresightCatalogEntry!.entry.angularSize.isNotEmpty)
                                       solveText(
                                           "${boresightCatalogEntry!.entry.angularSize}′",
-                                          size: 9 * panelScaleFactor),
+                                          size: 10 * panelScaleFactor),
                                   ],
                                 ),
                               ),
