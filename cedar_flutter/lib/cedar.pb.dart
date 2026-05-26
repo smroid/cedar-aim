@@ -981,12 +981,9 @@ class OperationSettings extends $pb.GeneratedMessage {
   void clearLogDwelledPositions() => $_clearField(10);
 
   /// In OPERATE mode, if `catalog_entry_match` is present, this is used to
-  /// determine the `catalog_entries` returned in each FrameResult. Only the
-  /// `faintest_magnitude` is used; the catalog label and object type label
-  /// filters are ignored.
+  /// determine the `catalog_entries` returned in each FrameResult.
   /// This field is also used to initialize the filter criteria in Cedar Aim's
-  /// catalog panel. Note that in that context the catalog label and object
-  /// type label filters are relevant.
+  /// catalog panel.
   @$pb.TagNumber(11)
   $1.CatalogEntryMatch get catalogEntryMatch => $_getN(3);
   @$pb.TagNumber(11)
@@ -1518,7 +1515,7 @@ class FrameRequest extends $pb.GeneratedMessage {
   void clearDisplayOrientation() => $_clearField(3);
 }
 
-/// Next tag: 40.
+/// Next tag: 43.
 class FrameResult extends $pb.GeneratedMessage {
   factory FrameResult({
     $core.int? frameId,
@@ -1551,6 +1548,9 @@ class FrameResult extends $pb.GeneratedMessage {
     Image? daylightFocusZoomImage,
     $core.bool? skipFocusActive,
     $core.int? hotPixelCount,
+    FovCatalogEntry? boresightCatalogEntry,
+    $1.Constellation? boresightConstellation,
+    $core.double? boresightCatalogEntryDistance,
   }) {
     final $result = create();
     if (frameId != null) {
@@ -1643,6 +1643,15 @@ class FrameResult extends $pb.GeneratedMessage {
     if (hotPixelCount != null) {
       $result.hotPixelCount = hotPixelCount;
     }
+    if (boresightCatalogEntry != null) {
+      $result.boresightCatalogEntry = boresightCatalogEntry;
+    }
+    if (boresightConstellation != null) {
+      $result.boresightConstellation = boresightConstellation;
+    }
+    if (boresightCatalogEntryDistance != null) {
+      $result.boresightCatalogEntryDistance = boresightCatalogEntryDistance;
+    }
     return $result;
   }
   FrameResult._() : super();
@@ -1680,6 +1689,9 @@ class FrameResult extends $pb.GeneratedMessage {
     ..aOM<Image>(37, _omitFieldNames ? '' : 'daylightFocusZoomImage', subBuilder: Image.create)
     ..aOB(38, _omitFieldNames ? '' : 'skipFocusActive')
     ..a<$core.int>(39, _omitFieldNames ? '' : 'hotPixelCount', $pb.PbFieldType.O3)
+    ..aOM<FovCatalogEntry>(40, _omitFieldNames ? '' : 'boresightCatalogEntry', subBuilder: FovCatalogEntry.create)
+    ..aOM<$1.Constellation>(41, _omitFieldNames ? '' : 'boresightConstellation', subBuilder: $1.Constellation.create)
+    ..a<$core.double>(42, _omitFieldNames ? '' : 'boresightCatalogEntryDistance', $pb.PbFieldType.OF)
     ..hasRequiredFields = false
   ;
 
@@ -1988,12 +2000,6 @@ class FrameResult extends $pb.GeneratedMessage {
   @$pb.TagNumber(30)
   PolarAlignAdvice ensurePolarAlignAdvice() => $_ensure(21);
 
-  /// Lists the sky catalog entries that are present in the `plate_solution`
-  /// field of view. The `catalog_entry_match` field in `operation_settings`
-  /// determines what entries are included, except in SETUP alignment mode where
-  /// fixed criteria are used (bright named stars and planets).
-  /// Empty if `plate_solution` is absent or failed or if Cedar Sky is not
-  /// present.
   /// The FOV catalog entries that dominate their crowd and should be labelled.
   @$pb.TagNumber(31)
   $pb.PbList<FovCatalogEntry> get labeledCatalogEntries => $_getList(22);
@@ -2076,6 +2082,44 @@ class FrameResult extends $pb.GeneratedMessage {
   $core.bool hasHotPixelCount() => $_has(29);
   @$pb.TagNumber(39)
   void clearHotPixelCount() => $_clearField(39);
+
+  /// The displayed catalog entry (labeled_catalog_entries +
+  /// unlabeled_catalog_entries) that is closest to the boresight. Can be omitted
+  /// if no catalog entries are currently visible in the display.
+  @$pb.TagNumber(40)
+  FovCatalogEntry get boresightCatalogEntry => $_getN(30);
+  @$pb.TagNumber(40)
+  set boresightCatalogEntry(FovCatalogEntry v) { $_setField(40, v); }
+  @$pb.TagNumber(40)
+  $core.bool hasBoresightCatalogEntry() => $_has(30);
+  @$pb.TagNumber(40)
+  void clearBoresightCatalogEntry() => $_clearField(40);
+  @$pb.TagNumber(40)
+  FovCatalogEntry ensureBoresightCatalogEntry() => $_ensure(30);
+
+  /// The constellation of the catalog entry closest to the boresight (even if
+  /// not displayed).
+  @$pb.TagNumber(41)
+  $1.Constellation get boresightConstellation => $_getN(31);
+  @$pb.TagNumber(41)
+  set boresightConstellation($1.Constellation v) { $_setField(41, v); }
+  @$pb.TagNumber(41)
+  $core.bool hasBoresightConstellation() => $_has(31);
+  @$pb.TagNumber(41)
+  void clearBoresightConstellation() => $_clearField(41);
+  @$pb.TagNumber(41)
+  $1.Constellation ensureBoresightConstellation() => $_ensure(31);
+
+  /// If we have a boresight_catalog_entry, this field gives its distance from
+  /// the boresight, as a multiple of the eyepiece FOV radius.
+  @$pb.TagNumber(42)
+  $core.double get boresightCatalogEntryDistance => $_getN(32);
+  @$pb.TagNumber(42)
+  set boresightCatalogEntryDistance($core.double v) { $_setFloat(32, v); }
+  @$pb.TagNumber(42)
+  $core.bool hasBoresightCatalogEntryDistance() => $_has(32);
+  @$pb.TagNumber(42)
+  void clearBoresightCatalogEntryDistance() => $_clearField(42);
 }
 
 class Image extends $pb.GeneratedMessage {
