@@ -6,7 +6,7 @@ import 'package:cedar_flutter/cedar_sky.pb.dart';
 import 'package:cedar_flutter/settings.dart';
 import 'package:flutter/material.dart';
 
-const double _textFontSize = 18.0;
+const double _textFontSize = 16.0;
 const double _arrowSize = 12.0;
 const double _arrowAngleDegrees = 25.0;
 const List<String> _specialCatalogLabels = ['IAU', 'AST', 'COM', 'PL'];
@@ -88,9 +88,9 @@ void drawGapCross(
 
 // Draw the text centered at `pos`.
 void drawText(BuildContext context, Canvas canvas, Color color, Offset pos,
-              String text) {
+              String text, {FontWeight fontWeight = FontWeight.normal}) {
   final textPainter = TextPainter(
-      text: TextSpan(text: text, style: TextStyle(color: color, fontSize: _textFontSize)),
+      text: TextSpan(text: text, style: TextStyle(color: color, fontSize: _textFontSize, fontWeight: fontWeight)),
       textDirection: TextDirection.ltr,
       textAlign: TextAlign.center,
       textScaler: textScaler(context));
