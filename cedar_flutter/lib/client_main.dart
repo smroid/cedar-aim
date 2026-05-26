@@ -594,6 +594,9 @@ class MyHomePageState extends State<MyHomePage> {
   double solutionRMSE = 0.0;
 
   cedar_rpc.LocationBasedInfo? locationBasedInfo;
+  Constellation? boresightConstellation;
+  cedar_rpc.FovCatalogEntry? boresightCatalogEntry;
+  double? boresightCatalogEntryDistance;
 
   cedar_rpc.CalibrationData? calibrationData;
   cedar_rpc.ProcessingStats? processingStats;
@@ -843,6 +846,15 @@ class MyHomePageState extends State<MyHomePage> {
       if (response.hasLocationBasedInfo()) {
         locationBasedInfo = response.locationBasedInfo;
       }
+      boresightConstellation = response.hasBoresightConstellation()
+          ? response.boresightConstellation
+          : null;
+      boresightCatalogEntry = response.hasBoresightCatalogEntry()
+          ? response.boresightCatalogEntry
+          : null;
+      boresightCatalogEntryDistance = response.hasBoresightCatalogEntryDistance()
+          ? response.boresightCatalogEntryDistance
+          : null;
       _scopeFov =
           preferences!.eyepieceFov * (_cameraWidth / _binFactor) / _solutionFOV;
     } else if (_scopeFov == 0) {
@@ -1593,8 +1605,6 @@ class MyHomePageState extends State<MyHomePage> {
         .min(mainDimensionBasedScale, crossDimensionBasedScale)
         .clamp(0.5, 1.2);
 
-    var gaugeSize = 45 * panelScaleFactor * textScale;
-
     // When goto is active, show movement instructions.
     if (_slewRequest != null) {
       final slew = _slewRequest!;
@@ -1644,19 +1654,48 @@ class MyHomePageState extends State<MyHomePage> {
       RotatedBox(
           quarterTurns: portrait ? 3 : 0,
           child: SizedBox(
-              width: gaugeSize,
-              height: gaugeSize,
+              width: 60 * panelScaleFactor * textScale,
+              height: 60 * panelScaleFactor * textScale,
               child: _setupMode
                   ? null
                   : Center(
-                      child: Text(
-                        "[TBD]",
-                        style: TextStyle(
-                          fontSize: 11 * panelScaleFactor,
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
-                        textScaler: textScaler(context),
-                      ),
+                      child: (boresightCatalogEntry != null &&
+                              (boresightCatalogEntryDistance ?? 2.0) <= 1.0)
+                          ? FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  solveText(
+                                      labelForEntry(boresightCatalogEntry!.entry),
+                                      size: 11 * panelScaleFactor),
+                                  if (commonNameForEntry(boresightCatalogEntry!.entry).isNotEmpty)
+                                  solveText(
+                                      commonNameForEntry(boresightCatalogEntry!.entry),
+                                      size: 9 * panelScaleFactor),
+                                  solveText(
+                                      boresightCatalogEntry!.entry.hasConstellation()
+                                          ? "${boresightCatalogEntry!.entry.objectType.label} in ${boresightCatalogEntry!.entry.constellation.label}"
+                                          : boresightCatalogEntry!.entry.objectType.label,
+                                      size: 9 * panelScaleFactor),
+                                  if (boresightCatalogEntry!.entry.hasMagnitude())
+                                    solveText(
+                                        sprintf("mag %.2f", [boresightCatalogEntry!.entry.magnitude]),
+                                        size: 9 * panelScaleFactor),
+                                  if (boresightCatalogEntry!.entry.angularSize.isNotEmpty)
+                                    solveText(
+                                        "${boresightCatalogEntry!.entry.angularSize}′",
+                                        size: 9 * panelScaleFactor),
+                                ],
+                              ),
+                            )
+                          : (boresightConstellation != null
+                              ? FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  child: solveText(boresightConstellation!.name,
+                                      size: 11 * panelScaleFactor),
+                                )
+                              : null),
                     ))),
       if (!_setupMode) ...[
         RotatedBox(
