@@ -362,7 +362,9 @@ class CedarDrawer extends StatelessWidget {
                     label: _scaledText("RA/Dec"),
                     onPressed: () {
                       controller.closeDrawer();
-                      controller.onGotoRaDec!();
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        controller.onGotoRaDec!();
+                      });
                     },
                   ),
                 ],
