@@ -883,16 +883,14 @@ const SlewRequest$json = {
   '2': [
     {'1': 'target', '3': 1, '4': 1, '5': 11, '6': '.cedar_common.CelestialCoord', '10': 'target'},
     {'1': 'target_catalog_entry', '3': 8, '4': 1, '5': 11, '6': '.cedar_sky.CatalogEntry', '9': 0, '10': 'targetCatalogEntry', '17': true},
-    {'1': 'target_catalog_entry_distance', '3': 9, '4': 1, '5': 1, '9': 1, '10': 'targetCatalogEntryDistance', '17': true},
-    {'1': 'target_distance', '3': 2, '4': 1, '5': 1, '9': 2, '10': 'targetDistance', '17': true},
-    {'1': 'target_angle', '3': 3, '4': 1, '5': 1, '9': 3, '10': 'targetAngle', '17': true},
-    {'1': 'offset_rotation_axis', '3': 5, '4': 1, '5': 1, '9': 4, '10': 'offsetRotationAxis', '17': true},
-    {'1': 'offset_tilt_axis', '3': 6, '4': 1, '5': 1, '9': 5, '10': 'offsetTiltAxis', '17': true},
-    {'1': 'image_pos', '3': 4, '4': 1, '5': 11, '6': '.cedar.ImageCoord', '9': 6, '10': 'imagePos', '17': true},
+    {'1': 'target_distance', '3': 2, '4': 1, '5': 1, '9': 1, '10': 'targetDistance', '17': true},
+    {'1': 'target_angle', '3': 3, '4': 1, '5': 1, '9': 2, '10': 'targetAngle', '17': true},
+    {'1': 'offset_rotation_axis', '3': 5, '4': 1, '5': 1, '9': 3, '10': 'offsetRotationAxis', '17': true},
+    {'1': 'offset_tilt_axis', '3': 6, '4': 1, '5': 1, '9': 4, '10': 'offsetTiltAxis', '17': true},
+    {'1': 'image_pos', '3': 4, '4': 1, '5': 11, '6': '.cedar.ImageCoord', '9': 5, '10': 'imagePos', '17': true},
   ],
   '8': [
     {'1': '_target_catalog_entry'},
-    {'1': '_target_catalog_entry_distance'},
     {'1': '_target_distance'},
     {'1': '_target_angle'},
     {'1': '_offset_rotation_axis'},
@@ -901,6 +899,7 @@ const SlewRequest$json = {
   ],
   '9': [
     {'1': 7, '2': 8},
+    {'1': 9, '2': 10},
   ],
 };
 
@@ -908,16 +907,14 @@ const SlewRequest$json = {
 final $typed_data.Uint8List slewRequestDescriptor = $convert.base64Decode(
     'CgtTbGV3UmVxdWVzdBI0CgZ0YXJnZXQYASABKAsyHC5jZWRhcl9jb21tb24uQ2VsZXN0aWFsQ2'
     '9vcmRSBnRhcmdldBJOChR0YXJnZXRfY2F0YWxvZ19lbnRyeRgIIAEoCzIXLmNlZGFyX3NreS5D'
-    'YXRhbG9nRW50cnlIAFISdGFyZ2V0Q2F0YWxvZ0VudHJ5iAEBEkYKHXRhcmdldF9jYXRhbG9nX2'
-    'VudHJ5X2Rpc3RhbmNlGAkgASgBSAFSGnRhcmdldENhdGFsb2dFbnRyeURpc3RhbmNliAEBEiwK'
-    'D3RhcmdldF9kaXN0YW5jZRgCIAEoAUgCUg50YXJnZXREaXN0YW5jZYgBARImCgx0YXJnZXRfYW'
-    '5nbGUYAyABKAFIA1ILdGFyZ2V0QW5nbGWIAQESNQoUb2Zmc2V0X3JvdGF0aW9uX2F4aXMYBSAB'
-    'KAFIBFISb2Zmc2V0Um90YXRpb25BeGlziAEBEi0KEG9mZnNldF90aWx0X2F4aXMYBiABKAFIBV'
-    'IOb2Zmc2V0VGlsdEF4aXOIAQESMwoJaW1hZ2VfcG9zGAQgASgLMhEuY2VkYXIuSW1hZ2VDb29y'
-    'ZEgGUghpbWFnZVBvc4gBAUIXChVfdGFyZ2V0X2NhdGFsb2dfZW50cnlCIAoeX3RhcmdldF9jYX'
-    'RhbG9nX2VudHJ5X2Rpc3RhbmNlQhIKEF90YXJnZXRfZGlzdGFuY2VCDwoNX3RhcmdldF9hbmds'
-    'ZUIXChVfb2Zmc2V0X3JvdGF0aW9uX2F4aXNCEwoRX29mZnNldF90aWx0X2F4aXNCDAoKX2ltYW'
-    'dlX3Bvc0oECAcQCA==');
+    'YXRhbG9nRW50cnlIAFISdGFyZ2V0Q2F0YWxvZ0VudHJ5iAEBEiwKD3RhcmdldF9kaXN0YW5jZR'
+    'gCIAEoAUgBUg50YXJnZXREaXN0YW5jZYgBARImCgx0YXJnZXRfYW5nbGUYAyABKAFIAlILdGFy'
+    'Z2V0QW5nbGWIAQESNQoUb2Zmc2V0X3JvdGF0aW9uX2F4aXMYBSABKAFIA1ISb2Zmc2V0Um90YX'
+    'Rpb25BeGlziAEBEi0KEG9mZnNldF90aWx0X2F4aXMYBiABKAFIBFIOb2Zmc2V0VGlsdEF4aXOI'
+    'AQESMwoJaW1hZ2VfcG9zGAQgASgLMhEuY2VkYXIuSW1hZ2VDb29yZEgFUghpbWFnZVBvc4gBAU'
+    'IXChVfdGFyZ2V0X2NhdGFsb2dfZW50cnlCEgoQX3RhcmdldF9kaXN0YW5jZUIPCg1fdGFyZ2V0'
+    'X2FuZ2xlQhcKFV9vZmZzZXRfcm90YXRpb25fYXhpc0ITChFfb2Zmc2V0X3RpbHRfYXhpc0IMCg'
+    'pfaW1hZ2VfcG9zSgQIBxAISgQICRAK');
 
 @$core.Deprecated('Use polarAlignAdviceDescriptor instead')
 const PolarAlignAdvice$json = {

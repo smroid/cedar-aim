@@ -2,7 +2,7 @@
 //  Generated code. Do not modify.
 //  source: cedar_common.proto
 //
-// @dart = 2.12
+// @dart = 3.3
 
 // ignore_for_file: annotate_overrides, camel_case_types, comment_references
 // ignore_for_file: constant_identifier_names, library_prefixes
@@ -13,10 +13,13 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
+export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
+
 class CelestialCoord extends $pb.GeneratedMessage {
   factory CelestialCoord({
     $core.double? ra,
     $core.double? dec,
+    $core.double? epoch,
   }) {
     final $result = create();
     if (ra != null) {
@@ -24,6 +27,9 @@ class CelestialCoord extends $pb.GeneratedMessage {
     }
     if (dec != null) {
       $result.dec = dec;
+    }
+    if (epoch != null) {
+      $result.epoch = epoch;
     }
     return $result;
   }
@@ -34,6 +40,7 @@ class CelestialCoord extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'CelestialCoord', package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar_common'), createEmptyInstance: create)
     ..a<$core.double>(1, _omitFieldNames ? '' : 'ra', $pb.PbFieldType.OD)
     ..a<$core.double>(2, _omitFieldNames ? '' : 'dec', $pb.PbFieldType.OD)
+    ..a<$core.double>(3, _omitFieldNames ? '' : 'epoch', $pb.PbFieldType.OD)
     ..hasRequiredFields = false
   ;
 
@@ -65,7 +72,7 @@ class CelestialCoord extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $core.bool hasRa() => $_has(0);
   @$pb.TagNumber(1)
-  void clearRa() => clearField(1);
+  void clearRa() => $_clearField(1);
 
   @$pb.TagNumber(2)
   $core.double get dec => $_getN(1);
@@ -74,7 +81,18 @@ class CelestialCoord extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $core.bool hasDec() => $_has(1);
   @$pb.TagNumber(2)
-  void clearDec() => clearField(2);
+  void clearDec() => $_clearField(2);
+
+  /// Epoch as a Julian year (e.g. 2000.0 for J2000). Defaults to 2000.0 if
+  /// omitted.
+  @$pb.TagNumber(3)
+  $core.double get epoch => $_getN(2);
+  @$pb.TagNumber(3)
+  set epoch($core.double v) { $_setDouble(2, v); }
+  @$pb.TagNumber(3)
+  $core.bool hasEpoch() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearEpoch() => $_clearField(3);
 }
 
 

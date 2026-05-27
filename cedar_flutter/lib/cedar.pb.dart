@@ -3655,7 +3655,6 @@ class SlewRequest extends $pb.GeneratedMessage {
     $core.double? offsetRotationAxis,
     $core.double? offsetTiltAxis,
     $1.CatalogEntry? targetCatalogEntry,
-    $core.double? targetCatalogEntryDistance,
   }) {
     final $result = create();
     if (target != null) {
@@ -3679,9 +3678,6 @@ class SlewRequest extends $pb.GeneratedMessage {
     if (targetCatalogEntry != null) {
       $result.targetCatalogEntry = targetCatalogEntry;
     }
-    if (targetCatalogEntryDistance != null) {
-      $result.targetCatalogEntryDistance = targetCatalogEntryDistance;
-    }
     return $result;
   }
   SlewRequest._() : super();
@@ -3696,7 +3692,6 @@ class SlewRequest extends $pb.GeneratedMessage {
     ..a<$core.double>(5, _omitFieldNames ? '' : 'offsetRotationAxis', $pb.PbFieldType.OD)
     ..a<$core.double>(6, _omitFieldNames ? '' : 'offsetTiltAxis', $pb.PbFieldType.OD)
     ..aOM<$1.CatalogEntry>(8, _omitFieldNames ? '' : 'targetCatalogEntry', subBuilder: $1.CatalogEntry.create)
-    ..a<$core.double>(9, _omitFieldNames ? '' : 'targetCatalogEntryDistance', $pb.PbFieldType.OD)
     ..hasRequiredFields = false
   ;
 
@@ -3814,17 +3809,6 @@ class SlewRequest extends $pb.GeneratedMessage {
   void clearTargetCatalogEntry() => $_clearField(8);
   @$pb.TagNumber(8)
   $1.CatalogEntry ensureTargetCatalogEntry() => $_ensure(6);
-
-  /// If `target_catalog_entry` is given, this field is the distance, in
-  /// degrees, between `target` and `target_catalog_entry.coord`.
-  @$pb.TagNumber(9)
-  $core.double get targetCatalogEntryDistance => $_getN(7);
-  @$pb.TagNumber(9)
-  set targetCatalogEntryDistance($core.double v) { $_setDouble(7, v); }
-  @$pb.TagNumber(9)
-  $core.bool hasTargetCatalogEntryDistance() => $_has(7);
-  @$pb.TagNumber(9)
-  void clearTargetCatalogEntryDistance() => $_clearField(9);
 }
 
 /// Estimate of alt/az offset of mount's polar axis from celestial pole. Not

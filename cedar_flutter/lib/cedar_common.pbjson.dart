@@ -2,7 +2,7 @@
 //  Generated code. Do not modify.
 //  source: cedar_common.proto
 //
-// @dart = 2.12
+// @dart = 3.3
 
 // ignore_for_file: annotate_overrides, camel_case_types, comment_references
 // ignore_for_file: constant_identifier_names, library_prefixes
@@ -19,10 +19,15 @@ const CelestialCoord$json = {
   '2': [
     {'1': 'ra', '3': 1, '4': 1, '5': 1, '10': 'ra'},
     {'1': 'dec', '3': 2, '4': 1, '5': 1, '10': 'dec'},
+    {'1': 'epoch', '3': 3, '4': 1, '5': 1, '9': 0, '10': 'epoch', '17': true},
+  ],
+  '8': [
+    {'1': '_epoch'},
   ],
 };
 
 /// Descriptor for `CelestialCoord`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List celestialCoordDescriptor = $convert.base64Decode(
-    'Cg5DZWxlc3RpYWxDb29yZBIOCgJyYRgBIAEoAVICcmESEAoDZGVjGAIgASgBUgNkZWM=');
+    'Cg5DZWxlc3RpYWxDb29yZBIOCgJyYRgBIAEoAVICcmESEAoDZGVjGAIgASgBUgNkZWMSGQoFZX'
+    'BvY2gYAyABKAFIAFIFZXBvY2iIAQFCCAoGX2Vwb2No');
 
