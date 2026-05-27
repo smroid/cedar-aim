@@ -9,6 +9,7 @@ void main() {
       /*showCatalogBrowser=*/ null,
       /*objectInfoDialog=*/ null,
       /*wifiAccessPointDialog=*/ null,
+      /*gotoRaDecDialog=*/ null,
       /*updaterInfo=*/ null,
       /*updateServiceAvailable=*/ false);
 }

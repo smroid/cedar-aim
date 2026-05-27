@@ -64,6 +64,9 @@ class CedarDrawerController {
   final BuildContext context;
   final MyHomePageState homePageState;
 
+  // Optional callback for RA/Dec Goto dialog (Advanced only).
+  final VoidCallback? onGotoRaDec;
+
   CedarDrawerController({
     required this.setupMode,
     required this.focusAid,
@@ -100,6 +103,7 @@ class CedarDrawerController {
     required this.closeDrawer,
     required this.context,
     required this.homePageState,
+    this.onGotoRaDec,
   });
 }
 
@@ -317,7 +321,7 @@ class CedarDrawer extends StatelessWidget {
                         borderRadius: BorderRadius.circular(6),
                       ),
                     ),
-                    width: 120 * textScaleFactor(controller.context),
+                    width: 85 * textScaleFactor(controller.context),
                     requestFocusOnTap: false,
                     initialSelection: controller.setupMode
                         ? (controller.focusAid ? "Focus" : "Align")
@@ -351,6 +355,17 @@ class CedarDrawer extends StatelessWidget {
                       controller.onStateChanged();
                       Navigator.of(controller.context).pop();
                     }),
+                if (controller.advanced && controller.onGotoRaDec != null) ...[
+                  const SizedBox(width: 4),
+                  TextButton.icon(
+                    icon: const Icon(Icons.gps_fixed),
+                    label: _scaledText("RA/Dec"),
+                    onPressed: () {
+                      controller.closeDrawer();
+                      controller.onGotoRaDec!();
+                    },
+                  ),
+                ],
               ],
             )),
       ],

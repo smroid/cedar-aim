@@ -48,6 +48,8 @@ typedef ObjectInfoDialogFunction = void Function(
 typedef WifiAccessPointDialogFunction = void Function(
     MyHomePageState, BuildContext);
 
+typedef GotoRaDecDialogFunction = void Function(BuildContext);
+
 typedef UpdateServerSoftwareDialogFunction = void
     Function(MyHomePageState, BuildContext, {bool filterUpdateFiles});
 
@@ -70,6 +72,7 @@ DrawCatalogEntriesFunction? _drawCatalogEntries;
 ShowCatalogBrowserFunction? _showCatalogBrowser;
 ObjectInfoDialogFunction? _objectInfoDialog;
 WifiAccessPointDialogFunction? _wifiAccessPointDialog;
+GotoRaDecDialogFunction? _gotoRaDecDialog;
 UpdaterInfo? _updaterInfo;
 bool _updateServiceAvailable = false;
 AppLogCallbacks? _appLogCallbacks;
@@ -147,6 +150,7 @@ void clientMain(
     ShowCatalogBrowserFunction? showCatalogBrowser,
     ObjectInfoDialogFunction? objectInfoDialog,
     WifiAccessPointDialogFunction? wifiAccessPointDialog,
+    GotoRaDecDialogFunction? gotoRaDecDialog,
     UpdaterInfo? updaterInfo,
     bool updateServiceAvailable,
     {AppLogCallbacks? appLogCallbacks}) {
@@ -154,6 +158,7 @@ void clientMain(
   _showCatalogBrowser = showCatalogBrowser;
   _objectInfoDialog = objectInfoDialog;
   _wifiAccessPointDialog = wifiAccessPointDialog;
+  _gotoRaDecDialog = gotoRaDecDialog;
   _updaterInfo = updaterInfo;
   _updateServiceAvailable = updateServiceAvailable;
   _appLogCallbacks = appLogCallbacks;
@@ -2387,6 +2392,9 @@ class MyHomePageState extends State<MyHomePage> {
         closeDrawer: closeDrawer,
         context: context,
         homePageState: this,
+        onGotoRaDec: (isDIY || _gotoRaDecDialog == null) ? null : () {
+          _gotoRaDecDialog!(context);
+        },
       ),
     );
   }
