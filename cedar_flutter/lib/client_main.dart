@@ -48,7 +48,7 @@ typedef ObjectInfoDialogFunction = void Function(
 typedef WifiAccessPointDialogFunction = void Function(
     MyHomePageState, BuildContext);
 
-typedef GotoRaDecDialogFunction = void Function(BuildContext);
+typedef GotoRaDecDialogFunction = void Function(MyHomePageState, BuildContext);
 
 typedef UpdateServerSoftwareDialogFunction = void
     Function(MyHomePageState, BuildContext, {bool filterUpdateFiles});
@@ -2393,7 +2393,7 @@ class MyHomePageState extends State<MyHomePage> {
         context: context,
         homePageState: this,
         onGotoRaDec: (isDIY || _gotoRaDecDialog == null) ? null : () {
-          _gotoRaDecDialog!(context);
+          _gotoRaDecDialog!(this, context);
         },
       ),
     );
