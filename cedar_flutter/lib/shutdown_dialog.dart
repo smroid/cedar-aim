@@ -91,12 +91,12 @@ void shutdownDialog(MyHomePageState state, BuildContext context) {
             style: ElevatedButton.styleFrom(backgroundColor: Colors.white10),
             child: _scaledText("Restart", context),
           ),
-          GestureDetector(
-            onTap: () async {
+          ElevatedButton(
+            onPressed: () async {
               await _performShutdown(state, context, productName);
             },
             onLongPress: () {
-              // Show confirmation dialog for clearing observer location.
+              // Long-press shows confirmation dialog that also clears observer location.
               showDialog(
                 context: context,
                 builder: (BuildContext context) {
@@ -113,18 +113,11 @@ void shutdownDialog(MyHomePageState state, BuildContext context) {
                       ),
                       ElevatedButton(
                         onPressed: () async {
-                          // Get the parent context before we start async operations
                           final parentContext = Navigator.of(context, rootNavigator: true).context;
-
-                          // Clear observer location first.
                           await clearObserverLocation();
-
-                          // Close confirmation dialog.
                           if (context.mounted) {
                             Navigator.of(context).pop();
                           }
-
-                          // Perform shutdown using the parent context
                           if (parentContext.mounted) {
                             await _performShutdown(state, parentContext, productName);
                           }
@@ -137,17 +130,8 @@ void shutdownDialog(MyHomePageState state, BuildContext context) {
                 },
               );
             },
-            child: AbsorbPointer(
-              absorbing: false,
-              child: ElevatedButton(
-                onPressed: null, // Disabled to let GestureDetector handle all events
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white10,
-                  foregroundColor: Theme.of(context).colorScheme.primary, // Keep text color active
-                ),
-                child: _scaledText("Shutdown", context),
-              ),
-            ),
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.white10),
+            child: _scaledText("Shutdown", context),
           ),
         ],
       );
