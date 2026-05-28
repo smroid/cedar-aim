@@ -333,6 +333,20 @@ class _MainImagePainter extends CustomPainter {
       labeledCatalogEntries = state._labeledFovCatalogEntries;
     }
 
+    if (state.showDetectedStars && !state._setupMode && state._stars.isNotEmpty) {
+      final Paint starPaint = Paint()
+        ..color = Colors.grey
+        ..strokeWidth = thin
+        ..style = PaintingStyle.stroke;
+      for (var star in state._stars) {
+        final scaledCenter = Offset(
+          (star.centroidPosition.x / state._binFactor + 0.5) * displayScale,
+          (star.centroidPosition.y / state._binFactor + 0.5) * displayScale,
+        );
+        canvas.drawCircle(scaledCenter, 4 * displayScale, starPaint);
+      }
+    }
+
     if (state._slewRequest != null && !state._setupMode && state._hasSolution) {
       final slew = state._slewRequest;
       Offset? posInImage;
@@ -542,6 +556,7 @@ class MyHomePageState extends State<MyHomePage> {
   String _demoFile = "";
   bool advanced = false;
   bool expert = false;
+  bool showDetectedStars = false;
   bool _systemMenuExpanded = false;
   bool _rightHanded = true;
   String _productName = 'Cedar Box';
@@ -592,7 +607,6 @@ class MyHomePageState extends State<MyHomePage> {
 
   double noiseEstimate = 0.0;
 
-  List<Offset>? _solutionCentroids;
   // Degrees.
   double solutionRA = 0.0;
   double solutionDec = 0.0;
@@ -841,10 +855,6 @@ class MyHomePageState extends State<MyHomePage> {
       PlateSolution plateSolution = response.plateSolution;
       _hasSolution = true;
       _hasPlateSolution = !plateSolution.solutionFromImu;
-      _solutionCentroids = <Offset>[];
-      for (var centroid in plateSolution.patternCentroids) {
-        _solutionCentroids!.add(Offset(centroid.x, centroid.y));
-      }
       if (plateSolution.targetSkyCoord.isNotEmpty) {
         solutionRA = plateSolution.targetSkyCoord.first.ra;
         solutionDec = plateSolution.targetSkyCoord.first.dec;

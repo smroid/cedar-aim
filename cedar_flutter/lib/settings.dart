@@ -200,6 +200,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final provider = Provider.of<SettingsModel>(context, listen: false);
     final prefsProto = provider.preferencesProto;
     final advanced = provider.preferencesProto.advanced;
+    final expert = _homePageState.expert;
     // final isBasic = provider.isBasic;
     final isPlus = provider.isPlus;
     final isDIY = provider.isDIY;
@@ -302,6 +303,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       ]),
                       title: scaledText('Night vision'),
                     ),
+                    if (expert)
+                      SettingsTile(
+                        leading: Row(children: <Widget>[
+                          Switch(
+                              value: _homePageState.showDetectedStars,
+                              onChanged: (bool value) {
+                                setState(() {
+                                  _homePageState.showDetectedStars = value;
+                                });
+                              })
+                        ]),
+                        title: scaledText('Show detected stars'),
+                      ),
                   ]),
                   SettingsSection(title: scaledText('Operation'), tiles: [
                     SettingsTile(
