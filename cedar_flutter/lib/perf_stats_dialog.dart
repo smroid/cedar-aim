@@ -240,12 +240,25 @@ Future<void> perfStatsDialog(
                           if (state.advanced)
                             StatRow(
                               context: context,
-                              label: "Detect+Solve",
+                              label: "Detect+misc",
                               value: sprintf("%s+%s ms", [
                                 _formatMilliseconds(state.processingStats!
                                     .detectLatency.recent.mean),
-                                _formatMilliseconds(state
-                                    .processingStats!.solveLatency.recent.mean),
+                                _formatMilliseconds(state.processingStats!
+                                    .detectOtherLatency.recent.mean),
+                              ]),
+                            ),
+                        ],
+                        ...[
+                          if (state.advanced)
+                            StatRow(
+                              context: context,
+                              label: "Solve+misc",
+                              value: sprintf("%s+%s ms", [
+                                _formatMilliseconds(state.processingStats!
+                                    .solveLatency.recent.mean),
+                                _formatMilliseconds(state.processingStats!
+                                    .solveOtherLatency.recent.mean),
                               ]),
                             ),
                         ],
