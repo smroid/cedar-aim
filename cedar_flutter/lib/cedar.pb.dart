@@ -2858,6 +2858,8 @@ class ProcessingStats extends $pb.GeneratedMessage {
     ValueStats? serveLatency,
     ValueStats? solveInterval,
     ValueStats? acquireLatency,
+    ValueStats? detectOtherLatency,
+    ValueStats? solveOtherLatency,
   }) {
     final $result = create();
     if (detectLatency != null) {
@@ -2881,6 +2883,12 @@ class ProcessingStats extends $pb.GeneratedMessage {
     if (acquireLatency != null) {
       $result.acquireLatency = acquireLatency;
     }
+    if (detectOtherLatency != null) {
+      $result.detectOtherLatency = detectOtherLatency;
+    }
+    if (solveOtherLatency != null) {
+      $result.solveOtherLatency = solveOtherLatency;
+    }
     return $result;
   }
   ProcessingStats._() : super();
@@ -2895,6 +2903,8 @@ class ProcessingStats extends $pb.GeneratedMessage {
     ..aOM<ValueStats>(7, _omitFieldNames ? '' : 'serveLatency', subBuilder: ValueStats.create)
     ..aOM<ValueStats>(8, _omitFieldNames ? '' : 'solveInterval', subBuilder: ValueStats.create)
     ..aOM<ValueStats>(9, _omitFieldNames ? '' : 'acquireLatency', subBuilder: ValueStats.create)
+    ..aOM<ValueStats>(10, _omitFieldNames ? '' : 'detectOtherLatency', subBuilder: ValueStats.create)
+    ..aOM<ValueStats>(11, _omitFieldNames ? '' : 'solveOtherLatency', subBuilder: ValueStats.create)
     ..hasRequiredFields = false
   ;
 
@@ -2919,7 +2929,7 @@ class ProcessingStats extends $pb.GeneratedMessage {
   static ProcessingStats getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<ProcessingStats>(create);
   static ProcessingStats? _defaultInstance;
 
-  /// How much time (in seconds) is spent detecting/centroiding stars.
+  /// How much time (in seconds) is spent in get_stars_from_image().
   @$pb.TagNumber(3)
   ValueStats get detectLatency => $_getN(0);
   @$pb.TagNumber(3)
@@ -2931,7 +2941,7 @@ class ProcessingStats extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   ValueStats ensureDetectLatency() => $_ensure(0);
 
-  /// How much time (in seconds) is spent plate solving (when attempted).
+  /// How much time (in seconds) is spent in attempt_plate_solve() (when attempted).
   @$pb.TagNumber(4)
   ValueStats get solveLatency => $_getN(1);
   @$pb.TagNumber(4)
@@ -3008,6 +3018,32 @@ class ProcessingStats extends $pb.GeneratedMessage {
   void clearAcquireLatency() => $_clearField(9);
   @$pb.TagNumber(9)
   ValueStats ensureAcquireLatency() => $_ensure(6);
+
+  /// How much time (in seconds) is spent on other detect-engine processing,
+  /// excluding image acquisition and get_stars_from_image().
+  @$pb.TagNumber(10)
+  ValueStats get detectOtherLatency => $_getN(7);
+  @$pb.TagNumber(10)
+  set detectOtherLatency(ValueStats v) { $_setField(10, v); }
+  @$pb.TagNumber(10)
+  $core.bool hasDetectOtherLatency() => $_has(7);
+  @$pb.TagNumber(10)
+  void clearDetectOtherLatency() => $_clearField(10);
+  @$pb.TagNumber(10)
+  ValueStats ensureDetectOtherLatency() => $_ensure(7);
+
+  /// How much time (in seconds) is spent in process_plate_solution_result()
+  /// (when a plate solve is attempted).
+  @$pb.TagNumber(11)
+  ValueStats get solveOtherLatency => $_getN(8);
+  @$pb.TagNumber(11)
+  set solveOtherLatency(ValueStats v) { $_setField(11, v); }
+  @$pb.TagNumber(11)
+  $core.bool hasSolveOtherLatency() => $_has(8);
+  @$pb.TagNumber(11)
+  void clearSolveOtherLatency() => $_clearField(11);
+  @$pb.TagNumber(11)
+  ValueStats ensureSolveOtherLatency() => $_ensure(8);
 }
 
 class ValueStats extends $pb.GeneratedMessage {

@@ -708,7 +708,9 @@ const ProcessingStats$json = {
   '2': [
     {'1': 'acquire_latency', '3': 9, '4': 1, '5': 11, '6': '.cedar.ValueStats', '10': 'acquireLatency'},
     {'1': 'detect_latency', '3': 3, '4': 1, '5': 11, '6': '.cedar.ValueStats', '10': 'detectLatency'},
+    {'1': 'detect_other_latency', '3': 10, '4': 1, '5': 11, '6': '.cedar.ValueStats', '10': 'detectOtherLatency'},
     {'1': 'solve_latency', '3': 4, '4': 1, '5': 11, '6': '.cedar.ValueStats', '10': 'solveLatency'},
+    {'1': 'solve_other_latency', '3': 11, '4': 1, '5': 11, '6': '.cedar.ValueStats', '10': 'solveOtherLatency'},
     {'1': 'solve_attempt_fraction', '3': 5, '4': 1, '5': 11, '6': '.cedar.ValueStats', '10': 'solveAttemptFraction'},
     {'1': 'solve_success_fraction', '3': 6, '4': 1, '5': 11, '6': '.cedar.ValueStats', '10': 'solveSuccessFraction'},
     {'1': 'serve_latency', '3': 7, '4': 1, '5': 11, '6': '.cedar.ValueStats', '10': 'serveLatency'},
@@ -724,13 +726,15 @@ const ProcessingStats$json = {
 final $typed_data.Uint8List processingStatsDescriptor = $convert.base64Decode(
     'Cg9Qcm9jZXNzaW5nU3RhdHMSOgoPYWNxdWlyZV9sYXRlbmN5GAkgASgLMhEuY2VkYXIuVmFsdW'
     'VTdGF0c1IOYWNxdWlyZUxhdGVuY3kSOAoOZGV0ZWN0X2xhdGVuY3kYAyABKAsyES5jZWRhci5W'
-    'YWx1ZVN0YXRzUg1kZXRlY3RMYXRlbmN5EjYKDXNvbHZlX2xhdGVuY3kYBCABKAsyES5jZWRhci'
-    '5WYWx1ZVN0YXRzUgxzb2x2ZUxhdGVuY3kSRwoWc29sdmVfYXR0ZW1wdF9mcmFjdGlvbhgFIAEo'
-    'CzIRLmNlZGFyLlZhbHVlU3RhdHNSFHNvbHZlQXR0ZW1wdEZyYWN0aW9uEkcKFnNvbHZlX3N1Y2'
-    'Nlc3NfZnJhY3Rpb24YBiABKAsyES5jZWRhci5WYWx1ZVN0YXRzUhRzb2x2ZVN1Y2Nlc3NGcmFj'
-    'dGlvbhI2Cg1zZXJ2ZV9sYXRlbmN5GAcgASgLMhEuY2VkYXIuVmFsdWVTdGF0c1IMc2VydmVMYX'
-    'RlbmN5EjgKDnNvbHZlX2ludGVydmFsGAggASgLMhEuY2VkYXIuVmFsdWVTdGF0c1INc29sdmVJ'
-    'bnRlcnZhbEoECAEQAkoECAIQAw==');
+    'YWx1ZVN0YXRzUg1kZXRlY3RMYXRlbmN5EkMKFGRldGVjdF9vdGhlcl9sYXRlbmN5GAogASgLMh'
+    'EuY2VkYXIuVmFsdWVTdGF0c1ISZGV0ZWN0T3RoZXJMYXRlbmN5EjYKDXNvbHZlX2xhdGVuY3kY'
+    'BCABKAsyES5jZWRhci5WYWx1ZVN0YXRzUgxzb2x2ZUxhdGVuY3kSQQoTc29sdmVfb3RoZXJfbG'
+    'F0ZW5jeRgLIAEoCzIRLmNlZGFyLlZhbHVlU3RhdHNSEXNvbHZlT3RoZXJMYXRlbmN5EkcKFnNv'
+    'bHZlX2F0dGVtcHRfZnJhY3Rpb24YBSABKAsyES5jZWRhci5WYWx1ZVN0YXRzUhRzb2x2ZUF0dG'
+    'VtcHRGcmFjdGlvbhJHChZzb2x2ZV9zdWNjZXNzX2ZyYWN0aW9uGAYgASgLMhEuY2VkYXIuVmFs'
+    'dWVTdGF0c1IUc29sdmVTdWNjZXNzRnJhY3Rpb24SNgoNc2VydmVfbGF0ZW5jeRgHIAEoCzIRLm'
+    'NlZGFyLlZhbHVlU3RhdHNSDHNlcnZlTGF0ZW5jeRI4Cg5zb2x2ZV9pbnRlcnZhbBgIIAEoCzIR'
+    'LmNlZGFyLlZhbHVlU3RhdHNSDXNvbHZlSW50ZXJ2YWxKBAgBEAJKBAgCEAM=');
 
 @$core.Deprecated('Use valueStatsDescriptor instead')
 const ValueStats$json = {
