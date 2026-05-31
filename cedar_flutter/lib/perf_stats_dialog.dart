@@ -226,7 +226,7 @@ Future<void> perfStatsDialog(
                     if (state.processingStats != null)
                       Column(children: [
                         ...[
-                          if (state.advanced)
+                          if (state.advanced && state.expert)
                             StatRow(
                               context: context,
                               label: "Acquire",
@@ -283,7 +283,7 @@ Future<void> perfStatsDialog(
                             ),
                         ],
                         ...[
-                          if (state.advanced)
+                          if (state.advanced && state.expert)
                             StatRow(
                               context: context,
                               label: "Serve",
@@ -294,7 +294,8 @@ Future<void> perfStatsDialog(
                             ),
                         ],
                         SizedBox(height: groupGap * textScaleFactor(context)),
-                        StatRow(
+                        if (state.advanced && state.expert)
+                          StatRow(
                           context: context,
                           label: "Solve try/pass",
                           value: sprintf("%s/%s %", [
@@ -334,7 +335,7 @@ Future<void> perfStatsDialog(
                       ),
                   ],
                   ...[
-                    if (state.advanced)
+                    if (state.advanced && state.expert)
                       StatRow(
                         context: context,
                         label: "Image noise",
