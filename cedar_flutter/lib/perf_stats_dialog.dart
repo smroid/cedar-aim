@@ -243,8 +243,7 @@ Future<void> perfStatsDialog(
                               label: "Detect",
                               value: sprintf("%s ms", [
                                 _formatMilliseconds(
-                                    state.processingStats!.detectLatency.recent.mean +
-                                    state.processingStats!.detectOtherLatency.recent.mean),
+                                    state.processingStats!.detectLatency.recent.mean),
                               ]),
                             ),
                           if (state.advanced && state.expert)
@@ -266,8 +265,7 @@ Future<void> perfStatsDialog(
                               label: "Solve",
                               value: sprintf("%s ms", [
                                 _formatMilliseconds(
-                                    state.processingStats!.solveLatency.recent.mean +
-                                    state.processingStats!.solveOtherLatency.recent.mean),
+                                    state.processingStats!.solveLatency.recent.mean),
                               ]),
                             ),
                           if (state.advanced && state.expert)
