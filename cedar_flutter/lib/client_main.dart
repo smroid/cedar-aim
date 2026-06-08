@@ -340,8 +340,8 @@ class _MainImagePainter extends CustomPainter {
         ..style = PaintingStyle.stroke;
       for (var star in state._stars) {
         final scaledCenter = Offset(
-          (star.centroidPosition.x / state._binFactor + 0.5) * displayScale,
-          (star.centroidPosition.y / state._binFactor + 0.5) * displayScale,
+          (star.centroidPosition.x / state._binFactor) * displayScale,
+          (star.centroidPosition.y / state._binFactor) * displayScale,
         );
         canvas.drawCircle(scaledCenter, 4 * displayScale, starPaint);
       }
