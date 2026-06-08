@@ -31,8 +31,10 @@ String _formatMilliseconds(double seconds) {
   double millis = seconds * 1000;
   if (millis >= 10.0) {
     return sprintf("%.0f", [millis]);
-  } else {
+  } else if (millis >= 1.0) {
     return sprintf("%.1f", [millis]);
+  } else {
+    return sprintf("%.2f", [millis]);
   }
 }
 
@@ -41,8 +43,10 @@ String _formatHz(double seconds) {
     double hz = 1.0 / seconds;
     if (hz >= 10.0) {
       return sprintf("%.0f", [hz]);
-    } else {
+    } else if (hz >= 1.0) {
       return sprintf("%.1f", [hz]);
+    } else {
+      return sprintf("%.2f", [hz]);
     }
   }
   return "0.0";
