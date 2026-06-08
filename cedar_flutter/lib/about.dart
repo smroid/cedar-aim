@@ -4,8 +4,8 @@
 import 'dart:async';
 import 'dart:math';
 
-import 'package:cedar_flutter/cedar.pb.dart' as cedar_rpc;
 import 'package:cedar_flutter/client_main.dart';
+import 'package:cedar_flutter/dark_calibration_dialog.dart';
 import 'package:cedar_flutter/platform.dart';
 import 'package:cedar_flutter/settings.dart';
 import 'package:flutter/material.dart';
@@ -797,7 +797,7 @@ void cameraDialog(MyHomePageState state, dynamic serverInfo, dynamic calData) {
                                     style: _viewButtonStyle,
                                     onPressed: () {
                                       calibrateDarkFrameDialog(
-                                          state, dialogOverlayEntry!);
+                                          state, context, dialogOverlayEntry!);
                                     },
                                     child: Text(
                                       calData.hasHotPixelMapCount()
@@ -822,110 +822,6 @@ void cameraDialog(MyHomePageState state, dynamic serverInfo, dynamic calData) {
   refreshTimer = Timer.periodic(const Duration(seconds: 1), (_) {
     dialogOverlayEntry?.markNeedsBuild();
   });
-}
-
-const Duration _darkFrameWarmup = Duration(seconds: 5);
-const Duration _darkFrameCalibrationTimeout = Duration(seconds: 30);
-
-void calibrateDarkFrameDialog(
-    MyHomePageState state, OverlayEntry cameraDialogEntry) {
-  OverlayEntry? dialogOverlayEntry;
-  bool started = false;
-  bool warmupDone = false;
-  String? errorMessage;
-  Timer? calibrationTimer;
-
-  void removeDialog() {
-    calibrationTimer?.cancel();
-    calibrationTimer = null;
-    dialogOverlayEntry?.remove();
-    dialogOverlayEntry = null;
-    cameraDialogEntry.markNeedsBuild();
-  }
-
-  dialogOverlayEntry = OverlayEntry(builder: (BuildContext context) {
-    return Material(
-      color: Colors.black54,
-      child: DefaultTextStyle.merge(
-          style: const TextStyle(fontFamilyFallback: ['Roboto']),
-          child: Center(
-            child: Container(
-              padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
-              decoration: _dialogDecoration(),
-              child: Column(mainAxisSize: MainAxisSize.min, children: [
-                if (errorMessage != null) ...[
-                  _scaledText("Error: $errorMessage"),
-                  const SizedBox(height: 15),
-                  TextButton(
-                    onPressed: removeDialog,
-                    child: _scaledText("Dismiss"),
-                  ),
-                ] else if (!started) ...[
-                  _scaledText(
-                      "Close the lens cover, then start dark frame calibration."),
-                  const SizedBox(height: 15),
-                  Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        TextButton(
-                          style: _viewButtonStyle,
-                          onPressed: removeDialog,
-                          child: _scaledText("Cancel"),
-                        ),
-                        TextButton(
-                          style: _viewButtonStyle,
-                          onPressed: () async {
-                            started = true;
-                            dialogOverlayEntry?.markNeedsBuild();
-                            final error = await state.initiateAction(
-                                cedar_rpc.ActionRequest(
-                                    calibrateDarkFrame: true));
-                            if (error != null) {
-                              started = false;
-                              errorMessage = error;
-                            } else {
-                              final startTime = DateTime.now();
-                              // Wait for warmup, then poll for calibrating=false.
-                              calibrationTimer = Timer(_darkFrameWarmup, () {
-                                warmupDone = true;
-                                calibrationTimer = Timer.periodic(
-                                    const Duration(seconds: 1), (_) {
-                                  if (!state.calibrating) {
-                                    removeDialog();
-                                  } else if (DateTime.now()
-                                          .difference(startTime) >
-                                      _darkFrameCalibrationTimeout) {
-                                    errorMessage =
-                                        "Timed out waiting for calibration to complete.";
-                                    calibrationTimer?.cancel();
-                                    calibrationTimer = null;
-                                  }
-                                  dialogOverlayEntry?.markNeedsBuild();
-                                });
-                                dialogOverlayEntry?.markNeedsBuild();
-                              });
-                            }
-                            dialogOverlayEntry?.markNeedsBuild();
-                          },
-                          child: _scaledText("Start"),
-                        ),
-                      ]),
-                ] else ...[
-                  _scaledText("Calibrating dark frame..."),
-                  const SizedBox(height: 15),
-                  CircularProgressIndicator(
-                      value: warmupDone && state.calibrating
-                          ? state.calibrationProgress
-                          : null,
-                      color: Theme.of(_context).colorScheme.primary),
-                ],
-              ]),
-            ),
-          )),
-    );
-  });
-
-  Overlay.of(_context).insert(dialogOverlayEntry!);
 }
 
 void imuCalibrationDialog(dynamic serverInfo, dynamic calData) {

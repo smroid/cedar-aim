@@ -6,6 +6,7 @@ import 'dart:math' as math;
 import 'package:cedar_flutter/cedar.pb.dart';
 import 'package:cedar_flutter/cedar_sky.pb.dart';
 import 'package:cedar_flutter/connection_recovery_dialog.dart';
+import 'package:cedar_flutter/dark_calibration_dialog.dart';
 import 'package:cedar_flutter/controls_widget.dart';
 import 'package:cedar_flutter/draw_slew_target.dart';
 import 'package:cedar_flutter/draw_util.dart';
@@ -495,6 +496,7 @@ class MyHomePageState extends State<MyHomePage> {
   bool _showedWelcome = false;
   bool _showFocusIntro = false;
   bool _showAlignIntro = false;
+  bool _suppressAlignIntro = false;
   bool _showTooFewStars = false;
   bool _showBrightSky = false;
   bool _showSolverFailed = false;
@@ -503,9 +505,6 @@ class MyHomePageState extends State<MyHomePage> {
   bool _dontShowWelcome = false;
   bool _dontShowFocusIntro = false;
   bool _dontShowAlignIntro = false;
-  bool _dontShowTooFewStars = false;
-  bool _dontShowBrightSky = false;
-  bool _dontShowSolverFailed = false;
   bool _dontShowSetupFinished = false;
 
   // Whether we should offer a menu item to set the observer location via a map.
@@ -824,14 +823,17 @@ class MyHomePageState extends State<MyHomePage> {
           CalibrationFailureReason.SOLVER_FAILED;
     }
     if (prevCalibrating && !_calibrating) {
-      if (tooFewStars && !_dontShowTooFewStars) {
+      if (tooFewStars) {
         _showTooFewStars = true;
+        _suppressAlignIntro = true;
       }
-      if (brightSky && !_dontShowBrightSky) {
+      if (brightSky) {
         _showBrightSky = true;
+        _suppressAlignIntro = true;
       }
-      if (solverFail && !_dontShowSolverFailed) {
+      if (solverFail) {
         _showSolverFailed = true;
+        _suppressAlignIntro = true;
       }
     }
 
@@ -948,9 +950,6 @@ class MyHomePageState extends State<MyHomePage> {
       _dontShowWelcome = dontShowItems.contains('welcome');
       _dontShowFocusIntro = dontShowItems.contains('focus_intro');
       _dontShowAlignIntro = dontShowItems.contains('align_intro');
-      _dontShowTooFewStars = dontShowItems.contains('too_few_stars');
-      _dontShowBrightSky = dontShowItems.contains('bright_sky');
-      _dontShowSolverFailed = dontShowItems.contains('solver_failed');
       _dontShowSetupFinished = dontShowItems.contains('setup_finished');
       // If a dontShow flag was cleared, reset the corresponding show flag so
       // the dialog can appear again.
@@ -969,12 +968,17 @@ class MyHomePageState extends State<MyHomePage> {
           !_dontShowFocusIntro && !(preferences?.skipFocus ?? false);
     }
     if (newAlignMode && !prevAlignMode) {
-      _showAlignIntro =
-          !_dontShowAlignIntro && !(preferences?.skipAlignment ?? false);
+      final bool calibrationFailedThisResponse =
+          _showTooFewStars || _showBrightSky || _showSolverFailed;
+      if (!calibrationFailedThisResponse) _suppressAlignIntro = false;
+      _showAlignIntro = !_dontShowAlignIntro &&
+          !(preferences?.skipAlignment ?? false) &&
+          !_suppressAlignIntro;
     }
     if (!_setupMode && prevSetupMode) {
       // Only show setup finished if we're not currently in skip-focus active mode
       _showSetupFinished = !_skipFocusActive && !_dontShowSetupFinished;
+      _suppressAlignIntro = false;
     }
   }
 
@@ -2421,7 +2425,56 @@ class MyHomePageState extends State<MyHomePage> {
         .hideAppBar;
     final String product = _productName;
 
-    if (_showWelcome && !_dontShowWelcome) {
+    final bool calibrationFailurePending =
+        _showTooFewStars || _showBrightSky || _showSolverFailed;
+
+    if (_showTooFewStars) {
+      _showTooFewStars = false;
+      String action = product == "Hopper"
+          ? " and verify the lens cap is open"
+          : ", verify the lens cap is open, and check focus";
+      SchedulerBinding.instance.addPostFrameCallback((_) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            duration: const Duration(seconds: 10),
+            content: Text(
+              "Calibration of $product failed because too few stars are visible.\n"
+              "Please point $product at stars$action.",
+            ),
+          ),
+        );
+      });
+    }
+    if (_showBrightSky) {
+      _showBrightSky = false;
+      SchedulerBinding.instance.addPostFrameCallback((_) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              "Calibration of $product failed because the sky is too bright.",
+            ),
+          ),
+        );
+      });
+    }
+    if (_showSolverFailed) {
+      _showSolverFailed = false;
+      SchedulerBinding.instance.addPostFrameCallback((_) {
+        if (!isDIY && !(calibrationData?.hasHotPixelMapCount() ?? false)) {
+          _showDarkCalibrationOfferDialog(context);
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                "Calibration of $product failed because the star field is not recognized.",
+              ),
+            ),
+          );
+        }
+      });
+    }
+
+    if (!calibrationFailurePending && _showWelcome && !_dontShowWelcome) {
       return interstitialDialog(
         "Welcome to Cedar Aim!\nThe next few screens will walk you through "
         "setting up your $product.",
@@ -2441,7 +2494,7 @@ class MyHomePageState extends State<MyHomePage> {
         },
       );
     }
-    if (_showFocusIntro && _focusAid && _setupMode) {
+    if (!calibrationFailurePending && _showFocusIntro && _focusAid && _setupMode) {
       return interstitialDialog(
         product == "Hopper"
             ? "We will verify the focus of your $product, which was set "
@@ -2470,7 +2523,7 @@ class MyHomePageState extends State<MyHomePage> {
         },
       );
     }
-    if (_showAlignIntro && !_focusAid && _setupMode) {
+    if (!calibrationFailurePending && _showAlignIntro && !_focusAid && _setupMode) {
       return interstitialDialog(
         "We will set the alignment of your $product "
         "relative to your telescope.\nStart by pointing your scope at "
@@ -2492,53 +2545,6 @@ class MyHomePageState extends State<MyHomePage> {
         },
       );
     }
-    if (_showTooFewStars) {
-      String action = product == "Hopper"
-          ? " and verify the lens cap is open"
-          : ", verify the lens cap is open, and check focus";
-      SchedulerBinding.instance.addPostFrameCallback((_) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              "Calibration of $product failed because too few stars are visible.\n"
-              "Please point $product at stars$action.",
-            ),
-          ),
-        );
-        setState(() {
-          _showTooFewStars = false;
-        });
-      });
-    }
-    if (_showBrightSky) {
-      SchedulerBinding.instance.addPostFrameCallback((_) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              "Calibration of $product failed because the sky is too bright.",
-            ),
-          ),
-        );
-        setState(() {
-          _showBrightSky = false;
-        });
-      });
-    }
-    if (_showSolverFailed) {
-      SchedulerBinding.instance.addPostFrameCallback((_) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              "Calibration of $product failed because the star field is not recgonized.",
-            ),
-          ),
-        );
-        setState(() {
-          _showSolverFailed = false;
-        });
-      });
-    }
-
     if (_showSetupFinished) {
       String useCatalog = product == "Hopper"
           ? "\nUse the 'Catalog' button to access the Cedar Sky database"
@@ -2629,6 +2635,44 @@ class MyHomePageState extends State<MyHomePage> {
       drawer: _drawer(),
       endDrawer: _drawer(),
       drawerEdgeDragWidth: 100,
+    );
+  }
+
+  void _showDarkCalibrationOfferDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: Column(mainAxisSize: MainAxisSize.min, children: [
+            Text(
+              "Star pattern not recognized. A dark frame calibration may help. Would you like to calibrate now?",
+              style: TextStyle(
+                  fontSize: 12,
+                  color: Theme.of(context).colorScheme.primary),
+              textScaler: textScaler(context),
+            ),
+            const SizedBox(height: 15),
+            Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text("Cancel",
+                    style: TextStyle(
+                        color: Theme.of(context).colorScheme.primary)),
+              ),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.white10),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  calibrateDarkFrameDialog(this, context);
+                },
+                child: Text("Calibrate",
+                    style: TextStyle(
+                        color: Theme.of(context).colorScheme.primary)),
+              ),
+            ]),
+          ]),
+        );
+      },
     );
   }
 
