@@ -38,7 +38,7 @@ class ControlsWidget extends StatelessWidget {
   final Widget Function({double? fontSize}) focusDoneButton;
   final Widget Function({double? fontSize}) setupAlignSkipOrDoneButton;
   final Widget Function({double? fontSize}) slewReAlignButton;
-  final Widget Function({double? fontSize}) catalogButton;
+  final Widget Function(double size) catalogButton;
   final Widget Function({double? fontSize}) endGotoButton;
   final Widget Function(double size, double scaleFactor) perfGauge;
 
@@ -99,6 +99,7 @@ class ControlsWidget extends StatelessWidget {
     final buttonWidth = 55 * panelScaleFactor * textScale;
     final buttonHeight = 20 * panelScaleFactor * textScale;
     final buttonFont = 11.0 * panelScaleFactor;
+    final catalogButtonSize = 40.0 * panelScaleFactor * textScale;
 
     final rightHanded = settingsModel.preferencesProto.rightHanded;
 
@@ -210,24 +211,27 @@ class ControlsWidget extends StatelessWidget {
                   ),
                 ),
               ] else if (!skipFocus || canAlign || !setupMode) ...[
-                SizedBox(
-                  width: buttonWidth,
-                  height: buttonHeight,
-                  child: focusAid
-                      ? focusDoneButton(fontSize: buttonFont)
-                      : (canAlign
-                          ? (slewRequest == null
-                              ? setupAlignSkipOrDoneButton(fontSize: buttonFont)
-                              : (boresightImageBytes != null
-                                  ? slewReAlignButton(fontSize: buttonFont)
-                                  : Container()))
-                          : (slewRequest == null &&
-                                  !setupMode &&
-                                  !settingsModel.isDIY &&
-                                  showCatalogBrowser
-                              ? catalogButton(fontSize: buttonFont)
-                              : Container())),
-                ),
+                if (slewRequest == null &&
+                    !setupMode &&
+                    !focusAid &&
+                    !canAlign &&
+                    !settingsModel.isDIY &&
+                    showCatalogBrowser)
+                  catalogButton(catalogButtonSize)
+                else
+                  SizedBox(
+                    width: buttonWidth,
+                    height: buttonHeight,
+                    child: focusAid
+                        ? focusDoneButton(fontSize: buttonFont)
+                        : (canAlign
+                            ? (slewRequest == null
+                                ? setupAlignSkipOrDoneButton(fontSize: buttonFont)
+                                : (boresightImageBytes != null
+                                    ? slewReAlignButton(fontSize: buttonFont)
+                                    : Container()))
+                            : Container()),
+                  ),
               ],
 
               // Skip and Day checkboxes (only in setup mode).
@@ -312,10 +316,7 @@ class ControlsWidget extends StatelessWidget {
         if (slewRequest != null && !setupMode && showCatalogBrowser) ...[
           RotatedBox(
               quarterTurns: portrait ? 3 : 0,
-              child: SizedBox(
-                  width: buttonWidth,
-                  height: buttonHeight,
-                  child: catalogButton(fontSize: buttonFont))),
+              child: catalogButton(catalogButtonSize)),
         ],
 
         // End goto button.

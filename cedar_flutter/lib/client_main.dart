@@ -22,6 +22,7 @@ import 'package:cedar_flutter/slew_directions.dart';
 import 'package:cedar_flutter/themes.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart' as flutter_widgets;
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart' as dart_widgets;
@@ -1327,21 +1328,25 @@ class MyHomePageState extends State<MyHomePage> {
         });
   }
 
-  Widget catalogButton({double? fontSize = 14.0}) {
-    return OutlinedButton(
-        style: OutlinedButton.styleFrom(
-            padding: const EdgeInsets.symmetric(horizontal: 0)),
-        child: Text(
-          style: TextStyle(fontSize: fontSize),
-          "Catalog",
-          textScaler: textScaler(context),
+  Widget catalogButton(double size) {
+    final color = Theme.of(context).colorScheme.primary;
+    return GestureDetector(
+      onTap: () {
+        if (_slewRequest != null) {
+          _stopSlew();
+        }
+        _showCatalogBrowser!(context, this);
+      },
+      child: ColorFiltered(
+        colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
+        child: flutter_widgets.Image.asset(
+          'assets/galaxy_white.png',
+          width: size,
+          height: size,
+          fit: BoxFit.contain,
         ),
-        onPressed: () {
-          if (_slewRequest != null) {
-            _stopSlew();
-          }
-          _showCatalogBrowser!(context, this);
-        });
+      ),
+    );
   }
 
   Widget endGotoButton({double? fontSize = 14.0}) {
@@ -1406,7 +1411,7 @@ class MyHomePageState extends State<MyHomePage> {
           setupAlignSkipOrDoneButton(fontSize: fontSize),
       slewReAlignButton: ({double? fontSize}) =>
           slewReAlignButton(fontSize: fontSize),
-      catalogButton: ({double? fontSize}) => catalogButton(fontSize: fontSize),
+      catalogButton: (double size) => catalogButton(size),
       endGotoButton: ({double? fontSize}) => endGotoButton(fontSize: fontSize),
       perfGauge: (double size, double scaleFactor) => PerfGauge(
         state: this,
