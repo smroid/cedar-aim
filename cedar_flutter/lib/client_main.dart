@@ -402,7 +402,7 @@ class _MainImagePainter extends CustomPainter {
         final scaledUnlabeledEntries = _createScaledCatalogEntries(
             state._unlabeledFovCatalogEntries, displayScale);
 
-        final boldEntry = state.boresightCatalogEntryInFov
+        final boldEntry = state.boresightCatalogEntryInFov && !state._setupMode
             ? state.boresightCatalogEntry
             : null;
 
