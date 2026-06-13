@@ -2465,7 +2465,7 @@ class MyHomePageState extends State<MyHomePage> {
     if (_showSolverFailed) {
       _showSolverFailed = false;
       SchedulerBinding.instance.addPostFrameCallback((_) {
-        if (!isDIY && !(calibrationData?.hasHotPixelMapCount() ?? false)) {
+        if (!isDIY && !(calibrationData?.hasBrightSpotMapCount() ?? false)) {
           _showDarkCalibrationOfferDialog(context);
         } else {
           ScaffoldMessenger.of(context).showSnackBar(

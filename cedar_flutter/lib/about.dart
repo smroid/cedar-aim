@@ -788,7 +788,7 @@ void cameraDialog(MyHomePageState state, dynamic serverInfo, dynamic calData) {
                           Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                _scaledText("Hot pixel count:"),
+                                _scaledText("Bright spot count:"),
                                 _dialogRowSpacing,
                                 Expanded(
                                     child: Align(
@@ -800,8 +800,8 @@ void cameraDialog(MyHomePageState state, dynamic serverInfo, dynamic calData) {
                                           state, context, dialogOverlayEntry!);
                                     },
                                     child: Text(
-                                      calData.hasHotPixelMapCount()
-                                          ? calData.hotPixelMapCount.toString()
+                                      calData.hasBrightSpotMapCount()
+                                          ? calData.brightSpotMapCount.toString()
                                           : "Unavailable",
                                       textAlign: TextAlign.right,
                                       style: _dialogTextStyle(),
