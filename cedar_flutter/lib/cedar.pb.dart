@@ -2072,8 +2072,8 @@ class FrameResult extends $pb.GeneratedMessage {
   @$pb.TagNumber(38)
   void clearSkipFocusActive() => $_clearField(38);
 
-  /// The number of candidates that were rejected as hot pixels. These are not
-  /// included in star_candidates.
+  /// The number of candidates that were rejected as isolated hot pixels. These
+  /// are not included in star_candidates.
   @$pb.TagNumber(39)
   $core.int get hotPixelCount => $_getIZ(29);
   @$pb.TagNumber(39)
@@ -2178,10 +2178,10 @@ class Image extends $pb.GeneratedMessage {
   static Image? _defaultInstance;
 
   /// Whether the image is binned/sampled or full resolution. Values:
-  /// 1: full resolution image from camera sensor.
-  /// 2: 2x lower resolution than camera sensor (in both x and y axes).
-  /// 4: 4x lower resolution than camera sensor.
-  /// 8: 8x lower resolution than camera sensor.
+  /// 1: full resolution image from the camera.
+  /// 2: 2x lower resolution than camera output (in both x and y axes).
+  /// 4: 4x lower resolution than camera output.
+  /// 8: 8x lower resolution than camera output.
   @$pb.TagNumber(1)
   $core.int get binningFactor => $_getIZ(0);
   @$pb.TagNumber(1)
@@ -3261,7 +3261,7 @@ class CalibrationData extends $pb.GeneratedMessage {
     $core.double? cameraViewMisalignment,
     $core.String? cameraUpGyroAxis,
     $core.double? cameraUpMisalignment,
-    $core.int? hotPixelMapCount,
+    $core.int? brightSpotMapCount,
   }) {
     final $result = create();
     if (calibrationTime != null) {
@@ -3318,8 +3318,8 @@ class CalibrationData extends $pb.GeneratedMessage {
     if (cameraUpMisalignment != null) {
       $result.cameraUpMisalignment = cameraUpMisalignment;
     }
-    if (hotPixelMapCount != null) {
-      $result.hotPixelMapCount = hotPixelMapCount;
+    if (brightSpotMapCount != null) {
+      $result.brightSpotMapCount = brightSpotMapCount;
     }
     return $result;
   }
@@ -3346,7 +3346,7 @@ class CalibrationData extends $pb.GeneratedMessage {
     ..a<$core.double>(20, _omitFieldNames ? '' : 'cameraViewMisalignment', $pb.PbFieldType.OD)
     ..aOS(21, _omitFieldNames ? '' : 'cameraUpGyroAxis')
     ..a<$core.double>(22, _omitFieldNames ? '' : 'cameraUpMisalignment', $pb.PbFieldType.OD)
-    ..a<$core.int>(23, _omitFieldNames ? '' : 'hotPixelMapCount', $pb.PbFieldType.O3)
+    ..a<$core.int>(23, _omitFieldNames ? '' : 'brightSpotMapCount', $pb.PbFieldType.O3)
     ..hasRequiredFields = false
   ;
 
@@ -3569,13 +3569,13 @@ class CalibrationData extends $pb.GeneratedMessage {
   /// The number of entries in the hot pixel map. Omitted if a hot pixel map is
   /// not being used or is not yet ready.
   @$pb.TagNumber(23)
-  $core.int get hotPixelMapCount => $_getIZ(18);
+  $core.int get brightSpotMapCount => $_getIZ(18);
   @$pb.TagNumber(23)
-  set hotPixelMapCount($core.int v) { $_setSignedInt32(18, v); }
+  set brightSpotMapCount($core.int v) { $_setSignedInt32(18, v); }
   @$pb.TagNumber(23)
-  $core.bool hasHotPixelMapCount() => $_has(18);
+  $core.bool hasBrightSpotMapCount() => $_has(18);
   @$pb.TagNumber(23)
-  void clearHotPixelMapCount() => $_clearField(23);
+  void clearBrightSpotMapCount() => $_clearField(23);
 }
 
 /// When the observer's geographic location is known, the
@@ -4323,7 +4323,7 @@ class ActionRequest extends $pb.GeneratedMessage {
   void clearCalibrateDarkFrame() => $_clearField(13);
 
   /// Discards the hot pixel map and any partial state towards building it.
-  /// After this action, CalibrationData.hot_pixel_map_count will be absent
+  /// After this action, CalibrationData.bright_spot_map_count will be absent
   /// until the map is rebuilt.
   @$pb.TagNumber(14)
   $core.bool get resetHotPixelMap => $_getBF(13);
