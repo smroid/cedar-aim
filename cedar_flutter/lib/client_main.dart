@@ -1976,16 +1976,39 @@ class MyHomePageState extends State<MyHomePage> {
                   overlaySize / _boresightImageHeight, _binFactor),
               child: overlayImage));
     }
+    final portrait =
+        MediaQuery.of(context).orientation == Orientation.portrait;
+    final cx = _imageRegion.width / 2;
+    final cy = _imageRegion.height / 2;
+    final boresightInRight = _boresightPosition.dx > cx;
+    final boresightInTop = _boresightPosition.dy < cy;
+    Alignment boresightAlignment;
+    if (portrait) {
+      // Default: topRight. Move to topLeft if boresight is in top-right quadrant.
+      boresightAlignment = (boresightInRight && boresightInTop)
+          ? Alignment.topLeft
+          : Alignment.topRight;
+    } else {
+      // Default: topLeft. Move to bottomLeft if boresight is in top-left quadrant.
+      boresightAlignment = (!boresightInRight && boresightInTop)
+          ? Alignment.bottomLeft
+          : Alignment.topLeft;
+    }
     return Stack(alignment: Alignment.bottomRight, children: <Widget>[
       _prevFrameId != -1
           ? _mainImage()
           : const SizedBox(width: 500, height: 500),
       if (_prevFrameId != -1 && overlayWidget != null) ...[
-        Container(
-            decoration: BoxDecoration(
-                border: Border.all(
-                    width: 0.5, color: Theme.of(context).colorScheme.primary)),
-            child: overlayWidget),
+        Align(
+          alignment: !_setupMode && _boresightImageBytes != null
+              ? boresightAlignment
+              : Alignment.bottomRight,
+          child: Container(
+              decoration: BoxDecoration(
+                  border: Border.all(
+                      width: 0.5, color: Theme.of(context).colorScheme.primary)),
+              child: overlayWidget),
+        ),
       ],
       if (_calibrating || _transitionToSetup) ...[
         Positioned.fill(
