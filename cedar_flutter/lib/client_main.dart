@@ -1811,7 +1811,7 @@ class MyHomePageState extends State<MyHomePage> {
                   }
                 } else {
                   // Aim mode.
-                  if (_objectInfoDialog != null) {
+                  if (_objectInfoDialog != null && _slewRequest == null) {
                     var object = _findObjectHit(localPosition, hitTolerance);
                     if (object != null) {
                       var selEntry = SelectedCatalogEntry(entry: object.entry);
