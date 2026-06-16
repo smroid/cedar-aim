@@ -1426,6 +1426,7 @@ class FrameRequest extends $pb.GeneratedMessage {
     $core.int? prevFrameId,
     $core.bool? nonBlocking,
     DisplayOrientation? displayOrientation,
+    $core.int? prevSolutionId,
   }) {
     final $result = create();
     if (prevFrameId != null) {
@@ -1437,6 +1438,9 @@ class FrameRequest extends $pb.GeneratedMessage {
     if (displayOrientation != null) {
       $result.displayOrientation = displayOrientation;
     }
+    if (prevSolutionId != null) {
+      $result.prevSolutionId = prevSolutionId;
+    }
     return $result;
   }
   FrameRequest._() : super();
@@ -1447,6 +1451,7 @@ class FrameRequest extends $pb.GeneratedMessage {
     ..a<$core.int>(1, _omitFieldNames ? '' : 'prevFrameId', $pb.PbFieldType.O3)
     ..aOB(2, _omitFieldNames ? '' : 'nonBlocking')
     ..e<DisplayOrientation>(3, _omitFieldNames ? '' : 'displayOrientation', $pb.PbFieldType.OE, defaultOrMaker: DisplayOrientation.ORIENTATION_UNSPECIFIED, valueOf: DisplayOrientation.valueOf, enumValues: DisplayOrientation.values)
+    ..a<$core.int>(4, _omitFieldNames ? '' : 'prevSolutionId', $pb.PbFieldType.O3)
     ..hasRequiredFields = false
   ;
 
@@ -1485,9 +1490,9 @@ class FrameRequest extends $pb.GeneratedMessage {
   void clearPrevFrameId() => $_clearField(1);
 
   /// If true, GetFrame() returns immediately. If the requested frame (a new frame
-  /// different from 'prev_frame_id' or the current frame if 'prev_frame_id' is
-  /// omitted) is available, the returned FrameResult.has_result field will be
-  /// true.
+  /// different from 'prev_frame_id'/'prev_solution_id', or the current
+  /// frame/solution if neither is provided) is available, the returned
+  /// FrameResult.has_result field will be true.
   @$pb.TagNumber(2)
   $core.bool get nonBlocking => $_getBF(1);
   @$pb.TagNumber(2)
@@ -1513,9 +1518,26 @@ class FrameRequest extends $pb.GeneratedMessage {
   $core.bool hasDisplayOrientation() => $_has(2);
   @$pb.TagNumber(3)
   void clearDisplayOrientation() => $_clearField(3);
+
+  /// Alternative to prev_frame_id for clients that want updates on every plate
+  /// solution. If provided, GetFrame() will block until FrameResult.solution_id
+  /// differs from this value; this field takes precedence over prev_frame_id.
+  /// When an IMU is available, solution_id advances on IMU interpolations
+  /// between camera frames, so updates arrive at the IMU interpolation rate
+  /// during motion.
+  /// Without an IMU, solution_id advances only on camera frames, so behavior is
+  /// identical to using prev_frame_id.
+  @$pb.TagNumber(4)
+  $core.int get prevSolutionId => $_getIZ(3);
+  @$pb.TagNumber(4)
+  set prevSolutionId($core.int v) { $_setSignedInt32(3, v); }
+  @$pb.TagNumber(4)
+  $core.bool hasPrevSolutionId() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearPrevSolutionId() => $_clearField(4);
 }
 
-/// Next tag: 43.
+/// Next tag: 44.
 class FrameResult extends $pb.GeneratedMessage {
   factory FrameResult({
     $core.int? frameId,
@@ -1551,6 +1573,7 @@ class FrameResult extends $pb.GeneratedMessage {
     FovCatalogEntry? boresightCatalogEntry,
     $1.Constellation? boresightConstellation,
     $core.double? boresightCatalogEntryDistance,
+    $core.int? solutionId,
   }) {
     final $result = create();
     if (frameId != null) {
@@ -1652,6 +1675,9 @@ class FrameResult extends $pb.GeneratedMessage {
     if (boresightCatalogEntryDistance != null) {
       $result.boresightCatalogEntryDistance = boresightCatalogEntryDistance;
     }
+    if (solutionId != null) {
+      $result.solutionId = solutionId;
+    }
     return $result;
   }
   FrameResult._() : super();
@@ -1692,6 +1718,7 @@ class FrameResult extends $pb.GeneratedMessage {
     ..aOM<FovCatalogEntry>(40, _omitFieldNames ? '' : 'boresightCatalogEntry', subBuilder: FovCatalogEntry.create)
     ..aOM<$1.Constellation>(41, _omitFieldNames ? '' : 'boresightConstellation', subBuilder: $1.Constellation.create)
     ..a<$core.double>(42, _omitFieldNames ? '' : 'boresightCatalogEntryDistance', $pb.PbFieldType.OF)
+    ..a<$core.int>(43, _omitFieldNames ? '' : 'solutionId', $pb.PbFieldType.O3)
     ..hasRequiredFields = false
   ;
 
@@ -2120,6 +2147,20 @@ class FrameResult extends $pb.GeneratedMessage {
   $core.bool hasBoresightCatalogEntryDistance() => $_has(32);
   @$pb.TagNumber(42)
   void clearBoresightCatalogEntryDistance() => $_clearField(42);
+
+  /// Identifies the plate solution that produced this FrameResult. Increments
+  /// on every solution posted by the solve engine, including IMU interpolations
+  /// between camera frames. Without an IMU, advances in lockstep with frame_id.
+  /// A client can include this in FrameRequest.prev_solution_id to be notified
+  /// of every solution, not just new camera frames.
+  @$pb.TagNumber(43)
+  $core.int get solutionId => $_getIZ(33);
+  @$pb.TagNumber(43)
+  set solutionId($core.int v) { $_setSignedInt32(33, v); }
+  @$pb.TagNumber(43)
+  $core.bool hasSolutionId() => $_has(33);
+  @$pb.TagNumber(43)
+  void clearSolutionId() => $_clearField(43);
 }
 
 class Image extends $pb.GeneratedMessage {
@@ -3566,8 +3607,8 @@ class CalibrationData extends $pb.GeneratedMessage {
   @$pb.TagNumber(22)
   void clearCameraUpMisalignment() => $_clearField(22);
 
-  /// The number of entries in the hot pixel map. Omitted if a hot pixel map is
-  /// not being used or is not yet ready.
+  /// The number of entries in the bright spot map. Omitted if a bright spot map
+  /// is not being used or is not yet ready.
   @$pb.TagNumber(23)
   $core.int get brightSpotMapCount => $_getIZ(18);
   @$pb.TagNumber(23)
