@@ -592,7 +592,8 @@ class MyHomePageState extends State<MyHomePage> {
 
   Uint8List? _daylightFocusZoomImageBytes;
 
-  int _prevFrameId = -1;
+  int? _prevFrameId;
+  int? _prevSolutionId;
   late List<cedar_rpc.StarCentroid> _stars;
   int numStars = 0;
   int? hotPixelCount;
@@ -730,6 +731,7 @@ class MyHomePageState extends State<MyHomePage> {
     }
     _showWelcome = !_showedWelcome;
     _prevFrameId = response.frameId;
+    _prevSolutionId = response.solutionId;
     _stars = response.starCandidates;
     numStars = response.starCountMovingAverage.round();
     hotPixelCount =
@@ -1017,9 +1019,11 @@ class MyHomePageState extends State<MyHomePage> {
 
   // Use request/response style of RPC.
   Future<void> _getFrameFromServer() async {
-    final request = cedar_rpc.FrameRequest()
-      ..prevFrameId = _prevFrameId
-      ..nonBlocking = true;
+    final request = cedar_rpc.FrameRequest(
+      nonBlocking: true,
+      prevSolutionId: _prevSolutionId,
+      prevFrameId: _prevSolutionId == null ? _prevFrameId : null,
+    );
     try {
       final c = await getClient();
       final response = await c
@@ -1045,6 +1049,7 @@ class MyHomePageState extends State<MyHomePage> {
       if (response.hasResult) {
         if (_inhibitRefresh) {
           _prevFrameId = response.frameId;
+          _prevSolutionId = response.solutionId;
         } else {
           _paintPending = true; // TODO: can we drop this?
           setState(() {
@@ -1995,10 +2000,10 @@ class MyHomePageState extends State<MyHomePage> {
           : Alignment.topLeft;
     }
     return Stack(alignment: Alignment.bottomRight, children: <Widget>[
-      _prevFrameId != -1
+      _prevFrameId != null
           ? _mainImage()
           : const SizedBox(width: 500, height: 500),
-      if (_prevFrameId != -1 && overlayWidget != null) ...[
+      if (_prevFrameId != null && overlayWidget != null) ...[
         Align(
           alignment: !_setupMode && _boresightImageBytes != null
               ? boresightAlignment
