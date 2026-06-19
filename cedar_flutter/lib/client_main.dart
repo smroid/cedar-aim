@@ -6,7 +6,6 @@ import 'dart:math' as math;
 import 'package:cedar_flutter/cedar.pb.dart';
 import 'package:cedar_flutter/cedar_sky.pb.dart';
 import 'package:cedar_flutter/connection_recovery_dialog.dart';
-import 'package:cedar_flutter/dark_calibration_dialog.dart';
 import 'package:cedar_flutter/controls_widget.dart';
 import 'package:cedar_flutter/draw_slew_target.dart';
 import 'package:cedar_flutter/draw_util.dart';
@@ -2493,17 +2492,13 @@ class MyHomePageState extends State<MyHomePage> {
     if (_showSolverFailed) {
       _showSolverFailed = false;
       SchedulerBinding.instance.addPostFrameCallback((_) {
-        if (!isDIY && !(calibrationData?.hasBrightSpotMapCount() ?? false)) {
-          _showDarkCalibrationOfferDialog(context);
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                "Calibration of $product failed because the star field is not recognized.",
-              ),
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              "Calibration of $product failed because the star field is not recognized.",
             ),
-          );
-        }
+          ),
+        );
       });
     }
 
@@ -2668,44 +2663,6 @@ class MyHomePageState extends State<MyHomePage> {
       drawer: _drawer(),
       endDrawer: _drawer(),
       drawerEdgeDragWidth: 100,
-    );
-  }
-
-  void _showDarkCalibrationOfferDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          content: Column(mainAxisSize: MainAxisSize.min, children: [
-            Text(
-              "Star pattern not recognized. A dark frame calibration may help. Would you like to calibrate now?",
-              style: TextStyle(
-                  fontSize: 12,
-                  color: Theme.of(context).colorScheme.primary),
-              textScaler: textScaler(context),
-            ),
-            const SizedBox(height: 15),
-            Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: Text("Cancel",
-                    style: TextStyle(
-                        color: Theme.of(context).colorScheme.primary)),
-              ),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(backgroundColor: Colors.white10),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  calibrateDarkFrameDialog(this, context);
-                },
-                child: Text("Calibrate",
-                    style: TextStyle(
-                        color: Theme.of(context).colorScheme.primary)),
-              ),
-            ]),
-          ]),
-        );
-      },
     );
   }
 
