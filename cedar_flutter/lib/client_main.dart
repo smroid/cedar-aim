@@ -60,9 +60,9 @@ typedef RestartCedarServerFunction = Future<void> Function();
 class UpdaterInfo {
   final UpdateServerSoftwareDialogFunction updateServerSoftwareDialogFunction;
   final RestartCedarServerFunction restartCedarServerFunction;
-  final String? updaterVersion;
+  String? updaterVersion;
 
-  const UpdaterInfo({
+  UpdaterInfo({
     required this.updateServerSoftwareDialogFunction,
     required this.restartCedarServerFunction,
     this.updaterVersion,
@@ -82,8 +82,7 @@ AppLogCallbacks? _appLogCallbacks;
 /// menu items.
 bool get updateServiceAvailable => _updateServiceAvailable;
 
-/// Get the updater version for display in about screen.
-String? getUpdaterVersion() => _updaterInfo?.updaterVersion;
+UpdaterInfo? getUpdaterInfo() => _updaterInfo;
 
 const Duration _rpcTimeout = Duration(seconds: 5);
 const Duration _getFrameRpcTimeout = Duration(seconds: 5);

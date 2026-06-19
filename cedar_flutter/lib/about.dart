@@ -182,7 +182,7 @@ Widget systemInfo(MyHomePageState state) {
               style: _viewButtonStyle,
               onPressed: () {
                 versionsDialog(
-                    serverInfo.cedarServerVersion, getUpdaterVersion());
+                    serverInfo.cedarServerVersion, getUpdaterInfo()?.updaterVersion);
               },
               child: _scaledText("view"),
             ),
