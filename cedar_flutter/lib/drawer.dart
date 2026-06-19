@@ -321,7 +321,7 @@ class CedarDrawer extends StatelessWidget {
                         borderRadius: BorderRadius.circular(6),
                       ),
                     ),
-                    width: 85 * textScaleFactor(controller.context),
+                    width: 95 * textScaleFactor(controller.context),
                     requestFocusOnTap: false,
                     initialSelection: controller.setupMode
                         ? (controller.focusAid ? "Focus" : "Align")
