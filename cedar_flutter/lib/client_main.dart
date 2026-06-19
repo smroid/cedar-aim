@@ -731,7 +731,7 @@ class MyHomePageState extends State<MyHomePage> {
     }
     _showWelcome = !_showedWelcome;
     _prevFrameId = response.frameId;
-    _prevSolutionId = response.solutionId;
+    _prevSolutionId = response.solutionId != 0 ? response.solutionId : null;
     _stars = response.starCandidates;
     numStars = response.starCountMovingAverage.round();
     hotPixelCount =
@@ -1049,7 +1049,7 @@ class MyHomePageState extends State<MyHomePage> {
       if (response.hasResult) {
         if (_inhibitRefresh) {
           _prevFrameId = response.frameId;
-          _prevSolutionId = response.solutionId;
+          _prevSolutionId = response.solutionId != 0 ? response.solutionId : null;
         } else {
           _paintPending = true; // TODO: can we drop this?
           setState(() {
