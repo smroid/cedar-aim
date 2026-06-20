@@ -2763,6 +2763,7 @@ class MyHomePageState extends State<MyHomePage> {
       config: ConnectionRecoveryConfig(
         productName: _productName,
         title: title,
+        everConnected: everConnected,
         devices: deviceList,
         onDeviceSelected: (device) {
           _selectDevice(device);

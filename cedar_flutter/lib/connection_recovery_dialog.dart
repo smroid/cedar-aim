@@ -8,6 +8,7 @@ import 'package:cedar_flutter/platform.dart';
 class ConnectionRecoveryConfig {
   final String productName;
   final String title;
+  final bool everConnected;
   final List<CedarDevice>? devices;
   final Function(CedarDevice)? onDeviceSelected;
   final Future<List<CedarDevice>> Function()? refreshDevices;
@@ -16,6 +17,7 @@ class ConnectionRecoveryConfig {
   ConnectionRecoveryConfig({
     required this.productName,
     required this.title,
+    this.everConnected = false,
     this.devices,
     this.onDeviceSelected,
     this.refreshDevices,
@@ -55,8 +57,12 @@ String _getConnectionRecoveryMessage(String productName) {
 }
 
 /// Generates the connection recovery dialog help text.
-String _getConnectionRecoveryHelpText(String productName) {
+String _getConnectionRecoveryHelpText(String productName, bool everConnected) {
   if (isAndroid()) {
+    if (!everConnected) {
+      return 'Tip: In WiFi Settings, select $productName\'s network. '
+          'If Android asks "No internet — stay connected?" tap Yes.';
+    }
     return 'You can also pair with $productName via Bluetooth.';
   }
   return '';
@@ -149,7 +155,7 @@ Future<void> showConnectionRecoveryDialog({
 
   // Generate message and help text based on product name
   final message = _getConnectionRecoveryMessage(config.productName);
-  final helpText = _getConnectionRecoveryHelpText(config.productName);
+  final helpText = _getConnectionRecoveryHelpText(config.productName, config.everConnected);
 
   await showDialog(
     context: context,
@@ -195,7 +201,7 @@ Future<void> showConnectionRecoveryDialog({
                 const SizedBox(height: 16),
                 Text(
                   helpText,
-                  style: TextStyle(fontSize: 12, color: primaryColor),
+                  style: TextStyle(fontSize: 14, color: primaryColor),
                 ),
               ],
             ],
@@ -205,7 +211,7 @@ Future<void> showConnectionRecoveryDialog({
           if (isLandscape) {
             // Two-column landscape layout using Table for reliable sizing.
             final leftColumnChildren = <Widget>[messageSection];
-            if (isAndroid() && currentDevices != null) {
+            if (isAndroid() && config.everConnected && currentDevices != null) {
               leftColumnChildren.add(const SizedBox(height: 20));
               leftColumnChildren.add(
                   _buildDeviceSection(currentDevices, config, dialogContext));
@@ -240,7 +246,7 @@ Future<void> showConnectionRecoveryDialog({
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   messageSection,
-                  if (isAndroid() && currentDevices != null) ...[
+                  if (isAndroid() && config.everConnected && currentDevices != null) ...[
                     const SizedBox(height: 20),
                     _buildDeviceSection(currentDevices, config, dialogContext),
                   ],
@@ -265,8 +271,8 @@ Future<void> showConnectionRecoveryDialog({
                   },
                 ),
 
-              // Bluetooth Settings button (Android only).
-              if (isAndroid())
+              // Bluetooth Settings button (Android only, after first connection).
+              if (isAndroid() && config.everConnected)
                 TextButton.icon(
                   icon: const Icon(Icons.bluetooth),
                   label: const Text('Bluetooth Settings'),
