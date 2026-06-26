@@ -207,11 +207,7 @@ class _MainImagePainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    try {
-      _paint(canvas, size);
-    } finally {
-      state._paintPending = false;
-    }
+    _paint(canvas, size);
   }
 
   bool _nearInImage(cedar_rpc.ImageCoord p1, cedar_rpc.ImageCoord p2) {
@@ -519,6 +515,10 @@ class MyHomePageState extends State<MyHomePage> {
   bool isDIY = false;
   bool isBasic = false;
   bool isPlus = false;
+  // True from when a new frame result arrives until build() runs, preventing
+  // the poll loop from fetching the next frame before the UI has caught up.
+  // Cleared at the top of build() rather than in the painter, so interstitial
+  // dialogs (which don't invoke the image painter) don't block the loop.
   bool _paintPending = false;
   bool _inhibitRefresh = false;
 
@@ -1049,7 +1049,7 @@ class MyHomePageState extends State<MyHomePage> {
           _prevFrameId = response.frameId;
           _prevSolutionId = response.solutionId != 0 ? response.solutionId : null;
         } else {
-          _paintPending = true; // TODO: can we drop this?
+          _paintPending = true;
           setState(() {
             setStateFromFrameResult(response);
           });
@@ -2451,6 +2451,9 @@ class MyHomePageState extends State<MyHomePage> {
     }
 
     // This method is rerun every time setState() is called.
+    // Clear paintPending here so that if we return an interstitial dialog
+    // (which doesn't render _MainImagePainter), the poll loop isn't blocked.
+    _paintPending = false;
     bool hideAppBar = Provider.of<SettingsModel>(context, listen: false)
         .preferencesProto
         .hideAppBar;
@@ -2671,8 +2674,6 @@ class MyHomePageState extends State<MyHomePage> {
   }
 
   Widget _badServerState() {
-    _paintPending = false;
-
     // If server is connected but camera is not detected.
     if (_serverConnected) {
       Color color = Theme.of(context).colorScheme.primary;
