@@ -1166,9 +1166,6 @@ class MyHomePageState extends State<MyHomePage> {
         ? cedar_rpc.OperatingMode.SETUP
         : cedar_rpc.OperatingMode.OPERATE;
     request.focusAssistMode = focusAid;
-    // solution_id is 0 in non-OPERATE modes; reset so we don't send a stale
-    // prevSolutionId that would block getFrame indefinitely after the switch.
-    _prevSolutionId = null;
     await updateOperationSettings(request);
   }
 
