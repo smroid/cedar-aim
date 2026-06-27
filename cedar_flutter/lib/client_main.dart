@@ -1367,8 +1367,9 @@ class MyHomePageState extends State<MyHomePage> {
   }
 
   Widget _buildControlsWidget([Size? containerSize]) {
+    final textScale = textScaleFactor(context);
     return ControlsWidget(
-      layoutCalculations: _getLayoutCalculations(containerSize),
+      layoutCalculations: _getLayoutCalculations(textScale, containerSize),
       focusAid: _focusAid,
       daylightMode: _daylightMode,
       canAlign: _canAlign,
@@ -1609,35 +1610,14 @@ class MyHomePageState extends State<MyHomePage> {
   List<Widget> _dataItems(BuildContext context, [Size? containerSize]) {
     final portrait = MediaQuery.of(context).orientation == Orientation.portrait;
     final textScale = textScaleFactor(context);
-    final constraints = containerSize ?? MediaQuery.of(context).size;
-    final shortDimension = portrait ? constraints.width : constraints.height;
-
-    final calculations = _getLayoutCalculations(containerSize);
-    final panelWidth = calculations['panelWidth']!;
+    final calculations = _getLayoutCalculations(textScale, containerSize);
 
     // Note that widgets are sized according to two factors. The first is
     // `textScale`, which is the user-chosen text size (small/medium/large). The
-    // second scaling factor is `panelScaleFactor`, computed below to adapt the
-    // widgets to available space in the panel above (or to the left of) the
-    // main image.
-
-    // Scale widgets based on constraining dimensions. We use the widgets shown
-    // when _slewRequest is non-null because these in aggregate use the largest
-    // layout.
-    final coordInfoSize = 85.0 * textScale;
-    final objectLabelSize = 60.0 * textScale;
-
-    // First, consider the dimension along the slew navigation widgets.
-    final mainDimension = 2.0 * coordInfoSize + objectLabelSize;
-    final mainDimensionBasedScale = (shortDimension / mainDimension);
-
-    // Next, consider the dimension across the slew navigation widgets.
-    final crossDimension = math.max(coordInfoSize, objectLabelSize);
-    final crossDimensionBasedScale = (panelWidth / crossDimension);
-
-    final panelScaleFactor = math
-        .min(mainDimensionBasedScale, crossDimensionBasedScale)
-        .clamp(0.5, 1.2);
+    // second scaling factor is `panelScaleFactor`, which adapts the widgets to
+    // available space in the panel above (or to the left of) the main image.
+    final panelScaleFactor = calculations['panelScaleFactor']!;
+    final infoSize = kInfoTextSize * textScale;
 
     // When goto is active, show movement instructions.
     if (_slewRequest != null) {
@@ -1655,7 +1635,7 @@ class MyHomePageState extends State<MyHomePage> {
               isAltAz,
               true, // isRotationAxis
               panelScaleFactor,
-              coordInfoSize * panelScaleFactor,
+              infoSize * panelScaleFactor,
             )),
         // Object label.
         RotatedBox(
@@ -1665,7 +1645,7 @@ class MyHomePageState extends State<MyHomePage> {
               slew.target,
               slew.targetCatalogEntry,
               panelScaleFactor,
-              objectLabelSize * panelScaleFactor,
+              infoSize * panelScaleFactor,
               formatRightAscension,
               formatDeclination,
             )),
@@ -1679,7 +1659,7 @@ class MyHomePageState extends State<MyHomePage> {
               isAltAz,
               false, // isRotationAxis
               panelScaleFactor,
-              coordInfoSize * panelScaleFactor,
+              infoSize * panelScaleFactor,
             )),
       ];
     }
@@ -1689,8 +1669,8 @@ class MyHomePageState extends State<MyHomePage> {
       RotatedBox(
           quarterTurns: portrait ? 3 : 0,
           child: SizedBox(
-              width: 60 * panelScaleFactor * textScale,
-              height: 60 * panelScaleFactor * textScale,
+              width: infoSize * panelScaleFactor,
+              height: infoSize * panelScaleFactor,
               child: Center(
                       child: boresightCatalogEntryInFov
                           ? GestureDetector(
@@ -1707,9 +1687,17 @@ class MyHomePageState extends State<MyHomePage> {
                                         labelForEntry(boresightCatalogEntry!.entry),
                                         size: 11 * panelScaleFactor),
                                     if (commonNameForEntry(boresightCatalogEntry!.entry).isNotEmpty)
-                                    solveText(
-                                        commonNameForEntry(boresightCatalogEntry!.entry),
-                                        size: 10 * panelScaleFactor),
+                                    SizedBox(
+                                        width: infoSize * panelScaleFactor,
+                                        child: Text(
+                                            commonNameForEntry(boresightCatalogEntry!.entry),
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                                color: _solveColor(),
+                                                fontSize: 10 * panelScaleFactor),
+                                            textScaler: textScaler(context))),
                                     solveText(
                                         boresightCatalogEntry!.entry.hasConstellation()
                                             ? "${boresightCatalogEntry!.entry.objectType.label} in ${boresightCatalogEntry!.entry.constellation.label}"
@@ -1740,8 +1728,8 @@ class MyHomePageState extends State<MyHomePage> {
         RotatedBox(
             quarterTurns: portrait ? 3 : 0,
             child: SizedBox(
-                width: 60 * panelScaleFactor * textScaleFactor(context),
-                height: 60 * panelScaleFactor * textScaleFactor(context),
+                width: infoSize * panelScaleFactor,
+                height: infoSize * panelScaleFactor,
                 child: GestureDetector(
                   onTap: () {
                     skyCoordsDialog(this, context);
@@ -2043,7 +2031,8 @@ class MyHomePageState extends State<MyHomePage> {
   int _initialTextSizeIndex = 0;
 
   // Helper method to calculate display scale and image size
-  Map<String, double> _getLayoutCalculations([Size? containerSize]) {
+  Map<String, double> _getLayoutCalculations(double textScale,
+      [Size? containerSize]) {
     final constraints = containerSize ?? MediaQuery.of(context).size;
     final portrait = MediaQuery.of(context).orientation == Orientation.portrait;
 
@@ -2088,15 +2077,24 @@ class MyHomePageState extends State<MyHomePage> {
 
     final displayScale = actualImageSize / _imageRegion.width;
 
+    final infoSize = kInfoTextSize * textScale;
+    // Sized for the goto layout (RA + object label + Dec), which is the largest.
+    final mainDimensionBasedScale = shortDimension / (3.0 * infoSize);
+    final crossDimensionBasedScale = panelWidth / infoSize;
+    final panelScaleFactor = math
+        .min(mainDimensionBasedScale, crossDimensionBasedScale)
+        .clamp(0.5, 1.2);
+
     return {
       'actualImageSize': actualImageSize,
       'panelWidth': panelWidth,
       'displayScale': displayScale,
+      'panelScaleFactor': panelScaleFactor,
     };
   }
 
   double _getDisplayScale([Size? containerSize]) {
-    return _getLayoutCalculations(containerSize)['displayScale']!;
+    return _getLayoutCalculations(textScaleFactor(context), containerSize)['displayScale']!;
   }
 
   Widget _orientationLayout(BuildContext context, [Size? containerSize]) {
@@ -2287,7 +2285,7 @@ class MyHomePageState extends State<MyHomePage> {
           child: Builder(
             builder: (context) {
               // Get layout calculations
-              final calculations = _getLayoutCalculations(containerSize);
+              final calculations = _getLayoutCalculations(textScaleFactor(context), containerSize);
               final actualImageSize = calculations['actualImageSize']!;
               final panelWidth = calculations['panelWidth']!;
 

@@ -1,12 +1,15 @@
 // Copyright (c) 2026 Steven Rosenthal smr@dt3.org
 // See LICENSE file in root directory for license terms.
 
-import 'dart:math' as math;
-
 import 'package:cedar_flutter/cedar.pb.dart';
 import 'package:cedar_flutter/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+// Base size (before textScale) of the info panel boxes (coord info, object
+// label, slew guidance). Used to compute panelScaleFactor in
+// _getLayoutCalculations.
+const double kInfoTextSize = 75.0;
 
 /// Widget that builds the controls interface for the Cedar Aim app. The
 /// controls are grouped together in a "pane" that is below the main image or
@@ -82,20 +85,11 @@ class ControlsWidget extends StatelessWidget {
 
     final textScale = textScaleFactor(context);
 
-    // Use the same panelScaleFactor formula as _dataItems so that sizing
-    // tracks available panel space consistently across both panels.
-    final constraints = MediaQuery.of(context).size;
-    final shortDimension = portrait ? constraints.width : constraints.height;
-    final panelWidth = layoutCalculations['panelWidth']!;
-    final coordInfoSize = 85.0 * textScale;
-    final objectLabelSize = 60.0 * textScale;
-    final mainDimensionBasedScale = shortDimension / (2.0 * coordInfoSize + objectLabelSize);
-    final crossDimensionBasedScale = panelWidth / math.max(coordInfoSize, objectLabelSize);
-    final panelScaleFactor = math.min(mainDimensionBasedScale, crossDimensionBasedScale).clamp(0.5, 1.2);
+    final panelScaleFactor = layoutCalculations['panelScaleFactor']!;
 
     // Calculate responsive sizes based on panel scale and text scale.
-    final textBoxWidth = 90 * panelScaleFactor * textScale;
-    final textBoxHeight = 100 * panelScaleFactor * textScale;
+    final textBoxWidth = kInfoTextSize * panelScaleFactor * textScale;
+    final textBoxHeight = kInfoTextSize * panelScaleFactor * textScale;
     final buttonWidth = 55 * panelScaleFactor * textScale;
     final buttonHeight = 20 * panelScaleFactor * textScale;
     final buttonFont = 11.0 * panelScaleFactor;
