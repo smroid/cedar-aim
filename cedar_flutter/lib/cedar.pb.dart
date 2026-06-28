@@ -43,6 +43,9 @@ class ServerInformation extends $pb.GeneratedMessage {
     ImuTrackerState? imuTrackerState,
     $core.double? imuAngularSpeed,
     ConnectionStatus? connectionStatus,
+    $core.double? systemLoadAverage,
+    $core.int? cpuCoreCount,
+    $core.double? cedarLoadAverage,
   }) {
     final $result = create();
     if (productName != null) {
@@ -96,6 +99,15 @@ class ServerInformation extends $pb.GeneratedMessage {
     if (connectionStatus != null) {
       $result.connectionStatus = connectionStatus;
     }
+    if (systemLoadAverage != null) {
+      $result.systemLoadAverage = systemLoadAverage;
+    }
+    if (cpuCoreCount != null) {
+      $result.cpuCoreCount = cpuCoreCount;
+    }
+    if (cedarLoadAverage != null) {
+      $result.cedarLoadAverage = cedarLoadAverage;
+    }
     return $result;
   }
   ServerInformation._() : super();
@@ -120,6 +132,9 @@ class ServerInformation extends $pb.GeneratedMessage {
     ..e<ImuTrackerState>(15, _omitFieldNames ? '' : 'imuTrackerState', $pb.PbFieldType.OE, defaultOrMaker: ImuTrackerState.TRACKER_STATE_UNKNOWN, valueOf: ImuTrackerState.valueOf, enumValues: ImuTrackerState.values)
     ..a<$core.double>(16, _omitFieldNames ? '' : 'imuAngularSpeed', $pb.PbFieldType.OD)
     ..aOM<ConnectionStatus>(17, _omitFieldNames ? '' : 'connectionStatus', subBuilder: ConnectionStatus.create)
+    ..a<$core.double>(18, _omitFieldNames ? '' : 'systemLoadAverage', $pb.PbFieldType.OF)
+    ..a<$core.int>(19, _omitFieldNames ? '' : 'cpuCoreCount', $pb.PbFieldType.O3)
+    ..a<$core.double>(20, _omitFieldNames ? '' : 'cedarLoadAverage', $pb.PbFieldType.OF)
     ..hasRequiredFields = false
   ;
 
@@ -309,6 +324,37 @@ class ServerInformation extends $pb.GeneratedMessage {
   void clearConnectionStatus() => $_clearField(17);
   @$pb.TagNumber(17)
   ConnectionStatus ensureConnectionStatus() => $_ensure(16);
+
+  /// Recent system load average (number of runnable/waiting processes).
+  @$pb.TagNumber(18)
+  $core.double get systemLoadAverage => $_getN(17);
+  @$pb.TagNumber(18)
+  set systemLoadAverage($core.double v) { $_setFloat(17, v); }
+  @$pb.TagNumber(18)
+  $core.bool hasSystemLoadAverage() => $_has(17);
+  @$pb.TagNumber(18)
+  void clearSystemLoadAverage() => $_clearField(18);
+
+  /// Number of logical CPU cores.
+  @$pb.TagNumber(19)
+  $core.int get cpuCoreCount => $_getIZ(18);
+  @$pb.TagNumber(19)
+  set cpuCoreCount($core.int v) { $_setSignedInt32(18, v); }
+  @$pb.TagNumber(19)
+  $core.bool hasCpuCoreCount() => $_has(18);
+  @$pb.TagNumber(19)
+  void clearCpuCoreCount() => $_clearField(19);
+
+  /// Recent CPU usage of the cedar server process, in cores (e.g. 1.0 = one full
+  /// core).
+  @$pb.TagNumber(20)
+  $core.double get cedarLoadAverage => $_getN(19);
+  @$pb.TagNumber(20)
+  set cedarLoadAverage($core.double v) { $_setFloat(19, v); }
+  @$pb.TagNumber(20)
+  $core.bool hasCedarLoadAverage() => $_has(19);
+  @$pb.TagNumber(20)
+  void clearCedarLoadAverage() => $_clearField(20);
 }
 
 class CameraModel extends $pb.GeneratedMessage {
@@ -1525,8 +1571,8 @@ class FrameRequest extends $pb.GeneratedMessage {
   /// When an IMU is available, solution_id advances on IMU interpolations
   /// between camera frames, so updates arrive at the IMU interpolation rate
   /// during motion.
-  /// Without an IMU, solution_id advances only on camera frames, so behavior is
-  /// identical to using prev_frame_id.
+  /// Without an IMU, or in non-OPERATE modes, solution_id advances once per
+  /// camera frame, so behavior is identical to using prev_frame_id.
   @$pb.TagNumber(4)
   $core.int get prevSolutionId => $_getIZ(3);
   @$pb.TagNumber(4)
@@ -2148,11 +2194,11 @@ class FrameResult extends $pb.GeneratedMessage {
   @$pb.TagNumber(42)
   void clearBoresightCatalogEntryDistance() => $_clearField(42);
 
-  /// Identifies the plate solution that produced this FrameResult. Increments
-  /// on every solution posted by the solve engine, including IMU interpolations
-  /// between camera frames. Without an IMU, advances in lockstep with frame_id.
-  /// A client can include this in FrameRequest.prev_solution_id to be notified
-  /// of every solution, not just new camera frames.
+  /// Identifies the solution that produced this FrameResult. Always advances
+  /// on every new result. In OPERATE mode with an IMU, also advances on IMU
+  /// interpolations between camera frames, so updates arrive at the IMU rate
+  /// during motion. A client can include this in FrameRequest.prev_solution_id
+  /// to be notified of every solution, not just new camera frames.
   @$pb.TagNumber(43)
   $core.int get solutionId => $_getIZ(33);
   @$pb.TagNumber(43)

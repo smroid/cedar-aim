@@ -16,6 +16,7 @@ import 'google/protobuf/timestamp.pb.dart';
 
 OverlayEntry? _aboutOverlayEntry;
 OverlayEntry? _serverTimeOverlayEntry;
+OverlayEntry? _loadAverageOverlayEntry;
 Timer? _timer;
 
 late BuildContext _context;
@@ -142,6 +143,7 @@ Future<void> aboutScreen(MyHomePageState state, BuildContext context) async {
   _timer = Timer.periodic(const Duration(seconds: 1), (_) async {
     _serverTimeOverlayEntry?.markNeedsBuild();
     _aboutOverlayEntry?.markNeedsBuild();
+    _loadAverageOverlayEntry?.markNeedsBuild();
   });
 
   Overlay.of(context).insert(_aboutOverlayEntry!);
@@ -212,6 +214,19 @@ Widget systemInfo(MyHomePageState state) {
             _scaledText("CPU temp"),
             _scaledText(sprintf("%.0f°C", [serverInfo.cpuTemperature]))
           ]),
+          if (state.expert &&
+              (serverInfo.hasSystemLoadAverage() ||
+                  serverInfo.hasCedarLoadAverage()))
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+              _scaledText("Load average"),
+              TextButton(
+                style: _viewButtonStyle,
+                onPressed: () {
+                  loadAverageDialog(state);
+                },
+                child: _scaledText("view"),
+              ),
+            ]),
           Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
             _scaledText("Processor/OS"),
             TextButton(
@@ -457,6 +472,84 @@ void processorOsDialog(
   });
 
   Overlay.of(_context).insert(dialogOverlayEntry);
+}
+
+void loadAverageDialog(MyHomePageState state) {
+  _loadAverageOverlayEntry = OverlayEntry(builder: (BuildContext context) {
+    final serverInfo = state.serverInformation;
+    final systemLoadAverage = serverInfo != null && serverInfo.hasSystemLoadAverage()
+        ? serverInfo.systemLoadAverage : null;
+    final cedarLoadAverage = serverInfo != null && serverInfo.hasCedarLoadAverage()
+        ? serverInfo.cedarLoadAverage : null;
+    final cpuCoreCount = serverInfo != null && serverInfo.hasCpuCoreCount()
+        ? serverInfo.cpuCoreCount : null;
+
+    return GestureDetector(
+      onTap: () {
+        _loadAverageOverlayEntry!.remove();
+        _loadAverageOverlayEntry = null;
+      },
+      child: Material(
+        color: Colors.black54,
+        child: DefaultTextStyle.merge(
+            style: const TextStyle(fontFamilyFallback: ['Roboto']),
+            child: Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 400),
+                child: Container(
+                  padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
+                  decoration: _dialogDecoration(),
+                  child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Center(
+                          child: Text(
+                            cpuCoreCount != null
+                                ? 'Load average ($cpuCoreCount cores)'
+                                : 'Load average',
+                            style: _dialogTextStyle(),
+                          ),
+                        ),
+                        _dialogItemSpacing,
+                        if (systemLoadAverage != null) ...[
+                          Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                _scaledText("System:"),
+                                _dialogRowSpacing,
+                                Expanded(
+                                    child: Text(
+                                  sprintf("%.2f", [systemLoadAverage]),
+                                  textAlign: TextAlign.right,
+                                  style: _dialogTextStyle(),
+                                )),
+                              ]),
+                        ],
+                        if (cedarLoadAverage != null) ...[
+                          if (systemLoadAverage != null) _dialogItemSpacing,
+                          Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                _scaledText("Cedar:"),
+                                _dialogRowSpacing,
+                                Expanded(
+                                    child: Text(
+                                  sprintf("%.2f", [cedarLoadAverage]),
+                                  textAlign: TextAlign.right,
+                                  style: _dialogTextStyle(),
+                                )),
+                              ]),
+                        ],
+                      ]),
+                ),
+              ),
+            )),
+      ),
+    );
+  });
+
+  Overlay.of(_context).insert(_loadAverageOverlayEntry!);
 }
 
 String _formatConnectionCount(int count) {
