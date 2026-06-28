@@ -2017,18 +2017,24 @@ class MyHomePageState extends State<MyHomePage> {
     return preferences!.textSizeIndex;
   }
 
-  Future<void> _setTextSizeIndex(int textSizeIndex) async {
+  void _setTextSizeIndex(int textSizeIndex) {
     textSizeIndex = math.min(textSizeIndex, 1);
     textSizeIndex = math.max(textSizeIndex, -1);
     if (preferences == null || preferences!.textSizeIndex == textSizeIndex) {
       return;
     }
-    var prefs = cedar_rpc.Preferences();
-    prefs.textSizeIndex = textSizeIndex;
-    await updatePreferences(prefs);
+    // Debounce: pinch gestures fire onScaleUpdate continuously, so wait until
+    // the gesture settles before sending the RPC.
+    _textSizeDebounceTimer?.cancel();
+    _textSizeDebounceTimer = Timer(const Duration(milliseconds: 300), () {
+      var prefs = cedar_rpc.Preferences();
+      prefs.textSizeIndex = textSizeIndex;
+      updatePreferences(prefs);
+    });
   }
 
   int _initialTextSizeIndex = 0;
+  Timer? _textSizeDebounceTimer;
 
   // Helper method to calculate display scale and image size
   Map<String, double> _getLayoutCalculations(double textScale,
