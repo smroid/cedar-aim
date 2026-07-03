@@ -4085,6 +4085,8 @@ class FovCatalogEntry extends $pb.GeneratedMessage {
   factory FovCatalogEntry({
     $1.CatalogEntry? entry,
     ImageCoord? imagePos,
+    $core.double? altitude,
+    $core.double? azimuth,
   }) {
     final $result = create();
     if (entry != null) {
@@ -4092,6 +4094,12 @@ class FovCatalogEntry extends $pb.GeneratedMessage {
     }
     if (imagePos != null) {
       $result.imagePos = imagePos;
+    }
+    if (altitude != null) {
+      $result.altitude = altitude;
+    }
+    if (azimuth != null) {
+      $result.azimuth = azimuth;
     }
     return $result;
   }
@@ -4102,6 +4110,8 @@ class FovCatalogEntry extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'FovCatalogEntry', package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'), createEmptyInstance: create)
     ..aOM<$1.CatalogEntry>(1, _omitFieldNames ? '' : 'entry', subBuilder: $1.CatalogEntry.create)
     ..aOM<ImageCoord>(2, _omitFieldNames ? '' : 'imagePos', subBuilder: ImageCoord.create)
+    ..a<$core.double>(3, _omitFieldNames ? '' : 'altitude', $pb.PbFieldType.OD)
+    ..a<$core.double>(4, _omitFieldNames ? '' : 'azimuth', $pb.PbFieldType.OD)
     ..hasRequiredFields = false
   ;
 
@@ -4147,6 +4157,26 @@ class FovCatalogEntry extends $pb.GeneratedMessage {
   void clearImagePos() => $_clearField(2);
   @$pb.TagNumber(2)
   ImageCoord ensureImagePos() => $_ensure(1);
+
+  /// Altitude (degrees, relative to the local horizon).
+  @$pb.TagNumber(3)
+  $core.double get altitude => $_getN(2);
+  @$pb.TagNumber(3)
+  set altitude($core.double v) { $_setDouble(2, v); }
+  @$pb.TagNumber(3)
+  $core.bool hasAltitude() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearAltitude() => $_clearField(3);
+
+  /// Azimuth (degrees, positive clockwise from north).
+  @$pb.TagNumber(4)
+  $core.double get azimuth => $_getN(3);
+  @$pb.TagNumber(4)
+  set azimuth($core.double v) { $_setDouble(3, v); }
+  @$pb.TagNumber(4)
+  $core.bool hasAzimuth() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearAzimuth() => $_clearField(4);
 }
 
 class ActionRequest extends $pb.GeneratedMessage {
