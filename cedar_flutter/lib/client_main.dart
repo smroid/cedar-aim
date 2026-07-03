@@ -1518,7 +1518,7 @@ class MyHomePageState extends State<MyHomePage> {
   }
 
   String formatAltitude(double alt, {bool short = false}) {
-    return short ? sprintf("%d°", [alt.round()]) : sprintf("%.2f°", [alt]);
+    return short ? sprintf("%.1f°", [alt]) : sprintf("%.2f°", [alt]);
   }
 
   String formatAzimuth(double az, {bool short = false}) {
@@ -1534,7 +1534,7 @@ class MyHomePageState extends State<MyHomePage> {
       double() => "??",
     };
     return short
-        ? sprintf("%s %d°", [dir, az.round()])
+        ? sprintf("%s %.1f°", [dir, az])
         : sprintf("%s %.2f°", [dir, az]);
   }
 
@@ -1676,7 +1676,11 @@ class MyHomePageState extends State<MyHomePage> {
                           ? GestureDetector(
                               onTap: _objectInfoDialog == null ? null : () {
                                 _objectInfoDialog!(this, context,
-                                    SelectedCatalogEntry(entry: boresightCatalogEntry!.entry));
+                                    SelectedCatalogEntry(
+                                      entry: boresightCatalogEntry!.entry,
+                                      altitude: boresightCatalogEntry!.hasAltitude() ? boresightCatalogEntry!.altitude : null,
+                                      azimuth: boresightCatalogEntry!.hasAzimuth() ? boresightCatalogEntry!.azimuth : null,
+                                    ));
                               },
                               child: FittedBox(
                                 fit: BoxFit.scaleDown,
@@ -1805,7 +1809,11 @@ class MyHomePageState extends State<MyHomePage> {
                   if (_objectInfoDialog != null && _slewRequest == null) {
                     var object = _findObjectHit(localPosition, hitTolerance);
                     if (object != null) {
-                      var selEntry = SelectedCatalogEntry(entry: object.entry);
+                      var selEntry = SelectedCatalogEntry(
+                        entry: object.entry,
+                        altitude: object.hasAltitude() ? object.altitude : null,
+                        azimuth: object.hasAzimuth() ? object.azimuth : null,
+                      );
                       _objectInfoDialog!(this, context, selEntry);
                     }
                   }
