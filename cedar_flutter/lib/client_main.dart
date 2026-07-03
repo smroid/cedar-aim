@@ -550,6 +550,7 @@ class MyHomePageState extends State<MyHomePage> {
   bool _daylightMode = false;
   bool _skipFocusActive = false;
   bool _demoMode = false;
+  bool _demoImageChangePending = false;
   List<String> _demoFiles = [];
   String _demoFile = "";
   bool advanced = false;
@@ -779,10 +780,12 @@ class MyHomePageState extends State<MyHomePage> {
     if (_setupMode) {
       _transitionToSetup = false;
     }
-    _demoFile = operationSettings.demoImageFilename;
-    _demoMode = _demoFile.isNotEmpty;
-    if (_demoFile.isEmpty) {
-      _demoFile = _demoFiles[0];
+    if (!_demoImageChangePending) {
+      _demoFile = operationSettings.demoImageFilename;
+      _demoMode = _demoFile.isNotEmpty;
+      if (_demoFile.isEmpty) {
+        _demoFile = _demoFiles[0];
+      }
     }
 
     _canAlign = _setupMode;
@@ -1176,8 +1179,10 @@ class MyHomePageState extends State<MyHomePage> {
 
   // Pass empty string to terminate demo mode.
   Future<void> _setDemoImage(String imageFile) async {
+    _demoImageChangePending = true;
     final request = cedar_rpc.OperationSettings(demoImageFilename: imageFile);
     await updateOperationSettings(request);
+    _demoImageChangePending = false;
   }
 
   Future<String> _getServerLogs() async {
