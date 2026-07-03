@@ -120,11 +120,13 @@ void rpcFailedImpl() {
 
 /// Aggressively cleans up the gRPC channel, with timeout and forced terminate.
 Future<void> _shutdownChannel({int timeoutSeconds = 2}) async {
-  if (_channel == null) {
+  final channel = _channel;
+  if (channel == null) {
     return;
   }
+  _channel = null;
   try {
-    await _channel!.shutdown().timeout(
+    await channel.shutdown().timeout(
       Duration(seconds: timeoutSeconds),
       onTimeout: () {
         debugPrint('Channel shutdown timed out, forcing terminate');
@@ -134,11 +136,10 @@ Future<void> _shutdownChannel({int timeoutSeconds = 2}) async {
     debugPrint('Error during channel shutdown: $e');
   }
   try {
-    await _channel!.terminate();
+    await channel.terminate();
   } catch (e) {
     debugPrint('Error during channel terminate: $e');
   }
-  _channel = null;
   // Brief pause to let OS release socket resources.
   await Future.delayed(const Duration(milliseconds: 100));
 }
@@ -340,11 +341,12 @@ Future<void> startAppUpdateImpl() async {
 
 Future<void> cleanupImpl() async {
   _client = null;
-  await _channel?.shutdown();
+  final channel = _channel;
+  _channel = null;
+  await channel?.shutdown();
   await _activeProxy?.stop();
   await _bluetoothConnection?.close();
   _bluetoothConnection?.dispose();
-  _channel = null;
   _activeProxy = null;
   _activeProxyPort = null;
   _bluetoothConnection = null;
