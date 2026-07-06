@@ -4195,6 +4195,7 @@ class ActionRequest extends $pb.GeneratedMessage {
     $core.bool? crashServer,
     $core.bool? calibrateDarkFrame,
     $core.bool? resetHotPixelMap,
+    $core.bool? wifiEnabled,
   }) {
     final $result = create();
     if (captureBoresight != null) {
@@ -4239,6 +4240,9 @@ class ActionRequest extends $pb.GeneratedMessage {
     if (resetHotPixelMap != null) {
       $result.resetHotPixelMap = resetHotPixelMap;
     }
+    if (wifiEnabled != null) {
+      $result.wifiEnabled = wifiEnabled;
+    }
     return $result;
   }
   ActionRequest._() : super();
@@ -4260,6 +4264,7 @@ class ActionRequest extends $pb.GeneratedMessage {
     ..aOB(12, _omitFieldNames ? '' : 'crashServer')
     ..aOB(13, _omitFieldNames ? '' : 'calibrateDarkFrame')
     ..aOB(14, _omitFieldNames ? '' : 'resetHotPixelMap')
+    ..aOB(15, _omitFieldNames ? '' : 'wifiEnabled')
     ..hasRequiredFields = false
   ;
 
@@ -4450,6 +4455,18 @@ class ActionRequest extends $pb.GeneratedMessage {
   $core.bool hasResetHotPixelMap() => $_has(13);
   @$pb.TagNumber(14)
   void clearResetHotPixelMap() => $_clearField(14);
+
+  /// Enables or disables the WiFi access point. When disabled, the AP is
+  /// brought down until explicitly re-enabled or the server reboots. Useful
+  /// after switching to Bluetooth.
+  @$pb.TagNumber(15)
+  $core.bool get wifiEnabled => $_getBF(14);
+  @$pb.TagNumber(15)
+  set wifiEnabled($core.bool v) { $_setBool(14, v); }
+  @$pb.TagNumber(15)
+  $core.bool hasWifiEnabled() => $_has(14);
+  @$pb.TagNumber(15)
+  void clearWifiEnabled() => $_clearField(15);
 }
 
 class ServerLogRequest extends $pb.GeneratedMessage {
