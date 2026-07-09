@@ -59,11 +59,8 @@ String _getConnectionRecoveryMessage(String productName) {
 /// Generates the connection recovery dialog help text.
 String _getConnectionRecoveryHelpText(String productName, bool everConnected) {
   if (isAndroid()) {
-    if (!everConnected) {
-      return 'Tip: In WiFi Settings, select $productName\'s network. '
-          'If Android asks "No internet — stay connected?" tap Yes.';
-    }
-    return 'You can also pair with $productName via Bluetooth.';
+    return 'Tip: In WiFi Settings, select $productName\'s network. '
+        'If Android asks "No internet — stay connected?" tap Yes.';
   }
   return '';
 }
@@ -86,6 +83,13 @@ Future<void> _selectDevice(
   }
 }
 
+/// Switches to WiFi and persists the selection. This is effective until the
+/// user picks a Bluetooth device again (e.g. from this same dialog, should a
+/// WiFi connection problem bring them back here).
+Future<void> _selectWifi(ConnectionRecoveryConfig config) async {
+  await _selectDevice(wifiDevice(), config);
+}
+
 /// Builds the device selection dropdown or message.
 Widget _buildDeviceSection(
   List<CedarDevice>? currentDevices,
@@ -106,9 +110,16 @@ Widget _buildDeviceSection(
 
   return DropdownButton<CedarDevice>(
     value: null,
-    hint: Text(
-      'Use ${config.productName} with Bluetooth',
-      style: TextStyle(color: primaryColor),
+    hint: Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(Icons.bluetooth, size: 16, color: primaryColor),
+        const SizedBox(width: 6),
+        Text(
+          'Use ${config.productName} with Bluetooth',
+          style: TextStyle(color: primaryColor),
+        ),
+      ],
     ),
     iconEnabledColor: primaryColor,
     iconDisabledColor: primaryColor,
@@ -211,7 +222,7 @@ Future<void> showConnectionRecoveryDialog({
           if (isLandscape) {
             // Two-column landscape layout using Table for reliable sizing.
             final leftColumnChildren = <Widget>[messageSection];
-            if (isAndroid() && config.everConnected && currentDevices != null) {
+            if (isAndroid() && currentDevices != null) {
               leftColumnChildren.add(const SizedBox(height: 20));
               leftColumnChildren.add(
                   _buildDeviceSection(currentDevices, config, dialogContext));
@@ -246,7 +257,7 @@ Future<void> showConnectionRecoveryDialog({
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   messageSection,
-                  if (isAndroid() && config.everConnected && currentDevices != null) ...[
+                  if (isAndroid() && currentDevices != null) ...[
                     const SizedBox(height: 20),
                     _buildDeviceSection(currentDevices, config, dialogContext),
                   ],
@@ -262,19 +273,38 @@ Future<void> showConnectionRecoveryDialog({
             ),
             content: content,
             actions: [
-              if (hasSettingsAccess)
+              // Switch to WiFi (Android only) — e.g. after power-cycling the
+              // Hopper, which reverts it to WiFi. Effective until the user
+              // picks a Bluetooth device again, including from this same
+              // dialog.
+              if (isAndroid())
                 TextButton.icon(
                   icon: const Icon(Icons.wifi),
+                  label: const Text('Use WiFi'),
+                  onPressed: () async {
+                    try {
+                      await _selectWifi(config);
+                    } finally {
+                      if (dialogContext.mounted) {
+                        Navigator.pop(dialogContext);
+                      }
+                    }
+                  },
+                ),
+
+              if (hasSettingsAccess)
+                TextButton.icon(
+                  icon: const Icon(Icons.wifi_find),
                   label: const Text('WiFi Settings'),
                   onPressed: () async {
                     await _openWiFiSettings();
                   },
                 ),
 
-              // Bluetooth Settings button (Android only, after first connection).
-              if (isAndroid() && config.everConnected)
+              // Bluetooth Settings button (Android only).
+              if (isAndroid())
                 TextButton.icon(
-                  icon: const Icon(Icons.bluetooth),
+                  icon: const Icon(Icons.bluetooth_searching),
                   label: const Text('Bluetooth Settings'),
                   onPressed: () async {
                     await _openBluetoothSettings();
@@ -309,10 +339,11 @@ Future<void> showConnectionRecoveryDialog({
               // The connection retry logic will attempt reconnection when the
               // dialog is closed.
 
-              // Cancel/OK button.
+              // Dismiss button — the connection retry logic attempts
+              // reconnection when the dialog closes, so this reads as "Retry".
               TextButton(
                 onPressed: () => Navigator.pop(dialogContext),
-                child: const Text('OK'),
+                child: const Text('Retry'),
               ),
             ],
           );

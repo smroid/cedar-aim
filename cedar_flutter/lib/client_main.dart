@@ -84,8 +84,38 @@ bool get updateServiceAvailable => _updateServiceAvailable;
 
 UpdaterInfo? getUpdaterInfo() => _updaterInfo;
 
+// Use longer timeout for BT.
 const Duration _rpcTimeout = Duration(seconds: 5);
+const Duration _rpcTimeoutBt = Duration(seconds: 10);
 const Duration _getFrameRpcTimeout = Duration(seconds: 5);
+const Duration _getFrameRpcTimeoutBt = Duration(seconds: 10);
+
+// Number of consecutive BT reconnect failures before we surface the connection
+// dialog. With the ~25s reconnect cooldown (see _btReconnectCooldown in
+// platform_mobile), each failure represents ~25s of trying, so this is roughly
+// a 75s budget: enough to ride out a few self-heal cycles on a transient drop,
+// short enough that the connection dialog shows before long.
+const int _btReconnectFailureThreshold = 3;
+
+// Timeout for non-frame RPCs, chosen for the active transport (BT is slower).
+Duration _rpcTimeoutForTransport() =>
+    isBluetoothInUse() ? _rpcTimeoutBt : _rpcTimeout;
+
+// Whether the connection dialog should be shown, given how long it's been
+// since the last successful response. On WiFi (or no device selected), any
+// sustained gap qualifies. On BT, we additionally wait for either the normal
+// failure-count budget, or an immediate fast-path if the target device was
+// found to be unbonded.
+bool _shouldShowConnectionDialog(Duration elapsed) {
+  if (elapsed.inSeconds <= 5) {
+    return false;
+  }
+  if (!isBluetoothInUse()) {
+    return true;
+  }
+  return btReconnectFailures() >= _btReconnectFailureThreshold ||
+      btTargetUnbonded();
+}
 
 /// Get server information by making a single GetFrame() RPC.
 /// Throws if unable to connect to server.
@@ -137,10 +167,12 @@ Future<void> clearObserverLocation() async {
     final request = cedar_rpc.EmptyMessage();
     await client.clearObserverLocation(
       request,
-      options: CallOptions(timeout: _rpcTimeout),
+      options: CallOptions(timeout: _rpcTimeoutForTransport()),
     );
     debugPrint('Observer location cleared successfully');
   } catch (e) {
+    // No notifyRpcFailed(): only called during shutdown, so there's no
+    // point recovering the connection.
     debugPrint('Error clearing observer location: $e');
   }
 }
@@ -524,6 +556,11 @@ class MyHomePageState extends State<MyHomePage> {
 
   DateTime _startTime = DateTime.now();
   bool _serverConnected = false;
+
+  // Leave this disabled for now, doesn't work well with Bluetooth.
+  // bool _serverSupportsStreaming = true;
+  bool _serverSupportsStreaming = false;
+
   bool everConnected = false;
   bool _connectionDialogShowing = false;
   DateTime _lastServerResponseTime = DateTime.now();
@@ -647,6 +684,7 @@ class MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
     _initPipConfiguration();
+    preloadDeviceSelection();
   }
 
   @override
@@ -999,11 +1037,33 @@ class MyHomePageState extends State<MyHomePage> {
     try {
       final c = await getClient();
       await c.updateFixedSettings(request,
-          options: CallOptions(timeout: _rpcTimeout));
+          options: CallOptions(timeout: _rpcTimeoutForTransport()));
     } catch (e) {
-      debugPrint("updateFixedSettings error: $e");
-      rpcFailed();
+      notifyRpcFailed('updateFixedSettings error', e);
     }
+  }
+
+  // Call on any non-frame RPC failure to update UI state. Does not tear down
+  // the channel — channel teardown is the frame loop's responsibility, since
+  // it is the authoritative connection health monitor. This just updates
+  // _serverConnected so the connection dialog appears if the server has been
+  // unresponsive long enough.
+  void notifyRpcFailed(String context, Object e) {
+    // A BT reconnect in progress is an expected quiet state, not an error;
+    // don't log it per-poll. Still evaluate the dialog gate below.
+    if (e is! BluetoothReconnectingException) {
+      debugPrint('$context: $e');
+    }
+    _lastConnectionError = e.toString();
+    setState(() {
+      Duration elapsed = DateTime.now().difference(_lastServerResponseTime);
+      if (_shouldShowConnectionDialog(elapsed)) {
+        debugPrint('serverConnected=false ($context): elapsed=${elapsed.inSeconds}s '
+            'btInUse=${isBluetoothInUse()} btFailures=${btReconnectFailures()} '
+            'btTargetUnbonded=${btTargetUnbonded()}');
+        _serverConnected = false;
+      }
+    });
   }
 
   Future<void> updateOperationSettings(
@@ -1011,10 +1071,9 @@ class MyHomePageState extends State<MyHomePage> {
     try {
       final c = await getClient();
       await c.updateOperationSettings(request,
-          options: CallOptions(timeout: _rpcTimeout));
+          options: CallOptions(timeout: _rpcTimeoutForTransport()));
     } catch (e) {
-      debugPrint("updateOperationSettings error: $e");
-      rpcFailed();
+      notifyRpcFailed('updateOperationSettings error', e);
     }
   }
 
@@ -1027,12 +1086,13 @@ class MyHomePageState extends State<MyHomePage> {
     );
     try {
       final c = await getClient();
+      final timeout = isBluetoothInUse() ? _getFrameRpcTimeoutBt : _getFrameRpcTimeout;
       final response = await c
           .getFrame(
             request,
-            options: CallOptions(timeout: _getFrameRpcTimeout),
+            options: CallOptions(timeout: timeout),
           )
-          .timeout(const Duration(seconds: 7), onTimeout: () {
+          .timeout(timeout + const Duration(seconds: 2), onTimeout: () {
         throw TimeoutException('getFrame timed out');
       });
       rpcSucceeded();
@@ -1058,33 +1118,168 @@ class MyHomePageState extends State<MyHomePage> {
           });
         }
       }
+    } on BluetoothReconnectingException catch (e) {
+      // Expected quiet state while BT reconnects (attempt running or in the
+      // cooldown between attempts). Don't log per-poll, don't recycle the
+      // channel (there isn't one). Still evaluate the dialog gate, then back
+      // off so we're not spinning at the poll cadence during the cooldown.
+      _lastConnectionError = e.toString();
+      setState(() {
+        Duration elapsed = DateTime.now().difference(_lastServerResponseTime);
+        if (_shouldShowConnectionDialog(elapsed)) {
+          debugPrint('serverConnected=false (reconnecting): '
+              'elapsed=${elapsed.inSeconds}s btFailures=${btReconnectFailures()} '
+              'btTargetUnbonded=${btTargetUnbonded()}');
+          _serverConnected = false;
+        }
+      });
+      await Future.delayed(const Duration(seconds: 1));
     } catch (e) {
       debugPrint("getFrame RPC error: $e");
       _lastConnectionError = e.toString();
-      rpcFailed(); // Make a new channel.
+      if (e is GrpcError && e.code == StatusCode.deadlineExceeded &&
+          isBluetoothInUse()) {
+        btTeardown(); // Force full BT reconnect on timeout to clear stale data.
+      } else {
+        rpcFailed(); // Make a new channel.
+      }
       setState(() {
-        // Has it been too long since we last succeeded?
         Duration elapsed = DateTime.now().difference(_lastServerResponseTime);
-        if (elapsed.inSeconds > 5) {
+        if (_shouldShowConnectionDialog(elapsed)) {
+          debugPrint('serverConnected=false: elapsed=${elapsed.inSeconds}s '
+              'btInUse=${isBluetoothInUse()} btFailures=${btReconnectFailures()} '
+              'btTargetUnbonded=${btTargetUnbonded()}');
           _serverConnected = false;
         }
       });
     }
   }
 
-  // Issue repeated request/response RPCs.
-  Future<void> _refreshStateFromServer() async {
-    await Future.doWhile(() async {
-      await Future.delayed(const Duration(milliseconds: 100));
-      if (!_paintPending &&
-          !_updateInProgress &&
-          !shutdownInProgress &&
-          !_connectionDialogShowing &&
-          !_isPipMode) {
-        await _getFrameFromServer();
+  void _handleFrameResult(cedar_rpc.FrameResult response) {
+    rpcSucceeded();
+    if (!_serverConnected) {
+      _setServerTime(DateTime.now());
+      if (_mapPosition != null) {
+        _setObserverLocation(_mapPosition!);
       }
-      return true; // Forever!
-    });
+    }
+    _serverConnected = true;
+    everConnected = true;
+    _lastServerResponseTime = DateTime.now();
+    if (_inhibitRefresh) {
+      _prevFrameId = response.frameId;
+      _prevSolutionId = response.solutionId != 0 ? response.solutionId : null;
+    } else {
+      _paintPending = true;
+      setState(() {
+        setStateFromFrameResult(response);
+      });
+    }
+  }
+
+  // Issue a streaming GetFrames RPC, processing results until cancelled or
+  // error. Returns true if the stream ran (even if it errored), false if the
+  // server does not support streaming (UNIMPLEMENTED).
+  Future<bool> _streamFramesFromServer() async {
+    final request = cedar_rpc.FrameRequest(
+      prevSolutionId: _prevSolutionId,
+      prevFrameId: _prevSolutionId == null ? _prevFrameId : null,
+    );
+    try {
+      final c = await getClient();
+      final stream = c.getFrames(request);
+      // Watchdog: cancel the stream if no frame arrives within this window.
+      // Catches silently dead connections that produce no gRPC error.
+      const watchdogDuration = Duration(seconds: 10);
+      var watchdog = Timer(watchdogDuration, () {
+        debugPrint('getFrames watchdog: no frame for >10s, cancelling stream');
+        stream.cancel();
+      });
+      await for (final response in stream) {
+        watchdog.cancel();
+        if (shutdownInProgress || _isPipMode ||
+            _updateInProgress || _connectionDialogShowing) {
+          break;
+        }
+        _handleFrameResult(response);
+        // Wait for the UI to consume the frame before processing the next.
+        while (_paintPending) {
+          await Future.delayed(const Duration(milliseconds: 20));
+        }
+        watchdog = Timer(watchdogDuration, () {
+          debugPrint('getFrames watchdog: no frame for >10s, cancelling stream');
+          stream.cancel();
+        });
+      }
+      watchdog.cancel();
+      await stream.cancel();
+    } on BluetoothReconnectingException catch (e) {
+      // Expected quiet state while BT reconnects. Don't log per-poll or recycle
+      // the channel. Evaluate the dialog gate, then back off.
+      _lastConnectionError = e.toString();
+      setState(() {
+        Duration elapsed = DateTime.now().difference(_lastServerResponseTime);
+        if (_shouldShowConnectionDialog(elapsed)) {
+          debugPrint('serverConnected=false (getFrames reconnecting): '
+              'elapsed=${elapsed.inSeconds}s btFailures=${btReconnectFailures()} '
+              'btTargetUnbonded=${btTargetUnbonded()}');
+          _serverConnected = false;
+        }
+      });
+      await Future.delayed(const Duration(seconds: 1));
+    } catch (e) {
+      if (e is GrpcError && e.code == StatusCode.unimplemented) {
+        return false;
+      }
+      debugPrint("getFrames RPC error: $e");
+      _lastConnectionError = e.toString();
+      rpcFailed();
+      setState(() {
+        Duration elapsed = DateTime.now().difference(_lastServerResponseTime);
+        if (_shouldShowConnectionDialog(elapsed)) {
+          debugPrint('serverConnected=false (getFrames): elapsed=${elapsed.inSeconds}s '
+              'btInUse=${isBluetoothInUse()} btFailures=${btReconnectFailures()} '
+              'btTargetUnbonded=${btTargetUnbonded()}');
+          _serverConnected = false;
+        }
+      });
+    }
+    return true;
+  }
+
+  // Main frame-fetch loop. Uses streaming GetFrames if the server supports it,
+  // falling back to the legacy poll loop otherwise.
+  Future<void> _refreshStateFromServer() async {
+    // Try streaming first; if unsupported, fall through to poll loop.
+    while (_serverSupportsStreaming && !shutdownInProgress) {
+      while (_isPipMode || _updateInProgress || _connectionDialogShowing) {
+        if (shutdownInProgress) {
+          break;
+        }
+        await Future.delayed(const Duration(milliseconds: 200));
+      }
+      if (shutdownInProgress) {
+        break;
+      }
+      final supported = await _streamFramesFromServer();
+      if (!supported) {
+        _serverSupportsStreaming = false;
+        break;
+      }
+    }
+
+    // Legacy poll loop (server doesn't support GetFrames).
+    if (!_serverSupportsStreaming) {
+      while (!shutdownInProgress) {
+        await Future.delayed(const Duration(milliseconds: 100));
+        if (!_paintPending &&
+            !_updateInProgress &&
+            !_connectionDialogShowing &&
+            !_isPipMode) {
+          await _getFrameFromServer();
+        }
+      }
+    }
   }
 
   // Returns true if the error is a server-side semantic rejection (the channel
@@ -1109,12 +1304,13 @@ class MyHomePageState extends State<MyHomePage> {
     try {
       final c = await getClient();
       await c.initiateAction(request,
-          options: CallOptions(timeout: _rpcTimeout));
+          options: CallOptions(timeout: _rpcTimeoutForTransport()));
       return null;
     } catch (e) {
-      debugPrint("initiateAction error: $e");
       if (!_isSemanticGrpcError(e)) {
-        rpcFailed();
+        notifyRpcFailed('initiateAction error', e);
+      } else {
+        debugPrint('initiateAction error: $e');
       }
       if (e is GrpcError && e.message != null) {
         return e.message;
@@ -1190,11 +1386,10 @@ class MyHomePageState extends State<MyHomePage> {
     try {
       final c = await getClient();
       final infoResult = await c.getServerLog(request,
-          options: CallOptions(timeout: _rpcTimeout));
+          options: CallOptions(timeout: _rpcTimeoutForTransport()));
       return infoResult.logContent;
     } catch (e) {
-      debugPrint("getServerLogs error: $e");
-      rpcFailed();
+      notifyRpcFailed('getServerLogs error', e);
       return "";
     }
   }
@@ -1239,6 +1434,11 @@ class MyHomePageState extends State<MyHomePage> {
     return initiateAction(request);
   }
 
+  Future<void> setWifiEnabled(bool enabled) async {
+    final request = cedar_rpc.ActionRequest(wifiEnabled: enabled);
+    await initiateAction(request);
+  }
+
   Future<void> _cancelCalibration() async {
     final request = cedar_rpc.ActionRequest(cancelCalibration: true);
     await initiateAction(request);
@@ -1248,7 +1448,7 @@ class MyHomePageState extends State<MyHomePage> {
     try {
       final c = await getClient();
       final newPrefs = await c.updatePreferences(changedPrefs,
-          options: CallOptions(timeout: _rpcTimeout));
+          options: CallOptions(timeout: _rpcTimeoutForTransport()));
       setState(() {
         preferences = newPrefs;
         if (newPrefs.nightVisionTheme) {
@@ -1260,8 +1460,7 @@ class MyHomePageState extends State<MyHomePage> {
         settingsModel.preferencesProto = preferences!.deepCopy();
       });
     } catch (e) {
-      debugPrint("updatePreferences error: $e");
-      rpcFailed();
+      notifyRpcFailed('updatePreferences error', e);
     }
   }
 
@@ -1707,11 +1906,8 @@ class MyHomePageState extends State<MyHomePage> {
                                                 color: _solveColor(),
                                                 fontSize: 10 * panelScaleFactor),
                                             textScaler: textScaler(context))),
-                                    solveText(
-                                        boresightCatalogEntry!.entry.hasConstellation()
-                                            ? "${boresightCatalogEntry!.entry.objectType.label} in ${boresightCatalogEntry!.entry.constellation.label}"
-                                            : boresightCatalogEntry!.entry.objectType.label,
-                                        size: 10 * panelScaleFactor),
+                                    solveText(boresightCatalogEntry!.entry.objectType.label,
+                                              size: 10 * panelScaleFactor),
                                     if (boresightCatalogEntry!.entry.hasMagnitude())
                                       solveText(
                                           sprintf("mag %.2f", [boresightCatalogEntry!.entry.magnitude]),
@@ -2756,6 +2952,7 @@ class MyHomePageState extends State<MyHomePage> {
     resetConnectionTimer();
   }
 
+
   Future<void> _showConnectionRecoveryDialog() async {
     // Prevent showing multiple dialogs.
     if (_connectionDialogShowing) {
@@ -2763,33 +2960,35 @@ class MyHomePageState extends State<MyHomePage> {
     }
     _connectionDialogShowing = true;
 
-    List<CedarDevice>? deviceList;
-    if (isAndroid()) {
-      deviceList = await getBluetoothDevices();
-    }
+    try {
+      List<CedarDevice>? deviceList;
+      if (isAndroid()) {
+        deviceList = await getBluetoothDevices();
+      }
 
-    final title = everConnected
-        ? "Connection to $_productName lost"
-        : "Connect to $_productName";
+      final title = everConnected
+          ? "Connection to $_productName lost"
+          : "Connect to $_productName";
 
-    if (!mounted) {
+      if (!mounted) {
+        return;
+      }
+      await showConnectionRecoveryDialog(
+        context: context,
+        config: ConnectionRecoveryConfig(
+          productName: _productName,
+          title: title,
+          everConnected: everConnected,
+          devices: deviceList,
+          onDeviceSelected: (device) {
+            _selectDevice(device);
+          },
+          refreshDevices: isAndroid() ? () => getBluetoothDevices() : null,
+          errorMessage: _lastConnectionError,
+        ),
+      );
+    } finally {
       _connectionDialogShowing = false;
-      return;
     }
-    await showConnectionRecoveryDialog(
-      context: context,
-      config: ConnectionRecoveryConfig(
-        productName: _productName,
-        title: title,
-        everConnected: everConnected,
-        devices: deviceList,
-        onDeviceSelected: (device) {
-          _selectDevice(device);
-        },
-        refreshDevices: isAndroid() ? () => getBluetoothDevices() : null,
-        errorMessage: _lastConnectionError,
-      ),
-    );
-    _connectionDialogShowing = false;
   }
 } // MyHomePageState

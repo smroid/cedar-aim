@@ -36,6 +36,13 @@ void rpcFailedImpl() {
   }
 }
 
+// Web has no Bluetooth transport, so these are always the WiFi-only defaults.
+int btReconnectFailuresImpl() => 0;
+bool isBluetoothInUseImpl() => false;
+bool btTargetUnbondedImpl() => false;
+void btTeardownImpl() {}
+Future<void> preloadDeviceSelectionImpl() async {}
+
 Future<CedarClient> getClientImpl() async {
   _channel ??= GrpcWebClientChannel.xhr(Uri.base);
   return CedarClient(_channel!);
@@ -117,3 +124,5 @@ Future<void> setActiveDeviceImpl(CedarDevice device) async {
 Future<String> resolveCedarHostImpl() async {
   return 'cedar.local'; // Web doesn't need mDNS fallback.
 }
+
+String wifiDeviceAddressImpl() => 'cedar.local';

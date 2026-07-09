@@ -1,4 +1,4 @@
-// Copyright (c) 2024 Steven Rosenthal smr@dt3.org
+// Copyright (c) 2026 Steven Rosenthal smr@dt3.org
 // See LICENSE file in root directory for license terms.
 
 import 'package:cedar_flutter/cedar.pbgrpc.dart';
@@ -16,6 +16,17 @@ class CedarDevice {
   final String? name; // null for WiFi
 
   CedarDevice({required this.address, this.name});
+}
+
+/// Thrown by getClient() when a Bluetooth reconnect is in progress (either an
+/// attempt is running or we're in the quiet cooldown between attempts). This is
+/// an expected, transient state — not an error. Callers should treat it as
+/// "not ready yet, back off and retry" without logging it as an RPC failure or
+/// recycling the gRPC channel.
+class BluetoothReconnectingException implements Exception {
+  const BluetoothReconnectingException();
+  @override
+  String toString() => 'Bluetooth not connected (reconnecting)';
 }
 
 bool isWeb() {
@@ -53,6 +64,9 @@ void rpcFailed() {
 Future<CedarClient> getClient() async {
   try {
     return await getClientImpl();
+  } on BluetoothReconnectingException {
+    // Expected transient state; caller handles it quietly. Don't log.
+    rethrow;
   } catch (e) {
     debugPrint('getClient: $e');
     rethrow;
@@ -145,6 +159,20 @@ Future<void> startAppUpdate() async {
   }
 }
 
+int btReconnectFailures() => btReconnectFailuresImpl();
+bool isBluetoothInUse() => isBluetoothInUseImpl();
+void btTeardown() => btTeardownImpl();
+
+// True once we detect the currently-selected BT device is no longer bonded
+// (e.g. unpaired from Android Bluetooth settings).
+bool btTargetUnbonded() => btTargetUnbondedImpl();
+
+/// Loads the persisted device selection early (call from initState) so
+/// isBluetoothInUse() is correct before the first build().
+Future<void> preloadDeviceSelection() async {
+  await preloadDeviceSelectionImpl();
+}
+
 Future<void> cleanup() async {
   await cleanupImpl();
 }
@@ -167,3 +195,8 @@ Future<void> setActiveDevice(CedarDevice device) async {
 Future<String> resolveCedarHost() async {
   return resolveCedarHostImpl();
 }
+
+/// The CedarDevice representing the WiFi transport (name is null, marking it
+/// as WiFi rather than Bluetooth). Used to let the user manually switch back
+/// to WiFi, e.g. from the connection recovery dialog.
+CedarDevice wifiDevice() => CedarDevice(address: wifiDeviceAddressImpl());

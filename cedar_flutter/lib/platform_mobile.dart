@@ -1,4 +1,4 @@
-// Copyright (c) 2024 Steven Rosenthal smr@dt3.org
+// Copyright (c) 2026 Steven Rosenthal smr@dt3.org
 // See LICENSE file in root directory for license terms.
 
 // Mobile impl for platform-specific functions.
@@ -44,13 +44,45 @@ String _btUuid = "4e5d4c88-2965-423f-9111-28a506720760";
 
 String _wifiAddress = "cedar.local";
 CedarDevice _activeDevice = CedarDevice(address: _wifiAddress);
+
+String wifiDeviceAddressImpl() => _wifiAddress;
 ClientChannel? _channel;
 cedar_rpc.CedarClient? _client;
 BluetoothGrpcProxy? _activeProxy;
 BluetoothConnection? _bluetoothConnection;
 int? _activeProxyPort; // Port assigned by OS when using port 0.
-// Only request to turn on Bluetooth once while it is off
+
+// Only request to turn on Bluetooth once while it is off.
 bool _requestedBtOn = false;
+
+// Consecutive BT reconnect failures since last successful frame.
+int _btReconnectFailures = 0;
+
+// True when we detect the target BT device is no longer bonded (e.g. the user
+// unpaired it from Android Bluetooth settings).
+bool _btTargetUnbonded = false;
+
+// True when the user has selected a BT device. Persists for the life of the
+// BT session — cleared only when the user explicitly selects a WiFi device.
+// We never auto-fall-back to WiFi: when BT is in use the server might turn its
+// WiFi off, so there is no WiFi endpoint to fall back to.
+bool _btDeviceSelected = false;
+
+// Single-flight guard: the in-flight reconnect future, if any. Ensures only
+// one connect attempt (one RFCOMM page) is ever outstanding.
+Future<void>? _btReconnectInFlight;
+
+// Time of the last actual connect attempt, used to enforce the cooldown below.
+DateTime? _lastBtAttemptTime;
+
+// Cooldown between reconnect attempts after a failure. Observed behavior: after
+// an unclean BT drop the stale link self-heals in ~22s, and re-paging before
+// then not only fails but risks wedging the link. So after a failed attempt we
+// stay quiet (no paging) until this much time has elapsed, landing the next
+// attempt right around when the link clears. The FIRST attempt after a drop is
+// not gated (a clean disconnect can reconnect immediately). One phone's data —
+// tune as we gather more.
+const Duration _btReconnectCooldown = Duration(seconds: 25);
 
 const _options = ChannelOptions(
   credentials: ChannelCredentials.insecure(),
@@ -86,7 +118,16 @@ Future<String> resolveCedarHostImpl() async {
   return _resolvedCedarHost!;
 }
 
+int btReconnectFailuresImpl() => _btReconnectFailures;
+bool isBluetoothInUseImpl() => _btDeviceSelected;
+bool btTargetUnbondedImpl() => _btTargetUnbonded;
+
 void rpcSucceededImpl() {
+  if (_btReconnectFailures > 0) {
+    debugPrint('BT rpcSucceeded: resetting failure count from $_btReconnectFailures');
+    _btReconnectFailures = 0;
+  }
+  _btTargetUnbonded = false;
   if (Platform.isAndroid && !_boundToWifi && _activeDevice.name == null) {
     _networkChannel.invokeMethod<bool>('bindToWifi').then((bound) {
       if (bound == true) {
@@ -98,6 +139,25 @@ void rpcSucceededImpl() {
     });
   }
 }
+
+// Tears down the BT connection and proxy so the next getClientImpl() call
+// re-establishes from scratch. Fire-and-forget; safe to call from sync context.
+void btTeardownImpl() {
+  if (!_btDeviceSelected) {
+    return;
+  }
+  debugPrint('BT teardown: closing connection and proxy');
+  _client = null;
+  _activeProxyPort = null;
+  final proxy = _activeProxy;
+  _activeProxy = null;
+  final conn = _bluetoothConnection;
+  _bluetoothConnection = null;
+  proxy?.stop().catchError((e) => debugPrint('btTeardown proxy stop error: $e'));
+  conn?.close();
+  conn?.dispose();
+}
+
 void rpcFailedImpl() {
   // On RPC failure, just clear the client so next getClientImpl() will create
   // a fresh one. Don't call cleanupImpl() here - it can race with device
@@ -147,6 +207,77 @@ Future<void> _shutdownChannel({int timeoutSeconds = 2}) async {
 // Track if we've loaded the selected device from SharedPreferences.
 bool _deviceLoaded = false;
 
+// Call early (e.g. from initState) to set _btDeviceSelected before the first
+// build() runs, so the connection dialog gate works correctly from the start.
+Future<void> preloadDeviceSelectionImpl() async {
+  if (_deviceLoaded) return;
+  final prefs = await SharedPreferences.getInstance();
+  final deviceName = prefs.getString('selected_device_name');
+  _btDeviceSelected = deviceName != null;
+}
+
+// Returns true if the target device is still bonded, or if the check itself
+// fails or times out — a flaky bond-state query shouldn't block reconnection.
+// Returns false only when the device is confirmed unbonded.
+Future<bool> _isTargetDeviceBonded(String address) async {
+  try {
+    final bondedDevices = await FlutterBlueClassic()
+        .bondedDevices
+        .timeout(const Duration(seconds: 3), onTimeout: () => null);
+    if (bondedDevices == null) {
+      return true;
+    }
+    return bondedDevices.any((d) =>
+        d.address == address && d.bondState == BluetoothBondState.bonded);
+  } catch (e) {
+    debugPrint('Error checking bond state for $address: $e');
+    return true;
+  }
+}
+
+// Performs at most one BT connect attempt, honoring the reconnect cooldown.
+// On the first attempt after a drop (failures == 0) it connects immediately.
+// After a failure it stays quiet until _btReconnectCooldown has elapsed since
+// the last attempt, so we don't re-page while the stale link is self-healing.
+// On success sets up _activeProxyPort; on failure or while cooling down leaves
+// _activeProxyPort null so the caller treats BT as not-yet-ready and retries.
+Future<void> _reconnectBluetooth() async {
+  if (_btReconnectFailures > 0 && _lastBtAttemptTime != null) {
+    final since = DateTime.now().difference(_lastBtAttemptTime!);
+    final remaining = _btReconnectCooldown - since;
+    if (remaining > Duration.zero) {
+      // Cooling down — leave the link alone. Caller will try again later.
+      return;
+    }
+  }
+  _lastBtAttemptTime = DateTime.now();
+
+  if (!await _isTargetDeviceBonded(_activeDevice.address)) {
+    // Unbonded is a permanent condition until the user re-pairs — waiting
+    // out the cooldown won't help. Count it as a real failed attempt (keeps
+    // the failure counter/log honest) but set the fast-path flag so the
+    // dialog gate doesn't need to wait for the full failure threshold.
+    _btReconnectFailures++;
+    _btTargetUnbonded = true;
+    debugPrint('BT reconnect: ${_activeDevice.address} is no longer bonded '
+        '(consecutive failures: $_btReconnectFailures)');
+    return;
+  }
+
+  try {
+    await _establishBluetoothConnection(_activeDevice.address);
+    if (_btReconnectFailures > 0) {
+      debugPrint('BT reconnect succeeded after $_btReconnectFailures failure(s)');
+    }
+    _btReconnectFailures = 0;
+  } catch (e) {
+    _btReconnectFailures++;
+    debugPrint('BT reconnect failed (consecutive failures: $_btReconnectFailures): $e');
+    // No inline delay: the cooldown is enforced by time-gating the next
+    // attempt, which keeps the link quiet rather than re-paging immediately.
+  }
+}
+
 Future<CedarClient> getClientImpl() async {
   // On first call, load persisted device selection.
   if (!_deviceLoaded) {
@@ -156,76 +287,111 @@ Future<CedarClient> getClientImpl() async {
     final deviceAddress = prefs.getString('selected_device_address');
     if (deviceAddress != null) {
       debugPrint('Loaded device addr $deviceAddress name $deviceName');
+      _btDeviceSelected = deviceName != null;
       final device = CedarDevice(address: deviceAddress, name: deviceName);
       await setActiveDeviceImpl(device);
     }
   }
 
-  // Always try WiFi first if we don't have a client.
-  if (_client == null) {
+  // For Android with a Bluetooth device, establish or check the connection.
+  // We never fall back to WiFi here: when BT is in use the server might turn
+  // its WiFi off, so there is no WiFi endpoint. On a drop we patiently
+  // reconnect over BT (see _reconnectBluetooth).
+  //
+  // NOTE: gate on the BT link's health, NOT on `_client`. When the *remote*
+  // closes the link (onDisconnected by remote), the proxy tears itself down
+  // and the local proxy port becomes dead, but `_client` is left non-null.
+  // If we trusted a non-null `_client` we'd hand back a client pointing at a
+  // dead 127.0.0.1 port, and every RPC would fail with "Connection refused"
+  // forever with nothing driving a reconnect. So a non-null `_client` is only
+  // valid while the underlying BT link is actually connected.
+  if (isAndroidImpl() && _activeDevice.name != null) {
+    final btAlive = _bluetoothConnection?.isConnected == true;
+    if (btAlive && _client != null) {
+      // Live link and a valid client — reuse it.
+      return _client!;
+    }
+    if (!btAlive) {
+      // Link is down (never connected, we tore it down, or the remote closed
+      // it). Drop any stale client/channel and reconnect via a single-flight
+      // attempt so only one RFCOMM page is ever outstanding — parallel pages
+      // churn/wedge the link. If a reconnect is already running, await it
+      // rather than starting a new one.
+      _client = null;
+      _btReconnectInFlight ??= _reconnectBluetooth();
+      final inFlight = _btReconnectInFlight!;
+      try {
+        await inFlight;
+      } finally {
+        // Only the starter clears the guard (identity check guards against a
+        // newer attempt that may have been started in the meantime).
+        if (identical(_btReconnectInFlight, inFlight)) {
+          _btReconnectInFlight = null;
+        }
+      }
+    }
+    // If we now have a live link with a proxy port, (re)build the client.
+    if (_bluetoothConnection?.isConnected == true && _activeProxyPort != null) {
+      await _channel?.shutdown();
+      _channel = ClientChannel(
+        InternetAddress.loopbackIPv4.address,
+        port: _activeProxyPort!,
+        options: const ChannelOptions(
+          credentials: ChannelCredentials.insecure(),
+        ),
+      );
+      _client = CedarClient(_channel!);
+      return _client!;
+    }
+    // Not connected yet (still cooling down, or attempt failed). Signal the
+    // caller that BT isn't ready; the poll loop will call us again. Do NOT
+    // fall through to the WiFi probe below.
+    throw const BluetoothReconnectingException();
+  }
+
+  // Try WiFi if we don't have a client (no BT device selected, or BT fell back).
+  if (_client == null && (!isAndroidImpl() || _activeDevice.name == null)) {
     await _shutdownChannel();
     _activeProxy = null;
     _activeProxyPort = null;
 
     // Resolve cedar.local, using cached result if available.
     final addressToTry = await resolveCedarHostImpl();
-    const readyToConnect = true;
 
-    // Attempt RPC connection with the resolved address or fallback IP.
-    if (readyToConnect) {
-      _channel = ClientChannel(addressToTry, port: 80, options: _options);
-      _client = CedarClient(_channel!);
-
-      // Test the WiFi connection before returning. Use getFrame() since it's
-      // been available in all server versions (unlike newer RPCs).
-      try {
-        final request = cedar_rpc.FrameRequest()
-          ..nonBlocking = true;
-        await _client!
-            .getFrame(request,
-                options: CallOptions(
-                  timeout: const Duration(seconds: 5),
-                ))
-            .timeout(const Duration(seconds: 7), onTimeout: () {
-          throw TimeoutException('WiFi connection test timed out connecting to $addressToTry:80');
-        });
-        debugPrint('WiFi connection test succeeded');
-        // Update active device to reflect WiFi usage.
-        if (isAndroidImpl()) {
-          _activeDevice = CedarDevice(address: addressToTry);
-        }
-        return _client!;
-      } catch (e) {
-        _client = null;
-        await _shutdownChannel(timeoutSeconds: 1);
-        if (!isAndroidImpl() || _activeDevice.name == null) {
-          // No Bluetooth fallback available, rethrow the error with context.
-          debugPrint('WiFi connection test failed connecting to $addressToTry:80: $e');
-          throw Exception('Failed to connect to Cedar ($addressToTry:80): $e');
-        }
-      }
-    }
-  }
-
-  // For Android with Bluetooth device, establish or check connection.
-  if (isAndroidImpl() && _activeDevice.name != null) {
-    if (_bluetoothConnection?.isConnected == true) {
-      return _client!;
-    }
-    if (_activeProxyPort == null) {
-      await _establishBluetoothConnection(_activeDevice.address);
-    }
-    await _channel?.shutdown();
-    _channel = ClientChannel(
-      InternetAddress.loopbackIPv4.address,
-      port: _activeProxyPort!,
-      options: const ChannelOptions(
-        credentials: ChannelCredentials.insecure(),
-      ),
-    );
+    _channel = ClientChannel(addressToTry, port: 80, options: _options);
     _client = CedarClient(_channel!);
+
+    // Test the WiFi connection before returning. Use getFrame() since it's
+    // been available in all server versions (unlike newer RPCs).
+    try {
+      final request = cedar_rpc.FrameRequest()
+        ..nonBlocking = true;
+      await _client!
+          .getFrame(request,
+              options: CallOptions(
+                timeout: const Duration(seconds: 5),
+              ))
+          .timeout(const Duration(seconds: 7), onTimeout: () {
+        throw TimeoutException('WiFi connection test timed out connecting to $addressToTry:80');
+      });
+      debugPrint('WiFi connection test succeeded');
+      // Update active device to reflect WiFi usage.
+      if (isAndroidImpl()) {
+        _activeDevice = CedarDevice(address: addressToTry);
+      }
+      return _client!;
+    } catch (e) {
+      _client = null;
+      await _shutdownChannel(timeoutSeconds: 1);
+      // No Bluetooth fallback available, rethrow the error with context.
+      debugPrint('WiFi connection test failed connecting to $addressToTry:80: $e');
+      throw Exception('Failed to connect to Cedar ($addressToTry:80): $e');
+    }
   }
 
+  if (_client == null) {
+    throw Exception('No client available');
+  }
   return _client!;
 }
 
@@ -341,9 +507,7 @@ Future<void> startAppUpdateImpl() async {
 
 Future<void> cleanupImpl() async {
   _client = null;
-  final channel = _channel;
-  _channel = null;
-  await channel?.shutdown();
+  await _shutdownChannel();
   await _activeProxy?.stop();
   await _bluetoothConnection?.close();
   _bluetoothConnection?.dispose();
@@ -365,7 +529,8 @@ Future<List<CedarDevice>> getBluetoothDevicesImpl() async {
   if (Platform.isAndroid) {
     try {
       final flutterBlueClassic = FlutterBlueClassic();
-      final bondedDevices = await flutterBlueClassic.bondedDevices;
+      final bondedDevices = await flutterBlueClassic.bondedDevices
+          .timeout(const Duration(seconds: 3), onTimeout: () => []);
       if (bondedDevices == null) {
         return [];
       }
@@ -393,6 +558,9 @@ Future<List<CedarDevice>> getBluetoothDevicesImpl() async {
 Future<void> setActiveDeviceImpl(CedarDevice device) async {
   if (Platform.isAndroid) {
     _activeDevice = device;
+    _btDeviceSelected = device.name != null;
+    _btReconnectFailures = 0;
+    _btTargetUnbonded = false;
 
     // Clean up any existing connection.
     await cleanupImpl();

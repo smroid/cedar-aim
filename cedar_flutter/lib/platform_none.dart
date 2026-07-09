@@ -17,6 +17,11 @@ bool isIOSImpl() {
   throw UnimplementedError("No impl in platform_none");
 }
 
+int btReconnectFailuresImpl() => 0;
+bool isBluetoothInUseImpl() => false;
+bool btTargetUnbondedImpl() => false;
+void btTeardownImpl() {}
+
 void rpcSucceededImpl() {
   throw UnimplementedError("No impl in platform_none");
 }
@@ -81,6 +86,12 @@ Future<void> setActiveDeviceImpl(CedarDevice device) async {
   throw UnimplementedError("No impl in platform_none");
 }
 
+Future<void> preloadDeviceSelectionImpl() async {}
+
 Future<String> resolveCedarHostImpl() async {
+  throw UnimplementedError("No impl in platform_none");
+}
+
+String wifiDeviceAddressImpl() {
   throw UnimplementedError("No impl in platform_none");
 }

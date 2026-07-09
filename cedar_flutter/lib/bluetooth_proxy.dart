@@ -19,15 +19,41 @@ class BluetoothGrpcProxy {
   // 0 (default) lets OS assign an available port.
   Future<int> start({int port = 0}) async {
     _server = await ServerSocket.bind(InternetAddress.loopbackIPv4, port);
+
+    // Set up the BT→TCP forwarder once. It writes to whatever _clientSocket is
+    // currently connected; drops data if no client is connected. This avoids
+    // the "stream already listened to" crash that occurs when re-subscribing to
+    // a single-subscription stream on reconnect.
+    _bluetoothSubscription = _connection.input?.listen(
+      (Uint8List data) {
+        final socket = _clientSocket;
+        if (socket == null) return;
+        try {
+          socket.add(data);
+        } catch (e) {
+          debugPrint('Error writing to Socket: $e');
+          _disconnectClient();
+        }
+      },
+      onError: (e) {
+        debugPrint('Bluetooth input error: $e');
+        stop();
+      },
+      onDone: () {
+        // BT connection closed — full teardown.
+        stop();
+      },
+    );
+
     _server!.listen((Socket socket) {
       if (_clientSocket != null) {
-        // We only support one client (the local gRPC client)
+        // Only one gRPC client at a time.
         socket.destroy();
         return;
       }
       _clientSocket = socket;
 
-      // Forward TCP (gRPC) data to Bluetooth output
+      // Forward TCP (gRPC) data to Bluetooth output.
       socket.listen(
         (Uint8List data) {
           try {
@@ -39,34 +65,23 @@ class BluetoothGrpcProxy {
         },
         onError: (e) {
           debugPrint('Socket error: $e');
-          stop();
+          _disconnectClient();
         },
         onDone: () {
-          stop();
-        },
-      );
-
-      // Forward Bluetooth input to TCP (gRPC)
-      _bluetoothSubscription = _connection.input?.listen(
-        (Uint8List data) {
-          try {
-            socket.add(data);
-          } catch (e) {
-            debugPrint('Error writing to Socket: $e');
-            stop();
-          }
-        },
-        onError: (e) {
-          debugPrint('Bluetooth input error: $e');
-          stop();
-        },
-        onDone: () {
-          stop();
+          // gRPC client closed this connection (e.g. stream cancel). Drop the
+          // client socket so the next getClient() can reconnect; keep the proxy
+          // and BT connection alive.
+          _disconnectClient();
         },
       );
     });
 
     return _server!.port;
+  }
+
+  void _disconnectClient() {
+    _clientSocket?.destroy();
+    _clientSocket = null;
   }
 
   Future<void> stop() async {
