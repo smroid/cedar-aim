@@ -194,10 +194,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_blue_classic
-      sha256: "67399e0a7cc9594b15dd594254b9afc8d6ccaecbda5a82b452edf353e8f05fb2"
+      sha256: "2f40b4c01405c5f066428b8df86c4080fc2f63969bd3bf9ae21554bc61ed58a0"
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.8"
+    version: "0.0.9"
   flutter_lints:
     dependency: "direct dev"
     description:
