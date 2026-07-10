@@ -2985,6 +2985,9 @@ class MyHomePageState extends State<MyHomePage> {
           },
           refreshDevices: isAndroid() ? () => getBluetoothDevices() : null,
           errorMessage: _lastConnectionError,
+          onWifiRequested: () async {
+            await initiateAction(cedar_rpc.ActionRequest(wifiEnabled: true));
+          },
         ),
       );
     } finally {

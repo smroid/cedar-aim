@@ -13,6 +13,10 @@ class ConnectionRecoveryConfig {
   final Function(CedarDevice)? onDeviceSelected;
   final Future<List<CedarDevice>> Function()? refreshDevices;
   final String? errorMessage;
+  // Issues the server-side action to bring the WiFi access point back up.
+  // Called (over the current transport, e.g. BT) before switching to WiFi —
+  // best-effort, since a manual power-cycle also brings WiFi back.
+  final Future<void> Function()? onWifiRequested;
 
   ConnectionRecoveryConfig({
     required this.productName,
@@ -22,6 +26,7 @@ class ConnectionRecoveryConfig {
     this.onDeviceSelected,
     this.refreshDevices,
     this.errorMessage,
+    this.onWifiRequested,
   });
 }
 
@@ -87,6 +92,17 @@ Future<void> _selectDevice(
 /// user picks a Bluetooth device again (e.g. from this same dialog, should a
 /// WiFi connection problem bring them back here).
 Future<void> _selectWifi(ConnectionRecoveryConfig config) async {
+  // Ask the server to bring its WiFi access point up before switching this
+  // client to WiFi — otherwise there may be nothing to connect to yet.
+  // Sent over the current transport (e.g. BT), so must happen before
+  // _selectDevice() switches us away from it. Best-effort: proceed with the
+  // switch even if this fails (e.g. the user already power-cycled the
+  // device, which also brings WiFi back).
+  try {
+    await config.onWifiRequested?.call();
+  } catch (e) {
+    debugPrint('Error requesting WiFi enable: $e');
+  }
   await _selectDevice(wifiDevice(), config);
 }
 
@@ -273,10 +289,11 @@ Future<void> showConnectionRecoveryDialog({
             ),
             content: content,
             actions: [
-              // Switch to WiFi (Android only) — e.g. after power-cycling the
-              // Hopper, which reverts it to WiFi. Effective until the user
-              // picks a Bluetooth device again, including from this same
-              // dialog.
+              // Switch to WiFi (Android only). Asks the server to bring its
+              // WiFi access point back up (see onWifiRequested), so this
+              // works even if the user hasn't power-cycled the device.
+              // Effective until the user picks a Bluetooth device again,
+              // including from this same dialog.
               if (isAndroid())
                 TextButton.icon(
                   icon: const Icon(Icons.wifi),
