@@ -2,7 +2,7 @@
 //  Generated code. Do not modify.
 //  source: cedar_sky.proto
 //
-// @dart = 2.12
+// @dart = 3.3
 
 // ignore_for_file: annotate_overrides, camel_case_types, comment_references
 // ignore_for_file: constant_identifier_names, library_prefixes
@@ -15,8 +15,13 @@ import 'package:protobuf/protobuf.dart' as $pb;
 
 class Ordering extends $pb.ProtobufEnum {
   static const Ordering UNSPECIFIED = Ordering._(0, _omitEnumNames ? '' : 'UNSPECIFIED');
+  /// Brightest first.
   static const Ordering BRIGHTNESS = Ordering._(1, _omitEnumNames ? '' : 'BRIGHTNESS');
+  /// Closest first. If no plate solution is available, reverts to brightness
+  /// ordering.
   static const Ordering SKY_LOCATION = Ordering._(2, _omitEnumNames ? '' : 'SKY_LOCATION');
+  /// Highest first. If observer geolocation is unknown, reverts to brightness
+  /// ordering.
   static const Ordering ELEVATION = Ordering._(3, _omitEnumNames ? '' : 'ELEVATION');
 
   static const $core.List<Ordering> values = <Ordering> [
@@ -29,7 +34,7 @@ class Ordering extends $pb.ProtobufEnum {
   static final $core.Map<$core.int, Ordering> _byValue = $pb.ProtobufEnum.initByValue(values);
   static Ordering? valueOf($core.int value) => _byValue[value];
 
-  const Ordering._($core.int v, $core.String n) : super(v, n);
+  const Ordering._(super.v, super.n);
 }
 
 

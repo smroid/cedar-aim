@@ -325,7 +325,7 @@ class ServerInformation extends $pb.GeneratedMessage {
   @$pb.TagNumber(17)
   ConnectionStatus ensureConnectionStatus() => $_ensure(16);
 
-  /// Recent system load average (number of runnable/waiting processes).
+  /// Recent total system CPU usage, in cores (e.g. 1.0 = one full core).
   @$pb.TagNumber(18)
   $core.double get systemLoadAverage => $_getN(17);
   @$pb.TagNumber(18)
