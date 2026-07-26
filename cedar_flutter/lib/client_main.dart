@@ -2568,7 +2568,7 @@ class MyHomePageState extends State<MyHomePage> {
   }
 
   // Width of the screen-edge band that opens the drawer when swiped inward.
-  static const double _kEdgeSwipeWidth = 100.0;
+  static const double _kEdgeSwipeWidth = 50.0;
   // Inward travel needed before the swipe opens the drawer. Above kTouchSlop
   // so an imprecise tap can't trigger it.
   static const double _kEdgeSwipeThreshold = 24.0;
@@ -2888,7 +2888,7 @@ class MyHomePageState extends State<MyHomePage> {
                             : _badServerState(),
                         // Swipe band, below the menu button in the Stack.
                         _edgeSwipeZone(),
-                        // Menu icon positioned at top when in fullscreen mode
+                        // Menu icon positioned at top when in fullscreen mode.
                         Positioned(
                           left: _rightHanded ? null : 0,
                           right: _rightHanded ? 0 : null,
