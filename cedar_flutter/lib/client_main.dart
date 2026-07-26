@@ -2559,6 +2559,57 @@ class MyHomePageState extends State<MyHomePage> {
     _scaffoldKey.currentState?.closeEndDrawer();
   }
 
+  void openDrawer() {
+    if (_rightHanded) {
+      _scaffoldKey.currentState?.openEndDrawer();
+    } else {
+      _scaffoldKey.currentState?.openDrawer();
+    }
+  }
+
+  // Width of the screen-edge band that opens the drawer when swiped inward.
+  static const double _kEdgeSwipeWidth = 100.0;
+  // Inward travel needed before the swipe opens the drawer. Above kTouchSlop
+  // so an imprecise tap can't trigger it.
+  static const double _kEdgeSwipeThreshold = 24.0;
+
+  double _edgeSwipeDx = 0;
+  bool _edgeSwipeOpened = false;
+
+  // Screen-edge swipe band. We turn off Scaffold's built-in open-drag gesture
+  // (see the Scaffold below) because it overlays a full-height, translucent
+  // drag strip on top of the body: the menu button sits inside it, so a tap
+  // with a little sideways travel was won by that drag recognizer, which then
+  // settled back closed — the drawer would slide out and immediately snap in.
+  // Placing our band *below* the menu button in the Stack means a touch on the
+  // button never reaches it, so the button's tap can no longer be stolen.
+  Widget _edgeSwipeZone() {
+    return Positioned(
+      top: 0,
+      bottom: 0,
+      left: _rightHanded ? null : 0,
+      right: _rightHanded ? 0 : null,
+      width: _kEdgeSwipeWidth,
+      child: GestureDetector(
+        behavior: HitTestBehavior.translucent,
+        excludeFromSemantics: true,
+        onHorizontalDragStart: (_) {
+          _edgeSwipeDx = 0;
+          _edgeSwipeOpened = false;
+        },
+        onHorizontalDragUpdate: (details) {
+          _edgeSwipeDx += details.delta.dx;
+          // Inward is leftward for the right-edge band, rightward for the left.
+          final inward = _rightHanded ? -_edgeSwipeDx : _edgeSwipeDx;
+          if (!_edgeSwipeOpened && inward > _kEdgeSwipeThreshold) {
+            _edgeSwipeOpened = true;
+            openDrawer();
+          }
+        },
+      ),
+    );
+  }
+
   Widget _drawer() {
     return CedarDrawer(
       controller: CedarDrawerController(
@@ -2835,6 +2886,8 @@ class MyHomePageState extends State<MyHomePage> {
                                 Size(constraints.maxWidth,
                                     constraints.maxHeight))
                             : _badServerState(),
+                        // Swipe band, below the menu button in the Stack.
+                        _edgeSwipeZone(),
                         // Menu icon positioned at top when in fullscreen mode
                         Positioned(
                           left: _rightHanded ? null : 0,
@@ -2845,21 +2898,9 @@ class MyHomePageState extends State<MyHomePage> {
                             left: !_rightHanded,
                             top: true,
                             bottom: false,
-                            child: Padding(
-                              padding: EdgeInsets.only(
-                                right: (isIOS() && _rightHanded) ? 8.0 : 0.0,
-                                left: (isIOS() && !_rightHanded) ? 8.0 : 0.0,
-                              ),
-                              child: IconButton(
-                                icon: const Icon(Icons.menu),
-                                onPressed: () {
-                                  if (_rightHanded) {
-                                    _scaffoldKey.currentState!.openEndDrawer();
-                                  } else {
-                                    _scaffoldKey.currentState!.openDrawer();
-                                  }
-                                },
-                              ),
+                            child: IconButton(
+                              icon: const Icon(Icons.menu),
+                              onPressed: openDrawer,
                             ),
                           ),
                         ),
@@ -2877,7 +2918,11 @@ class MyHomePageState extends State<MyHomePage> {
                 )),
       drawer: _drawer(),
       endDrawer: _drawer(),
-      drawerEdgeDragWidth: 100,
+      // Scaffold's built-in open-drag gesture is off: its drag strip overlays
+      // the body and steals taps from edge-anchored buttons. _edgeSwipeZone()
+      // provides swipe-to-open instead.
+      drawerEnableOpenDragGesture: false,
+      endDrawerEnableOpenDragGesture: false,
     );
   }
 
