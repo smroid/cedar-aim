@@ -3,6 +3,7 @@
 
 import 'dart:async';
 import 'dart:math' as math;
+import 'dart:typed_data';
 import 'package:cedar_flutter/cedar.pb.dart';
 import 'package:cedar_flutter/cedar_sky.pb.dart';
 import 'package:cedar_flutter/connection_recovery_dialog.dart';
@@ -25,7 +26,9 @@ import 'package:flutter/widgets.dart' as flutter_widgets;
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart' as dart_widgets;
+import 'package:gal/gal.dart';
 import 'package:grpc/grpc.dart';
+import 'package:intl/intl.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:pip/pip.dart';
 import 'package:provider/provider.dart';
@@ -1423,9 +1426,48 @@ class MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  Future<void> _saveImage() async {
-    final request = cedar_rpc.ActionRequest(saveImage: true);
-    await initiateAction(request);
+  // Fetches the current camera image via GetImage() and saves it to the
+  // device's photo gallery. Returns the saved image's filename on success, or
+  // null on error.
+  // Note: when iOS is scaffolded (ios/Runner/Info.plist doesn't exist yet in
+  // this repo), add NSPhotoLibraryAddUsageDescription there for gal to work.
+  Future<String?> _saveImage() async {
+    final request = cedar_rpc.ImageRequest(
+        format: cedar_rpc.ImageFormat.JPEG, quality: 95);
+    try {
+      if (!await Gal.requestAccess()) {
+        notifyRpcFailed('getImage error', 'Photo library access denied');
+        return null;
+      }
+      final c = await getClient();
+      final stream = c.getImage(request,
+          options: CallOptions(timeout: _rpcTimeoutForTransport()));
+      final bytes = BytesBuilder(copy: false);
+      DateTime? acquireTime;
+      double? exposureMs;
+      await for (final response in stream) {
+        // Only the first ImageResult has the metadata fields populated.
+        if (acquireTime == null && response.hasAcquireTime()) {
+          acquireTime = response.acquireTime.toDateTime().toLocal();
+        }
+        if (exposureMs == null && response.hasExposureTime()) {
+          final e = response.exposureTime;
+          exposureMs = e.seconds.toInt() * 1000 + e.nanos / 1000000;
+        }
+        bytes.add(response.imageChunk);
+      }
+      final timestamp =
+          DateFormat('yyyy-MM-dd_HH-mm-ss').format(acquireTime ?? DateTime.now());
+      final exposureSuffix = exposureMs != null
+          ? '_${exposureMs < 1 ? exposureMs.toStringAsFixed(2) : exposureMs.round()}ms'
+          : '';
+      final name = 'img_$timestamp$exposureSuffix';
+      await Gal.putImageBytes(bytes.takeBytes(), name: name);
+      return name;
+    } catch (e) {
+      notifyRpcFailed('getImage error', e);
+      return null;
+    }
   }
 
   Future<String?> updateWifi(String ssid, String psk, int channel) async {

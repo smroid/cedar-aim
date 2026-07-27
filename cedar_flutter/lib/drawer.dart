@@ -47,7 +47,7 @@ class CedarDrawerController {
   final AppLogCallbacks? appLogCallbacks;
   final void Function(bool setupMode, bool focusAid) setOperatingMode;
   final void Function(String) setDemoImage;
-  final Future<void> Function() saveImage;
+  final Future<String?> Function() saveImage;
   final Future<String> Function() getServerLogs;
   final Future<void> Function() crashServer;
   final Future<void> Function() restartCedarServer;
@@ -684,7 +684,7 @@ class CedarDrawer extends StatelessWidget {
         ],
       ],
 
-      // Save image button (conditional)
+      // Save image button.
       if (controller.advanced) ...[
         Column(children: [
           SizedBox(height: _kDrawerSpacing * textScaleFactor(controller.context)),
@@ -694,11 +694,42 @@ class CedarDrawer extends StatelessWidget {
                   label: _scaledText("Save image"),
                   icon: const Icon(Icons.add_a_photo_outlined),
                   onPressed: () async {
-                    await controller.saveImage();
-                    // Brief delay to give user feedback that action was triggered
-                    await Future.delayed(const Duration(milliseconds: 500));
-                    if (controller.context.mounted) {
+                    final context = controller.context;
+                    showDialog(
+                      context: context,
+                      barrierDismissible: false,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                _scaledText("Saving image"),
+                                const SizedBox(height: 10),
+                                const CircularProgressIndicator()
+                              ]),
+                        );
+                      },
+                    );
+                    final started = DateTime.now();
+                    String? path;
+                    try {
+                      path = await controller.saveImage();
+                    } catch (e) {
+                      path = null;
+                    }
+                    final elapsed = DateTime.now().difference(started);
+                    const minDuration = Duration(milliseconds: 500);
+                    if (elapsed < minDuration) {
+                      await Future.delayed(minDuration - elapsed);
+                    }
+                    if (context.mounted) {
+                      Navigator.of(context).pop(); // Close "Saving image" dialog
                       controller.closeDrawer();
+                      if (path == null) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Failed to save image')),
+                        );
+                      }
                     }
                   }))
         ]),
