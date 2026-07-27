@@ -1429,8 +1429,6 @@ class MyHomePageState extends State<MyHomePage> {
   // Fetches the current camera image via GetImage() and saves it to the
   // device's photo gallery. Returns the saved image's filename on success, or
   // null on error.
-  // Note: when iOS is scaffolded (ios/Runner/Info.plist doesn't exist yet in
-  // this repo), add NSPhotoLibraryAddUsageDescription there for gal to work.
   Future<String?> _saveImage() async {
     final request = cedar_rpc.ImageRequest(
         format: cedar_rpc.ImageFormat.JPEG, quality: 95);
