@@ -4341,8 +4341,7 @@ class ActionRequest extends $pb.GeneratedMessage {
   /// Save the current image for debugging. The image is saved in the run
   /// directory on the server with the current date/time incorporated into the
   /// filename.
-  /// TODO: return filename? Provide rename action? Return image to be saved
-  /// on client device?
+  /// Deprecated. Use GetImage RPC instead.
   @$pb.TagNumber(5)
   $core.bool get saveImage => $_getBF(4);
   @$pb.TagNumber(5)
@@ -4889,6 +4888,260 @@ class SetPairingModeRequest extends $pb.GeneratedMessage {
   $core.bool hasForever() => $_has(1);
   @$pb.TagNumber(2)
   void clearForever() => $_clearField(2);
+}
+
+class ImageRequest extends $pb.GeneratedMessage {
+  factory ImageRequest({
+    ImageFormat? format,
+    $core.int? quality,
+    $core.int? prevFrameId,
+  }) {
+    final $result = create();
+    if (format != null) {
+      $result.format = format;
+    }
+    if (quality != null) {
+      $result.quality = quality;
+    }
+    if (prevFrameId != null) {
+      $result.prevFrameId = prevFrameId;
+    }
+    return $result;
+  }
+  ImageRequest._() : super();
+  factory ImageRequest.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory ImageRequest.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'ImageRequest', package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'), createEmptyInstance: create)
+    ..e<ImageFormat>(1, _omitFieldNames ? '' : 'format', $pb.PbFieldType.OE, defaultOrMaker: ImageFormat.IMAGE_FORMAT_UNSPECIFIED, valueOf: ImageFormat.valueOf, enumValues: ImageFormat.values)
+    ..a<$core.int>(2, _omitFieldNames ? '' : 'quality', $pb.PbFieldType.O3)
+    ..a<$core.int>(3, _omitFieldNames ? '' : 'prevFrameId', $pb.PbFieldType.O3)
+    ..hasRequiredFields = false
+  ;
+
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  ImageRequest clone() => ImageRequest()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  ImageRequest copyWith(void Function(ImageRequest) updates) => super.copyWith((message) => updates(message as ImageRequest)) as ImageRequest;
+
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ImageRequest create() => ImageRequest._();
+  ImageRequest createEmptyInstance() => create();
+  static $pb.PbList<ImageRequest> createRepeated() => $pb.PbList<ImageRequest>();
+  @$core.pragma('dart2js:noInline')
+  static ImageRequest getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<ImageRequest>(create);
+  static ImageRequest? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  ImageFormat get format => $_getN(0);
+  @$pb.TagNumber(1)
+  set format(ImageFormat v) { $_setField(1, v); }
+  @$pb.TagNumber(1)
+  $core.bool hasFormat() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearFormat() => $_clearField(1);
+
+  /// For image formats with lossy compression, this is the quality level on a
+  /// scale of [1..100]. If omitted, defaults to 90.
+  @$pb.TagNumber(2)
+  $core.int get quality => $_getIZ(1);
+  @$pb.TagNumber(2)
+  set quality($core.int v) { $_setSignedInt32(1, v); }
+  @$pb.TagNumber(2)
+  $core.bool hasQuality() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearQuality() => $_clearField(2);
+
+  /// This is the frame_id of the previous ImageResult obtained by the requesting
+  /// client. If provided, GetImage() will block until a new image (with a
+  /// different frame_id) is available, so successive calls with each response's
+  /// frame_id return fresh images rather than possibly repeating the same one.
+  /// If omitted, GetImage() returns the server's current image without waiting
+  /// for a new one.
+  @$pb.TagNumber(3)
+  $core.int get prevFrameId => $_getIZ(2);
+  @$pb.TagNumber(3)
+  set prevFrameId($core.int v) { $_setSignedInt32(2, v); }
+  @$pb.TagNumber(3)
+  $core.bool hasPrevFrameId() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearPrevFrameId() => $_clearField(3);
+}
+
+class ImageResult extends $pb.GeneratedMessage {
+  factory ImageResult({
+    $core.int? frameId,
+    $core.int? width,
+    $core.int? height,
+    $2.Timestamp? acquireTime,
+    $3.Duration? exposureTime,
+    $core.int? cameraGain,
+    CameraModel? camera,
+    $core.List<$core.int>? imageChunk,
+  }) {
+    final $result = create();
+    if (frameId != null) {
+      $result.frameId = frameId;
+    }
+    if (width != null) {
+      $result.width = width;
+    }
+    if (height != null) {
+      $result.height = height;
+    }
+    if (acquireTime != null) {
+      $result.acquireTime = acquireTime;
+    }
+    if (exposureTime != null) {
+      $result.exposureTime = exposureTime;
+    }
+    if (cameraGain != null) {
+      $result.cameraGain = cameraGain;
+    }
+    if (camera != null) {
+      $result.camera = camera;
+    }
+    if (imageChunk != null) {
+      $result.imageChunk = imageChunk;
+    }
+    return $result;
+  }
+  ImageResult._() : super();
+  factory ImageResult.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory ImageResult.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'ImageResult', package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'), createEmptyInstance: create)
+    ..a<$core.int>(1, _omitFieldNames ? '' : 'frameId', $pb.PbFieldType.O3)
+    ..a<$core.int>(2, _omitFieldNames ? '' : 'width', $pb.PbFieldType.O3)
+    ..a<$core.int>(3, _omitFieldNames ? '' : 'height', $pb.PbFieldType.O3)
+    ..aOM<$2.Timestamp>(4, _omitFieldNames ? '' : 'acquireTime', subBuilder: $2.Timestamp.create)
+    ..aOM<$3.Duration>(5, _omitFieldNames ? '' : 'exposureTime', subBuilder: $3.Duration.create)
+    ..a<$core.int>(6, _omitFieldNames ? '' : 'cameraGain', $pb.PbFieldType.O3)
+    ..aOM<CameraModel>(7, _omitFieldNames ? '' : 'camera', subBuilder: CameraModel.create)
+    ..a<$core.List<$core.int>>(8, _omitFieldNames ? '' : 'imageChunk', $pb.PbFieldType.OY)
+    ..hasRequiredFields = false
+  ;
+
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  ImageResult clone() => ImageResult()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  ImageResult copyWith(void Function(ImageResult) updates) => super.copyWith((message) => updates(message as ImageResult)) as ImageResult;
+
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ImageResult create() => ImageResult._();
+  ImageResult createEmptyInstance() => create();
+  static $pb.PbList<ImageResult> createRepeated() => $pb.PbList<ImageResult>();
+  @$core.pragma('dart2js:noInline')
+  static ImageResult getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<ImageResult>(create);
+  static ImageResult? _defaultInstance;
+
+  /// Identifies this image. A client can pass this in the next
+  /// ImageRequest.prev_frame_id to be given a fresh image on the subsequent
+  /// call.
+  @$pb.TagNumber(1)
+  $core.int get frameId => $_getIZ(0);
+  @$pb.TagNumber(1)
+  set frameId($core.int v) { $_setSignedInt32(0, v); }
+  @$pb.TagNumber(1)
+  $core.bool hasFrameId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearFrameId() => $_clearField(1);
+
+  /// The resolution of the image. This is the full camera resolution, i.e. no
+  /// binning is applied.
+  @$pb.TagNumber(2)
+  $core.int get width => $_getIZ(1);
+  @$pb.TagNumber(2)
+  set width($core.int v) { $_setSignedInt32(1, v); }
+  @$pb.TagNumber(2)
+  $core.bool hasWidth() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearWidth() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.int get height => $_getIZ(2);
+  @$pb.TagNumber(3)
+  set height($core.int v) { $_setSignedInt32(2, v); }
+  @$pb.TagNumber(3)
+  $core.bool hasHeight() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearHeight() => $_clearField(3);
+
+  /// Time at which image was read out from camera.
+  @$pb.TagNumber(4)
+  $2.Timestamp get acquireTime => $_getN(3);
+  @$pb.TagNumber(4)
+  set acquireTime($2.Timestamp v) { $_setField(4, v); }
+  @$pb.TagNumber(4)
+  $core.bool hasAcquireTime() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearAcquireTime() => $_clearField(4);
+  @$pb.TagNumber(4)
+  $2.Timestamp ensureAcquireTime() => $_ensure(3);
+
+  /// Exposure duration.
+  @$pb.TagNumber(5)
+  $3.Duration get exposureTime => $_getN(4);
+  @$pb.TagNumber(5)
+  set exposureTime($3.Duration v) { $_setField(5, v); }
+  @$pb.TagNumber(5)
+  $core.bool hasExposureTime() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearExposureTime() => $_clearField(5);
+  @$pb.TagNumber(5)
+  $3.Duration ensureExposureTime() => $_ensure(4);
+
+  /// Camera gain setting [0..100], if relevant.
+  @$pb.TagNumber(6)
+  $core.int get cameraGain => $_getIZ(5);
+  @$pb.TagNumber(6)
+  set cameraGain($core.int v) { $_setSignedInt32(5, v); }
+  @$pb.TagNumber(6)
+  $core.bool hasCameraGain() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearCameraGain() => $_clearField(6);
+
+  /// Camera model, if known.
+  @$pb.TagNumber(7)
+  CameraModel get camera => $_getN(6);
+  @$pb.TagNumber(7)
+  set camera(CameraModel v) { $_setField(7, v); }
+  @$pb.TagNumber(7)
+  $core.bool hasCamera() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearCamera() => $_clearField(7);
+  @$pb.TagNumber(7)
+  CameraModel ensureCamera() => $_ensure(6);
+
+  /// The image, in the requested format (e.g. BMP or JPEG grayscale 8 bits per
+  /// pixel), split into one or more chunks. The client should concatenate
+  /// `image_chunk` across all streamed ImageResult messages, in order, to
+  /// reconstruct the full image; only the first ImageResult has the other
+  /// fields populated.
+  @$pb.TagNumber(8)
+  $core.List<$core.int> get imageChunk => $_getN(7);
+  @$pb.TagNumber(8)
+  set imageChunk($core.List<$core.int> v) { $_setBytes(7, v); }
+  @$pb.TagNumber(8)
+  $core.bool hasImageChunk() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearImageChunk() => $_clearField(8);
 }
 
 

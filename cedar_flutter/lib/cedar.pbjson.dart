@@ -121,6 +121,21 @@ final $typed_data.Uint8List calibrationFailureReasonDescriptor = $convert.base64
     'ChhDYWxpYnJhdGlvbkZhaWx1cmVSZWFzb24SFgoSUkVBU09OX1VOU1BFQ0lGSUVEEAASEQoNVE'
     '9PX0ZFV19TVEFSUxABEg4KCkJSSUdIVF9TS1kQAhIRCg1TT0xWRVJfRkFJTEVEEAM=');
 
+@$core.Deprecated('Use imageFormatDescriptor instead')
+const ImageFormat$json = {
+  '1': 'ImageFormat',
+  '2': [
+    {'1': 'IMAGE_FORMAT_UNSPECIFIED', '2': 0},
+    {'1': 'JPEG', '2': 1},
+    {'1': 'BMP', '2': 2},
+  ],
+};
+
+/// Descriptor for `ImageFormat`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List imageFormatDescriptor = $convert.base64Decode(
+    'CgtJbWFnZUZvcm1hdBIcChhJTUFHRV9GT1JNQVRfVU5TUEVDSUZJRUQQABIICgRKUEVHEAESBw'
+    'oDQk1QEAI=');
+
 @$core.Deprecated('Use serverInformationDescriptor instead')
 const ServerInformation$json = {
   '1': 'ServerInformation',
@@ -1157,4 +1172,60 @@ const SetPairingModeRequest$json = {
 final $typed_data.Uint8List setPairingModeRequestDescriptor = $convert.base64Decode(
     'ChVTZXRQYWlyaW5nTW9kZVJlcXVlc3QSGAoHZW5hYmxlZBgBIAEoCFIHZW5hYmxlZBIYCgdmb3'
     'JldmVyGAIgASgIUgdmb3JldmVy');
+
+@$core.Deprecated('Use imageRequestDescriptor instead')
+const ImageRequest$json = {
+  '1': 'ImageRequest',
+  '2': [
+    {'1': 'format', '3': 1, '4': 1, '5': 14, '6': '.cedar.ImageFormat', '10': 'format'},
+    {'1': 'quality', '3': 2, '4': 1, '5': 5, '9': 0, '10': 'quality', '17': true},
+    {'1': 'prev_frame_id', '3': 3, '4': 1, '5': 5, '9': 1, '10': 'prevFrameId', '17': true},
+  ],
+  '8': [
+    {'1': '_quality'},
+    {'1': '_prev_frame_id'},
+  ],
+};
+
+/// Descriptor for `ImageRequest`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List imageRequestDescriptor = $convert.base64Decode(
+    'CgxJbWFnZVJlcXVlc3QSKgoGZm9ybWF0GAEgASgOMhIuY2VkYXIuSW1hZ2VGb3JtYXRSBmZvcm'
+    '1hdBIdCgdxdWFsaXR5GAIgASgFSABSB3F1YWxpdHmIAQESJwoNcHJldl9mcmFtZV9pZBgDIAEo'
+    'BUgBUgtwcmV2RnJhbWVJZIgBAUIKCghfcXVhbGl0eUIQCg5fcHJldl9mcmFtZV9pZA==');
+
+@$core.Deprecated('Use imageResultDescriptor instead')
+const ImageResult$json = {
+  '1': 'ImageResult',
+  '2': [
+    {'1': 'frame_id', '3': 1, '4': 1, '5': 5, '9': 0, '10': 'frameId', '17': true},
+    {'1': 'width', '3': 2, '4': 1, '5': 5, '9': 1, '10': 'width', '17': true},
+    {'1': 'height', '3': 3, '4': 1, '5': 5, '9': 2, '10': 'height', '17': true},
+    {'1': 'acquire_time', '3': 4, '4': 1, '5': 11, '6': '.google.protobuf.Timestamp', '9': 3, '10': 'acquireTime', '17': true},
+    {'1': 'exposure_time', '3': 5, '4': 1, '5': 11, '6': '.google.protobuf.Duration', '9': 4, '10': 'exposureTime', '17': true},
+    {'1': 'camera_gain', '3': 6, '4': 1, '5': 5, '9': 5, '10': 'cameraGain', '17': true},
+    {'1': 'camera', '3': 7, '4': 1, '5': 11, '6': '.cedar.CameraModel', '9': 6, '10': 'camera', '17': true},
+    {'1': 'image_chunk', '3': 8, '4': 1, '5': 12, '10': 'imageChunk'},
+  ],
+  '8': [
+    {'1': '_frame_id'},
+    {'1': '_width'},
+    {'1': '_height'},
+    {'1': '_acquire_time'},
+    {'1': '_exposure_time'},
+    {'1': '_camera_gain'},
+    {'1': '_camera'},
+  ],
+};
+
+/// Descriptor for `ImageResult`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List imageResultDescriptor = $convert.base64Decode(
+    'CgtJbWFnZVJlc3VsdBIeCghmcmFtZV9pZBgBIAEoBUgAUgdmcmFtZUlkiAEBEhkKBXdpZHRoGA'
+    'IgASgFSAFSBXdpZHRoiAEBEhsKBmhlaWdodBgDIAEoBUgCUgZoZWlnaHSIAQESQgoMYWNxdWly'
+    'ZV90aW1lGAQgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcEgDUgthY3F1aXJlVGltZY'
+    'gBARJDCg1leHBvc3VyZV90aW1lGAUgASgLMhkuZ29vZ2xlLnByb3RvYnVmLkR1cmF0aW9uSARS'
+    'DGV4cG9zdXJlVGltZYgBARIkCgtjYW1lcmFfZ2FpbhgGIAEoBUgFUgpjYW1lcmFHYWluiAEBEi'
+    '8KBmNhbWVyYRgHIAEoCzISLmNlZGFyLkNhbWVyYU1vZGVsSAZSBmNhbWVyYYgBARIfCgtpbWFn'
+    'ZV9jaHVuaxgIIAEoDFIKaW1hZ2VDaHVua0ILCglfZnJhbWVfaWRCCAoGX3dpZHRoQgkKB19oZW'
+    'lnaHRCDwoNX2FjcXVpcmVfdGltZUIQCg5fZXhwb3N1cmVfdGltZUIOCgxfY2FtZXJhX2dhaW5C'
+    'CQoHX2NhbWVyYQ==');
 

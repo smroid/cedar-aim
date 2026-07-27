@@ -169,5 +169,23 @@ class CalibrationFailureReason extends $pb.ProtobufEnum {
   const CalibrationFailureReason._(super.v, super.n);
 }
 
+class ImageFormat extends $pb.ProtobufEnum {
+  /// Server defaults to JPEG.
+  static const ImageFormat IMAGE_FORMAT_UNSPECIFIED = ImageFormat._(0, _omitEnumNames ? '' : 'IMAGE_FORMAT_UNSPECIFIED');
+  static const ImageFormat JPEG = ImageFormat._(1, _omitEnumNames ? '' : 'JPEG');
+  static const ImageFormat BMP = ImageFormat._(2, _omitEnumNames ? '' : 'BMP');
+
+  static const $core.List<ImageFormat> values = <ImageFormat> [
+    IMAGE_FORMAT_UNSPECIFIED,
+    JPEG,
+    BMP,
+  ];
+
+  static final $core.Map<$core.int, ImageFormat> _byValue = $pb.ProtobufEnum.initByValue(values);
+  static ImageFormat? valueOf($core.int value) => _byValue[value];
+
+  const ImageFormat._(super.v, super.n);
+}
+
 
 const _omitEnumNames = $core.bool.fromEnvironment('protobuf.omit_enum_names');
