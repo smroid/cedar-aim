@@ -1459,7 +1459,7 @@ class MyHomePageState extends State<MyHomePage> {
       final exposureSuffix = exposureMs != null
           ? '_${exposureMs < 1 ? exposureMs.toStringAsFixed(2) : exposureMs.round()}ms'
           : '';
-      final name = 'img_$timestamp$exposureSuffix';
+      final name = 'cedar_img_$timestamp$exposureSuffix';
       await Gal.putImageBytes(bytes.takeBytes(), name: name);
       return name;
     } catch (e) {
