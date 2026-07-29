@@ -4,9 +4,20 @@
 import 'package:flutter/material.dart';
 
 ThemeData _normalTheme() {
-  return ThemeData(
+  final base = ThemeData(
     brightness: Brightness.dark,
     useMaterial3: true,
+  );
+  final color = base.colorScheme.primary;
+  return base.copyWith(
+    segmentedButtonTheme: SegmentedButtonThemeData(
+      style: SegmentedButton.styleFrom(
+        side: BorderSide(color: color),
+        foregroundColor: color,
+        selectedForegroundColor: base.colorScheme.onPrimary,
+        selectedBackgroundColor: color,
+      ),
+    ),
   );
 }
 
@@ -54,6 +65,14 @@ ThemeData _nightVisionTheme() {
         ),
         focusedBorder: const OutlineInputBorder(
           borderSide: BorderSide(color: pureRed, width: 2),
+        ),
+      ),
+      segmentedButtonTheme: SegmentedButtonThemeData(
+        style: SegmentedButton.styleFrom(
+          side: const BorderSide(color: pureRed),
+          foregroundColor: pureRed,
+          selectedForegroundColor: darkGray,
+          selectedBackgroundColor: pureRed,
         ),
       ),
       switchTheme: SwitchThemeData(
