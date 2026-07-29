@@ -3778,6 +3778,7 @@ class SlewRequest extends $pb.GeneratedMessage {
     $core.double? offsetRotationAxis,
     $core.double? offsetTiltAxis,
     $1.CatalogEntry? targetCatalogEntry,
+    $4.HorizonCoord? targetAltAz,
   }) {
     final $result = create();
     if (target != null) {
@@ -3801,6 +3802,9 @@ class SlewRequest extends $pb.GeneratedMessage {
     if (targetCatalogEntry != null) {
       $result.targetCatalogEntry = targetCatalogEntry;
     }
+    if (targetAltAz != null) {
+      $result.targetAltAz = targetAltAz;
+    }
     return $result;
   }
   SlewRequest._() : super();
@@ -3815,6 +3819,7 @@ class SlewRequest extends $pb.GeneratedMessage {
     ..a<$core.double>(5, _omitFieldNames ? '' : 'offsetRotationAxis', $pb.PbFieldType.OD)
     ..a<$core.double>(6, _omitFieldNames ? '' : 'offsetTiltAxis', $pb.PbFieldType.OD)
     ..aOM<$1.CatalogEntry>(8, _omitFieldNames ? '' : 'targetCatalogEntry', subBuilder: $1.CatalogEntry.create)
+    ..aOM<$4.HorizonCoord>(10, _omitFieldNames ? '' : 'targetAltAz', subBuilder: $4.HorizonCoord.create)
     ..hasRequiredFields = false
   ;
 
@@ -3839,7 +3844,8 @@ class SlewRequest extends $pb.GeneratedMessage {
   static SlewRequest getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<SlewRequest>(create);
   static SlewRequest? _defaultInstance;
 
-  /// Identifies the target coordinate of the telescope motion request.
+  /// Identifies the target coordinate of the telescope motion request. One but
+  /// not both of these fields will be populated.
   @$pb.TagNumber(1)
   $4.CelestialCoord get target => $_getN(0);
   @$pb.TagNumber(1)
@@ -3932,6 +3938,17 @@ class SlewRequest extends $pb.GeneratedMessage {
   void clearTargetCatalogEntry() => $_clearField(8);
   @$pb.TagNumber(8)
   $1.CatalogEntry ensureTargetCatalogEntry() => $_ensure(6);
+
+  @$pb.TagNumber(10)
+  $4.HorizonCoord get targetAltAz => $_getN(7);
+  @$pb.TagNumber(10)
+  set targetAltAz($4.HorizonCoord v) { $_setField(10, v); }
+  @$pb.TagNumber(10)
+  $core.bool hasTargetAltAz() => $_has(7);
+  @$pb.TagNumber(10)
+  void clearTargetAltAz() => $_clearField(10);
+  @$pb.TagNumber(10)
+  $4.HorizonCoord ensureTargetAltAz() => $_ensure(7);
 }
 
 /// Estimate of alt/az offset of mount's polar axis from celestial pole. Not
@@ -4196,6 +4213,7 @@ class ActionRequest extends $pb.GeneratedMessage {
     $core.bool? calibrateDarkFrame,
     $core.bool? resetHotPixelMap,
     $core.bool? wifiEnabled,
+    $4.HorizonCoord? initiateSlewAltAz,
   }) {
     final $result = create();
     if (captureBoresight != null) {
@@ -4243,6 +4261,9 @@ class ActionRequest extends $pb.GeneratedMessage {
     if (wifiEnabled != null) {
       $result.wifiEnabled = wifiEnabled;
     }
+    if (initiateSlewAltAz != null) {
+      $result.initiateSlewAltAz = initiateSlewAltAz;
+    }
     return $result;
   }
   ActionRequest._() : super();
@@ -4265,6 +4286,7 @@ class ActionRequest extends $pb.GeneratedMessage {
     ..aOB(13, _omitFieldNames ? '' : 'calibrateDarkFrame')
     ..aOB(14, _omitFieldNames ? '' : 'resetHotPixelMap')
     ..aOB(15, _omitFieldNames ? '' : 'wifiEnabled')
+    ..aOM<$4.HorizonCoord>(16, _omitFieldNames ? '' : 'initiateSlewAltAz', subBuilder: $4.HorizonCoord.create)
     ..hasRequiredFields = false
   ;
 
@@ -4466,6 +4488,20 @@ class ActionRequest extends $pb.GeneratedMessage {
   $core.bool hasWifiEnabled() => $_has(14);
   @$pb.TagNumber(15)
   void clearWifiEnabled() => $_clearField(15);
+
+  /// Cedar-aim is initiating a goto operation. This is from a user-entered
+  /// altitude/azimuth value. Error if the observer location or time is not
+  /// known.
+  @$pb.TagNumber(16)
+  $4.HorizonCoord get initiateSlewAltAz => $_getN(15);
+  @$pb.TagNumber(16)
+  set initiateSlewAltAz($4.HorizonCoord v) { $_setField(16, v); }
+  @$pb.TagNumber(16)
+  $core.bool hasInitiateSlewAltAz() => $_has(15);
+  @$pb.TagNumber(16)
+  void clearInitiateSlewAltAz() => $_clearField(16);
+  @$pb.TagNumber(16)
+  $4.HorizonCoord ensureInitiateSlewAltAz() => $_ensure(15);
 }
 
 class ServerLogRequest extends $pb.GeneratedMessage {

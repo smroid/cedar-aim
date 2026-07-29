@@ -914,15 +914,18 @@ final $typed_data.Uint8List locationBasedInfoDescriptor = $convert.base64Decode(
 const SlewRequest$json = {
   '1': 'SlewRequest',
   '2': [
-    {'1': 'target', '3': 1, '4': 1, '5': 11, '6': '.cedar_common.CelestialCoord', '10': 'target'},
-    {'1': 'target_catalog_entry', '3': 8, '4': 1, '5': 11, '6': '.cedar_sky.CatalogEntry', '9': 0, '10': 'targetCatalogEntry', '17': true},
-    {'1': 'target_distance', '3': 2, '4': 1, '5': 1, '9': 1, '10': 'targetDistance', '17': true},
-    {'1': 'target_angle', '3': 3, '4': 1, '5': 1, '9': 2, '10': 'targetAngle', '17': true},
-    {'1': 'offset_rotation_axis', '3': 5, '4': 1, '5': 1, '9': 3, '10': 'offsetRotationAxis', '17': true},
-    {'1': 'offset_tilt_axis', '3': 6, '4': 1, '5': 1, '9': 4, '10': 'offsetTiltAxis', '17': true},
-    {'1': 'image_pos', '3': 4, '4': 1, '5': 11, '6': '.cedar.ImageCoord', '9': 5, '10': 'imagePos', '17': true},
+    {'1': 'target', '3': 1, '4': 1, '5': 11, '6': '.cedar_common.CelestialCoord', '9': 0, '10': 'target', '17': true},
+    {'1': 'target_alt_az', '3': 10, '4': 1, '5': 11, '6': '.cedar_common.HorizonCoord', '9': 1, '10': 'targetAltAz', '17': true},
+    {'1': 'target_catalog_entry', '3': 8, '4': 1, '5': 11, '6': '.cedar_sky.CatalogEntry', '9': 2, '10': 'targetCatalogEntry', '17': true},
+    {'1': 'target_distance', '3': 2, '4': 1, '5': 1, '9': 3, '10': 'targetDistance', '17': true},
+    {'1': 'target_angle', '3': 3, '4': 1, '5': 1, '9': 4, '10': 'targetAngle', '17': true},
+    {'1': 'offset_rotation_axis', '3': 5, '4': 1, '5': 1, '9': 5, '10': 'offsetRotationAxis', '17': true},
+    {'1': 'offset_tilt_axis', '3': 6, '4': 1, '5': 1, '9': 6, '10': 'offsetTiltAxis', '17': true},
+    {'1': 'image_pos', '3': 4, '4': 1, '5': 11, '6': '.cedar.ImageCoord', '9': 7, '10': 'imagePos', '17': true},
   ],
   '8': [
+    {'1': '_target'},
+    {'1': '_target_alt_az'},
     {'1': '_target_catalog_entry'},
     {'1': '_target_distance'},
     {'1': '_target_angle'},
@@ -938,16 +941,18 @@ const SlewRequest$json = {
 
 /// Descriptor for `SlewRequest`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List slewRequestDescriptor = $convert.base64Decode(
-    'CgtTbGV3UmVxdWVzdBI0CgZ0YXJnZXQYASABKAsyHC5jZWRhcl9jb21tb24uQ2VsZXN0aWFsQ2'
-    '9vcmRSBnRhcmdldBJOChR0YXJnZXRfY2F0YWxvZ19lbnRyeRgIIAEoCzIXLmNlZGFyX3NreS5D'
-    'YXRhbG9nRW50cnlIAFISdGFyZ2V0Q2F0YWxvZ0VudHJ5iAEBEiwKD3RhcmdldF9kaXN0YW5jZR'
-    'gCIAEoAUgBUg50YXJnZXREaXN0YW5jZYgBARImCgx0YXJnZXRfYW5nbGUYAyABKAFIAlILdGFy'
-    'Z2V0QW5nbGWIAQESNQoUb2Zmc2V0X3JvdGF0aW9uX2F4aXMYBSABKAFIA1ISb2Zmc2V0Um90YX'
-    'Rpb25BeGlziAEBEi0KEG9mZnNldF90aWx0X2F4aXMYBiABKAFIBFIOb2Zmc2V0VGlsdEF4aXOI'
-    'AQESMwoJaW1hZ2VfcG9zGAQgASgLMhEuY2VkYXIuSW1hZ2VDb29yZEgFUghpbWFnZVBvc4gBAU'
-    'IXChVfdGFyZ2V0X2NhdGFsb2dfZW50cnlCEgoQX3RhcmdldF9kaXN0YW5jZUIPCg1fdGFyZ2V0'
-    'X2FuZ2xlQhcKFV9vZmZzZXRfcm90YXRpb25fYXhpc0ITChFfb2Zmc2V0X3RpbHRfYXhpc0IMCg'
-    'pfaW1hZ2VfcG9zSgQIBxAISgQICRAK');
+    'CgtTbGV3UmVxdWVzdBI5CgZ0YXJnZXQYASABKAsyHC5jZWRhcl9jb21tb24uQ2VsZXN0aWFsQ2'
+    '9vcmRIAFIGdGFyZ2V0iAEBEkMKDXRhcmdldF9hbHRfYXoYCiABKAsyGi5jZWRhcl9jb21tb24u'
+    'SG9yaXpvbkNvb3JkSAFSC3RhcmdldEFsdEF6iAEBEk4KFHRhcmdldF9jYXRhbG9nX2VudHJ5GA'
+    'ggASgLMhcuY2VkYXJfc2t5LkNhdGFsb2dFbnRyeUgCUhJ0YXJnZXRDYXRhbG9nRW50cnmIAQES'
+    'LAoPdGFyZ2V0X2Rpc3RhbmNlGAIgASgBSANSDnRhcmdldERpc3RhbmNliAEBEiYKDHRhcmdldF'
+    '9hbmdsZRgDIAEoAUgEUgt0YXJnZXRBbmdsZYgBARI1ChRvZmZzZXRfcm90YXRpb25fYXhpcxgF'
+    'IAEoAUgFUhJvZmZzZXRSb3RhdGlvbkF4aXOIAQESLQoQb2Zmc2V0X3RpbHRfYXhpcxgGIAEoAU'
+    'gGUg5vZmZzZXRUaWx0QXhpc4gBARIzCglpbWFnZV9wb3MYBCABKAsyES5jZWRhci5JbWFnZUNv'
+    'b3JkSAdSCGltYWdlUG9ziAEBQgkKB190YXJnZXRCEAoOX3RhcmdldF9hbHRfYXpCFwoVX3Rhcm'
+    'dldF9jYXRhbG9nX2VudHJ5QhIKEF90YXJnZXRfZGlzdGFuY2VCDwoNX3RhcmdldF9hbmdsZUIX'
+    'ChVfb2Zmc2V0X3JvdGF0aW9uX2F4aXNCEwoRX29mZnNldF90aWx0X2F4aXNCDAoKX2ltYWdlX3'
+    'Bvc0oECAcQCEoECAkQCg==');
 
 @$core.Deprecated('Use polarAlignAdviceDescriptor instead')
 const PolarAlignAdvice$json = {
@@ -1016,15 +1021,16 @@ const ActionRequest$json = {
     {'1': 'shutdown_server', '3': 3, '4': 1, '5': 8, '9': 3, '10': 'shutdownServer', '17': true},
     {'1': 'restart_server', '3': 8, '4': 1, '5': 8, '9': 4, '10': 'restartServer', '17': true},
     {'1': 'initiate_slew', '3': 6, '4': 1, '5': 11, '6': '.cedar_common.CelestialCoord', '9': 5, '10': 'initiateSlew', '17': true},
-    {'1': 'stop_slew', '3': 4, '4': 1, '5': 8, '9': 6, '10': 'stopSlew', '17': true},
-    {'1': 'save_image', '3': 5, '4': 1, '5': 8, '9': 7, '10': 'saveImage', '17': true},
-    {'1': 'update_wifi_access_point', '3': 7, '4': 1, '5': 11, '6': '.cedar.WiFiAccessPoint', '9': 8, '10': 'updateWifiAccessPoint', '17': true},
-    {'1': 'clear_dont_show_items', '3': 10, '4': 1, '5': 8, '9': 9, '10': 'clearDontShowItems', '17': true},
-    {'1': 'designate_daylight_focus_region', '3': 11, '4': 1, '5': 11, '6': '.cedar.ImageCoord', '9': 10, '10': 'designateDaylightFocusRegion', '17': true},
-    {'1': 'calibrate_dark_frame', '3': 13, '4': 1, '5': 8, '9': 11, '10': 'calibrateDarkFrame', '17': true},
-    {'1': 'reset_hot_pixel_map', '3': 14, '4': 1, '5': 8, '9': 12, '10': 'resetHotPixelMap', '17': true},
-    {'1': 'crash_server', '3': 12, '4': 1, '5': 8, '9': 13, '10': 'crashServer', '17': true},
-    {'1': 'wifi_enabled', '3': 15, '4': 1, '5': 8, '9': 14, '10': 'wifiEnabled', '17': true},
+    {'1': 'initiate_slew_alt_az', '3': 16, '4': 1, '5': 11, '6': '.cedar_common.HorizonCoord', '9': 6, '10': 'initiateSlewAltAz', '17': true},
+    {'1': 'stop_slew', '3': 4, '4': 1, '5': 8, '9': 7, '10': 'stopSlew', '17': true},
+    {'1': 'save_image', '3': 5, '4': 1, '5': 8, '9': 8, '10': 'saveImage', '17': true},
+    {'1': 'update_wifi_access_point', '3': 7, '4': 1, '5': 11, '6': '.cedar.WiFiAccessPoint', '9': 9, '10': 'updateWifiAccessPoint', '17': true},
+    {'1': 'clear_dont_show_items', '3': 10, '4': 1, '5': 8, '9': 10, '10': 'clearDontShowItems', '17': true},
+    {'1': 'designate_daylight_focus_region', '3': 11, '4': 1, '5': 11, '6': '.cedar.ImageCoord', '9': 11, '10': 'designateDaylightFocusRegion', '17': true},
+    {'1': 'calibrate_dark_frame', '3': 13, '4': 1, '5': 8, '9': 12, '10': 'calibrateDarkFrame', '17': true},
+    {'1': 'reset_hot_pixel_map', '3': 14, '4': 1, '5': 8, '9': 13, '10': 'resetHotPixelMap', '17': true},
+    {'1': 'crash_server', '3': 12, '4': 1, '5': 8, '9': 14, '10': 'crashServer', '17': true},
+    {'1': 'wifi_enabled', '3': 15, '4': 1, '5': 8, '9': 15, '10': 'wifiEnabled', '17': true},
   ],
   '8': [
     {'1': '_cancel_calibration'},
@@ -1033,6 +1039,7 @@ const ActionRequest$json = {
     {'1': '_shutdown_server'},
     {'1': '_restart_server'},
     {'1': '_initiate_slew'},
+    {'1': '_initiate_slew_alt_az'},
     {'1': '_stop_slew'},
     {'1': '_save_image'},
     {'1': '_update_wifi_access_point'},
@@ -1053,22 +1060,24 @@ final $typed_data.Uint8List actionRequestDescriptor = $convert.base64Decode(
     'JSEmRlc2lnbmF0ZUJvcmVzaWdodIgBARIsCg9zaHV0ZG93bl9zZXJ2ZXIYAyABKAhIA1IOc2h1'
     'dGRvd25TZXJ2ZXKIAQESKgoOcmVzdGFydF9zZXJ2ZXIYCCABKAhIBFINcmVzdGFydFNlcnZlco'
     'gBARJGCg1pbml0aWF0ZV9zbGV3GAYgASgLMhwuY2VkYXJfY29tbW9uLkNlbGVzdGlhbENvb3Jk'
-    'SAVSDGluaXRpYXRlU2xld4gBARIgCglzdG9wX3NsZXcYBCABKAhIBlIIc3RvcFNsZXeIAQESIg'
-    'oKc2F2ZV9pbWFnZRgFIAEoCEgHUglzYXZlSW1hZ2WIAQESVAoYdXBkYXRlX3dpZmlfYWNjZXNz'
-    'X3BvaW50GAcgASgLMhYuY2VkYXIuV2lGaUFjY2Vzc1BvaW50SAhSFXVwZGF0ZVdpZmlBY2Nlc3'
-    'NQb2ludIgBARI2ChVjbGVhcl9kb250X3Nob3dfaXRlbXMYCiABKAhICVISY2xlYXJEb250U2hv'
-    'd0l0ZW1ziAEBEl0KH2Rlc2lnbmF0ZV9kYXlsaWdodF9mb2N1c19yZWdpb24YCyABKAsyES5jZW'
-    'Rhci5JbWFnZUNvb3JkSApSHGRlc2lnbmF0ZURheWxpZ2h0Rm9jdXNSZWdpb26IAQESNQoUY2Fs'
-    'aWJyYXRlX2RhcmtfZnJhbWUYDSABKAhIC1ISY2FsaWJyYXRlRGFya0ZyYW1liAEBEjIKE3Jlc2'
-    'V0X2hvdF9waXhlbF9tYXAYDiABKAhIDFIQcmVzZXRIb3RQaXhlbE1hcIgBARImCgxjcmFzaF9z'
-    'ZXJ2ZXIYDCABKAhIDVILY3Jhc2hTZXJ2ZXKIAQESJgoMd2lmaV9lbmFibGVkGA8gASgISA5SC3'
-    'dpZmlFbmFibGVkiAEBQhUKE19jYW5jZWxfY2FsaWJyYXRpb25CFAoSX2NhcHR1cmVfYm9yZXNp'
-    'Z2h0QhYKFF9kZXNpZ25hdGVfYm9yZXNpZ2h0QhIKEF9zaHV0ZG93bl9zZXJ2ZXJCEQoPX3Jlc3'
-    'RhcnRfc2VydmVyQhAKDl9pbml0aWF0ZV9zbGV3QgwKCl9zdG9wX3NsZXdCDQoLX3NhdmVfaW1h'
-    'Z2VCGwoZX3VwZGF0ZV93aWZpX2FjY2Vzc19wb2ludEIYChZfY2xlYXJfZG9udF9zaG93X2l0ZW'
-    '1zQiIKIF9kZXNpZ25hdGVfZGF5bGlnaHRfZm9jdXNfcmVnaW9uQhcKFV9jYWxpYnJhdGVfZGFy'
-    'a19mcmFtZUIWChRfcmVzZXRfaG90X3BpeGVsX21hcEIPCg1fY3Jhc2hfc2VydmVyQg8KDV93aW'
-    'ZpX2VuYWJsZWQ=');
+    'SAVSDGluaXRpYXRlU2xld4gBARJQChRpbml0aWF0ZV9zbGV3X2FsdF9hehgQIAEoCzIaLmNlZG'
+    'FyX2NvbW1vbi5Ib3Jpem9uQ29vcmRIBlIRaW5pdGlhdGVTbGV3QWx0QXqIAQESIAoJc3RvcF9z'
+    'bGV3GAQgASgISAdSCHN0b3BTbGV3iAEBEiIKCnNhdmVfaW1hZ2UYBSABKAhICFIJc2F2ZUltYW'
+    'dliAEBElQKGHVwZGF0ZV93aWZpX2FjY2Vzc19wb2ludBgHIAEoCzIWLmNlZGFyLldpRmlBY2Nl'
+    'c3NQb2ludEgJUhV1cGRhdGVXaWZpQWNjZXNzUG9pbnSIAQESNgoVY2xlYXJfZG9udF9zaG93X2'
+    'l0ZW1zGAogASgISApSEmNsZWFyRG9udFNob3dJdGVtc4gBARJdCh9kZXNpZ25hdGVfZGF5bGln'
+    'aHRfZm9jdXNfcmVnaW9uGAsgASgLMhEuY2VkYXIuSW1hZ2VDb29yZEgLUhxkZXNpZ25hdGVEYX'
+    'lsaWdodEZvY3VzUmVnaW9uiAEBEjUKFGNhbGlicmF0ZV9kYXJrX2ZyYW1lGA0gASgISAxSEmNh'
+    'bGlicmF0ZURhcmtGcmFtZYgBARIyChNyZXNldF9ob3RfcGl4ZWxfbWFwGA4gASgISA1SEHJlc2'
+    'V0SG90UGl4ZWxNYXCIAQESJgoMY3Jhc2hfc2VydmVyGAwgASgISA5SC2NyYXNoU2VydmVyiAEB'
+    'EiYKDHdpZmlfZW5hYmxlZBgPIAEoCEgPUgt3aWZpRW5hYmxlZIgBAUIVChNfY2FuY2VsX2NhbG'
+    'licmF0aW9uQhQKEl9jYXB0dXJlX2JvcmVzaWdodEIWChRfZGVzaWduYXRlX2JvcmVzaWdodEIS'
+    'ChBfc2h1dGRvd25fc2VydmVyQhEKD19yZXN0YXJ0X3NlcnZlckIQCg5faW5pdGlhdGVfc2xld0'
+    'IXChVfaW5pdGlhdGVfc2xld19hbHRfYXpCDAoKX3N0b3Bfc2xld0INCgtfc2F2ZV9pbWFnZUIb'
+    'ChlfdXBkYXRlX3dpZmlfYWNjZXNzX3BvaW50QhgKFl9jbGVhcl9kb250X3Nob3dfaXRlbXNCIg'
+    'ogX2Rlc2lnbmF0ZV9kYXlsaWdodF9mb2N1c19yZWdpb25CFwoVX2NhbGlicmF0ZV9kYXJrX2Zy'
+    'YW1lQhYKFF9yZXNldF9ob3RfcGl4ZWxfbWFwQg8KDV9jcmFzaF9zZXJ2ZXJCDwoNX3dpZmlfZW'
+    '5hYmxlZA==');
 
 @$core.Deprecated('Use serverLogRequestDescriptor instead')
 const ServerLogRequest$json = {
