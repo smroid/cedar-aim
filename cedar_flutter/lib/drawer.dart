@@ -355,7 +355,7 @@ class CedarDrawer extends StatelessWidget {
                       controller.onStateChanged();
                       Navigator.of(controller.context).pop();
                     }),
-                if (controller.advanced && controller.onGotoRaDec != null) ...[
+                if (controller.onGotoRaDec != null) ...[
                   const SizedBox(width: 4),
                   TextButton.icon(
                     icon: const Icon(Icons.gps_fixed),
