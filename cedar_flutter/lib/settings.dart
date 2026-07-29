@@ -197,6 +197,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
       );
     }
 
+    // Wraps a tile's leading control in a fixed-width, left-aligned column so
+    // that title text lines up across tiles regardless of each control's
+    // natural width (slider vs. switch vs. segmented button).
+    Widget leadingColumn(Widget control) {
+      return ConstrainedBox(
+        constraints: const BoxConstraints(minWidth: 145),
+        child: Align(
+            alignment: Alignment.centerLeft,
+            widthFactor: 1.0,
+            child: control),
+      );
+    }
+
     final provider = Provider.of<SettingsModel>(context, listen: false);
     final prefsProto = provider.preferencesProto;
     final advanced = provider.preferencesProto.advanced;
@@ -242,7 +255,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     // is not visible. We work around this by putting the important
                     // element (the control) in the 'leading' position.
                     SettingsTile(
-                      leading: SizedBox(
+                      leading: leadingColumn(SizedBox(
                           width: 100,
                           child: SliderTheme(
                               data: sliderThemeData,
@@ -257,96 +270,99 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                     provider.updateTextSize(value.toInt());
                                   });
                                 },
-                              ))),
+                              )))),
                       title: scaledText('Text size'),
                     ),
                     SettingsTile(
-                      leading: Row(children: <Widget>[
-                        Switch(
-                            value: prefsProto.hideAppBar,
-                            onChanged: (bool value) {
-                              setState(() {
-                                provider.updateHideAppBar(value);
-                              });
-                            })
-                      ]),
+                      leading: leadingColumn(Switch(
+                          value: prefsProto.hideAppBar,
+                          onChanged: (bool value) {
+                            setState(() {
+                              provider.updateHideAppBar(value);
+                            });
+                          })),
                       title: scaledText('Full screen'),
                     ),
                     if (advanced)
                       SettingsTile(
-                        leading: Row(children: <Widget>[
-                          Switch(
-                              value: prefsProto.celestialCoordFormat ==
-                                  CelestialCoordFormat.HMS_DMS,
-                              onChanged: (bool value) {
-                                setState(() {
-                                  provider.updateCelestialCoordFormat(value
-                                      ? CelestialCoordFormat.HMS_DMS
-                                      : CelestialCoordFormat.DECIMAL);
-                                });
-                              })
-                        ]),
-                        title: scaledText(prefsProto.celestialCoordFormat ==
-                                CelestialCoordFormat.HMS_DMS
-                            ? 'RA/Dec format H:M:S/D:M:S'
-                            : 'RA/Dec format D.DD/D.DD'),
+                        leading: leadingColumn(SegmentedButton<CelestialCoordFormat>(
+                          showSelectedIcon: false,
+                          segments: const [
+                            ButtonSegment(
+                                value: CelestialCoordFormat.HMS_DMS,
+                                label: Text('H:M:S')),
+                            ButtonSegment(
+                                value: CelestialCoordFormat.DECIMAL,
+                                label: Text('D.DD')),
+                          ],
+                          selected: {prefsProto.celestialCoordFormat},
+                          onSelectionChanged:
+                              (Set<CelestialCoordFormat> selection) {
+                            setState(() {
+                              provider.updateCelestialCoordFormat(
+                                  selection.first);
+                            });
+                          },
+                          style: const ButtonStyle(
+                              visualDensity: VisualDensity.compact),
+                        )),
+                        title: scaledText('RA/Dec display'),
                       ),
                     SettingsTile(
-                      leading: Row(children: <Widget>[
-                        Switch(
-                            value: prefsProto.nightVisionTheme,
-                            onChanged: (bool value) {
-                              setState(() {
-                                provider.updateNightVisionEnabled(value);
-                              });
-                            })
-                      ]),
+                      leading: leadingColumn(Switch(
+                          value: prefsProto.nightVisionTheme,
+                          onChanged: (bool value) {
+                            setState(() {
+                              provider.updateNightVisionEnabled(value);
+                            });
+                          })),
                       title: scaledText('Night vision'),
                     ),
                     if (expert)
                       SettingsTile(
-                        leading: Row(children: <Widget>[
-                          Switch(
-                              value: _homePageState.showDetectedStars,
-                              onChanged: (bool value) {
-                                setState(() {
-                                  _homePageState.showDetectedStars = value;
-                                });
-                              })
-                        ]),
+                        leading: leadingColumn(Switch(
+                            value: _homePageState.showDetectedStars,
+                            onChanged: (bool value) {
+                              setState(() {
+                                _homePageState.showDetectedStars = value;
+                              });
+                            })),
                         title: scaledText('Show detected stars'),
                       ),
                   ]),
                   SettingsSection(title: scaledText('Operation'), tiles: [
                     SettingsTile(
-                      leading: Row(children: <Widget>[
-                        Switch(
-                            value: prefsProto.screenAlwaysOn,
-                            onChanged: (bool value) {
-                              setState(() {
-                                provider.updateScreenAlwaysOn(value);
-                              });
-                            })
-                      ]),
+                      leading: leadingColumn(Switch(
+                          value: prefsProto.screenAlwaysOn,
+                          onChanged: (bool value) {
+                            setState(() {
+                              provider.updateScreenAlwaysOn(value);
+                            });
+                          })),
                       title: scaledText('Keep screen on'),
                     ),
                     SettingsTile(
-                      leading: Row(children: <Widget>[
-                        Switch(
-                            value: prefsProto.rightHanded,
-                            onChanged: (bool value) {
-                              setState(() {
-                                provider.updateRightHanded(value);
-                              });
-                            })
-                      ]),
-                      title: scaledText(
-                          rightHanded ? 'Right handed' : 'Left handed'),
+                      leading: leadingColumn(SegmentedButton<bool>(
+                        showSelectedIcon: false,
+                        segments: const [
+                          ButtonSegment(value: false, label: Text('Left')),
+                          ButtonSegment(value: true, label: Text('Right')),
+                        ],
+                        selected: {rightHanded},
+                        onSelectionChanged: (Set<bool> selection) {
+                          setState(() {
+                            provider.updateRightHanded(selection.first);
+                          });
+                        },
+                        style: const ButtonStyle(
+                            visualDensity: VisualDensity.compact),
+                      )),
+                      title: scaledText('Handedness'),
                     ),
                   ]),
                   SettingsSection(title: scaledText('Telescope'), tiles: [
                     SettingsTile(
-                      leading: SizedBox(
+                      leading: leadingColumn(SizedBox(
                           width: 140,
                           child: SliderTheme(
                               data: sliderThemeData,
@@ -360,28 +376,32 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                     provider.updateSlewBullseyeSize(value);
                                   });
                                 },
-                              ))),
+                              )))),
                       title: scaledText(sprintf(
                           'Eyepiece FOV %.1f°', [prefsProto.eyepieceFov])),
                     ),
                     if (advanced && (isPlus || isDIY))
                       SettingsTile(
-                        leading: Row(children: <Widget>[
-                          Switch(
-                              value:
-                                  prefsProto.mountType == MountType.EQUATORIAL,
-                              onChanged: (bool value) {
-                                setState(() {
-                                  provider.updateMountType(value
-                                      ? MountType.EQUATORIAL
-                                      : MountType.ALT_AZ);
-                                });
-                              })
-                        ]),
-                        title: scaledText(
-                            prefsProto.mountType == MountType.EQUATORIAL
-                                ? 'Equatorial mount'
-                                : 'Alt/Az mount'),
+                        leading: leadingColumn(SegmentedButton<MountType>(
+                          showSelectedIcon: false,
+                          segments: const [
+                            ButtonSegment(
+                                value: MountType.EQUATORIAL,
+                                label: Text('Equatorial')),
+                            ButtonSegment(
+                                value: MountType.ALT_AZ,
+                                label: Text('Alt/Az')),
+                          ],
+                          selected: {prefsProto.mountType},
+                          onSelectionChanged: (Set<MountType> selection) {
+                            setState(() {
+                              provider.updateMountType(selection.first);
+                            });
+                          },
+                          style: const ButtonStyle(
+                              visualDensity: VisualDensity.compact),
+                        )),
+                        title: scaledText('Mount type'),
                       ),
                   ]),
                 ])));
