@@ -1886,12 +1886,15 @@ class MyHomePageState extends State<MyHomePage> {
             quarterTurns: portrait ? 3 : 0,
             child: _slewDirections.buildObjectLabel(
               context,
-              slew.target,
+              slew.hasTarget() ? slew.target : null,
+              slew.hasTargetAltAz() ? slew.targetAltAz : null,
               slew.targetCatalogEntry,
               panelScaleFactor,
               infoSize * panelScaleFactor,
               formatRightAscension,
               formatDeclination,
+              formatAltitude,
+              formatAzimuth,
             )),
         // Tilt axis guidance.
         RotatedBox(
