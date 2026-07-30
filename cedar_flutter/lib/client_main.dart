@@ -5,6 +5,7 @@ import 'dart:async';
 import 'dart:math' as math;
 import 'dart:typed_data';
 import 'package:cedar_flutter/cedar.pb.dart';
+import 'package:cedar_flutter/cedar_common.pb.dart' as cedar_common;
 import 'package:cedar_flutter/cedar_sky.pb.dart';
 import 'package:cedar_flutter/connection_recovery_dialog.dart';
 import 'package:cedar_flutter/controls_widget.dart';
@@ -1399,6 +1400,36 @@ class MyHomePageState extends State<MyHomePage> {
 
   Text _scaledText(String str) {
     return Text(str, textScaler: textScaler(context));
+  }
+
+  // Converts a celestial (RA/Dec) coordinate to horizon (Alt/Az) using the
+  // server's current observer location and time. Returns null on error, or
+  // if the observer location or time is not known.
+  Future<cedar_common.HorizonCoord?> convertToHorizon(
+      cedar_common.CelestialCoord coord) async {
+    try {
+      final c = await getClient();
+      return await c.convertToHorizon(coord,
+          options: CallOptions(timeout: _rpcTimeoutForTransport()));
+    } catch (e) {
+      notifyRpcFailed('convertToHorizon error', e);
+      return null;
+    }
+  }
+
+  // Converts a horizon (Alt/Az) coordinate to celestial (RA/Dec) using the
+  // server's current observer location and time. Returns null on error, or
+  // if the observer location or time is not known.
+  Future<cedar_common.CelestialCoord?> convertToCelestial(
+      cedar_common.HorizonCoord coord) async {
+    try {
+      final c = await getClient();
+      return await c.convertToCelestial(coord,
+          options: CallOptions(timeout: _rpcTimeoutForTransport()));
+    } catch (e) {
+      notifyRpcFailed('convertToCelestial error', e);
+      return null;
+    }
   }
 
   Future<void> shutdown() async {
