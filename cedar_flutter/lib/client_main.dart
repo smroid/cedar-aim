@@ -1765,18 +1765,21 @@ class MyHomePageState extends State<MyHomePage> {
     return short ? sprintf("%.1f°", [alt]) : sprintf("%.2f°", [alt]);
   }
 
+  // 16-point compass direction for a given azimuth in degrees.
+  String compassDirection(double az) {
+    const points = [
+      "N", "NNE", "NE", "ENE",
+      "E", "ESE", "SE", "SSE",
+      "S", "SSW", "SW", "WSW",
+      "W", "WNW", "NW", "NNW",
+    ];
+    final normed = az % 360.0;
+    final index = ((normed + 11.25) / 22.5).floor() % 16;
+    return points[index];
+  }
+
   String formatAzimuth(double az, {bool short = false}) {
-    final String dir = switch (az) {
-      >= 360 - 22.5 || < 22.5 => "N",
-      >= 22.5 && < 45 + 22.5 => "NE",
-      >= 45 + 22.5 && < 90 + 22.5 => "E",
-      >= 90 + 22.5 && < 135 + 22.5 => "SE",
-      >= 135 + 22.5 && < 180 + 22.5 => "S",
-      >= 180 + 22.5 && < 225 + 22.5 => "SW",
-      >= 225 + 22.5 && < 270 + 22.5 => "W",
-      >= 270 + 22.5 && < 315 + 22.5 => "NW",
-      double() => "??",
-    };
+    final dir = compassDirection(az);
     return short
         ? sprintf("%s %.1f°", [dir, az])
         : sprintf("%s %.2f°", [dir, az]);
