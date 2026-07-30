@@ -99,6 +99,7 @@ class HorizonCoord extends $pb.GeneratedMessage {
   factory HorizonCoord({
     $core.double? altitude,
     $core.double? azimuth,
+    $core.double? epoch,
   }) {
     final $result = create();
     if (altitude != null) {
@@ -106,6 +107,9 @@ class HorizonCoord extends $pb.GeneratedMessage {
     }
     if (azimuth != null) {
       $result.azimuth = azimuth;
+    }
+    if (epoch != null) {
+      $result.epoch = epoch;
     }
     return $result;
   }
@@ -116,6 +120,7 @@ class HorizonCoord extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'HorizonCoord', package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar_common'), createEmptyInstance: create)
     ..a<$core.double>(1, _omitFieldNames ? '' : 'altitude', $pb.PbFieldType.OD)
     ..a<$core.double>(2, _omitFieldNames ? '' : 'azimuth', $pb.PbFieldType.OD)
+    ..a<$core.double>(3, _omitFieldNames ? '' : 'epoch', $pb.PbFieldType.OD)
     ..hasRequiredFields = false
   ;
 
@@ -157,6 +162,17 @@ class HorizonCoord extends $pb.GeneratedMessage {
   $core.bool hasAzimuth() => $_has(1);
   @$pb.TagNumber(2)
   void clearAzimuth() => $_clearField(2);
+
+  /// Meaningful only when calling the ConvertToCelestial() RPC. Determines what
+  /// the epoch will be in the returned CelestialCoord.
+  @$pb.TagNumber(3)
+  $core.double get epoch => $_getN(2);
+  @$pb.TagNumber(3)
+  set epoch($core.double v) { $_setDouble(2, v); }
+  @$pb.TagNumber(3)
+  $core.bool hasEpoch() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearEpoch() => $_clearField(3);
 }
 
 
