@@ -27,6 +27,7 @@ ThemeData _nightVisionTheme() {
   const Color darkGray = Color.fromARGB(255, 64, 64, 64);
   const Color mediumGray = Color.fromARGB(255, 128, 128, 128);
   const Color veryDarkRed = Color.fromARGB(255, 24, 0, 0);
+  const Color dimRed = Color.fromARGB(255, 48, 0, 0);
   return ThemeData(
       primaryColor: pureRed,
       textTheme: const TextTheme(
@@ -42,6 +43,7 @@ ThemeData _nightVisionTheme() {
         secondary: pureRed,
         onSecondary: darkGray,
         tertiary: mediumGray,
+        surfaceContainer: dimRed,
       ),
       snackBarTheme: SnackBarThemeData(
         backgroundColor: Colors.black,

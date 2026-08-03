@@ -86,6 +86,11 @@ bool diffOperationSettings(OperationSettings prev, OperationSettings curr) {
   } else {
     curr.clearUseImu();
   }
+  if (curr.detectSensitivity != prev.detectSensitivity) {
+    hasDiff = true;
+  } else {
+    curr.clearDetectSensitivity();
+  }
   return hasDiff;
 }
 
@@ -140,7 +145,10 @@ class SettingsModel extends ChangeNotifier {
     notifyListeners();
   }
 
-
+  void updateDetectSensitivity(DetectSensitivity sensitivity) {
+    opSettingsProto.detectSensitivity = sensitivity;
+    notifyListeners();
+  }
 }
 
 proto_duration.Duration durationFromMs(int intervalMs) {
@@ -153,6 +161,17 @@ proto_duration.Duration durationFromMs(int intervalMs) {
 
 int durationToMs(proto_duration.Duration duration) {
   return (duration.seconds * 1000 + duration.nanos ~/ 1000000).toInt();
+}
+
+String _sensitivityLabel(DetectSensitivity sensitivity) {
+  switch (sensitivity) {
+    case DetectSensitivity.HIGH:
+      return 'High';
+    case DetectSensitivity.HIGHEST:
+      return 'Highest';
+    default:
+      return 'Normal';
+  }
 }
 
 double textScaleFactor(BuildContext context) {
@@ -202,7 +221,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     // natural width (slider vs. switch vs. segmented button).
     Widget leadingColumn(Widget control) {
       return ConstrainedBox(
-        constraints: const BoxConstraints(minWidth: 145),
+        constraints: const BoxConstraints(minWidth: 130),
         child: Align(
             alignment: Alignment.centerLeft,
             widthFactor: 1.0,
@@ -243,12 +262,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
             style: const TextStyle(
                 fontFamily: 'Roboto', fontFamilyFallback: ['Roboto']),
             child: SettingsList(
-                darkTheme: prefsProto.nightVisionTheme
-                    ? const SettingsThemeData(
-                        titleTextColor: Colors.red,
-                        settingsTileTextColor: Colors.red,
-                        leadingIconsColor: Colors.red)
-                    : const SettingsThemeData(),
+                platform: DevicePlatform.iOS,
+                darkTheme: SettingsThemeData(
+                    titleTextColor: prefsProto.nightVisionTheme
+                        ? Colors.red
+                        : null,
+                    settingsTileTextColor: prefsProto.nightVisionTheme
+                        ? Colors.red
+                        : null,
+                    leadingIconsColor: prefsProto.nightVisionTheme
+                        ? Colors.red
+                        : null,
+                    settingsSectionBackground:
+                        Theme.of(context).colorScheme.surfaceContainer),
                 sections: [
                   SettingsSection(title: scaledText('Appearance'), tiles: [
                     // settings_ui has a bug on Web where the 'trailing' element
@@ -359,6 +385,37 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       )),
                       title: scaledText('Handedness'),
                     ),
+                    if (advanced)
+                      SettingsTile(
+                        leading: leadingColumn(SizedBox(
+                            width: 100,
+                            child: SliderTheme(
+                                data: sliderThemeData,
+                                child: Slider(
+                                  min: 1,
+                                  max: 3,
+                                  divisions: 2,
+                                  value: (provider.opSettingsProto
+                                                  .detectSensitivity ==
+                                              DetectSensitivity
+                                                  .SENSITIVITY_UNSPECIFIED
+                                          ? DetectSensitivity.NORMAL
+                                          : provider.opSettingsProto
+                                              .detectSensitivity)
+                                      .value
+                                      .toDouble(),
+                                  onChanged: (double value) {
+                                    setState(() {
+                                      provider.updateDetectSensitivity(
+                                          DetectSensitivity.valueOf(
+                                                  value.toInt()) ??
+                                              DetectSensitivity.NORMAL);
+                                    });
+                                  },
+                                )))),
+                        title: scaledText(
+                            'Sensitivity: ${_sensitivityLabel(provider.opSettingsProto.detectSensitivity)}'),
+                      ),
                   ]),
                   SettingsSection(title: scaledText('Telescope'), tiles: [
                     SettingsTile(
