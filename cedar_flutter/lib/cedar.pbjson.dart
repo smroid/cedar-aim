@@ -60,6 +60,22 @@ final $typed_data.Uint8List operatingModeDescriptor = $convert.base64Decode(
     'Cg1PcGVyYXRpbmdNb2RlEhQKEE1PREVfVU5TUEVDSUZJRUQQABIJCgVTRVRVUBABEgsKB09QRV'
     'JBVEUQAg==');
 
+@$core.Deprecated('Use detectSensitivityDescriptor instead')
+const DetectSensitivity$json = {
+  '1': 'DetectSensitivity',
+  '2': [
+    {'1': 'SENSITIVITY_UNSPECIFIED', '2': 0},
+    {'1': 'NORMAL', '2': 1},
+    {'1': 'HIGH', '2': 2},
+    {'1': 'HIGHEST', '2': 3},
+  ],
+};
+
+/// Descriptor for `DetectSensitivity`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List detectSensitivityDescriptor = $convert.base64Decode(
+    'ChFEZXRlY3RTZW5zaXRpdml0eRIbChdTRU5TSVRJVklUWV9VTlNQRUNJRklFRBAAEgoKBk5PUk'
+    '1BTBABEggKBEhJR0gQAhILCgdISUdIRVNUEAM=');
+
 @$core.Deprecated('Use celestialCoordFormatDescriptor instead')
 const CelestialCoordFormat$json = {
   '1': 'CelestialCoordFormat',
@@ -330,6 +346,7 @@ const OperationSettings$json = {
     {'1': 'catalog_entry_match', '3': 11, '4': 1, '5': 11, '6': '.cedar_sky.CatalogEntryMatch', '9': 4, '10': 'catalogEntryMatch', '17': true},
     {'1': 'demo_image_filename', '3': 12, '4': 1, '5': 9, '9': 5, '10': 'demoImageFilename', '17': true},
     {'1': 'use_imu', '3': 15, '4': 1, '5': 8, '9': 6, '10': 'useImu', '17': true},
+    {'1': 'detect_sensitivity', '3': 17, '4': 1, '5': 14, '6': '.cedar.DetectSensitivity', '9': 7, '10': 'detectSensitivity', '17': true},
   ],
   '8': [
     {'1': '_operating_mode'},
@@ -339,6 +356,7 @@ const OperationSettings$json = {
     {'1': '_catalog_entry_match'},
     {'1': '_demo_image_filename'},
     {'1': '_use_imu'},
+    {'1': '_detect_sensitivity'},
   ],
   '9': [
     {'1': 3, '2': 4},
@@ -359,10 +377,12 @@ final $typed_data.Uint8List operationSettingsDescriptor = $convert.base64Decode(
     'b3NpdGlvbnOIAQESUQoTY2F0YWxvZ19lbnRyeV9tYXRjaBgLIAEoCzIcLmNlZGFyX3NreS5DYX'
     'RhbG9nRW50cnlNYXRjaEgEUhFjYXRhbG9nRW50cnlNYXRjaIgBARIzChNkZW1vX2ltYWdlX2Zp'
     'bGVuYW1lGAwgASgJSAVSEWRlbW9JbWFnZUZpbGVuYW1liAEBEhwKB3VzZV9pbXUYDyABKAhIBl'
-    'IGdXNlSW11iAEBQhEKD19vcGVyYXRpbmdfbW9kZUIQCg5fZGF5bGlnaHRfbW9kZUIUChJfZm9j'
-    'dXNfYXNzaXN0X21vZGVCGAoWX2xvZ19kd2VsbGVkX3Bvc2l0aW9uc0IWChRfY2F0YWxvZ19lbn'
-    'RyeV9tYXRjaEIWChRfZGVtb19pbWFnZV9maWxlbmFtZUIKCghfdXNlX2ltdUoECAMQBEoECAUQ'
-    'BkoECAcQCEoECAgQCUoECA0QDkoECBAQEQ==');
+    'IGdXNlSW11iAEBEkwKEmRldGVjdF9zZW5zaXRpdml0eRgRIAEoDjIYLmNlZGFyLkRldGVjdFNl'
+    'bnNpdGl2aXR5SAdSEWRldGVjdFNlbnNpdGl2aXR5iAEBQhEKD19vcGVyYXRpbmdfbW9kZUIQCg'
+    '5fZGF5bGlnaHRfbW9kZUIUChJfZm9jdXNfYXNzaXN0X21vZGVCGAoWX2xvZ19kd2VsbGVkX3Bv'
+    'c2l0aW9uc0IWChRfY2F0YWxvZ19lbnRyeV9tYXRjaEIWChRfZGVtb19pbWFnZV9maWxlbmFtZU'
+    'IKCghfdXNlX2ltdUIVChNfZGV0ZWN0X3NlbnNpdGl2aXR5SgQIAxAESgQIBRAGSgQIBxAISgQI'
+    'CBAJSgQIDRAOSgQIEBAR');
 
 @$core.Deprecated('Use preferencesDescriptor instead')
 const Preferences$json = {

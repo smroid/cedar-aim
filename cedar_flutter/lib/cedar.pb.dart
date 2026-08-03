@@ -925,6 +925,7 @@ class OperationSettings extends $pb.GeneratedMessage {
     $core.String? demoImageFilename,
     $core.bool? focusAssistMode,
     $core.bool? useImu,
+    DetectSensitivity? detectSensitivity,
   }) {
     final $result = create();
     if (daylightMode != null) {
@@ -948,6 +949,9 @@ class OperationSettings extends $pb.GeneratedMessage {
     if (useImu != null) {
       $result.useImu = useImu;
     }
+    if (detectSensitivity != null) {
+      $result.detectSensitivity = detectSensitivity;
+    }
     return $result;
   }
   OperationSettings._() : super();
@@ -962,6 +966,7 @@ class OperationSettings extends $pb.GeneratedMessage {
     ..aOS(12, _omitFieldNames ? '' : 'demoImageFilename')
     ..aOB(14, _omitFieldNames ? '' : 'focusAssistMode')
     ..aOB(15, _omitFieldNames ? '' : 'useImu')
+    ..e<DetectSensitivity>(17, _omitFieldNames ? '' : 'detectSensitivity', $pb.PbFieldType.OE, defaultOrMaker: DetectSensitivity.SENSITIVITY_UNSPECIFIED, valueOf: DetectSensitivity.valueOf, enumValues: DetectSensitivity.values)
     ..hasRequiredFields = false
   ;
 
@@ -1075,6 +1080,18 @@ class OperationSettings extends $pb.GeneratedMessage {
   $core.bool hasUseImu() => $_has(6);
   @$pb.TagNumber(15)
   void clearUseImu() => $_clearField(15);
+
+  /// How aggressively stars are detected. Defaults to NORMAL. Unlike most
+  /// settings, this is deliberately not carried in Preferences: it reverts to
+  /// NORMAL when Cedar server restarts.
+  @$pb.TagNumber(17)
+  DetectSensitivity get detectSensitivity => $_getN(7);
+  @$pb.TagNumber(17)
+  set detectSensitivity(DetectSensitivity v) { $_setField(17, v); }
+  @$pb.TagNumber(17)
+  $core.bool hasDetectSensitivity() => $_has(7);
+  @$pb.TagNumber(17)
+  void clearDetectSensitivity() => $_clearField(17);
 }
 
 /// User interface preferences and operation settings that are stored durably on
