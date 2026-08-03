@@ -81,6 +81,33 @@ class OperatingMode extends $pb.ProtobufEnum {
   const OperatingMode._(super.v, super.n);
 }
 
+/// How aggressively Cedar detects stars.
+/// A star is detected when it rises above the sky background by a multiple of
+/// the image noise. Raising the sensitivity lowers that multiple, which recovers
+/// more stars, at the cost of admitting more spurious detections.
+class DetectSensitivity extends $pb.ProtobufEnum {
+  static const DetectSensitivity SENSITIVITY_UNSPECIFIED = DetectSensitivity._(0, _omitEnumNames ? '' : 'SENSITIVITY_UNSPECIFIED');
+  /// Detection threshold as configured.
+  static const DetectSensitivity NORMAL = DetectSensitivity._(1, _omitEnumNames ? '' : 'NORMAL');
+  /// Modestly lowered threshold.
+  static const DetectSensitivity HIGH = DetectSensitivity._(2, _omitEnumNames ? '' : 'HIGH');
+  /// Recovers the most stars but is prone to reporting noise or hot pixels as
+  /// stars.
+  static const DetectSensitivity HIGHEST = DetectSensitivity._(3, _omitEnumNames ? '' : 'HIGHEST');
+
+  static const $core.List<DetectSensitivity> values = <DetectSensitivity> [
+    SENSITIVITY_UNSPECIFIED,
+    NORMAL,
+    HIGH,
+    HIGHEST,
+  ];
+
+  static final $core.Map<$core.int, DetectSensitivity> _byValue = $pb.ProtobufEnum.initByValue(values);
+  static DetectSensitivity? valueOf($core.int value) => _byValue[value];
+
+  const DetectSensitivity._(super.v, super.n);
+}
+
 class CelestialCoordFormat extends $pb.ProtobufEnum {
   static const CelestialCoordFormat FORMAT_UNSPECIFIED = CelestialCoordFormat._(0, _omitEnumNames ? '' : 'FORMAT_UNSPECIFIED');
   /// Both right ascension and declination should be formatted as
@@ -167,6 +194,24 @@ class CalibrationFailureReason extends $pb.ProtobufEnum {
   static CalibrationFailureReason? valueOf($core.int value) => _byValue[value];
 
   const CalibrationFailureReason._(super.v, super.n);
+}
+
+class ImageFormat extends $pb.ProtobufEnum {
+  /// Server defaults to JPEG.
+  static const ImageFormat IMAGE_FORMAT_UNSPECIFIED = ImageFormat._(0, _omitEnumNames ? '' : 'IMAGE_FORMAT_UNSPECIFIED');
+  static const ImageFormat JPEG = ImageFormat._(1, _omitEnumNames ? '' : 'JPEG');
+  static const ImageFormat BMP = ImageFormat._(2, _omitEnumNames ? '' : 'BMP');
+
+  static const $core.List<ImageFormat> values = <ImageFormat> [
+    IMAGE_FORMAT_UNSPECIFIED,
+    JPEG,
+    BMP,
+  ];
+
+  static final $core.Map<$core.int, ImageFormat> _byValue = $pb.ProtobufEnum.initByValue(values);
+  static ImageFormat? valueOf($core.int value) => _byValue[value];
+
+  const ImageFormat._(super.v, super.n);
 }
 
 

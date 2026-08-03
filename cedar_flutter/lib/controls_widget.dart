@@ -222,7 +222,8 @@ class ControlsWidget extends StatelessWidget {
                         : (canAlign
                             ? (slewRequest == null
                                 ? setupAlignSkipOrDoneButton(fontSize: buttonFont)
-                                : (boresightImageBytes != null
+                                : (boresightImageBytes != null &&
+                                        !slewRequest.hasTargetAltAz()
                                     ? slewReAlignButton(fontSize: buttonFont)
                                     : Container()))
                             : Container()),

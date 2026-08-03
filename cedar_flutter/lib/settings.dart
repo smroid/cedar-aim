@@ -86,6 +86,11 @@ bool diffOperationSettings(OperationSettings prev, OperationSettings curr) {
   } else {
     curr.clearUseImu();
   }
+  if (curr.detectSensitivity != prev.detectSensitivity) {
+    hasDiff = true;
+  } else {
+    curr.clearDetectSensitivity();
+  }
   return hasDiff;
 }
 
@@ -140,7 +145,10 @@ class SettingsModel extends ChangeNotifier {
     notifyListeners();
   }
 
-
+  void updateDetectSensitivity(DetectSensitivity sensitivity) {
+    opSettingsProto.detectSensitivity = sensitivity;
+    notifyListeners();
+  }
 }
 
 proto_duration.Duration durationFromMs(int intervalMs) {
@@ -153,6 +161,17 @@ proto_duration.Duration durationFromMs(int intervalMs) {
 
 int durationToMs(proto_duration.Duration duration) {
   return (duration.seconds * 1000 + duration.nanos ~/ 1000000).toInt();
+}
+
+String _sensitivityLabel(DetectSensitivity sensitivity) {
+  switch (sensitivity) {
+    case DetectSensitivity.HIGH:
+      return 'High';
+    case DetectSensitivity.HIGHEST:
+      return 'Highest';
+    default:
+      return 'Normal';
+  }
 }
 
 double textScaleFactor(BuildContext context) {
@@ -197,6 +216,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
       );
     }
 
+    // Wraps a tile's leading control in a fixed-width, left-aligned column so
+    // that title text lines up across tiles regardless of each control's
+    // natural width (slider vs. switch vs. segmented button).
+    Widget leadingColumn(Widget control) {
+      return ConstrainedBox(
+        constraints: const BoxConstraints(minWidth: 130),
+        child: Align(
+            alignment: Alignment.centerLeft,
+            widthFactor: 1.0,
+            child: control),
+      );
+    }
+
     final provider = Provider.of<SettingsModel>(context, listen: false);
     final prefsProto = provider.preferencesProto;
     final advanced = provider.preferencesProto.advanced;
@@ -230,19 +262,26 @@ class _SettingsScreenState extends State<SettingsScreen> {
             style: const TextStyle(
                 fontFamily: 'Roboto', fontFamilyFallback: ['Roboto']),
             child: SettingsList(
-                darkTheme: prefsProto.nightVisionTheme
-                    ? const SettingsThemeData(
-                        titleTextColor: Colors.red,
-                        settingsTileTextColor: Colors.red,
-                        leadingIconsColor: Colors.red)
-                    : const SettingsThemeData(),
+                platform: DevicePlatform.iOS,
+                darkTheme: SettingsThemeData(
+                    titleTextColor: prefsProto.nightVisionTheme
+                        ? Colors.red
+                        : null,
+                    settingsTileTextColor: prefsProto.nightVisionTheme
+                        ? Colors.red
+                        : null,
+                    leadingIconsColor: prefsProto.nightVisionTheme
+                        ? Colors.red
+                        : null,
+                    settingsSectionBackground:
+                        Theme.of(context).colorScheme.surfaceContainer),
                 sections: [
                   SettingsSection(title: scaledText('Appearance'), tiles: [
                     // settings_ui has a bug on Web where the 'trailing' element
                     // is not visible. We work around this by putting the important
                     // element (the control) in the 'leading' position.
                     SettingsTile(
-                      leading: SizedBox(
+                      leading: leadingColumn(SizedBox(
                           width: 100,
                           child: SliderTheme(
                               data: sliderThemeData,
@@ -257,96 +296,188 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                     provider.updateTextSize(value.toInt());
                                   });
                                 },
-                              ))),
+                              )))),
                       title: scaledText('Text size'),
+                      onPressed: (context) {
+                        setState(() {
+                          final next =
+                              provider.preferencesProto.textSizeIndex + 1;
+                          provider.updateTextSize(next > 1 ? -1 : next);
+                        });
+                      },
                     ),
                     SettingsTile(
-                      leading: Row(children: <Widget>[
-                        Switch(
-                            value: prefsProto.hideAppBar,
-                            onChanged: (bool value) {
-                              setState(() {
-                                provider.updateHideAppBar(value);
-                              });
-                            })
-                      ]),
+                      leading: leadingColumn(Switch(
+                          value: prefsProto.hideAppBar,
+                          onChanged: (bool value) {
+                            setState(() {
+                              provider.updateHideAppBar(value);
+                            });
+                          })),
                       title: scaledText('Full screen'),
+                      onPressed: (context) {
+                        setState(() {
+                          provider.updateHideAppBar(!prefsProto.hideAppBar);
+                        });
+                      },
                     ),
                     if (advanced)
                       SettingsTile(
-                        leading: Row(children: <Widget>[
-                          Switch(
-                              value: prefsProto.celestialCoordFormat ==
-                                  CelestialCoordFormat.HMS_DMS,
-                              onChanged: (bool value) {
-                                setState(() {
-                                  provider.updateCelestialCoordFormat(value
-                                      ? CelestialCoordFormat.HMS_DMS
-                                      : CelestialCoordFormat.DECIMAL);
-                                });
-                              })
-                        ]),
-                        title: scaledText(prefsProto.celestialCoordFormat ==
-                                CelestialCoordFormat.HMS_DMS
-                            ? 'RA/Dec format H:M:S/D:M:S'
-                            : 'RA/Dec format D.DD/D.DD'),
+                        leading: leadingColumn(SegmentedButton<CelestialCoordFormat>(
+                          showSelectedIcon: false,
+                          segments: const [
+                            ButtonSegment(
+                                value: CelestialCoordFormat.HMS_DMS,
+                                label: Text('H:M:S')),
+                            ButtonSegment(
+                                value: CelestialCoordFormat.DECIMAL,
+                                label: Text('D.DD')),
+                          ],
+                          selected: {prefsProto.celestialCoordFormat},
+                          onSelectionChanged:
+                              (Set<CelestialCoordFormat> selection) {
+                            setState(() {
+                              provider.updateCelestialCoordFormat(
+                                  selection.first);
+                            });
+                          },
+                          style: const ButtonStyle(
+                              visualDensity: VisualDensity.compact),
+                        )),
+                        title: scaledText('RA/Dec display'),
+                        onPressed: (context) {
+                          setState(() {
+                            provider.updateCelestialCoordFormat(
+                                prefsProto.celestialCoordFormat ==
+                                        CelestialCoordFormat.HMS_DMS
+                                    ? CelestialCoordFormat.DECIMAL
+                                    : CelestialCoordFormat.HMS_DMS);
+                          });
+                        },
                       ),
                     SettingsTile(
-                      leading: Row(children: <Widget>[
-                        Switch(
-                            value: prefsProto.nightVisionTheme,
-                            onChanged: (bool value) {
-                              setState(() {
-                                provider.updateNightVisionEnabled(value);
-                              });
-                            })
-                      ]),
+                      leading: leadingColumn(Switch(
+                          value: prefsProto.nightVisionTheme,
+                          onChanged: (bool value) {
+                            setState(() {
+                              provider.updateNightVisionEnabled(value);
+                            });
+                          })),
                       title: scaledText('Night vision'),
+                      onPressed: (context) {
+                        setState(() {
+                          provider.updateNightVisionEnabled(
+                              !prefsProto.nightVisionTheme);
+                        });
+                      },
                     ),
                     if (expert)
                       SettingsTile(
-                        leading: Row(children: <Widget>[
-                          Switch(
-                              value: _homePageState.showDetectedStars,
-                              onChanged: (bool value) {
-                                setState(() {
-                                  _homePageState.showDetectedStars = value;
-                                });
-                              })
-                        ]),
+                        leading: leadingColumn(Switch(
+                            value: _homePageState.showDetectedStars,
+                            onChanged: (bool value) {
+                              setState(() {
+                                _homePageState.showDetectedStars = value;
+                              });
+                            })),
                         title: scaledText('Show detected stars'),
+                        onPressed: (context) {
+                          setState(() {
+                            _homePageState.showDetectedStars =
+                                !_homePageState.showDetectedStars;
+                          });
+                        },
                       ),
                   ]),
-                  SettingsSection(title: scaledText('Operation'), tiles: [
-                    SettingsTile(
-                      leading: Row(children: <Widget>[
-                        Switch(
+                  if (advanced)
+                    SettingsSection(title: scaledText('Operation'), tiles: [
+                      SettingsTile(
+                        leading: leadingColumn(Switch(
                             value: prefsProto.screenAlwaysOn,
                             onChanged: (bool value) {
                               setState(() {
                                 provider.updateScreenAlwaysOn(value);
                               });
-                            })
-                      ]),
-                      title: scaledText('Keep screen on'),
-                    ),
-                    SettingsTile(
-                      leading: Row(children: <Widget>[
-                        Switch(
-                            value: prefsProto.rightHanded,
-                            onChanged: (bool value) {
-                              setState(() {
-                                provider.updateRightHanded(value);
-                              });
-                            })
-                      ]),
-                      title: scaledText(
-                          rightHanded ? 'Right handed' : 'Left handed'),
-                    ),
-                  ]),
+                            })),
+                        title: scaledText('Keep screen on'),
+                        onPressed: (context) {
+                          setState(() {
+                            provider.updateScreenAlwaysOn(
+                                !prefsProto.screenAlwaysOn);
+                          });
+                        },
+                      ),
+                      SettingsTile(
+                        leading: leadingColumn(SegmentedButton<bool>(
+                          showSelectedIcon: false,
+                          segments: const [
+                            ButtonSegment(value: false, label: Text('Left')),
+                            ButtonSegment(value: true, label: Text('Right')),
+                          ],
+                          selected: {rightHanded},
+                          onSelectionChanged: (Set<bool> selection) {
+                            setState(() {
+                              provider.updateRightHanded(selection.first);
+                            });
+                          },
+                          style: const ButtonStyle(
+                              visualDensity: VisualDensity.compact),
+                        )),
+                        title: scaledText('Handedness'),
+                        onPressed: (context) {
+                          setState(() {
+                            provider.updateRightHanded(!rightHanded);
+                          });
+                        },
+                      ),
+                      SettingsTile(
+                        leading: leadingColumn(SizedBox(
+                            width: 100,
+                            child: SliderTheme(
+                                data: sliderThemeData,
+                                child: Slider(
+                                  min: 1,
+                                  max: 3,
+                                  divisions: 2,
+                                  value: (provider.opSettingsProto
+                                                  .detectSensitivity ==
+                                              DetectSensitivity
+                                                  .SENSITIVITY_UNSPECIFIED
+                                          ? DetectSensitivity.NORMAL
+                                          : provider.opSettingsProto
+                                              .detectSensitivity)
+                                      .value
+                                      .toDouble(),
+                                  onChanged: (double value) {
+                                    setState(() {
+                                      provider.updateDetectSensitivity(
+                                          DetectSensitivity.valueOf(
+                                                  value.toInt()) ??
+                                              DetectSensitivity.NORMAL);
+                                    });
+                                  },
+                                )))),
+                        title: scaledText(
+                            'Sensitivity: ${_sensitivityLabel(provider.opSettingsProto.detectSensitivity)}'),
+                        onPressed: (context) {
+                          setState(() {
+                            final current = provider.opSettingsProto
+                                        .detectSensitivity ==
+                                    DetectSensitivity.SENSITIVITY_UNSPECIFIED
+                                ? DetectSensitivity.NORMAL
+                                : provider.opSettingsProto.detectSensitivity;
+                            final next = current.value + 1;
+                            provider.updateDetectSensitivity(
+                                DetectSensitivity.valueOf(
+                                        next > 3 ? 1 : next) ??
+                                    DetectSensitivity.NORMAL);
+                          });
+                        },
+                      ),
+                    ]),
                   SettingsSection(title: scaledText('Telescope'), tiles: [
                     SettingsTile(
-                      leading: SizedBox(
+                      leading: leadingColumn(SizedBox(
                           width: 140,
                           child: SliderTheme(
                               data: sliderThemeData,
@@ -360,28 +491,50 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                     provider.updateSlewBullseyeSize(value);
                                   });
                                 },
-                              ))),
+                              )))),
                       title: scaledText(sprintf(
                           'Eyepiece FOV %.1f°', [prefsProto.eyepieceFov])),
+                      onPressed: (context) {
+                        setState(() {
+                          const step = 0.1;
+                          final next =
+                              min(prefsProto.eyepieceFov, 2.0) + step;
+                          provider.updateSlewBullseyeSize(
+                              next > 2.0 ? 0.1 : double.parse(
+                                  next.toStringAsFixed(1)));
+                        });
+                      },
                     ),
                     if (advanced && (isPlus || isDIY))
                       SettingsTile(
-                        leading: Row(children: <Widget>[
-                          Switch(
-                              value:
-                                  prefsProto.mountType == MountType.EQUATORIAL,
-                              onChanged: (bool value) {
-                                setState(() {
-                                  provider.updateMountType(value
-                                      ? MountType.EQUATORIAL
-                                      : MountType.ALT_AZ);
-                                });
-                              })
-                        ]),
-                        title: scaledText(
-                            prefsProto.mountType == MountType.EQUATORIAL
-                                ? 'Equatorial mount'
-                                : 'Alt/Az mount'),
+                        leading: leadingColumn(SegmentedButton<MountType>(
+                          showSelectedIcon: false,
+                          segments: const [
+                            ButtonSegment(
+                                value: MountType.EQUATORIAL,
+                                label: Text('Equatorial')),
+                            ButtonSegment(
+                                value: MountType.ALT_AZ,
+                                label: Text('Alt/Az')),
+                          ],
+                          selected: {prefsProto.mountType},
+                          onSelectionChanged: (Set<MountType> selection) {
+                            setState(() {
+                              provider.updateMountType(selection.first);
+                            });
+                          },
+                          style: const ButtonStyle(
+                              visualDensity: VisualDensity.compact),
+                        )),
+                        title: scaledText('Mount type'),
+                        onPressed: (context) {
+                          setState(() {
+                            provider.updateMountType(
+                                prefsProto.mountType == MountType.EQUATORIAL
+                                    ? MountType.ALT_AZ
+                                    : MountType.EQUATORIAL);
+                          });
+                        },
                       ),
                   ]),
                 ])));

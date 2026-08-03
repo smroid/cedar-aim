@@ -31,3 +31,21 @@ final $typed_data.Uint8List celestialCoordDescriptor = $convert.base64Decode(
     'Cg5DZWxlc3RpYWxDb29yZBIOCgJyYRgBIAEoAVICcmESEAoDZGVjGAIgASgBUgNkZWMSGQoFZX'
     'BvY2gYAyABKAFIAFIFZXBvY2iIAQFCCAoGX2Vwb2No');
 
+@$core.Deprecated('Use horizonCoordDescriptor instead')
+const HorizonCoord$json = {
+  '1': 'HorizonCoord',
+  '2': [
+    {'1': 'altitude', '3': 1, '4': 1, '5': 1, '10': 'altitude'},
+    {'1': 'azimuth', '3': 2, '4': 1, '5': 1, '10': 'azimuth'},
+    {'1': 'epoch', '3': 3, '4': 1, '5': 1, '9': 0, '10': 'epoch', '17': true},
+  ],
+  '8': [
+    {'1': '_epoch'},
+  ],
+};
+
+/// Descriptor for `HorizonCoord`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List horizonCoordDescriptor = $convert.base64Decode(
+    'CgxIb3Jpem9uQ29vcmQSGgoIYWx0aXR1ZGUYASABKAFSCGFsdGl0dWRlEhgKB2F6aW11dGgYAi'
+    'ABKAFSB2F6aW11dGgSGQoFZXBvY2gYAyABKAFIAFIFZXBvY2iIAQFCCAoGX2Vwb2No');
+

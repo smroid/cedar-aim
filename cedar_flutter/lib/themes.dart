@@ -4,9 +4,25 @@
 import 'package:flutter/material.dart';
 
 ThemeData _normalTheme() {
-  return ThemeData(
+  final base = ThemeData(
     brightness: Brightness.dark,
     useMaterial3: true,
+  );
+  final color = base.colorScheme.primary;
+  final dimColor = color.withValues(alpha: 0.5);
+  return base.copyWith(
+    segmentedButtonTheme: SegmentedButtonThemeData(
+      style: SegmentedButton.styleFrom(
+        side: BorderSide(color: color),
+        selectedForegroundColor: base.colorScheme.onPrimary,
+        selectedBackgroundColor: color,
+      ).copyWith(
+        foregroundColor: WidgetStateProperty.resolveWith((states) =>
+            states.contains(WidgetState.selected)
+                ? base.colorScheme.onPrimary
+                : dimColor),
+      ),
+    ),
   );
 }
 
@@ -16,6 +32,7 @@ ThemeData _nightVisionTheme() {
   const Color darkGray = Color.fromARGB(255, 64, 64, 64);
   const Color mediumGray = Color.fromARGB(255, 128, 128, 128);
   const Color veryDarkRed = Color.fromARGB(255, 24, 0, 0);
+  const Color dimRed = Color.fromARGB(255, 48, 0, 0);
   return ThemeData(
       primaryColor: pureRed,
       textTheme: const TextTheme(
@@ -31,6 +48,7 @@ ThemeData _nightVisionTheme() {
         secondary: pureRed,
         onSecondary: darkGray,
         tertiary: mediumGray,
+        surfaceContainer: dimRed,
       ),
       snackBarTheme: SnackBarThemeData(
         backgroundColor: Colors.black,
@@ -54,6 +72,16 @@ ThemeData _nightVisionTheme() {
         ),
         focusedBorder: const OutlineInputBorder(
           borderSide: BorderSide(color: pureRed, width: 2),
+        ),
+      ),
+      segmentedButtonTheme: SegmentedButtonThemeData(
+        style: SegmentedButton.styleFrom(
+          side: const BorderSide(color: pureRed),
+          selectedForegroundColor: darkGray,
+          selectedBackgroundColor: pureRed,
+        ).copyWith(
+          foregroundColor: WidgetStateProperty.resolveWith((states) =>
+              states.contains(WidgetState.selected) ? darkGray : darkRed),
         ),
       ),
       switchTheme: SwitchThemeData(

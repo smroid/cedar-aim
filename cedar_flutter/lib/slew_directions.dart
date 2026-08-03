@@ -112,10 +112,13 @@ class SlewDirectionsWidgets {
     );
   }
 
-  Widget buildObjectLabel(BuildContext context, CelestialCoord target,
+  Widget buildObjectLabel(BuildContext context, CelestialCoord? target,
+      HorizonCoord? targetAltAz,
       CatalogEntry catalogEntry, double scaleFactor, double size,
       String Function(double, {bool short}) formatRightAscension,
-      String Function(double, {bool short}) formatDeclination) {
+      String Function(double, {bool short}) formatDeclination,
+      String Function(double, {bool short}) formatAltitude,
+      String Function(double, {bool short}) formatAzimuth) {
     final color = Theme.of(context).colorScheme.primary;
 
     List<Widget> children = [
@@ -178,7 +181,18 @@ class SlewDirectionsWidgets {
                           style: TextStyle(color: color, fontSize: 10 * scaleFactor,),
                           textScaler: textScaler(context)));
       }
-    } else {
+    } else if (targetAltAz != null) {
+      // Show Alt and Az.
+      final alt = formatAltitude(targetAltAz.altitude, short: true);
+      final az = formatAzimuth(targetAltAz.azimuth, short: true);
+
+      children.add(Text("Alt $alt",
+                        style: TextStyle(color: color, fontSize: 10 * scaleFactor),
+                        textScaler: textScaler(context)));
+      children.add(Text("Az $az",
+                        style: TextStyle(color: color, fontSize: 10 * scaleFactor),
+                        textScaler: textScaler(context)));
+    } else if (target != null) {
       // Show RA and Dec
       final ra = formatRightAscension(target.ra, short: true);
       final dec = formatDeclination(target.dec, short: true);

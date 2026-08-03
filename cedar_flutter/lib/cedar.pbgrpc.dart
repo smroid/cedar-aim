@@ -16,6 +16,7 @@ import 'package:grpc/service_api.dart' as $grpc;
 import 'package:protobuf/protobuf.dart' as $pb;
 
 import 'cedar.pb.dart' as $0;
+import 'cedar_common.pb.dart' as $2;
 import 'cedar_sky.pb.dart' as $1;
 
 export 'cedar.pb.dart';
@@ -50,6 +51,10 @@ class CedarClient extends $grpc.Client {
       '/cedar.Cedar/GetFrames',
       ($0.FrameRequest value) => value.writeToBuffer(),
       ($core.List<$core.int> value) => $0.FrameResult.fromBuffer(value));
+  static final _$getImage = $grpc.ClientMethod<$0.ImageRequest, $0.ImageResult>(
+      '/cedar.Cedar/GetImage',
+      ($0.ImageRequest value) => value.writeToBuffer(),
+      ($core.List<$core.int> value) => $0.ImageResult.fromBuffer(value));
   static final _$initiateAction = $grpc.ClientMethod<$0.ActionRequest, $0.EmptyMessage>(
       '/cedar.Cedar/InitiateAction',
       ($0.ActionRequest value) => value.writeToBuffer(),
@@ -90,8 +95,20 @@ class CedarClient extends $grpc.Client {
       '/cedar.Cedar/RemoveBond',
       ($0.RemoveBondRequest value) => value.writeToBuffer(),
       ($core.List<$core.int> value) => $0.EmptyMessage.fromBuffer(value));
+  static final _$convertToHorizon = $grpc.ClientMethod<$2.CelestialCoord, $2.HorizonCoord>(
+      '/cedar.Cedar/ConvertToHorizon',
+      ($2.CelestialCoord value) => value.writeToBuffer(),
+      ($core.List<$core.int> value) => $2.HorizonCoord.fromBuffer(value));
+  static final _$convertToCelestial = $grpc.ClientMethod<$2.HorizonCoord, $2.CelestialCoord>(
+      '/cedar.Cedar/ConvertToCelestial',
+      ($2.HorizonCoord value) => value.writeToBuffer(),
+      ($core.List<$core.int> value) => $2.CelestialCoord.fromBuffer(value));
 
-  CedarClient(super.channel, {super.options, super.interceptors});
+  CedarClient($grpc.ClientChannel channel,
+      {$grpc.CallOptions? options,
+      $core.Iterable<$grpc.ClientInterceptor>? interceptors})
+      : super(channel, options: options,
+        interceptors: interceptors);
 
   $grpc.ResponseFuture<$0.ServerLogResult> getServerLog($0.ServerLogRequest request, {$grpc.CallOptions? options}) {
     return $createUnaryCall(_$getServerLog, request, options: options);
@@ -119,6 +136,10 @@ class CedarClient extends $grpc.Client {
 
   $grpc.ResponseStream<$0.FrameResult> getFrames($0.FrameRequest request, {$grpc.CallOptions? options}) {
     return $createStreamingCall(_$getFrames, $async.Stream.fromIterable([request]), options: options);
+  }
+
+  $grpc.ResponseStream<$0.ImageResult> getImage($0.ImageRequest request, {$grpc.CallOptions? options}) {
+    return $createStreamingCall(_$getImage, $async.Stream.fromIterable([request]), options: options);
   }
 
   $grpc.ResponseFuture<$0.EmptyMessage> initiateAction($0.ActionRequest request, {$grpc.CallOptions? options}) {
@@ -159,6 +180,14 @@ class CedarClient extends $grpc.Client {
 
   $grpc.ResponseFuture<$0.EmptyMessage> removeBond($0.RemoveBondRequest request, {$grpc.CallOptions? options}) {
     return $createUnaryCall(_$removeBond, request, options: options);
+  }
+
+  $grpc.ResponseFuture<$2.HorizonCoord> convertToHorizon($2.CelestialCoord request, {$grpc.CallOptions? options}) {
+    return $createUnaryCall(_$convertToHorizon, request, options: options);
+  }
+
+  $grpc.ResponseFuture<$2.CelestialCoord> convertToCelestial($2.HorizonCoord request, {$grpc.CallOptions? options}) {
+    return $createUnaryCall(_$convertToCelestial, request, options: options);
   }
 }
 
@@ -216,6 +245,13 @@ abstract class CedarServiceBase extends $grpc.Service {
         true,
         ($core.List<$core.int> value) => $0.FrameRequest.fromBuffer(value),
         ($0.FrameResult value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.ImageRequest, $0.ImageResult>(
+        'GetImage',
+        getImage_Pre,
+        false,
+        true,
+        ($core.List<$core.int> value) => $0.ImageRequest.fromBuffer(value),
+        ($0.ImageResult value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.ActionRequest, $0.EmptyMessage>(
         'InitiateAction',
         initiateAction_Pre,
@@ -286,6 +322,20 @@ abstract class CedarServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $0.RemoveBondRequest.fromBuffer(value),
         ($0.EmptyMessage value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$2.CelestialCoord, $2.HorizonCoord>(
+        'ConvertToHorizon',
+        convertToHorizon_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $2.CelestialCoord.fromBuffer(value),
+        ($2.HorizonCoord value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$2.HorizonCoord, $2.CelestialCoord>(
+        'ConvertToCelestial',
+        convertToCelestial_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $2.HorizonCoord.fromBuffer(value),
+        ($2.CelestialCoord value) => value.writeToBuffer()));
   }
 
   $async.Future<$0.ServerLogResult> getServerLog_Pre($grpc.ServiceCall $call, $async.Future<$0.ServerLogRequest> $request) async {
@@ -314,6 +364,10 @@ abstract class CedarServiceBase extends $grpc.Service {
 
   $async.Stream<$0.FrameResult> getFrames_Pre($grpc.ServiceCall $call, $async.Future<$0.FrameRequest> $request) async* {
     yield* getFrames($call, await $request);
+  }
+
+  $async.Stream<$0.ImageResult> getImage_Pre($grpc.ServiceCall $call, $async.Future<$0.ImageRequest> $request) async* {
+    yield* getImage($call, await $request);
   }
 
   $async.Future<$0.EmptyMessage> initiateAction_Pre($grpc.ServiceCall $call, $async.Future<$0.ActionRequest> $request) async {
@@ -356,6 +410,14 @@ abstract class CedarServiceBase extends $grpc.Service {
     return removeBond($call, await $request);
   }
 
+  $async.Future<$2.HorizonCoord> convertToHorizon_Pre($grpc.ServiceCall $call, $async.Future<$2.CelestialCoord> $request) async {
+    return convertToHorizon($call, await $request);
+  }
+
+  $async.Future<$2.CelestialCoord> convertToCelestial_Pre($grpc.ServiceCall $call, $async.Future<$2.HorizonCoord> $request) async {
+    return convertToCelestial($call, await $request);
+  }
+
   $async.Future<$0.ServerLogResult> getServerLog($grpc.ServiceCall call, $0.ServerLogRequest request);
   $async.Future<$0.FixedSettings> updateFixedSettings($grpc.ServiceCall call, $0.FixedSettings request);
   $async.Future<$0.EmptyMessage> clearObserverLocation($grpc.ServiceCall call, $0.EmptyMessage request);
@@ -363,6 +425,7 @@ abstract class CedarServiceBase extends $grpc.Service {
   $async.Future<$0.Preferences> updatePreferences($grpc.ServiceCall call, $0.Preferences request);
   $async.Future<$0.FrameResult> getFrame($grpc.ServiceCall call, $0.FrameRequest request);
   $async.Stream<$0.FrameResult> getFrames($grpc.ServiceCall call, $0.FrameRequest request);
+  $async.Stream<$0.ImageResult> getImage($grpc.ServiceCall call, $0.ImageRequest request);
   $async.Future<$0.EmptyMessage> initiateAction($grpc.ServiceCall call, $0.ActionRequest request);
   $async.Future<$1.QueryCatalogResponse> queryCatalogEntries($grpc.ServiceCall call, $1.QueryCatalogRequest request);
   $async.Future<$1.CatalogEntry> getCatalogEntry($grpc.ServiceCall call, $1.CatalogEntryKey request);
@@ -373,4 +436,6 @@ abstract class CedarServiceBase extends $grpc.Service {
   $async.Future<$0.EmptyMessage> setPairingMode($grpc.ServiceCall call, $0.SetPairingModeRequest request);
   $async.Future<$0.GetBondedDevicesResponse> getBondedDevices($grpc.ServiceCall call, $0.EmptyMessage request);
   $async.Future<$0.EmptyMessage> removeBond($grpc.ServiceCall call, $0.RemoveBondRequest request);
+  $async.Future<$2.HorizonCoord> convertToHorizon($grpc.ServiceCall call, $2.CelestialCoord request);
+  $async.Future<$2.CelestialCoord> convertToCelestial($grpc.ServiceCall call, $2.HorizonCoord request);
 }

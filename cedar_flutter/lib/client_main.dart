@@ -3,7 +3,9 @@
 
 import 'dart:async';
 import 'dart:math' as math;
+import 'dart:typed_data';
 import 'package:cedar_flutter/cedar.pb.dart';
+import 'package:cedar_flutter/cedar_common.pb.dart' as cedar_common;
 import 'package:cedar_flutter/cedar_sky.pb.dart';
 import 'package:cedar_flutter/connection_recovery_dialog.dart';
 import 'package:cedar_flutter/controls_widget.dart';
@@ -25,7 +27,9 @@ import 'package:flutter/widgets.dart' as flutter_widgets;
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart' as dart_widgets;
+import 'package:gal/gal.dart';
 import 'package:grpc/grpc.dart';
+import 'package:intl/intl.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:pip/pip.dart';
 import 'package:provider/provider.dart';
@@ -1403,6 +1407,36 @@ class MyHomePageState extends State<MyHomePage> {
     return Text(str, textScaler: textScaler(context));
   }
 
+  // Converts a celestial (RA/Dec) coordinate to horizon (Alt/Az) using the
+  // server's current observer location and time. Returns null on error, or
+  // if the observer location or time is not known.
+  Future<cedar_common.HorizonCoord?> convertToHorizon(
+      cedar_common.CelestialCoord coord) async {
+    try {
+      final c = await getClient();
+      return await c.convertToHorizon(coord,
+          options: CallOptions(timeout: _rpcTimeoutForTransport()));
+    } catch (e) {
+      notifyRpcFailed('convertToHorizon error', e);
+      return null;
+    }
+  }
+
+  // Converts a horizon (Alt/Az) coordinate to celestial (RA/Dec) using the
+  // server's current observer location and time. Returns null on error, or
+  // if the observer location or time is not known.
+  Future<cedar_common.CelestialCoord?> convertToCelestial(
+      cedar_common.HorizonCoord coord) async {
+    try {
+      final c = await getClient();
+      return await c.convertToCelestial(coord,
+          options: CallOptions(timeout: _rpcTimeoutForTransport()));
+    } catch (e) {
+      notifyRpcFailed('convertToCelestial error', e);
+      return null;
+    }
+  }
+
   Future<void> shutdown() async {
     shutdownInProgress = true;
     final request = cedar_rpc.ActionRequest(shutdownServer: true);
@@ -1428,9 +1462,46 @@ class MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  Future<void> _saveImage() async {
-    final request = cedar_rpc.ActionRequest(saveImage: true);
-    await initiateAction(request);
+  // Fetches the current camera image via GetImage() and saves it to the
+  // device's photo gallery. Returns the saved image's filename on success, or
+  // null on error.
+  Future<String?> _saveImage() async {
+    final request = cedar_rpc.ImageRequest(
+        format: cedar_rpc.ImageFormat.JPEG, quality: 95);
+    try {
+      if (!await Gal.requestAccess()) {
+        notifyRpcFailed('getImage error', 'Photo library access denied');
+        return null;
+      }
+      final c = await getClient();
+      final stream = c.getImage(request,
+          options: CallOptions(timeout: _rpcTimeoutForTransport()));
+      final bytes = BytesBuilder(copy: false);
+      DateTime? acquireTime;
+      double? exposureMs;
+      await for (final response in stream) {
+        // Only the first ImageResult has the metadata fields populated.
+        if (acquireTime == null && response.hasAcquireTime()) {
+          acquireTime = response.acquireTime.toDateTime().toLocal();
+        }
+        if (exposureMs == null && response.hasExposureTime()) {
+          final e = response.exposureTime;
+          exposureMs = e.seconds.toInt() * 1000 + e.nanos / 1000000;
+        }
+        bytes.add(response.imageChunk);
+      }
+      final timestamp =
+          DateFormat('yyyy-MM-dd_HH-mm-ss').format(acquireTime ?? DateTime.now());
+      final exposureSuffix = exposureMs != null
+          ? '_${exposureMs < 1 ? exposureMs.toStringAsFixed(2) : exposureMs.round()}ms'
+          : '';
+      final name = 'cedar_img_$timestamp$exposureSuffix';
+      await Gal.putImageBytes(bytes.takeBytes(), name: name);
+      return name;
+    } catch (e) {
+      notifyRpcFailed('getImage error', e);
+      return null;
+    }
   }
 
   Future<String?> updateWifi(String ssid, String psk, int channel) async {
@@ -1723,18 +1794,21 @@ class MyHomePageState extends State<MyHomePage> {
     return short ? sprintf("%.1f°", [alt]) : sprintf("%.2f°", [alt]);
   }
 
+  // 16-point compass direction for a given azimuth in degrees.
+  String compassDirection(double az) {
+    const points = [
+      "N", "NNE", "NE", "ENE",
+      "E", "ESE", "SE", "SSE",
+      "S", "SSW", "SW", "WSW",
+      "W", "WNW", "NW", "NNW",
+    ];
+    final normed = az % 360.0;
+    final index = ((normed + 11.25) / 22.5).floor() % 16;
+    return points[index];
+  }
+
   String formatAzimuth(double az, {bool short = false}) {
-    final String dir = switch (az) {
-      >= 360 - 22.5 || < 22.5 => "N",
-      >= 22.5 && < 45 + 22.5 => "NE",
-      >= 45 + 22.5 && < 90 + 22.5 => "E",
-      >= 90 + 22.5 && < 135 + 22.5 => "SE",
-      >= 135 + 22.5 && < 180 + 22.5 => "S",
-      >= 180 + 22.5 && < 225 + 22.5 => "SW",
-      >= 225 + 22.5 && < 270 + 22.5 => "W",
-      >= 270 + 22.5 && < 315 + 22.5 => "NW",
-      double() => "??",
-    };
+    final dir = compassDirection(az);
     return short
         ? sprintf("%s %.1f°", [dir, az])
         : sprintf("%s %.2f°", [dir, az]);
@@ -1844,12 +1918,15 @@ class MyHomePageState extends State<MyHomePage> {
             quarterTurns: portrait ? 3 : 0,
             child: _slewDirections.buildObjectLabel(
               context,
-              slew.target,
+              slew.hasTarget() ? slew.target : null,
+              slew.hasTargetAltAz() ? slew.targetAltAz : null,
               slew.targetCatalogEntry,
               panelScaleFactor,
               infoSize * panelScaleFactor,
               formatRightAscension,
               formatDeclination,
+              formatAltitude,
+              formatAzimuth,
             )),
         // Tilt axis guidance.
         RotatedBox(
@@ -2557,6 +2634,57 @@ class MyHomePageState extends State<MyHomePage> {
     _scaffoldKey.currentState?.closeEndDrawer();
   }
 
+  void openDrawer() {
+    if (_rightHanded) {
+      _scaffoldKey.currentState?.openEndDrawer();
+    } else {
+      _scaffoldKey.currentState?.openDrawer();
+    }
+  }
+
+  // Width of the screen-edge band that opens the drawer when swiped inward.
+  static const double _kEdgeSwipeWidth = 50.0;
+  // Inward travel needed before the swipe opens the drawer. Above kTouchSlop
+  // so an imprecise tap can't trigger it.
+  static const double _kEdgeSwipeThreshold = 24.0;
+
+  double _edgeSwipeDx = 0;
+  bool _edgeSwipeOpened = false;
+
+  // Screen-edge swipe band. We turn off Scaffold's built-in open-drag gesture
+  // (see the Scaffold below) because it overlays a full-height, translucent
+  // drag strip on top of the body: the menu button sits inside it, so a tap
+  // with a little sideways travel was won by that drag recognizer, which then
+  // settled back closed — the drawer would slide out and immediately snap in.
+  // Placing our band *below* the menu button in the Stack means a touch on the
+  // button never reaches it, so the button's tap can no longer be stolen.
+  Widget _edgeSwipeZone() {
+    return Positioned(
+      top: 0,
+      bottom: 0,
+      left: _rightHanded ? null : 0,
+      right: _rightHanded ? 0 : null,
+      width: _kEdgeSwipeWidth,
+      child: GestureDetector(
+        behavior: HitTestBehavior.translucent,
+        excludeFromSemantics: true,
+        onHorizontalDragStart: (_) {
+          _edgeSwipeDx = 0;
+          _edgeSwipeOpened = false;
+        },
+        onHorizontalDragUpdate: (details) {
+          _edgeSwipeDx += details.delta.dx;
+          // Inward is leftward for the right-edge band, rightward for the left.
+          final inward = _rightHanded ? -_edgeSwipeDx : _edgeSwipeDx;
+          if (!_edgeSwipeOpened && inward > _kEdgeSwipeThreshold) {
+            _edgeSwipeOpened = true;
+            openDrawer();
+          }
+        },
+      ),
+    );
+  }
+
   Widget _drawer() {
     return CedarDrawer(
       controller: CedarDrawerController(
@@ -2833,7 +2961,9 @@ class MyHomePageState extends State<MyHomePage> {
                                 Size(constraints.maxWidth,
                                     constraints.maxHeight))
                             : _badServerState(),
-                        // Menu icon positioned at top when in fullscreen mode
+                        // Swipe band, below the menu button in the Stack.
+                        _edgeSwipeZone(),
+                        // Menu icon positioned at top when in fullscreen mode.
                         Positioned(
                           left: _rightHanded ? null : 0,
                           right: _rightHanded ? 0 : null,
@@ -2843,21 +2973,9 @@ class MyHomePageState extends State<MyHomePage> {
                             left: !_rightHanded,
                             top: true,
                             bottom: false,
-                            child: Padding(
-                              padding: EdgeInsets.only(
-                                right: (isIOS() && _rightHanded) ? 8.0 : 0.0,
-                                left: (isIOS() && !_rightHanded) ? 8.0 : 0.0,
-                              ),
-                              child: IconButton(
-                                icon: const Icon(Icons.menu),
-                                onPressed: () {
-                                  if (_rightHanded) {
-                                    _scaffoldKey.currentState!.openEndDrawer();
-                                  } else {
-                                    _scaffoldKey.currentState!.openDrawer();
-                                  }
-                                },
-                              ),
+                            child: IconButton(
+                              icon: const Icon(Icons.menu),
+                              onPressed: openDrawer,
                             ),
                           ),
                         ),
@@ -2875,7 +2993,11 @@ class MyHomePageState extends State<MyHomePage> {
                 )),
       drawer: _drawer(),
       endDrawer: _drawer(),
-      drawerEdgeDragWidth: 100,
+      // Scaffold's built-in open-drag gesture is off: its drag strip overlays
+      // the body and steals taps from edge-anchored buttons. _edgeSwipeZone()
+      // provides swipe-to-open instead.
+      drawerEnableOpenDragGesture: false,
+      endDrawerEnableOpenDragGesture: false,
     );
   }
 
