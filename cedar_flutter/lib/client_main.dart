@@ -652,6 +652,7 @@ class MyHomePageState extends State<MyHomePage> {
   double solutionRA = 0.0;
   double solutionDec = 0.0;
   double _solutionRollAngle = 0.0; // Degrees.
+  double get solutionRollAngle => _solutionRollAngle;
   double _solutionFOV = 0.0; // Degrees.
 
   // Arcsec.
@@ -1323,6 +1324,10 @@ class MyHomePageState extends State<MyHomePage> {
     }
   }
 
+  Future<void> setServerTime(DateTime now) async {
+    return _setServerTime(now);
+  }
+
   Future<void> _setServerTime(DateTime now) async {
     final ts = Timestamp(
         seconds: Int64(now.millisecondsSinceEpoch ~/ 1000.0),
@@ -1610,19 +1615,12 @@ class MyHomePageState extends State<MyHomePage> {
     final color = Theme.of(context).colorScheme.primary;
     return GestureDetector(
       onTap: () {
-        if (_slewRequest != null) {
-          _stopSlew();
-        }
         _showCatalogBrowser!(context, this);
       },
-      child: ColorFiltered(
-        colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
-        child: flutter_widgets.Image.asset(
-          'assets/galaxy_white.png',
-          width: size,
-          height: size,
-          fit: BoxFit.contain,
-        ),
+      child: Icon(
+        Icons.auto_awesome,
+        color: color,
+        size: size,
       ),
     );
   }

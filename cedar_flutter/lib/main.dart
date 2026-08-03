@@ -3,10 +3,13 @@
 
 import 'package:cedar_flutter/client_main.dart';
 
+import 'package:cedar_flutter/catalog_browser.dart';
+import 'package:cedar_flutter/draw_catalog.dart';
+
 void main() {
   clientMain(
-      /*drawCatalogEntries=*/ null,
-      /*showCatalogBrowser=*/ null,
+      /*drawCatalogEntries=*/ drawCatalogEntries,
+      /*showCatalogBrowser=*/ showCatalogBrowser,
       /*objectInfoDialog=*/ null,
       /*wifiAccessPointDialog=*/ null,
       /*gotoRaDecDialog=*/ null,
