@@ -9,13 +9,18 @@ ThemeData _normalTheme() {
     useMaterial3: true,
   );
   final color = base.colorScheme.primary;
+  final dimColor = color.withValues(alpha: 0.5);
   return base.copyWith(
     segmentedButtonTheme: SegmentedButtonThemeData(
       style: SegmentedButton.styleFrom(
         side: BorderSide(color: color),
-        foregroundColor: color,
         selectedForegroundColor: base.colorScheme.onPrimary,
         selectedBackgroundColor: color,
+      ).copyWith(
+        foregroundColor: WidgetStateProperty.resolveWith((states) =>
+            states.contains(WidgetState.selected)
+                ? base.colorScheme.onPrimary
+                : dimColor),
       ),
     ),
   );
@@ -72,9 +77,11 @@ ThemeData _nightVisionTheme() {
       segmentedButtonTheme: SegmentedButtonThemeData(
         style: SegmentedButton.styleFrom(
           side: const BorderSide(color: pureRed),
-          foregroundColor: pureRed,
           selectedForegroundColor: darkGray,
           selectedBackgroundColor: pureRed,
+        ).copyWith(
+          foregroundColor: WidgetStateProperty.resolveWith((states) =>
+              states.contains(WidgetState.selected) ? darkGray : darkRed),
         ),
       ),
       switchTheme: SwitchThemeData(

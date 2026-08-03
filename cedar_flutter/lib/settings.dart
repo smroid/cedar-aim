@@ -298,6 +298,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 },
                               )))),
                       title: scaledText('Text size'),
+                      onPressed: (context) {
+                        setState(() {
+                          final next =
+                              provider.preferencesProto.textSizeIndex + 1;
+                          provider.updateTextSize(next > 1 ? -1 : next);
+                        });
+                      },
                     ),
                     SettingsTile(
                       leading: leadingColumn(Switch(
@@ -308,6 +315,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             });
                           })),
                       title: scaledText('Full screen'),
+                      onPressed: (context) {
+                        setState(() {
+                          provider.updateHideAppBar(!prefsProto.hideAppBar);
+                        });
+                      },
                     ),
                     if (advanced)
                       SettingsTile(
@@ -333,6 +345,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               visualDensity: VisualDensity.compact),
                         )),
                         title: scaledText('RA/Dec display'),
+                        onPressed: (context) {
+                          setState(() {
+                            provider.updateCelestialCoordFormat(
+                                prefsProto.celestialCoordFormat ==
+                                        CelestialCoordFormat.HMS_DMS
+                                    ? CelestialCoordFormat.DECIMAL
+                                    : CelestialCoordFormat.HMS_DMS);
+                          });
+                        },
                       ),
                     SettingsTile(
                       leading: leadingColumn(Switch(
@@ -343,6 +364,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             });
                           })),
                       title: scaledText('Night vision'),
+                      onPressed: (context) {
+                        setState(() {
+                          provider.updateNightVisionEnabled(
+                              !prefsProto.nightVisionTheme);
+                        });
+                      },
                     ),
                     if (expert)
                       SettingsTile(
@@ -354,38 +381,55 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               });
                             })),
                         title: scaledText('Show detected stars'),
-                      ),
-                  ]),
-                  SettingsSection(title: scaledText('Operation'), tiles: [
-                    SettingsTile(
-                      leading: leadingColumn(Switch(
-                          value: prefsProto.screenAlwaysOn,
-                          onChanged: (bool value) {
-                            setState(() {
-                              provider.updateScreenAlwaysOn(value);
-                            });
-                          })),
-                      title: scaledText('Keep screen on'),
-                    ),
-                    SettingsTile(
-                      leading: leadingColumn(SegmentedButton<bool>(
-                        showSelectedIcon: false,
-                        segments: const [
-                          ButtonSegment(value: false, label: Text('Left')),
-                          ButtonSegment(value: true, label: Text('Right')),
-                        ],
-                        selected: {rightHanded},
-                        onSelectionChanged: (Set<bool> selection) {
+                        onPressed: (context) {
                           setState(() {
-                            provider.updateRightHanded(selection.first);
+                            _homePageState.showDetectedStars =
+                                !_homePageState.showDetectedStars;
                           });
                         },
-                        style: const ButtonStyle(
-                            visualDensity: VisualDensity.compact),
-                      )),
-                      title: scaledText('Handedness'),
-                    ),
-                    if (advanced)
+                      ),
+                  ]),
+                  if (advanced)
+                    SettingsSection(title: scaledText('Operation'), tiles: [
+                      SettingsTile(
+                        leading: leadingColumn(Switch(
+                            value: prefsProto.screenAlwaysOn,
+                            onChanged: (bool value) {
+                              setState(() {
+                                provider.updateScreenAlwaysOn(value);
+                              });
+                            })),
+                        title: scaledText('Keep screen on'),
+                        onPressed: (context) {
+                          setState(() {
+                            provider.updateScreenAlwaysOn(
+                                !prefsProto.screenAlwaysOn);
+                          });
+                        },
+                      ),
+                      SettingsTile(
+                        leading: leadingColumn(SegmentedButton<bool>(
+                          showSelectedIcon: false,
+                          segments: const [
+                            ButtonSegment(value: false, label: Text('Left')),
+                            ButtonSegment(value: true, label: Text('Right')),
+                          ],
+                          selected: {rightHanded},
+                          onSelectionChanged: (Set<bool> selection) {
+                            setState(() {
+                              provider.updateRightHanded(selection.first);
+                            });
+                          },
+                          style: const ButtonStyle(
+                              visualDensity: VisualDensity.compact),
+                        )),
+                        title: scaledText('Handedness'),
+                        onPressed: (context) {
+                          setState(() {
+                            provider.updateRightHanded(!rightHanded);
+                          });
+                        },
+                      ),
                       SettingsTile(
                         leading: leadingColumn(SizedBox(
                             width: 100,
@@ -415,8 +459,22 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 )))),
                         title: scaledText(
                             'Sensitivity: ${_sensitivityLabel(provider.opSettingsProto.detectSensitivity)}'),
+                        onPressed: (context) {
+                          setState(() {
+                            final current = provider.opSettingsProto
+                                        .detectSensitivity ==
+                                    DetectSensitivity.SENSITIVITY_UNSPECIFIED
+                                ? DetectSensitivity.NORMAL
+                                : provider.opSettingsProto.detectSensitivity;
+                            final next = current.value + 1;
+                            provider.updateDetectSensitivity(
+                                DetectSensitivity.valueOf(
+                                        next > 3 ? 1 : next) ??
+                                    DetectSensitivity.NORMAL);
+                          });
+                        },
                       ),
-                  ]),
+                    ]),
                   SettingsSection(title: scaledText('Telescope'), tiles: [
                     SettingsTile(
                       leading: leadingColumn(SizedBox(
@@ -436,6 +494,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               )))),
                       title: scaledText(sprintf(
                           'Eyepiece FOV %.1f°', [prefsProto.eyepieceFov])),
+                      onPressed: (context) {
+                        setState(() {
+                          const step = 0.1;
+                          final next =
+                              min(prefsProto.eyepieceFov, 2.0) + step;
+                          provider.updateSlewBullseyeSize(
+                              next > 2.0 ? 0.1 : double.parse(
+                                  next.toStringAsFixed(1)));
+                        });
+                      },
                     ),
                     if (advanced && (isPlus || isDIY))
                       SettingsTile(
@@ -459,6 +527,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               visualDensity: VisualDensity.compact),
                         )),
                         title: scaledText('Mount type'),
+                        onPressed: (context) {
+                          setState(() {
+                            provider.updateMountType(
+                                prefsProto.mountType == MountType.EQUATORIAL
+                                    ? MountType.ALT_AZ
+                                    : MountType.EQUATORIAL);
+                          });
+                        },
                       ),
                   ]),
                 ])));
