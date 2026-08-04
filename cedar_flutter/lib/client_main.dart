@@ -1615,12 +1615,19 @@ class MyHomePageState extends State<MyHomePage> {
     final color = Theme.of(context).colorScheme.primary;
     return GestureDetector(
       onTap: () {
+        if (_slewRequest != null) {
+          _stopSlew();
+        }
         _showCatalogBrowser!(context, this);
       },
-      child: Icon(
-        Icons.auto_awesome,
-        color: color,
-        size: size,
+      child: ColorFiltered(
+        colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
+        child: flutter_widgets.Image.asset(
+          'assets/galaxy_white.png',
+          width: size,
+          height: size,
+          fit: BoxFit.contain,
+        ),
       ),
     );
   }
@@ -1944,7 +1951,7 @@ class MyHomePageState extends State<MyHomePage> {
     }
 
     return <Widget>[
-      if (!isDIY && !_setupMode) ...[
+      if (_drawCatalogEntries != null && !_setupMode) ...[
       RotatedBox(
           quarterTurns: portrait ? 3 : 0,
           child: SizedBox(
@@ -2776,7 +2783,7 @@ class MyHomePageState extends State<MyHomePage> {
         closeDrawer: closeDrawer,
         context: context,
         homePageState: this,
-        onGotoRaDec: (isDIY || _gotoRaDecDialog == null) ? null : () {
+        onGotoRaDec: _gotoRaDecDialog == null ? null : () {
           _gotoRaDecDialog!(this, context);
         },
       ),
