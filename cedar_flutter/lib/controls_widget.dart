@@ -182,7 +182,6 @@ class ControlsWidget extends StatelessWidget {
         // visible button, so the gauge centers via spaceEvenly).
         if (focusAid || canAlign ||
             (!setupMode && showCatalogBrowser)) ...[
-
         RotatedBox(
           quarterTurns: portrait ? 3 : 0,
           child: Column(
