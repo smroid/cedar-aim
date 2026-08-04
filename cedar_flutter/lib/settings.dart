@@ -430,50 +430,52 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           });
                         },
                       ),
-                      SettingsTile(
-                        leading: leadingColumn(SizedBox(
-                            width: 100,
-                            child: SliderTheme(
-                                data: sliderThemeData,
-                                child: Slider(
-                                  min: 1,
-                                  max: 3,
-                                  divisions: 2,
-                                  value: (provider.opSettingsProto
-                                                  .detectSensitivity ==
-                                              DetectSensitivity
-                                                  .SENSITIVITY_UNSPECIFIED
-                                          ? DetectSensitivity.NORMAL
-                                          : provider.opSettingsProto
-                                              .detectSensitivity)
-                                      .value
-                                      .toDouble(),
-                                  onChanged: (double value) {
-                                    setState(() {
-                                      provider.updateDetectSensitivity(
-                                          DetectSensitivity.valueOf(
-                                                  value.toInt()) ??
-                                              DetectSensitivity.NORMAL);
-                                    });
-                                  },
-                                )))),
-                        title: scaledText(
-                            'Sensitivity: ${_sensitivityLabel(provider.opSettingsProto.detectSensitivity)}'),
-                        onPressed: (context) {
-                          setState(() {
-                            final current = provider.opSettingsProto
-                                        .detectSensitivity ==
-                                    DetectSensitivity.SENSITIVITY_UNSPECIFIED
-                                ? DetectSensitivity.NORMAL
-                                : provider.opSettingsProto.detectSensitivity;
-                            final next = current.value + 1;
-                            provider.updateDetectSensitivity(
-                                DetectSensitivity.valueOf(
-                                        next > 3 ? 1 : next) ??
-                                    DetectSensitivity.NORMAL);
-                          });
-                        },
-                      ),
+                      if (expert)
+                        SettingsTile(
+                          leading: leadingColumn(SizedBox(
+                              width: 100,
+                              child: SliderTheme(
+                                  data: sliderThemeData,
+                                  child: Slider(
+                                    min: 1,
+                                    max: 3,
+                                    divisions: 2,
+                                    value: (provider.opSettingsProto
+                                                    .detectSensitivity ==
+                                                DetectSensitivity
+                                                    .SENSITIVITY_UNSPECIFIED
+                                            ? DetectSensitivity.NORMAL
+                                            : provider.opSettingsProto
+                                                .detectSensitivity)
+                                        .value
+                                        .toDouble(),
+                                    onChanged: (double value) {
+                                      setState(() {
+                                        provider.updateDetectSensitivity(
+                                            DetectSensitivity.valueOf(
+                                                    value.toInt()) ??
+                                                DetectSensitivity.NORMAL);
+                                      });
+                                    },
+                                  )))),
+                          title: scaledText(
+                              'Sensitivity: ${_sensitivityLabel(provider.opSettingsProto.detectSensitivity)}'),
+                          onPressed: (context) {
+                            setState(() {
+                              final current = provider.opSettingsProto
+                                          .detectSensitivity ==
+                                      DetectSensitivity
+                                          .SENSITIVITY_UNSPECIFIED
+                                  ? DetectSensitivity.NORMAL
+                                  : provider.opSettingsProto.detectSensitivity;
+                              final next = current.value + 1;
+                              provider.updateDetectSensitivity(
+                                  DetectSensitivity.valueOf(
+                                          next > 3 ? 1 : next) ??
+                                      DetectSensitivity.NORMAL);
+                            });
+                          },
+                        ),
                     ]),
                   SettingsSection(title: scaledText('Telescope'), tiles: [
                     SettingsTile(
