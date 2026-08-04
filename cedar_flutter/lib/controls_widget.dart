@@ -212,7 +212,6 @@ class ControlsWidget extends StatelessWidget {
                     !canAlign &&
                     showCatalogBrowser)
                   catalogButton(catalogButtonSize)
-
                 else
                   SizedBox(
                     width: buttonWidth,
