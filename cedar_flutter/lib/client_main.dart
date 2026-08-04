@@ -652,6 +652,7 @@ class MyHomePageState extends State<MyHomePage> {
   double solutionRA = 0.0;
   double solutionDec = 0.0;
   double _solutionRollAngle = 0.0; // Degrees.
+  double get solutionRollAngle => _solutionRollAngle;
   double _solutionFOV = 0.0; // Degrees.
 
   // Arcsec.
@@ -1323,6 +1324,10 @@ class MyHomePageState extends State<MyHomePage> {
     }
   }
 
+  Future<void> setServerTime(DateTime now) async {
+    return _setServerTime(now);
+  }
+
   Future<void> _setServerTime(DateTime now) async {
     final ts = Timestamp(
         seconds: Int64(now.millisecondsSinceEpoch ~/ 1000.0),
@@ -1946,7 +1951,7 @@ class MyHomePageState extends State<MyHomePage> {
     }
 
     return <Widget>[
-      if (!isDIY && !_setupMode) ...[
+      if (_drawCatalogEntries != null && !_setupMode) ...[
       RotatedBox(
           quarterTurns: portrait ? 3 : 0,
           child: SizedBox(
@@ -2778,7 +2783,7 @@ class MyHomePageState extends State<MyHomePage> {
         closeDrawer: closeDrawer,
         context: context,
         homePageState: this,
-        onGotoRaDec: (isDIY || _gotoRaDecDialog == null) ? null : () {
+        onGotoRaDec: _gotoRaDecDialog == null ? null : () {
           _gotoRaDecDialog!(this, context);
         },
       ),

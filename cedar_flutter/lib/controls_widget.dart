@@ -181,7 +181,7 @@ class ControlsWidget extends StatelessWidget {
         // Main control buttons (omitted entirely on DIY mission mode with no
         // visible button, so the gauge centers via spaceEvenly).
         if (focusAid || canAlign ||
-            (!setupMode && !settingsModel.isDIY && showCatalogBrowser)) ...[
+            (!setupMode && showCatalogBrowser)) ...[
         RotatedBox(
           quarterTurns: portrait ? 3 : 0,
           child: Column(
@@ -209,7 +209,6 @@ class ControlsWidget extends StatelessWidget {
                     !setupMode &&
                     !focusAid &&
                     !canAlign &&
-                    !settingsModel.isDIY &&
                     showCatalogBrowser)
                   catalogButton(catalogButtonSize)
                 else
