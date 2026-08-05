@@ -390,6 +390,23 @@ class CedarDrawer extends StatelessWidget {
                   Navigator.of(controller.context).pop();
                 })),
         SizedBox(height: _kDrawerSpacing * textScaleFactor(controller.context)),
+        if (controller.onGotoRaDec != null) ...[
+          Align(
+            alignment: Alignment.topLeft,
+            child:
+              TextButton.icon(
+                icon: const Icon(Icons.gps_fixed),
+                label: _scaledText("RA/Dec"),
+                onPressed: () {
+                  controller.closeDrawer();
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    controller.onGotoRaDec!();
+                  });
+                },
+              ),
+          ),
+          SizedBox(height: _kDrawerSpacing * textScaleFactor(controller.context)),
+        ],
       ],
 
       // Preferences button
