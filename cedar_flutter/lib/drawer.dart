@@ -592,7 +592,7 @@ class CedarDrawer extends StatelessWidget {
           SizedBox(height: _kDrawerSpacingCondensed * textScaleFactor(controller.context)),
 
           // Check for Update button.
-          if (!controller.isDIY && _buildCheckForUpdateButton() != null) ...[
+          if (_buildCheckForUpdateButton() != null) ...[
             Padding(
               padding: const EdgeInsets.only(left: 16),
               child: _buildCheckForUpdateButton()!,
@@ -673,7 +673,7 @@ class CedarDrawer extends StatelessWidget {
           SizedBox(height: _kDrawerSpacingCondensed * textScaleFactor(controller.context)),
 
           // WiFi button.
-          if (!controller.isDIY && controller.wifiAccessPointDialog != null) ...[
+          if (controller.wifiAccessPointDialog != null) ...[
             Padding(
               padding: const EdgeInsets.only(left: 16),
               child: Align(
@@ -691,7 +691,7 @@ class CedarDrawer extends StatelessWidget {
           ],
 
           // Restart Cedar Server button.
-          if (!controller.isDIY && _buildRestartServerButton() != null) ...[
+          if (_buildRestartServerButton() != null) ...[
             Padding(
               padding: const EdgeInsets.only(left: 16),
               child: _buildRestartServerButton()!,
