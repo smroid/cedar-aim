@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 const double _textFontSize = 16.0;
 const double _arrowSize = 12.0;
 const double _arrowAngleDegrees = 25.0;
-const List<String> _specialCatalogLabels = ['IAU', 'AST', 'COM', 'PL'];
+const List<String> _specialCatalogLabels = ['IAU', 'BAY', 'HYG', 'AST', 'COM', 'PL'];
 
 // Catalog labels in order of how recognizable their designations are, most
 // recognizable first. A catalog not listed here sorts after all of these,
@@ -18,7 +18,7 @@ const List<String> _specialCatalogLabels = ['IAU', 'AST', 'COM', 'PL'];
 // AST/COM/PL are omitted: they name planets, asteroids and comets, which
 // are never merged with an M/IAU/NGC/IC designation of the same object, so
 // they never actually compete against this list for ranking.
-const List<String> _catalogRank = ['M', 'IAU', 'NGC', 'IC'];
+const List<String> _catalogRank = ['M', 'IAU', 'HYG', 'BAY', 'NGC', 'IC'];
 
 // angleRad is counter-clockwise starting from up direction, where y increases
 // downward. The angle typically corresponds to north (equatorial mount) or
