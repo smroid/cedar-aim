@@ -1901,6 +1901,10 @@ class MyHomePageState extends State<MyHomePage> {
     // available space in the panel above (or to the left of) the main image.
     final panelScaleFactor = calculations['panelScaleFactor']!;
     final infoSize = kInfoTextSize * textScale;
+    final bestBoresightDesignation = boresightCatalogEntry == null
+        ? null
+        : bestDesignation(
+            boresightCatalogEntry!.entry, boresightCatalogEntry!.dedupedEntries);
 
     // When goto is active, show movement instructions.
     if (_slewRequest != null) {
@@ -1964,6 +1968,7 @@ class MyHomePageState extends State<MyHomePage> {
                                 _objectInfoDialog!(this, context,
                                     SelectedCatalogEntry(
                                       entry: boresightCatalogEntry!.entry,
+                                      dedupedEntries: boresightCatalogEntry!.dedupedEntries,
                                       altitude: boresightCatalogEntry!.hasAltitude() ? boresightCatalogEntry!.altitude : null,
                                       azimuth: boresightCatalogEntry!.hasAzimuth() ? boresightCatalogEntry!.azimuth : null,
                                     ));
@@ -1974,13 +1979,13 @@ class MyHomePageState extends State<MyHomePage> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     solveText(
-                                        labelForEntry(boresightCatalogEntry!.entry),
+                                        labelForEntry(bestBoresightDesignation!),
                                         size: 11 * panelScaleFactor),
-                                    if (commonNameForEntry(boresightCatalogEntry!.entry).isNotEmpty)
+                                    if (commonNameForEntry(bestBoresightDesignation).isNotEmpty)
                                     SizedBox(
                                         width: infoSize * panelScaleFactor,
                                         child: Text(
-                                            commonNameForEntry(boresightCatalogEntry!.entry),
+                                            commonNameForEntry(bestBoresightDesignation),
                                             maxLines: 1,
                                             overflow: TextOverflow.ellipsis,
                                             textAlign: TextAlign.center,
@@ -2094,6 +2099,7 @@ class MyHomePageState extends State<MyHomePage> {
                     if (object != null) {
                       var selEntry = SelectedCatalogEntry(
                         entry: object.entry,
+                        dedupedEntries: object.dedupedEntries,
                         altitude: object.hasAltitude() ? object.altitude : null,
                         azimuth: object.hasAzimuth() ? object.azimuth : null,
                       );
@@ -2160,7 +2166,8 @@ class MyHomePageState extends State<MyHomePage> {
           (catEntry.imagePos.y - starPos.y) * (catEntry.imagePos.y - starPos.y);
       if (distanceSq < 4) {
         // Within ~2 pixels
-        return labelForEntry(catEntry.entry);
+        return labelForEntry(
+            bestDesignation(catEntry.entry, catEntry.dedupedEntries));
       }
     }
     return null;

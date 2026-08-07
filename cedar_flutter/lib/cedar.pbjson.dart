@@ -1015,6 +1015,7 @@ const FovCatalogEntry$json = {
   '2': [
     {'1': 'entry', '3': 1, '4': 1, '5': 11, '6': '.cedar_sky.CatalogEntry', '10': 'entry'},
     {'1': 'image_pos', '3': 2, '4': 1, '5': 11, '6': '.cedar.ImageCoord', '10': 'imagePos'},
+    {'1': 'deduped_entries', '3': 5, '4': 3, '5': 11, '6': '.cedar_sky.CatalogEntry', '10': 'dedupedEntries'},
     {'1': 'altitude', '3': 3, '4': 1, '5': 1, '9': 0, '10': 'altitude', '17': true},
     {'1': 'azimuth', '3': 4, '4': 1, '5': 1, '9': 1, '10': 'azimuth', '17': true},
   ],
@@ -1028,8 +1029,9 @@ const FovCatalogEntry$json = {
 final $typed_data.Uint8List fovCatalogEntryDescriptor = $convert.base64Decode(
     'Cg9Gb3ZDYXRhbG9nRW50cnkSLQoFZW50cnkYASABKAsyFy5jZWRhcl9za3kuQ2F0YWxvZ0VudH'
     'J5UgVlbnRyeRIuCglpbWFnZV9wb3MYAiABKAsyES5jZWRhci5JbWFnZUNvb3JkUghpbWFnZVBv'
-    'cxIfCghhbHRpdHVkZRgDIAEoAUgAUghhbHRpdHVkZYgBARIdCgdhemltdXRoGAQgASgBSAFSB2'
-    'F6aW11dGiIAQFCCwoJX2FsdGl0dWRlQgoKCF9hemltdXRo');
+    'cxJACg9kZWR1cGVkX2VudHJpZXMYBSADKAsyFy5jZWRhcl9za3kuQ2F0YWxvZ0VudHJ5Ug5kZW'
+    'R1cGVkRW50cmllcxIfCghhbHRpdHVkZRgDIAEoAUgAUghhbHRpdHVkZYgBARIdCgdhemltdXRo'
+    'GAQgASgBSAFSB2F6aW11dGiIAQFCCwoJX2FsdGl0dWRlQgoKCF9hemltdXRo');
 
 @$core.Deprecated('Use actionRequestDescriptor instead')
 const ActionRequest$json = {

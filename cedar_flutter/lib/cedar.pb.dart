@@ -4121,6 +4121,7 @@ class FovCatalogEntry extends $pb.GeneratedMessage {
     ImageCoord? imagePos,
     $core.double? altitude,
     $core.double? azimuth,
+    $core.Iterable<$1.CatalogEntry>? dedupedEntries,
   }) {
     final $result = create();
     if (entry != null) {
@@ -4135,6 +4136,9 @@ class FovCatalogEntry extends $pb.GeneratedMessage {
     if (azimuth != null) {
       $result.azimuth = azimuth;
     }
+    if (dedupedEntries != null) {
+      $result.dedupedEntries.addAll(dedupedEntries);
+    }
     return $result;
   }
   FovCatalogEntry._() : super();
@@ -4146,6 +4150,7 @@ class FovCatalogEntry extends $pb.GeneratedMessage {
     ..aOM<ImageCoord>(2, _omitFieldNames ? '' : 'imagePos', subBuilder: ImageCoord.create)
     ..a<$core.double>(3, _omitFieldNames ? '' : 'altitude', $pb.PbFieldType.OD)
     ..a<$core.double>(4, _omitFieldNames ? '' : 'azimuth', $pb.PbFieldType.OD)
+    ..pc<$1.CatalogEntry>(5, _omitFieldNames ? '' : 'dedupedEntries', $pb.PbFieldType.PM, subBuilder: $1.CatalogEntry.create)
     ..hasRequiredFields = false
   ;
 
@@ -4211,6 +4216,14 @@ class FovCatalogEntry extends $pb.GeneratedMessage {
   $core.bool hasAzimuth() => $_has(3);
   @$pb.TagNumber(4)
   void clearAzimuth() => $_clearField(4);
+
+  /// The object's other designations, if any. See
+  /// cedar_sky.SelectedCatalogEntry.deduped_entries, from which these are
+  /// carried over unchanged. `entry` above is not necessarily the most
+  /// recognizable of them, so a client labelling this object should rank
+  /// `entry` together with these rather than rendering `entry` alone.
+  @$pb.TagNumber(5)
+  $pb.PbList<$1.CatalogEntry> get dedupedEntries => $_getList(4);
 }
 
 class ActionRequest extends $pb.GeneratedMessage {

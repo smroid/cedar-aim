@@ -11,6 +11,15 @@ const double _arrowSize = 12.0;
 const double _arrowAngleDegrees = 25.0;
 const List<String> _specialCatalogLabels = ['IAU', 'AST', 'COM', 'PL'];
 
+// Catalog labels in order of how recognizable their designations are, most
+// recognizable first. A catalog not listed here sorts after all of these,
+// and falls back to the default "label+entry" rendering.
+//
+// AST/COM/PL are omitted: they name planets, asteroids and comets, which
+// are never merged with an M/IAU/NGC/IC designation of the same object, so
+// they never actually compete against this list for ranking.
+const List<String> _catalogRank = ['M', 'IAU', 'NGC', 'IC'];
+
 // angleRad is counter-clockwise starting from up direction, where y increases
 // downward. The angle typically corresponds to north (equatorial mount) or
 // zenith (alt-az mount).
@@ -151,4 +160,30 @@ String commonNameForEntry(CatalogEntry entry) {
     return "";
   }
   return entry.commonName;
+}
+
+// Picks the most recognizable designation of an object out of `primary`
+// (usually SelectedCatalogEntry.entry or FovCatalogEntry.entry) together
+// with its alternates (usually dedupedEntries). `primary` is not
+// necessarily the most recognizable of the set, so callers that want to
+// label an object for a user should call this rather than assuming
+// `primary` is fit to display as-is.
+CatalogEntry bestDesignation(
+    CatalogEntry primary, Iterable<CatalogEntry> alternates) {
+  var best = primary;
+  var bestRank = _catalogRank.indexOf(primary.catalogLabel);
+  if (bestRank == -1) {
+    bestRank = _catalogRank.length;
+  }
+  for (var alt in alternates) {
+    var rank = _catalogRank.indexOf(alt.catalogLabel);
+    if (rank == -1) {
+      rank = _catalogRank.length;
+    }
+    if (rank < bestRank) {
+      best = alt;
+      bestRank = rank;
+    }
+  }
+  return best;
 }
