@@ -48,7 +48,8 @@ typedef ShowCatalogBrowserFunction = void Function(
     BuildContext, MyHomePageState);
 
 typedef ObjectInfoDialogFunction = void Function(
-    MyHomePageState, BuildContext, SelectedCatalogEntry);
+    MyHomePageState, BuildContext, SelectedCatalogEntry,
+    {String? searchText});
 
 typedef WifiAccessPointDialogFunction = void Function(
     MyHomePageState, BuildContext);

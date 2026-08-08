@@ -18,7 +18,7 @@ const List<String> _specialCatalogLabels = ['IAU', 'BAY', 'HYG', 'AST', 'COM', '
 // AST/COM/PL are omitted: they name planets, asteroids and comets, which
 // are never merged with an M/IAU/NGC/IC designation of the same object, so
 // they never actually compete against this list for ranking.
-const List<String> _catalogRank = ['M', 'IAU', 'HYG', 'BAY', 'NGC', 'IC'];
+const List<String> _catalogRank = ['M', 'IAU', 'HYG', 'BAY', 'NGC', 'IC', 'C'];
 
 // angleRad is counter-clockwise starting from up direction, where y increases
 // downward. The angle typically corresponds to north (equatorial mount) or
@@ -148,6 +148,13 @@ void drawArrow(
   canvas.drawPath(path, paint);
 }
 
+// Whether `catalogLabel` is one whose entries are conventionally shown
+// without a catalog prefix (e.g. IAU star names), rather than as
+// "label+entry" (e.g. "NGC1976").
+bool isSpecialCatalogLabel(String catalogLabel) {
+  return _specialCatalogLabels.contains(catalogLabel);
+}
+
 String labelForEntry(CatalogEntry entry) {
   if (_specialCatalogLabels.contains(entry.catalogLabel)) {
     return entry.catalogEntry;
@@ -162,28 +169,47 @@ String commonNameForEntry(CatalogEntry entry) {
   return entry.commonName;
 }
 
+String _normalizedForMatch(String s) =>
+    s.replaceAll(' ', '').toLowerCase();
+
 // Picks the most recognizable designation of an object out of `primary`
 // (usually SelectedCatalogEntry.entry or FovCatalogEntry.entry) together
 // with its alternates (usually dedupedEntries). `primary` is not
 // necessarily the most recognizable of the set, so callers that want to
 // label an object for a user should call this rather than assuming
 // `primary` is fit to display as-is.
+//
+// If `searchText` is given and non-empty, a designation whose label (per
+// labelForEntry) starts with it takes priority over the recognizability
+// ranking below -- a result found by searching "c2" should be shown as
+// "C24", not as whichever designation would otherwise be preferred, since
+// that is the designation the user's search actually matched. Comparison
+// ignores case and spaces on both sides, so "c 2" and "C24" match too. If
+// several designations match, the recognizability ranking picks among them.
 CatalogEntry bestDesignation(
-    CatalogEntry primary, Iterable<CatalogEntry> alternates) {
-  var best = primary;
-  var bestRank = _catalogRank.indexOf(primary.catalogLabel);
-  if (bestRank == -1) {
-    bestRank = _catalogRank.length;
-  }
-  for (var alt in alternates) {
-    var rank = _catalogRank.indexOf(alt.catalogLabel);
+    CatalogEntry primary, Iterable<CatalogEntry> alternates,
+    {String? searchText}) {
+  final query = searchText == null || searchText.isEmpty
+      ? null
+      : _normalizedForMatch(searchText);
+
+  CatalogEntry? best;
+  var bestRank = _catalogRank.length + 1;
+  var bestMatches = false;
+  for (var candidate in [primary, ...alternates]) {
+    final matches = query != null &&
+        _normalizedForMatch(labelForEntry(candidate)).startsWith(query);
+    var rank = _catalogRank.indexOf(candidate.catalogLabel);
     if (rank == -1) {
       rank = _catalogRank.length;
     }
-    if (rank < bestRank) {
-      best = alt;
+    if (best == null ||
+        (matches && !bestMatches) ||
+        (matches == bestMatches && rank < bestRank)) {
+      best = candidate;
       bestRank = rank;
+      bestMatches = matches;
     }
   }
-  return best;
+  return best!;
 }
