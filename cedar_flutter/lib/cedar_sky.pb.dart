@@ -13,8 +13,9 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import 'cedar_common.pb.dart' as $0;
+import 'cedar_common.pb.dart' as $1;
 import 'cedar_sky.pbenum.dart';
+import 'google/protobuf/timestamp.pb.dart' as $0;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
@@ -448,17 +449,229 @@ class SelectedCatalogEntry extends $pb.GeneratedMessage {
   void clearAzimuth() => $_clearField(5);
 }
 
+class SkyEvent extends $pb.GeneratedMessage {
+  factory SkyEvent({
+    $0.Timestamp? time,
+    $core.double? value,
+  }) {
+    final $result = create();
+    if (time != null) {
+      $result.time = time;
+    }
+    if (value != null) {
+      $result.value = value;
+    }
+    return $result;
+  }
+  SkyEvent._() : super();
+  factory SkyEvent.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory SkyEvent.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'SkyEvent', package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar_sky'), createEmptyInstance: create)
+    ..aOM<$0.Timestamp>(1, _omitFieldNames ? '' : 'time', subBuilder: $0.Timestamp.create)
+    ..a<$core.double>(2, _omitFieldNames ? '' : 'value', $pb.PbFieldType.OD)
+    ..hasRequiredFields = false
+  ;
+
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  SkyEvent clone() => SkyEvent()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  SkyEvent copyWith(void Function(SkyEvent) updates) => super.copyWith((message) => updates(message as SkyEvent)) as SkyEvent;
+
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static SkyEvent create() => SkyEvent._();
+  SkyEvent createEmptyInstance() => create();
+  static $pb.PbList<SkyEvent> createRepeated() => $pb.PbList<SkyEvent>();
+  @$core.pragma('dart2js:noInline')
+  static SkyEvent getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<SkyEvent>(create);
+  static SkyEvent? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $0.Timestamp get time => $_getN(0);
+  @$pb.TagNumber(1)
+  set time($0.Timestamp v) { $_setField(1, v); }
+  @$pb.TagNumber(1)
+  $core.bool hasTime() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearTime() => $_clearField(1);
+  @$pb.TagNumber(1)
+  $0.Timestamp ensureTime() => $_ensure(0);
+
+  /// For a rise/set event, azimuth (degrees, positive clockwise from north)
+  /// at that event. For a culmination event, altitude (degrees) at that
+  /// event.
+  @$pb.TagNumber(2)
+  $core.double get value => $_getN(1);
+  @$pb.TagNumber(2)
+  set value($core.double v) { $_setDouble(1, v); }
+  @$pb.TagNumber(2)
+  $core.bool hasValue() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearValue() => $_clearField(2);
+}
+
+///  Rise, set, and culmination times for an object, relative to the time the
+///  containing CatalogEntry was computed. prev_*/next_* are the nearest such
+///  event strictly before/after that time.
+///
+///  prev_rise/next_rise and prev_set/next_set are omitted together: absent iff
+///  the object is circumpolar (never sets) or never rises, as determined by
+///  the object's declination, the observer's latitude, and the horizon
+///  altitude used for the rise/set computation. prev_culmination/
+///  next_culmination are always present; upper culmination (meridian
+///  crossing) occurs regardless of whether the object rises/sets.
+class RiseSetCulmination extends $pb.GeneratedMessage {
+  factory RiseSetCulmination({
+    SkyEvent? prevRise,
+    SkyEvent? nextRise,
+    SkyEvent? prevSet,
+    SkyEvent? nextSet,
+    SkyEvent? prevCulmination,
+    SkyEvent? nextCulmination,
+  }) {
+    final $result = create();
+    if (prevRise != null) {
+      $result.prevRise = prevRise;
+    }
+    if (nextRise != null) {
+      $result.nextRise = nextRise;
+    }
+    if (prevSet != null) {
+      $result.prevSet = prevSet;
+    }
+    if (nextSet != null) {
+      $result.nextSet = nextSet;
+    }
+    if (prevCulmination != null) {
+      $result.prevCulmination = prevCulmination;
+    }
+    if (nextCulmination != null) {
+      $result.nextCulmination = nextCulmination;
+    }
+    return $result;
+  }
+  RiseSetCulmination._() : super();
+  factory RiseSetCulmination.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory RiseSetCulmination.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'RiseSetCulmination', package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar_sky'), createEmptyInstance: create)
+    ..aOM<SkyEvent>(1, _omitFieldNames ? '' : 'prevRise', subBuilder: SkyEvent.create)
+    ..aOM<SkyEvent>(2, _omitFieldNames ? '' : 'nextRise', subBuilder: SkyEvent.create)
+    ..aOM<SkyEvent>(3, _omitFieldNames ? '' : 'prevSet', subBuilder: SkyEvent.create)
+    ..aOM<SkyEvent>(4, _omitFieldNames ? '' : 'nextSet', subBuilder: SkyEvent.create)
+    ..aOM<SkyEvent>(5, _omitFieldNames ? '' : 'prevCulmination', subBuilder: SkyEvent.create)
+    ..aOM<SkyEvent>(6, _omitFieldNames ? '' : 'nextCulmination', subBuilder: SkyEvent.create)
+    ..hasRequiredFields = false
+  ;
+
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  RiseSetCulmination clone() => RiseSetCulmination()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  RiseSetCulmination copyWith(void Function(RiseSetCulmination) updates) => super.copyWith((message) => updates(message as RiseSetCulmination)) as RiseSetCulmination;
+
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static RiseSetCulmination create() => RiseSetCulmination._();
+  RiseSetCulmination createEmptyInstance() => create();
+  static $pb.PbList<RiseSetCulmination> createRepeated() => $pb.PbList<RiseSetCulmination>();
+  @$core.pragma('dart2js:noInline')
+  static RiseSetCulmination getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<RiseSetCulmination>(create);
+  static RiseSetCulmination? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  SkyEvent get prevRise => $_getN(0);
+  @$pb.TagNumber(1)
+  set prevRise(SkyEvent v) { $_setField(1, v); }
+  @$pb.TagNumber(1)
+  $core.bool hasPrevRise() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearPrevRise() => $_clearField(1);
+  @$pb.TagNumber(1)
+  SkyEvent ensurePrevRise() => $_ensure(0);
+
+  @$pb.TagNumber(2)
+  SkyEvent get nextRise => $_getN(1);
+  @$pb.TagNumber(2)
+  set nextRise(SkyEvent v) { $_setField(2, v); }
+  @$pb.TagNumber(2)
+  $core.bool hasNextRise() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearNextRise() => $_clearField(2);
+  @$pb.TagNumber(2)
+  SkyEvent ensureNextRise() => $_ensure(1);
+
+  @$pb.TagNumber(3)
+  SkyEvent get prevSet => $_getN(2);
+  @$pb.TagNumber(3)
+  set prevSet(SkyEvent v) { $_setField(3, v); }
+  @$pb.TagNumber(3)
+  $core.bool hasPrevSet() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearPrevSet() => $_clearField(3);
+  @$pb.TagNumber(3)
+  SkyEvent ensurePrevSet() => $_ensure(2);
+
+  @$pb.TagNumber(4)
+  SkyEvent get nextSet => $_getN(3);
+  @$pb.TagNumber(4)
+  set nextSet(SkyEvent v) { $_setField(4, v); }
+  @$pb.TagNumber(4)
+  $core.bool hasNextSet() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearNextSet() => $_clearField(4);
+  @$pb.TagNumber(4)
+  SkyEvent ensureNextSet() => $_ensure(3);
+
+  @$pb.TagNumber(5)
+  SkyEvent get prevCulmination => $_getN(4);
+  @$pb.TagNumber(5)
+  set prevCulmination(SkyEvent v) { $_setField(5, v); }
+  @$pb.TagNumber(5)
+  $core.bool hasPrevCulmination() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearPrevCulmination() => $_clearField(5);
+  @$pb.TagNumber(5)
+  SkyEvent ensurePrevCulmination() => $_ensure(4);
+
+  @$pb.TagNumber(6)
+  SkyEvent get nextCulmination => $_getN(5);
+  @$pb.TagNumber(6)
+  set nextCulmination(SkyEvent v) { $_setField(6, v); }
+  @$pb.TagNumber(6)
+  $core.bool hasNextCulmination() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearNextCulmination() => $_clearField(6);
+  @$pb.TagNumber(6)
+  SkyEvent ensureNextCulmination() => $_ensure(5);
+}
+
 class CatalogEntry extends $pb.GeneratedMessage {
   factory CatalogEntry({
     $core.String? catalogLabel,
     $core.String? catalogEntry,
-    $0.CelestialCoord? coord,
+    $1.CelestialCoord? coord,
     Constellation? constellation,
     ObjectType? objectType,
     $core.double? magnitude,
     $core.String? angularSize,
     $core.String? commonName,
     $core.String? notes,
+    RiseSetCulmination? riseSetCulmination,
   }) {
     final $result = create();
     if (catalogLabel != null) {
@@ -488,6 +701,9 @@ class CatalogEntry extends $pb.GeneratedMessage {
     if (notes != null) {
       $result.notes = notes;
     }
+    if (riseSetCulmination != null) {
+      $result.riseSetCulmination = riseSetCulmination;
+    }
     return $result;
   }
   CatalogEntry._() : super();
@@ -497,13 +713,14 @@ class CatalogEntry extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'CatalogEntry', package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar_sky'), createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'catalogLabel')
     ..aOS(2, _omitFieldNames ? '' : 'catalogEntry')
-    ..aOM<$0.CelestialCoord>(3, _omitFieldNames ? '' : 'coord', subBuilder: $0.CelestialCoord.create)
+    ..aOM<$1.CelestialCoord>(3, _omitFieldNames ? '' : 'coord', subBuilder: $1.CelestialCoord.create)
     ..aOM<Constellation>(4, _omitFieldNames ? '' : 'constellation', subBuilder: Constellation.create)
     ..aOM<ObjectType>(5, _omitFieldNames ? '' : 'objectType', subBuilder: ObjectType.create)
     ..a<$core.double>(6, _omitFieldNames ? '' : 'magnitude', $pb.PbFieldType.OD)
     ..aOS(7, _omitFieldNames ? '' : 'angularSize')
     ..aOS(8, _omitFieldNames ? '' : 'commonName')
     ..aOS(9, _omitFieldNames ? '' : 'notes')
+    ..aOM<RiseSetCulmination>(10, _omitFieldNames ? '' : 'riseSetCulmination', subBuilder: RiseSetCulmination.create)
     ..hasRequiredFields = false
   ;
 
@@ -549,15 +766,15 @@ class CatalogEntry extends $pb.GeneratedMessage {
   void clearCatalogEntry() => $_clearField(2);
 
   @$pb.TagNumber(3)
-  $0.CelestialCoord get coord => $_getN(2);
+  $1.CelestialCoord get coord => $_getN(2);
   @$pb.TagNumber(3)
-  set coord($0.CelestialCoord v) { $_setField(3, v); }
+  set coord($1.CelestialCoord v) { $_setField(3, v); }
   @$pb.TagNumber(3)
   $core.bool hasCoord() => $_has(2);
   @$pb.TagNumber(3)
   void clearCoord() => $_clearField(3);
   @$pb.TagNumber(3)
-  $0.CelestialCoord ensureCoord() => $_ensure(2);
+  $1.CelestialCoord ensureCoord() => $_ensure(2);
 
   @$pb.TagNumber(4)
   Constellation get constellation => $_getN(3);
@@ -616,6 +833,21 @@ class CatalogEntry extends $pb.GeneratedMessage {
   $core.bool hasNotes() => $_has(8);
   @$pb.TagNumber(9)
   void clearNotes() => $_clearField(9);
+
+  /// Rise/set/culmination timing, relative to the observer location and time
+  /// in effect when this entry was returned. Only populated by the
+  /// GetCatalogEntry RPC, which knows the observer location/time; omitted
+  /// elsewhere (e.g. entries returned by QueryCatalogEntries).
+  @$pb.TagNumber(10)
+  RiseSetCulmination get riseSetCulmination => $_getN(9);
+  @$pb.TagNumber(10)
+  set riseSetCulmination(RiseSetCulmination v) { $_setField(10, v); }
+  @$pb.TagNumber(10)
+  $core.bool hasRiseSetCulmination() => $_has(9);
+  @$pb.TagNumber(10)
+  void clearRiseSetCulmination() => $_clearField(10);
+  @$pb.TagNumber(10)
+  RiseSetCulmination ensureRiseSetCulmination() => $_ensure(9);
 }
 
 class CatalogDescription extends $pb.GeneratedMessage {
@@ -1052,7 +1284,7 @@ class CatalogEntryKey extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   void clearCatLabel() => $_clearField(1);
 
-  /// or COM.
+  /// PL, etc.
   @$pb.TagNumber(2)
   $core.String get entry => $_getSZ(1);
   @$pb.TagNumber(2)

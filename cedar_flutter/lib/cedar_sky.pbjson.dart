@@ -127,6 +127,50 @@ final $typed_data.Uint8List selectedCatalogEntryDescriptor = $convert.base64Deco
     'AUgAUghhbHRpdHVkZYgBARIdCgdhemltdXRoGAUgASgBSAFSB2F6aW11dGiIAQFCCwoJX2FsdG'
     'l0dWRlQgoKCF9hemltdXRo');
 
+@$core.Deprecated('Use skyEventDescriptor instead')
+const SkyEvent$json = {
+  '1': 'SkyEvent',
+  '2': [
+    {'1': 'time', '3': 1, '4': 1, '5': 11, '6': '.google.protobuf.Timestamp', '10': 'time'},
+    {'1': 'value', '3': 2, '4': 1, '5': 1, '10': 'value'},
+  ],
+};
+
+/// Descriptor for `SkyEvent`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List skyEventDescriptor = $convert.base64Decode(
+    'CghTa3lFdmVudBIuCgR0aW1lGAEgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcFIEdG'
+    'ltZRIUCgV2YWx1ZRgCIAEoAVIFdmFsdWU=');
+
+@$core.Deprecated('Use riseSetCulminationDescriptor instead')
+const RiseSetCulmination$json = {
+  '1': 'RiseSetCulmination',
+  '2': [
+    {'1': 'prev_rise', '3': 1, '4': 1, '5': 11, '6': '.cedar_sky.SkyEvent', '9': 0, '10': 'prevRise', '17': true},
+    {'1': 'next_rise', '3': 2, '4': 1, '5': 11, '6': '.cedar_sky.SkyEvent', '9': 1, '10': 'nextRise', '17': true},
+    {'1': 'prev_set', '3': 3, '4': 1, '5': 11, '6': '.cedar_sky.SkyEvent', '9': 2, '10': 'prevSet', '17': true},
+    {'1': 'next_set', '3': 4, '4': 1, '5': 11, '6': '.cedar_sky.SkyEvent', '9': 3, '10': 'nextSet', '17': true},
+    {'1': 'prev_culmination', '3': 5, '4': 1, '5': 11, '6': '.cedar_sky.SkyEvent', '10': 'prevCulmination'},
+    {'1': 'next_culmination', '3': 6, '4': 1, '5': 11, '6': '.cedar_sky.SkyEvent', '10': 'nextCulmination'},
+  ],
+  '8': [
+    {'1': '_prev_rise'},
+    {'1': '_next_rise'},
+    {'1': '_prev_set'},
+    {'1': '_next_set'},
+  ],
+};
+
+/// Descriptor for `RiseSetCulmination`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List riseSetCulminationDescriptor = $convert.base64Decode(
+    'ChJSaXNlU2V0Q3VsbWluYXRpb24SNQoJcHJldl9yaXNlGAEgASgLMhMuY2VkYXJfc2t5LlNreU'
+    'V2ZW50SABSCHByZXZSaXNliAEBEjUKCW5leHRfcmlzZRgCIAEoCzITLmNlZGFyX3NreS5Ta3lF'
+    'dmVudEgBUghuZXh0UmlzZYgBARIzCghwcmV2X3NldBgDIAEoCzITLmNlZGFyX3NreS5Ta3lFdm'
+    'VudEgCUgdwcmV2U2V0iAEBEjMKCG5leHRfc2V0GAQgASgLMhMuY2VkYXJfc2t5LlNreUV2ZW50'
+    'SANSB25leHRTZXSIAQESPgoQcHJldl9jdWxtaW5hdGlvbhgFIAEoCzITLmNlZGFyX3NreS5Ta3'
+    'lFdmVudFIPcHJldkN1bG1pbmF0aW9uEj4KEG5leHRfY3VsbWluYXRpb24YBiABKAsyEy5jZWRh'
+    'cl9za3kuU2t5RXZlbnRSD25leHRDdWxtaW5hdGlvbkIMCgpfcHJldl9yaXNlQgwKCl9uZXh0X3'
+    'Jpc2VCCwoJX3ByZXZfc2V0QgsKCV9uZXh0X3NldA==');
+
 @$core.Deprecated('Use catalogEntryDescriptor instead')
 const CatalogEntry$json = {
   '1': 'CatalogEntry',
@@ -140,6 +184,7 @@ const CatalogEntry$json = {
     {'1': 'angular_size', '3': 7, '4': 1, '5': 9, '9': 2, '10': 'angularSize', '17': true},
     {'1': 'common_name', '3': 8, '4': 1, '5': 9, '9': 3, '10': 'commonName', '17': true},
     {'1': 'notes', '3': 9, '4': 1, '5': 9, '9': 4, '10': 'notes', '17': true},
+    {'1': 'rise_set_culmination', '3': 10, '4': 1, '5': 11, '6': '.cedar_sky.RiseSetCulmination', '9': 5, '10': 'riseSetCulmination', '17': true},
   ],
   '8': [
     {'1': '_constellation'},
@@ -147,6 +192,7 @@ const CatalogEntry$json = {
     {'1': '_angular_size'},
     {'1': '_common_name'},
     {'1': '_notes'},
+    {'1': '_rise_set_culmination'},
   ],
 };
 
@@ -159,8 +205,10 @@ final $typed_data.Uint8List catalogEntryDescriptor = $convert.base64Decode(
     'cGUYBSABKAsyFS5jZWRhcl9za3kuT2JqZWN0VHlwZVIKb2JqZWN0VHlwZRIhCgltYWduaXR1ZG'
     'UYBiABKAFIAVIJbWFnbml0dWRliAEBEiYKDGFuZ3VsYXJfc2l6ZRgHIAEoCUgCUgthbmd1bGFy'
     'U2l6ZYgBARIkCgtjb21tb25fbmFtZRgIIAEoCUgDUgpjb21tb25OYW1liAEBEhkKBW5vdGVzGA'
-    'kgASgJSARSBW5vdGVziAEBQhAKDl9jb25zdGVsbGF0aW9uQgwKCl9tYWduaXR1ZGVCDwoNX2Fu'
-    'Z3VsYXJfc2l6ZUIOCgxfY29tbW9uX25hbWVCCAoGX25vdGVz');
+    'kgASgJSARSBW5vdGVziAEBElQKFHJpc2Vfc2V0X2N1bG1pbmF0aW9uGAogASgLMh0uY2VkYXJf'
+    'c2t5LlJpc2VTZXRDdWxtaW5hdGlvbkgFUhJyaXNlU2V0Q3VsbWluYXRpb26IAQFCEAoOX2Nvbn'
+    'N0ZWxsYXRpb25CDAoKX21hZ25pdHVkZUIPCg1fYW5ndWxhcl9zaXplQg4KDF9jb21tb25fbmFt'
+    'ZUIICgZfbm90ZXNCFwoVX3Jpc2Vfc2V0X2N1bG1pbmF0aW9u');
 
 @$core.Deprecated('Use catalogDescriptionDescriptor instead')
 const CatalogDescription$json = {
