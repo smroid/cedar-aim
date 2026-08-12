@@ -305,12 +305,14 @@ class CedarDrawer extends StatelessWidget {
               alignment: Alignment.center)),
       SizedBox(height: _kDrawerSpacing * textScaleFactor(controller.context)),
 
-      // Mode selection dropdown (hidden if both skip_focus and skip_alignment are set)
-      if (!(controller.skipFocus && controller.skipAlignment)) ...[
-        Align(
-            alignment: Alignment.topLeft,
-            child: Row(
-              children: [
+      // Mode selection dropdown and RA/Dec button. The dropdown is hidden
+      // if both skip_focus and skip_alignment are set (nothing to select
+      // between); the RA/Dec button stays in this row either way.
+      Align(
+          alignment: Alignment.topLeft,
+          child: Row(
+            children: [
+              if (!(controller.skipFocus && controller.skipAlignment)) ...[
                 Container(width: 15),
                 DropdownMenu<String>(
                     inputDecorationTheme: InputDecorationTheme(
@@ -355,22 +357,21 @@ class CedarDrawer extends StatelessWidget {
                       controller.onStateChanged();
                       Navigator.of(controller.context).pop();
                     }),
-                if (controller.onGotoRaDec != null) ...[
-                  const SizedBox(width: 4),
-                  TextButton.icon(
-                    icon: const Icon(Icons.gps_fixed),
-                    label: _scaledText("RA/Dec"),
-                    onPressed: () {
-                      controller.closeDrawer();
-                      WidgetsBinding.instance.addPostFrameCallback((_) {
-                        controller.onGotoRaDec!();
-                      });
-                    },
-                  ),
-                ],
+                const SizedBox(width: 4),
               ],
-            )),
-      ],
+              if (controller.onGotoRaDec != null)
+                TextButton.icon(
+                  icon: const Icon(Icons.gps_fixed),
+                  label: _scaledText("RA/Dec"),
+                  onPressed: () {
+                    controller.closeDrawer();
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      controller.onGotoRaDec!();
+                    });
+                  },
+                ),
+            ],
+          )),
 
       SizedBox(height: _kDrawerSpacing * textScaleFactor(controller.context)),
 
@@ -390,23 +391,6 @@ class CedarDrawer extends StatelessWidget {
                   Navigator.of(controller.context).pop();
                 })),
         SizedBox(height: _kDrawerSpacing * textScaleFactor(controller.context)),
-        if (controller.onGotoRaDec != null) ...[
-          Align(
-            alignment: Alignment.topLeft,
-            child:
-              TextButton.icon(
-                icon: const Icon(Icons.gps_fixed),
-                label: _scaledText("RA/Dec"),
-                onPressed: () {
-                  controller.closeDrawer();
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    controller.onGotoRaDec!();
-                  });
-                },
-              ),
-          ),
-          SizedBox(height: _kDrawerSpacing * textScaleFactor(controller.context)),
-        ],
       ],
 
       // Preferences button
