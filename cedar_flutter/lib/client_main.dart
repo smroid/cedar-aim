@@ -41,15 +41,24 @@ import 'platform.dart';
 // flutter build web --no-web-resources-cdn
 // flutter build apk --release
 
-typedef DrawCatalogEntriesFunction = void Function(BuildContext, Canvas, Color,
-    List<cedar_rpc.FovCatalogEntry>, bool, int, cedar_rpc.FovCatalogEntry?);
+typedef DrawCatalogEntriesFunction = void Function(
+    BuildContext,
+    Canvas,
+    Color,
+    List<cedar_rpc.FovCatalogEntry>,
+    bool,
+    int,
+    cedar_rpc.FovCatalogEntry?,
+    Iterable<String>?);
 
 typedef ShowCatalogBrowserFunction = void Function(
     BuildContext, MyHomePageState);
 
 typedef ObjectInfoDialogFunction = void Function(
     MyHomePageState, BuildContext, SelectedCatalogEntry,
-    {String? searchText});
+    {String? searchText,
+    Iterable<String>? preferredCatalogs,
+    bool dedupedEntriesMayBeIncomplete});
 
 typedef WifiAccessPointDialogFunction = void Function(
     MyHomePageState, BuildContext);
@@ -440,12 +449,15 @@ class _MainImagePainter extends CustomPainter {
             : null;
 
         _drawCatalogEntries!(_context, canvas, color, scaledLabeledEntries,
-            /*drawLabel=*/ true, state._binFactor, boldEntry);
+            /*drawLabel=*/ true, state._binFactor, boldEntry,
+            state.preferredCatalogs);
         _drawCatalogEntries!(_context, canvas, color, scaledUnlabeledEntries,
-            /*drawLabel=*/ false, state._binFactor, boldEntry);
+            /*drawLabel=*/ false, state._binFactor, boldEntry,
+            state.preferredCatalogs);
         if (dimLabeledCatalogEntries.isNotEmpty) {
           _drawCatalogEntries!(_context, canvas, opaqueColor, scaledDimEntries,
-              /*drawLabel=*/ true, state._binFactor, null);
+              /*drawLabel=*/ true, state._binFactor, null,
+              state.preferredCatalogs);
         }
       }
     }
@@ -587,6 +599,19 @@ class MyHomePageState extends State<MyHomePage> {
   cedar_rpc.ServerInformation? serverInformation;
   var fixedSettings = cedar_rpc.FixedSettings();
   var operationSettings = cedar_rpc.OperationSettings();
+
+  // The catalog(s) the FOV is currently filtered to, if catalog_label
+  // matching is active and non-empty -- an object found under that filter
+  // should be labeled with a designation from one of these catalogs, in
+  // preference to the general recognizability ranking. See
+  // draw_util.dart's bestDesignation().
+  Iterable<String>? get preferredCatalogs {
+    final catalogEntryMatch = operationSettings.catalogEntryMatch;
+    return catalogEntryMatch.matchCatalogLabel &&
+            catalogEntryMatch.catalogLabel.isNotEmpty
+        ? catalogEntryMatch.catalogLabel
+        : null;
+  }
   bool _setupMode = false;
   bool _focusAid = false;
   bool _daylightMode = false;
@@ -1972,7 +1997,8 @@ class MyHomePageState extends State<MyHomePage> {
                                       dedupedEntries: boresightCatalogEntry!.dedupedEntries,
                                       altitude: boresightCatalogEntry!.hasAltitude() ? boresightCatalogEntry!.altitude : null,
                                       azimuth: boresightCatalogEntry!.hasAzimuth() ? boresightCatalogEntry!.azimuth : null,
-                                    ));
+                                    ),
+                                    preferredCatalogs: preferredCatalogs);
                               },
                               child: FittedBox(
                                 fit: BoxFit.scaleDown,
@@ -2096,15 +2122,18 @@ class MyHomePageState extends State<MyHomePage> {
                 } else {
                   // Aim mode.
                   if (_objectInfoDialog != null && _slewRequest == null) {
-                    var object = _findObjectHit(localPosition, hitTolerance);
-                    if (object != null) {
+                    var hit = _findObjectHit(localPosition, hitTolerance);
+                    if (hit != null) {
+                      final (object, isUnlabeled) = hit;
                       var selEntry = SelectedCatalogEntry(
                         entry: object.entry,
                         dedupedEntries: object.dedupedEntries,
                         altitude: object.hasAltitude() ? object.altitude : null,
                         azimuth: object.hasAzimuth() ? object.azimuth : null,
                       );
-                      _objectInfoDialog!(this, context, selEntry);
+                      _objectInfoDialog!(this, context, selEntry,
+                          preferredCatalogs: preferredCatalogs,
+                          dedupedEntriesMayBeIncomplete: isUnlabeled);
                     }
                   }
                 }
@@ -2174,8 +2203,15 @@ class MyHomePageState extends State<MyHomePage> {
     return null;
   }
 
-  cedar_rpc.FovCatalogEntry? _findObjectHit(Offset tapPosition, int tolerance) {
+  // Returns the tapped entry, if any, together with whether it came from
+  // the unlabeled/decrowded list -- such an entry's dedupedEntries is
+  // always empty server-side (a decrowded object is represented as a bare
+  // CatalogEntry, which has no field to carry alternate designations), so
+  // callers may need to re-query for the full designation set.
+  (cedar_rpc.FovCatalogEntry, bool isUnlabeled)? _findObjectHit(
+      Offset tapPosition, int tolerance) {
     cedar_rpc.FovCatalogEntry? closest;
+    bool closestIsUnlabeled = false;
     double closestDistance = 0;
 
     for (var entry in _labeledFovCatalogEntries) {
@@ -2183,6 +2219,7 @@ class MyHomePageState extends State<MyHomePage> {
       var distance = (imagePos - tapPosition).distance;
       if (closest == null || distance < closestDistance) {
         closest = entry;
+        closestIsUnlabeled = false;
         closestDistance = distance;
       }
     }
@@ -2191,11 +2228,12 @@ class MyHomePageState extends State<MyHomePage> {
       var distance = (imagePos - tapPosition).distance;
       if (closest == null || distance < closestDistance) {
         closest = entry;
+        closestIsUnlabeled = true;
         closestDistance = distance;
       }
     }
     if (closest != null && closestDistance < tolerance * _binFactor) {
-      return closest;
+      return (closest, closestIsUnlabeled);
     }
     return null;
   }

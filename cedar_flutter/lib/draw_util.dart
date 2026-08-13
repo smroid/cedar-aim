@@ -184,36 +184,58 @@ String _normalizedForMatch(String s) =>
 // label an object for a user should call this rather than assuming
 // `primary` is fit to display as-is.
 //
-// If `searchText` is given and non-empty, a designation whose label (per
-// labelForEntry) starts with it takes priority over the recognizability
-// ranking below -- a result found by searching "c2" should be shown as
-// "C24", not as whichever designation would otherwise be preferred, since
-// that is the designation the user's search actually matched. Comparison
-// ignores case and spaces on both sides, so "c 2" and "C24" match too. If
-// several designations match, the recognizability ranking picks among them.
+// Three tiers of preference are considered, in order:
+//
+// 1. If `searchText` is given and non-empty, a designation whose label
+//    (per labelForEntry) starts with it wins outright -- a result found by
+//    searching "c2" should be shown as "C24", not as whichever designation
+//    would otherwise be preferred, since that is the designation the
+//    user's search actually matched. Comparison ignores case and spaces on
+//    both sides, so "c 2" and "C24" match too.
+// 2. Otherwise, if `preferredCatalogs` is given and non-empty (typically
+//    CatalogEntryMatch.catalog_label, when CatalogEntryMatch.
+//    match_catalog_label is set), a designation belonging to one of those
+//    catalogs wins -- when the user has filtered the browser to NGC, an
+//    object found under that filter should be labeled with its NGC
+//    designation, not some other catalog's. If several qualifying
+//    designations belong to different preferred catalogs, the
+//    recognizability ranking below picks among them (preferredCatalogs
+//    itself carries no ordering).
+// 3. Otherwise, the recognizability ranking below picks the winner.
+//
+// Within any tier, if several designations qualify, the recognizability
+// ranking picks among them.
 CatalogEntry bestDesignation(
     CatalogEntry primary, Iterable<CatalogEntry> alternates,
-    {String? searchText}) {
+    {String? searchText, Iterable<String>? preferredCatalogs}) {
   final query = searchText == null || searchText.isEmpty
       ? null
       : _normalizedForMatch(searchText);
+  final preferred =
+      preferredCatalogs == null || preferredCatalogs.isEmpty
+          ? null
+          : preferredCatalogs.toSet();
 
   CatalogEntry? best;
   var bestRank = _catalogRank.length + 1;
-  var bestMatches = false;
+  var bestTier = 0; // Higher is better: 2 = search match, 1 = preferred
+                    // catalog, 0 = neither.
   for (var candidate in [primary, ...alternates]) {
-    final matches = query != null &&
+    final matchesSearch = query != null &&
         _normalizedForMatch(labelForEntry(candidate)).startsWith(query);
+    final matchesPreferred =
+        preferred != null && preferred.contains(candidate.catalogLabel);
+    final tier = matchesSearch ? 2 : (matchesPreferred ? 1 : 0);
     var rank = _catalogRank.indexOf(candidate.catalogLabel);
     if (rank == -1) {
       rank = _catalogRank.length;
     }
     if (best == null ||
-        (matches && !bestMatches) ||
-        (matches == bestMatches && rank < bestRank)) {
+        tier > bestTier ||
+        (tier == bestTier && rank < bestRank)) {
       best = candidate;
       bestRank = rank;
-      bestMatches = matches;
+      bestTier = tier;
     }
   }
   return best!;
