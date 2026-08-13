@@ -726,11 +726,13 @@ class CedarDrawer extends StatelessWidget {
                     if (context.mounted) {
                       Navigator.of(context).pop(); // Close "Saving image" dialog
                       controller.closeDrawer();
-                      if (path == null) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Failed to save image')),
-                        );
-                      }
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(path == null
+                              ? 'Failed to save image'
+                              : 'Image saved'),
+                        ),
+                      );
                     }
                   }))
         ]),
