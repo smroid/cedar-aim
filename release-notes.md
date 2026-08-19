@@ -1,5 +1,13 @@
 # Cedar Aim Release Notes
 
+## 1.2.3 (build 29)
+
+Changes since 1.2.0 (build 26).
+
+### Image saving
+
+- Saving an image now shows a confirmation snackbar.
+
 ## 1.2.0 (build 26)
 
 Changes since 1.1.3 (build 25).
