@@ -164,8 +164,8 @@ class QueryCatalogRequest extends $pb.GeneratedMessage {
   /// with implicit AND; order is not significant. Thus, |andr gal| and
   /// |gal andr| both match "Andromeda Galaxy".
   /// Note that when `text_search` is given, the `catalog_entry_match`,
-  /// `max_distance`, and `min_elevation` constraints are ignored, and 'ordering'
-  /// is also ignored.
+  /// `max_distance`, and `min_elevation` constraints are ignored, and
+  /// 'ordering' and `decrowd_distance` are also ignored.
   @$pb.TagNumber(8)
   $core.String get textSearch => $_getSZ(6);
   @$pb.TagNumber(8)

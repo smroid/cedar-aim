@@ -21,13 +21,14 @@ const Ordering$json = {
     {'1': 'BRIGHTNESS', '2': 1},
     {'1': 'SKY_LOCATION', '2': 2},
     {'1': 'ELEVATION', '2': 3},
+    {'1': 'HOUR_ANGLE', '2': 4},
   ],
 };
 
 /// Descriptor for `Ordering`. Decode as a `google.protobuf.EnumDescriptorProto`.
 final $typed_data.Uint8List orderingDescriptor = $convert.base64Decode(
     'CghPcmRlcmluZxIPCgtVTlNQRUNJRklFRBAAEg4KCkJSSUdIVE5FU1MQARIQCgxTS1lfTE9DQV'
-    'RJT04QAhINCglFTEVWQVRJT04QAw==');
+    'RJT04QAhINCglFTEVWQVRJT04QAxIOCgpIT1VSX0FOR0xFEAQ=');
 
 @$core.Deprecated('Use queryCatalogRequestDescriptor instead')
 const QueryCatalogRequest$json = {

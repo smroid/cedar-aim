@@ -23,12 +23,21 @@ class Ordering extends $pb.ProtobufEnum {
   /// Highest first. If observer geolocation is unknown, reverts to brightness
   /// ordering.
   static const Ordering ELEVATION = Ordering._(3, _omitEnumNames ? '' : 'ELEVATION');
+  /// Ordered by hour angle from the observer's local meridian, sweeping
+  /// eastward starting at the anti-meridian (hour angle 180 degrees -- the
+  /// seam) through the meridian (hour angle 0) and on to just short of the
+  /// anti-meridian again (hour angle -180/+180 degrees). Intended for
+  /// observing marathons: west-most (setting soonest) objects first, working
+  /// eastward toward what has the most time left before setting. If observer
+  /// geolocation is unknown, reverts to brightness ordering.
+  static const Ordering HOUR_ANGLE = Ordering._(4, _omitEnumNames ? '' : 'HOUR_ANGLE');
 
   static const $core.List<Ordering> values = <Ordering> [
     UNSPECIFIED,
     BRIGHTNESS,
     SKY_LOCATION,
     ELEVATION,
+    HOUR_ANGLE,
   ];
 
   static final $core.Map<$core.int, Ordering> _byValue = $pb.ProtobufEnum.initByValue(values);
