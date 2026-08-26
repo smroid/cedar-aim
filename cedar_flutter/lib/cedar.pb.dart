@@ -1120,6 +1120,8 @@ class Preferences extends $pb.GeneratedMessage {
     $core.String? perfGaugeChoice,
     $core.bool? skipFocus,
     $core.bool? skipAlignment,
+    $core.Iterable<$core.String>? knownCatalogLabel,
+    $core.Iterable<$core.String>? knownObjectTypeLabel,
   }) {
     final $result = create();
     if (celestialCoordFormat != null) {
@@ -1188,6 +1190,12 @@ class Preferences extends $pb.GeneratedMessage {
     if (skipAlignment != null) {
       $result.skipAlignment = skipAlignment;
     }
+    if (knownCatalogLabel != null) {
+      $result.knownCatalogLabel.addAll(knownCatalogLabel);
+    }
+    if (knownObjectTypeLabel != null) {
+      $result.knownObjectTypeLabel.addAll(knownObjectTypeLabel);
+    }
     return $result;
   }
   Preferences._() : super();
@@ -1217,6 +1225,8 @@ class Preferences extends $pb.GeneratedMessage {
     ..aOS(33, _omitFieldNames ? '' : 'perfGaugeChoice')
     ..aOB(35, _omitFieldNames ? '' : 'skipFocus')
     ..aOB(36, _omitFieldNames ? '' : 'skipAlignment')
+    ..pPS(37, _omitFieldNames ? '' : 'knownCatalogLabel')
+    ..pPS(38, _omitFieldNames ? '' : 'knownObjectTypeLabel')
     ..hasRequiredFields = false
   ;
 
@@ -1482,6 +1492,16 @@ class Preferences extends $pb.GeneratedMessage {
   $core.bool hasSkipAlignment() => $_has(21);
   @$pb.TagNumber(36)
   void clearSkipAlignment() => $_clearField(36);
+
+  /// Every label the sky catalog offered when `catalog_entry_match` was last
+  /// written, so that a label the user deselected can be distinguished from one
+  /// that did not exist yet. The latter is selected when the catalog gains it.
+  /// Maintained by the server; clients neither set nor need these.
+  @$pb.TagNumber(37)
+  $pb.PbList<$core.String> get knownCatalogLabel => $_getList(22);
+
+  @$pb.TagNumber(38)
+  $pb.PbList<$core.String> get knownObjectTypeLabel => $_getList(23);
 }
 
 class FrameRequest extends $pb.GeneratedMessage {
@@ -3136,8 +3156,9 @@ class ProcessingStats extends $pb.GeneratedMessage {
   @$pb.TagNumber(10)
   ValueStats ensureDetectOtherLatency() => $_ensure(7);
 
-  /// How much time (in seconds) is spent in process_plate_solution_result()
-  /// (when a plate solve is attempted).
+  /// How much time (in seconds) is spent in attempt_plate_solve()'s
+  /// non-solver work plus process_and_post() -- includes the Cedar Sky
+  /// catalog query -- when a plate solve is attempted.
   @$pb.TagNumber(11)
   ValueStats get solveOtherLatency => $_getN(8);
   @$pb.TagNumber(11)
@@ -4633,6 +4654,58 @@ class ServerLogResult extends $pb.GeneratedMessage {
   $core.bool hasLogContent() => $_has(0);
   @$pb.TagNumber(1)
   void clearLogContent() => $_clearField(1);
+}
+
+class CpuUsageReport extends $pb.GeneratedMessage {
+  factory CpuUsageReport({
+    $core.String? report,
+  }) {
+    final $result = create();
+    if (report != null) {
+      $result.report = report;
+    }
+    return $result;
+  }
+  CpuUsageReport._() : super();
+  factory CpuUsageReport.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory CpuUsageReport.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'CpuUsageReport', package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'), createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'report')
+    ..hasRequiredFields = false
+  ;
+
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  CpuUsageReport clone() => CpuUsageReport()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  CpuUsageReport copyWith(void Function(CpuUsageReport) updates) => super.copyWith((message) => updates(message as CpuUsageReport)) as CpuUsageReport;
+
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static CpuUsageReport create() => CpuUsageReport._();
+  CpuUsageReport createEmptyInstance() => create();
+  static $pb.PbList<CpuUsageReport> createRepeated() => $pb.PbList<CpuUsageReport>();
+  @$core.pragma('dart2js:noInline')
+  static CpuUsageReport getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<CpuUsageReport>(create);
+  static CpuUsageReport? _defaultInstance;
+
+  /// Human-readable, top-like snapshot of instantaneous CPU usage. Not
+  /// machine-parsed; format is not guaranteed stable.
+  @$pb.TagNumber(1)
+  $core.String get report => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set report($core.String v) { $_setString(0, v); }
+  @$pb.TagNumber(1)
+  $core.bool hasReport() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearReport() => $_clearField(1);
 }
 
 class EmptyMessage extends $pb.GeneratedMessage {

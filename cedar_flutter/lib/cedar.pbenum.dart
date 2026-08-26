@@ -13,6 +13,13 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
+/// BASIC and PLUS identify commercial embodiments of cedar-server licensed by
+/// the copyright holder and are reserved for servers produced under such a
+/// license. A cedar-server instance -- including any modified or
+/// derivative build -- that has not been produced under such a license MUST
+/// report DIY, regardless of what functionality it implements or resembles.
+/// This is a condition of the license under which cedar-server is made
+/// available; see the "Feature-Level Advertisement" section of LICENSE.md.
 class FeatureLevel extends $pb.ProtobufEnum {
   static const FeatureLevel FEATURE_LEVEL_UNSPECIFIED = FeatureLevel._(0, _omitEnumNames ? '' : 'FEATURE_LEVEL_UNSPECIFIED');
   static const FeatureLevel DIY = FeatureLevel._(1, _omitEnumNames ? '' : 'DIY');

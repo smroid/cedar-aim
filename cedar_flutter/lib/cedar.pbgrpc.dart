@@ -27,6 +27,10 @@ class CedarClient extends $grpc.Client {
       '/cedar.Cedar/GetServerLog',
       ($0.ServerLogRequest value) => value.writeToBuffer(),
       ($core.List<$core.int> value) => $0.ServerLogResult.fromBuffer(value));
+  static final _$getCpuUsageReport = $grpc.ClientMethod<$0.EmptyMessage, $0.CpuUsageReport>(
+      '/cedar.Cedar/GetCpuUsageReport',
+      ($0.EmptyMessage value) => value.writeToBuffer(),
+      ($core.List<$core.int> value) => $0.CpuUsageReport.fromBuffer(value));
   static final _$updateFixedSettings = $grpc.ClientMethod<$0.FixedSettings, $0.FixedSettings>(
       '/cedar.Cedar/UpdateFixedSettings',
       ($0.FixedSettings value) => value.writeToBuffer(),
@@ -112,6 +116,10 @@ class CedarClient extends $grpc.Client {
 
   $grpc.ResponseFuture<$0.ServerLogResult> getServerLog($0.ServerLogRequest request, {$grpc.CallOptions? options}) {
     return $createUnaryCall(_$getServerLog, request, options: options);
+  }
+
+  $grpc.ResponseFuture<$0.CpuUsageReport> getCpuUsageReport($0.EmptyMessage request, {$grpc.CallOptions? options}) {
+    return $createUnaryCall(_$getCpuUsageReport, request, options: options);
   }
 
   $grpc.ResponseFuture<$0.FixedSettings> updateFixedSettings($0.FixedSettings request, {$grpc.CallOptions? options}) {
@@ -203,6 +211,13 @@ abstract class CedarServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $0.ServerLogRequest.fromBuffer(value),
         ($0.ServerLogResult value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.EmptyMessage, $0.CpuUsageReport>(
+        'GetCpuUsageReport',
+        getCpuUsageReport_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.EmptyMessage.fromBuffer(value),
+        ($0.CpuUsageReport value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.FixedSettings, $0.FixedSettings>(
         'UpdateFixedSettings',
         updateFixedSettings_Pre,
@@ -342,6 +357,10 @@ abstract class CedarServiceBase extends $grpc.Service {
     return getServerLog($call, await $request);
   }
 
+  $async.Future<$0.CpuUsageReport> getCpuUsageReport_Pre($grpc.ServiceCall $call, $async.Future<$0.EmptyMessage> $request) async {
+    return getCpuUsageReport($call, await $request);
+  }
+
   $async.Future<$0.FixedSettings> updateFixedSettings_Pre($grpc.ServiceCall $call, $async.Future<$0.FixedSettings> $request) async {
     return updateFixedSettings($call, await $request);
   }
@@ -419,6 +438,7 @@ abstract class CedarServiceBase extends $grpc.Service {
   }
 
   $async.Future<$0.ServerLogResult> getServerLog($grpc.ServiceCall call, $0.ServerLogRequest request);
+  $async.Future<$0.CpuUsageReport> getCpuUsageReport($grpc.ServiceCall call, $0.EmptyMessage request);
   $async.Future<$0.FixedSettings> updateFixedSettings($grpc.ServiceCall call, $0.FixedSettings request);
   $async.Future<$0.EmptyMessage> clearObserverLocation($grpc.ServiceCall call, $0.EmptyMessage request);
   $async.Future<$0.OperationSettings> updateOperationSettings($grpc.ServiceCall call, $0.OperationSettings request);
