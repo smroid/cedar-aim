@@ -219,12 +219,17 @@ Widget systemInfo(MyHomePageState state) {
                   serverInfo.hasCedarLoadAverage()))
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
               _scaledText("Load average"),
-              TextButton(
-                style: _viewButtonStyle,
-                onPressed: () {
-                  loadAverageDialog(state);
+              GestureDetector(
+                onLongPress: () {
+                  _showCpuUsageReport(state);
                 },
-                child: _scaledText("view"),
+                child: TextButton(
+                  style: _viewButtonStyle,
+                  onPressed: () {
+                    loadAverageDialog(state);
+                  },
+                  child: _scaledText("view"),
+                ),
               ),
             ]),
           Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
@@ -472,6 +477,64 @@ void processorOsDialog(
   });
 
   Overlay.of(_context).insert(dialogOverlayEntry);
+}
+
+OverlayEntry? _cpuUsageReportOverlayEntry;
+
+Future<void> _showCpuUsageReport(MyHomePageState state) async {
+  final report = await state.getCpuUsageReport();
+  if (report.isEmpty || !_context.mounted) {
+    return;
+  }
+
+  _cpuUsageReportOverlayEntry = OverlayEntry(builder: (BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        _cpuUsageReportOverlayEntry!.remove();
+        _cpuUsageReportOverlayEntry = null;
+      },
+      child: Material(
+        color: Colors.black54,
+        child: DefaultTextStyle.merge(
+            style: const TextStyle(fontFamilyFallback: ['Roboto']),
+            child: Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 500, maxHeight: 500),
+                child: Container(
+                  padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
+                  decoration: _dialogDecoration(),
+                  child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Center(
+                          child: Text(
+                            'CPU usage report',
+                            style: _dialogTextStyle(),
+                          ),
+                        ),
+                        _dialogItemSpacing,
+                        Flexible(
+                          child: SingleChildScrollView(
+                            child: Text(
+                              report,
+                              style: TextStyle(
+                                fontSize: 10,
+                                fontFamily: 'monospace',
+                                color: Theme.of(context).colorScheme.primary,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ]),
+                ),
+              ),
+            )),
+      ),
+    );
+  });
+
+  Overlay.of(_context).insert(_cpuUsageReportOverlayEntry!);
 }
 
 void loadAverageDialog(MyHomePageState state) {

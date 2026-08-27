@@ -1429,6 +1429,19 @@ class MyHomePageState extends State<MyHomePage> {
     }
   }
 
+  Future<String> getCpuUsageReport() async {
+    final request = cedar_rpc.EmptyMessage();
+    try {
+      final c = await getClient();
+      final result = await c.getCpuUsageReport(request,
+          options: CallOptions(timeout: _rpcTimeoutForTransport()));
+      return result.report;
+    } catch (e) {
+      notifyRpcFailed('getCpuUsageReport error', e);
+      return "";
+    }
+  }
+
   Text _scaledText(String str) {
     return Text(str, textScaler: textScaler(context));
   }
