@@ -2,6 +2,7 @@
 // See LICENSE file in root directory for license terms.
 
 import 'dart:async';
+import 'dart:io';
 import 'dart:math';
 
 import 'package:cedar_flutter/client_main.dart';
@@ -10,6 +11,8 @@ import 'package:cedar_flutter/platform.dart';
 import 'package:cedar_flutter/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:sprintf/sprintf.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'google/protobuf/timestamp.pb.dart';
@@ -219,17 +222,12 @@ Widget systemInfo(MyHomePageState state) {
                   serverInfo.hasCedarLoadAverage()))
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
               _scaledText("Load average"),
-              GestureDetector(
-                onLongPress: () {
-                  _showCpuUsageReport(state);
+              TextButton(
+                style: _viewButtonStyle,
+                onPressed: () {
+                  loadAverageDialog(state);
                 },
-                child: TextButton(
-                  style: _viewButtonStyle,
-                  onPressed: () {
-                    loadAverageDialog(state);
-                  },
-                  child: _scaledText("view"),
-                ),
+                child: _scaledText("view"),
               ),
             ]),
           Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
@@ -481,8 +479,29 @@ void processorOsDialog(
 
 OverlayEntry? _cpuUsageReportOverlayEntry;
 
+Future<void> _sendCpuUsageReportToSupport(String report) async {
+  final timestamp =
+      DateFormat('yyyy-MM-dd_HH-mm-ss').format(DateTime.now());
+  final subject = 'cedar_cpu_usage_$timestamp';
+  final dir = await getTemporaryDirectory();
+  final file = File('${dir.path}/$subject.txt');
+  await file.writeAsString(report);
+  await Share.shareXFiles(
+    [XFile(file.path, mimeType: 'text/plain')],
+    subject: subject,
+    text: 'Please send this CPU usage report (attached) to support@cs-astro.com.',
+  );
+}
+
 Future<void> _showCpuUsageReport(MyHomePageState state) async {
+  final spinnerOverlayEntry = OverlayEntry(builder: (BuildContext context) {
+    return const Center(child: CircularProgressIndicator());
+  });
+  Overlay.of(_context).insert(spinnerOverlayEntry);
+
   final report = await state.getCpuUsageReport();
+  spinnerOverlayEntry.remove();
+
   if (report.isEmpty || !_context.mounted) {
     return;
   }
@@ -498,35 +517,52 @@ Future<void> _showCpuUsageReport(MyHomePageState state) async {
         child: DefaultTextStyle.merge(
             style: const TextStyle(fontFamilyFallback: ['Roboto']),
             child: Center(
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 500, maxHeight: 500),
-                child: Container(
-                  padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
-                  decoration: _dialogDecoration(),
-                  child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Center(
-                          child: Text(
-                            'CPU usage report',
-                            style: _dialogTextStyle(),
-                          ),
-                        ),
-                        _dialogItemSpacing,
-                        Flexible(
-                          child: SingleChildScrollView(
+              child: GestureDetector(
+                onTap: () {}, // Swallow taps so they don't dismiss the popup.
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 350, maxHeight: 300),
+                  child: Container(
+                    padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
+                    decoration: _dialogDecoration(),
+                    child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Center(
                             child: Text(
-                              report,
-                              style: TextStyle(
-                                fontSize: 10,
-                                fontFamily: 'monospace',
-                                color: Theme.of(context).colorScheme.primary,
+                              'CPU usage report',
+                              style: _dialogTextStyle(),
+                            ),
+                          ),
+                          _dialogItemSpacing,
+                          Flexible(
+                            child: SingleChildScrollView(
+                              child: Text(
+                                report,
+                                style: TextStyle(
+                                  fontSize: 10,
+                                  fontFamily: 'monospace',
+                                  color: Theme.of(context).colorScheme.primary,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ]),
+                          if (!state.isDIY) ...[
+                            _dialogItemSpacing,
+                            Align(
+                              alignment: Alignment.centerRight,
+                              child: TextButton.icon(
+                                style: _viewButtonStyle,
+                                icon: const Icon(Icons.email_outlined),
+                                label: _scaledText("Send to support"),
+                                onPressed: () {
+                                  _sendCpuUsageReportToSupport(report);
+                                },
+                              ),
+                            ),
+                          ],
+                        ]),
+                  ),
                 ),
               ),
             )),
@@ -557,54 +593,67 @@ void loadAverageDialog(MyHomePageState state) {
         child: DefaultTextStyle.merge(
             style: const TextStyle(fontFamilyFallback: ['Roboto']),
             child: Center(
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 400),
-                child: Container(
-                  padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
-                  decoration: _dialogDecoration(),
-                  child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Center(
-                          child: Text(
-                            cpuCoreCount != null
-                                ? 'Load average ($cpuCoreCount cores)'
-                                : 'Load average',
-                            style: _dialogTextStyle(),
+              child: GestureDetector(
+                onTap: () {}, // Swallow taps so they don't dismiss the popup.
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 400),
+                  child: Container(
+                    padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
+                    decoration: _dialogDecoration(),
+                    child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Center(
+                            child: Text(
+                              cpuCoreCount != null
+                                  ? 'Load average ($cpuCoreCount cores)'
+                                  : 'Load average',
+                              style: _dialogTextStyle(),
+                            ),
                           ),
-                        ),
-                        _dialogItemSpacing,
-                        if (systemLoadAverage != null) ...[
-                          Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                _scaledText("System:"),
-                                _dialogRowSpacing,
-                                Expanded(
-                                    child: Text(
-                                  sprintf("%.2f", [systemLoadAverage]),
-                                  textAlign: TextAlign.right,
-                                  style: _dialogTextStyle(),
-                                )),
-                              ]),
-                        ],
-                        if (cedarLoadAverage != null) ...[
-                          if (systemLoadAverage != null) _dialogItemSpacing,
-                          Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                _scaledText("Cedar:"),
-                                _dialogRowSpacing,
-                                Expanded(
-                                    child: Text(
-                                  sprintf("%.2f", [cedarLoadAverage]),
-                                  textAlign: TextAlign.right,
-                                  style: _dialogTextStyle(),
-                                )),
-                              ]),
-                        ],
-                      ]),
+                          _dialogItemSpacing,
+                          if (systemLoadAverage != null) ...[
+                            Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  _scaledText("System:"),
+                                  _dialogRowSpacing,
+                                  Expanded(
+                                      child: Text(
+                                    sprintf("%.2f", [systemLoadAverage]),
+                                    textAlign: TextAlign.right,
+                                    style: _dialogTextStyle(),
+                                  )),
+                                ]),
+                          ],
+                          if (cedarLoadAverage != null) ...[
+                            if (systemLoadAverage != null) _dialogItemSpacing,
+                            Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  _scaledText("Cedar:"),
+                                  _dialogRowSpacing,
+                                  Expanded(
+                                      child: Text(
+                                    sprintf("%.2f", [cedarLoadAverage]),
+                                    textAlign: TextAlign.right,
+                                    style: _dialogTextStyle(),
+                                  )),
+                                ]),
+                          ],
+                          _dialogItemSpacing,
+                          Center(
+                            child: TextButton(
+                              style: _viewButtonStyle,
+                              onPressed: () {
+                                _showCpuUsageReport(state);
+                              },
+                              child: _scaledText("CPU usage"),
+                            ),
+                          ),
+                        ]),
+                  ),
                 ),
               ),
             )),
