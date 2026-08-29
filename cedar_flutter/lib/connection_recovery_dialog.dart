@@ -17,6 +17,13 @@ class ConnectionRecoveryConfig {
   // Called (over the current transport, e.g. BT) before switching to WiFi —
   // best-effort, since a manual power-cycle also brings WiFi back.
   final Future<void> Function()? onWifiRequested;
+  // Optional extra action button, e.g. for an app-specific recovery path
+  // (such as jumping to an update flow when a companion service is
+  // reachable even though the main server isn't). Shown alongside the
+  // built-in buttons; pressing it closes the dialog then runs the callback.
+  final String? extraActionLabel;
+  final IconData? extraActionIcon;
+  final Future<void> Function()? onExtraAction;
 
   ConnectionRecoveryConfig({
     required this.productName,
@@ -27,6 +34,9 @@ class ConnectionRecoveryConfig {
     this.refreshDevices,
     this.errorMessage,
     this.onWifiRequested,
+    this.extraActionLabel,
+    this.extraActionIcon,
+    this.onExtraAction,
   });
 }
 
@@ -349,6 +359,18 @@ Future<void> showConnectionRecoveryDialog({
                         ],
                       ),
                     );
+                  },
+                ),
+
+              // App-specific extra recovery action, if provided.
+              if (config.extraActionLabel != null &&
+                  config.onExtraAction != null)
+                TextButton.icon(
+                  icon: Icon(config.extraActionIcon ?? Icons.build),
+                  label: Text(config.extraActionLabel!),
+                  onPressed: () async {
+                    Navigator.pop(dialogContext);
+                    await config.onExtraAction!();
                   },
                 ),
 

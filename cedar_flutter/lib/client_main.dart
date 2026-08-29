@@ -75,11 +75,15 @@ class UpdaterInfo {
   final UpdateServerSoftwareDialogFunction updateServerSoftwareDialogFunction;
   final RestartCedarServerFunction restartCedarServerFunction;
   String? updaterVersion;
+  // Live re-check of Updater reachability (pings fresh, doesn't rely on a
+  // snapshot taken at startup). Optional since not every app wires this up.
+  final Future<bool> Function()? checkUpdateServiceAvailable;
 
   UpdaterInfo({
     required this.updateServerSoftwareDialogFunction,
     required this.restartCedarServerFunction,
     this.updaterVersion,
+    this.checkUpdateServiceAvailable,
   });
 }
 
@@ -3159,6 +3163,18 @@ class MyHomePageState extends State<MyHomePage> {
       if (!mounted) {
         return;
       }
+
+      // Re-check reachability fresh rather than trusting the snapshot taken
+      // at app startup, which can easily be stale by the time this dialog
+      // shows (e.g. the Updater wasn't reachable yet at startup but is now).
+      final updateServiceAvailable = _updaterInfo?.checkUpdateServiceAvailable != null
+          ? await _updaterInfo!.checkUpdateServiceAvailable!()
+          : _updateServiceAvailable;
+
+      if (!mounted) {
+        return;
+      }
+
       await showConnectionRecoveryDialog(
         context: context,
         config: ConnectionRecoveryConfig(
@@ -3174,6 +3190,20 @@ class MyHomePageState extends State<MyHomePage> {
           onWifiRequested: () async {
             await initiateAction(cedar_rpc.ActionRequest(wifiEnabled: true));
           },
+          extraActionLabel: _updaterInfo != null && updateServiceAvailable
+              ? 'Update $_productName'
+              : null,
+          extraActionIcon: _updaterInfo != null && updateServiceAvailable
+              ? Icons.system_update
+              : null,
+          onExtraAction: _updaterInfo != null && updateServiceAvailable
+              ? () async {
+                  if (mounted) {
+                    _updaterInfo!.updateServerSoftwareDialogFunction(
+                        this, context);
+                  }
+                }
+              : null,
         ),
       );
     } finally {
