@@ -18,7 +18,7 @@ const List<String> _specialCatalogLabels =
 // Catalogs whose entry numbers are conventionally shown without the
 // server's zero-padding (e.g. Barnard's B2, not B002), unlike e.g. NGC/IC,
 // whose zero-padded form (NGC0023) is the conventional one.
-const List<String> _unpaddedCatalogLabels = ['B'];
+const List<String> _unpaddedCatalogLabels = ['B', 'C'];
 
 // Catalog labels in order of how recognizable their designations are, most
 // recognizable first. A catalog not listed here sorts after all of these,
