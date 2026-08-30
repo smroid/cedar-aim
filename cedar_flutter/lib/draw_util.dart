@@ -15,13 +15,19 @@ const double _arrowAngleDegrees = 25.0;
 const List<String> _specialCatalogLabels =
     ['AST', 'BAY', 'COM', 'HYG', 'IAU', 'PL', 'WDS'];
 
+// Catalogs whose entry numbers are conventionally shown without the
+// server's zero-padding (e.g. Barnard's B2, not B002), unlike e.g. NGC/IC,
+// whose zero-padded form (NGC0023) is the conventional one.
+const List<String> _unpaddedCatalogLabels = ['B'];
+
 // Catalog labels in order of how recognizable their designations are, most
 // recognizable first. A catalog not listed here sorts after all of these,
 // and falls back to the default "label+entry" rendering.
 //
 // AST/COM/PL are omitted: they name planets, asteroids and comets, which
 // are never merged with another catalog's designation of the same object, so
-// they never actually compete against this list for ranking.
+// they never actually compete against this list for ranking. 'B' also omitted
+// because Barnard dark nebulae don't overlap/alias with other catalog entries.
 const List<String> _catalogRank =
     ['M', 'IAU', 'HYG', 'BAY', 'WDS', 'NGC', 'IC', 'C'];
 
@@ -163,6 +169,10 @@ bool isSpecialCatalogLabel(String catalogLabel) {
 String labelForEntry(CatalogEntry entry) {
   if (_specialCatalogLabels.contains(entry.catalogLabel)) {
     return entry.catalogEntry;
+  }
+  if (_unpaddedCatalogLabels.contains(entry.catalogLabel)) {
+    return entry.catalogLabel +
+        entry.catalogEntry.replaceFirst(RegExp(r'^0+(?=\d)'), '');
   }
   return entry.catalogLabel + entry.catalogEntry;
 }
