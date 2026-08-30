@@ -13,9 +13,11 @@ enum ArrowDirection { left, right, up, down }
 
 class SlewDirectionsWidgets {
   final bool northernHemisphere;
+  final ObjectLabelingFunctions? objectLabeling;
 
   SlewDirectionsWidgets({
     required this.northernHemisphere,
+    this.objectLabeling,
   });
 
   Widget _buildTriangleArrow(ArrowDirection direction, Color color, double size) {
@@ -128,9 +130,13 @@ class SlewDirectionsWidgets {
     ];
 
     if (catalogEntry.catalogLabel.isNotEmpty) {
-      // Show catalog name and object type.
-      final commonName = commonNameForEntry(catalogEntry);
-      final objectLabel = commonName.isEmpty ? labelForEntry(catalogEntry) : commonName;
+      // Show catalog name and object type. A non-empty catalogLabel only
+      // ever comes from a goto target set via hopper-aim's catalog UI,
+      // which is also what injects objectLabeling -- so it's present
+      // whenever this branch is reached.
+      final commonName = objectLabeling!.commonNameForEntry(catalogEntry);
+      final objectLabel =
+          commonName.isEmpty ? objectLabeling!.labelForEntry(catalogEntry) : commonName;
       bool usedTwoLines = false;
 
       // Handle short vs long names differently

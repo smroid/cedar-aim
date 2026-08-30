@@ -90,6 +90,7 @@ class UpdaterInfo {
 DrawCatalogEntriesFunction? _drawCatalogEntries;
 ShowCatalogBrowserFunction? _showCatalogBrowser;
 ObjectInfoDialogFunction? _objectInfoDialog;
+ObjectLabelingFunctions? _objectLabeling;
 WifiAccessPointDialogFunction? _wifiAccessPointDialog;
 GotoRaDecDialogFunction? _gotoRaDecDialog;
 UpdaterInfo? _updaterInfo;
@@ -203,10 +204,12 @@ void clientMain(
     GotoRaDecDialogFunction? gotoRaDecDialog,
     UpdaterInfo? updaterInfo,
     bool updateServiceAvailable,
-    {AppLogCallbacks? appLogCallbacks}) {
+    {AppLogCallbacks? appLogCallbacks,
+    ObjectLabelingFunctions? objectLabeling}) {
   _drawCatalogEntries = drawCatalogEntries;
   _showCatalogBrowser = showCatalogBrowser;
   _objectInfoDialog = objectInfoDialog;
+  _objectLabeling = objectLabeling;
   _wifiAccessPointDialog = wifiAccessPointDialog;
   _gotoRaDecDialog = gotoRaDecDialog;
   _updaterInfo = updaterInfo;
@@ -535,6 +538,7 @@ class MyHomePageState extends State<MyHomePage> {
   MyHomePageState() {
     _slewDirections = SlewDirectionsWidgets(
       northernHemisphere: _northernHemisphere,
+      objectLabeling: _objectLabeling,
     );
     _initLocation();
     _refreshStateFromServer();
@@ -608,7 +612,7 @@ class MyHomePageState extends State<MyHomePage> {
   // matching is active and non-empty -- an object found under that filter
   // should be labeled with a designation from one of these catalogs, in
   // preference to the general recognizability ranking. See
-  // draw_util.dart's bestDesignation().
+  // ObjectLabelingFunctions.bestDesignation().
   Iterable<String>? get preferredCatalogs {
     final catalogEntryMatch = operationSettings.catalogEntryMatch;
     return catalogEntryMatch.matchCatalogLabel &&
@@ -1640,8 +1644,9 @@ class MyHomePageState extends State<MyHomePage> {
           _captureBoresight(); // Re-align.
           final catalogEntry = _slewRequest?.targetCatalogEntry;
           final targetName = catalogEntry != null &&
-                  catalogEntry.catalogLabel.isNotEmpty
-              ? labelForEntry(catalogEntry)
+                  catalogEntry.catalogLabel.isNotEmpty &&
+                  _objectLabeling != null
+              ? _objectLabeling!.labelForEntry(catalogEntry)
               : null;
           final message = targetName != null && targetName.isNotEmpty
               ? 'Re-aligning on $targetName'
@@ -1944,10 +1949,11 @@ class MyHomePageState extends State<MyHomePage> {
     // available space in the panel above (or to the left of) the main image.
     final panelScaleFactor = calculations['panelScaleFactor']!;
     final infoSize = kInfoTextSize * textScale;
-    final bestBoresightDesignation = boresightCatalogEntry == null
-        ? null
-        : bestDesignation(
-            boresightCatalogEntry!.entry, boresightCatalogEntry!.dedupedEntries);
+    final bestBoresightDesignation =
+        boresightCatalogEntry == null || _objectLabeling == null
+            ? null
+            : _objectLabeling!.bestDesignation(boresightCatalogEntry!.entry,
+                boresightCatalogEntry!.dedupedEntries);
 
     // When goto is active, show movement instructions.
     if (_slewRequest != null) {
@@ -2005,7 +2011,8 @@ class MyHomePageState extends State<MyHomePage> {
               width: infoSize * panelScaleFactor,
               height: infoSize * panelScaleFactor,
               child: Center(
-                      child: boresightCatalogEntryInFov
+                      child: boresightCatalogEntryInFov &&
+                              bestBoresightDesignation != null
                           ? GestureDetector(
                               onTap: _objectInfoDialog == null ? null : () {
                                 _objectInfoDialog!(this, context,
@@ -2023,13 +2030,17 @@ class MyHomePageState extends State<MyHomePage> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     solveText(
-                                        labelForEntry(bestBoresightDesignation!),
+                                        _objectLabeling!
+                                            .labelForEntry(bestBoresightDesignation),
                                         size: 11 * panelScaleFactor),
-                                    if (commonNameForEntry(bestBoresightDesignation).isNotEmpty)
+                                    if (_objectLabeling!
+                                        .commonNameForEntry(bestBoresightDesignation)
+                                        .isNotEmpty)
                                     SizedBox(
                                         width: infoSize * panelScaleFactor,
                                         child: Text(
-                                            commonNameForEntry(bestBoresightDesignation),
+                                            _objectLabeling!.commonNameForEntry(
+                                                bestBoresightDesignation),
                                             maxLines: 1,
                                             overflow: TextOverflow.ellipsis,
                                             textAlign: TextAlign.center,
@@ -2211,10 +2222,10 @@ class MyHomePageState extends State<MyHomePage> {
       final distanceSq = (catEntry.imagePos.x - starPos.x) *
               (catEntry.imagePos.x - starPos.x) +
           (catEntry.imagePos.y - starPos.y) * (catEntry.imagePos.y - starPos.y);
-      if (distanceSq < 4) {
+      if (distanceSq < 4 && _objectLabeling != null) {
         // Within ~2 pixels
-        return labelForEntry(
-            bestDesignation(catEntry.entry, catEntry.dedupedEntries));
+        return _objectLabeling!.labelForEntry(_objectLabeling!
+            .bestDesignation(catEntry.entry, catEntry.dedupedEntries));
       }
     }
     return null;
