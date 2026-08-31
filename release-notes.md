@@ -1,5 +1,14 @@
 # Cedar Aim Release Notes
 
+## 1.2.4 (build 30)
+
+Changes since 1.2.3 (build 29).
+
+### System status
+
+- Added a CPU/thread usage report, accessible via a button in the load average
+  dialog.
+
 ## 1.2.3 (build 29)
 
 Changes since 1.2.0 (build 26).
