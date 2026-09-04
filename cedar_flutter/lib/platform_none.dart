@@ -34,6 +34,12 @@ Future<CedarClient> getClientImpl() async {
   throw UnimplementedError("No impl in platform_none");
 }
 
+bool isFullScreenImpl() => false;
+
+void toggleFullScreenImpl() {}
+
+bool isStandaloneImpl() => false;
+
 void goFullScreenImpl() {
   throw UnimplementedError("No impl in platform_none");
 }

@@ -24,8 +24,13 @@ bool isAndroidImpl() {
   return false;
 }
 
+// iPadOS 13+ reports as MacIntel, distinguished by multi-touch support.
 bool isIOSImpl() {
-  return false;
+  final ua = window.navigator.userAgent;
+  final platform = window.navigator.platform ?? '';
+  final maxTouchPoints = window.navigator.maxTouchPoints ?? 0;
+  return RegExp(r'iPad|iPhone|iPod').hasMatch(ua) ||
+      (platform == 'MacIntel' && maxTouchPoints > 1);
 }
 
 void rpcSucceededImpl() {}
@@ -48,10 +53,35 @@ Future<CedarClient> getClientImpl() async {
   return CedarClient(_channel!);
 }
 
-// This usually doesn't work on Web.
+bool isFullScreenImpl() {
+  try {
+    return document.fullscreenElement != null;
+  } catch (_) {
+    return false;
+  }
+}
+
+void toggleFullScreenImpl() {
+  if (isFullScreenImpl()) {
+    cancelFullScreenImpl();
+  } else {
+    goFullScreenImpl();
+  }
+}
+
+// Detects standalone/fullscreen display mode (installed PWA / Home Screen).
+bool isStandaloneImpl() {
+  try {
+    return window.matchMedia('(display-mode: standalone)').matches ||
+        window.matchMedia('(display-mode: fullscreen)').matches;
+  } catch (_) {
+    return false;
+  }
+}
+
 void goFullScreenImpl() {
   try {
-    if (document.fullscreenEnabled!) {
+    if (document.fullscreenEnabled ?? false) {
       document.documentElement?.requestFullscreen();
     } else {
       debugPrint("Fullscreen not enabled.");
@@ -63,7 +93,7 @@ void goFullScreenImpl() {
 
 void cancelFullScreenImpl() {
   try {
-    if (document.fullscreenEnabled!) {
+    if (document.fullscreenEnabled ?? false) {
       document.exitFullscreen();
     } else {
       debugPrint("Fullscreen not enabled.");

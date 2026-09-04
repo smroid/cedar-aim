@@ -718,10 +718,12 @@ class MyHomePageState extends State<MyHomePage> {
 
   final Pip pip = Pip();
   bool _isPipMode = false;
+  bool _isFullScreen = false;
 
   @override
   void initState() {
     super.initState();
+    _isFullScreen = isFullScreen();
     _initPipConfiguration();
     preloadDeviceSelection();
   }
@@ -1677,6 +1679,96 @@ class MyHomePageState extends State<MyHomePage> {
           fit: BoxFit.contain,
         ),
       ),
+    );
+  }
+
+  // Hidden in PWA/standalone mode where browser bars are already removed.
+  Widget _fullscreenButton() {
+    if (isStandalone()) {
+      return const SizedBox.shrink();
+    }
+    return IconButton(
+      icon: Icon(_isFullScreen ? Icons.fullscreen_exit : Icons.fullscreen),
+      tooltip: _isFullScreen ? "Exit Fullscreen" : "Fullscreen",
+      onPressed: _handleFullscreenTap,
+    );
+  }
+
+  // iOS WebKit blocks requestFullscreen(); guide users to Add to Home Screen instead.
+  void _handleFullscreenTap() {
+    if (isWeb() && isIOS()) {
+      _showIosFullscreenGuidance();
+    } else {
+      toggleFullScreen();
+      setState(() {
+        _isFullScreen = isFullScreen();
+      });
+    }
+  }
+
+  void _showIosFullscreenGuidance() {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      barrierColor: Colors.black54,
+      builder: (BuildContext dialogContext) {
+        final color = Theme.of(dialogContext).colorScheme.primary;
+        final textStyle = TextStyle(
+          color: color,
+          fontSize: 13.0,
+          height: 1.35,
+          fontFamilyFallback: const ['Roboto'],
+        );
+
+        return Dialog(
+          backgroundColor: Colors.black,
+          shape: RoundedRectangleBorder(
+            side: BorderSide(color: color),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 18),
+            constraints: const BoxConstraints(maxWidth: 360),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Center(
+                  child: Text(
+                    "Run Full Screen",
+                    style: TextStyle(
+                      color: color,
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.bold,
+                      fontFamilyFallback: const ['Roboto'],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 14),
+                Text(
+                  "To run completely full screen without browser bars:",
+                  style: textStyle,
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  "1. Tap the Share button (⎋) in your browser toolbar (or open in Safari).",
+                  style: textStyle,
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  "2. Scroll down and select Add to Home Screen (⊞).",
+                  style: textStyle,
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  "3. Open Cedar from your home screen for the full-screen experience.",
+                  style: textStyle,
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -3025,7 +3117,9 @@ class MyHomePageState extends State<MyHomePage> {
           ? null
           : AppBar(
               title: Text(widget.title),
-              foregroundColor: Theme.of(context).colorScheme.primary),
+              foregroundColor: Theme.of(context).colorScheme.primary,
+              actions: [_fullscreenButton()],
+            ),
       onDrawerChanged: _handleDrawerChanged,
       onEndDrawerChanged: _handleDrawerChanged,
       body: DefaultTextStyle.merge(
@@ -3058,6 +3152,19 @@ class MyHomePageState extends State<MyHomePage> {
                               icon: const Icon(Icons.menu),
                               onPressed: openDrawer,
                             ),
+                          ),
+                        ),
+                        // Fullscreen button positioned opposite the menu icon.
+                        Positioned(
+                          left: _rightHanded ? 0 : null,
+                          right: _rightHanded ? null : 0,
+                          top: 0,
+                          child: SafeArea(
+                            left: _rightHanded,
+                            right: !_rightHanded,
+                            top: true,
+                            bottom: false,
+                            child: _fullscreenButton(),
                           ),
                         ),
                       ],

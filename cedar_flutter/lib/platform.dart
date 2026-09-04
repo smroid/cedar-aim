@@ -73,6 +73,32 @@ Future<CedarClient> getClient() async {
   }
 }
 
+bool isFullScreen() {
+  try {
+    return isFullScreenImpl();
+  } catch (e) {
+    debugPrint('isFullScreen: $e');
+    return false;
+  }
+}
+
+void toggleFullScreen() {
+  try {
+    toggleFullScreenImpl();
+  } catch (e) {
+    debugPrint('toggleFullScreen: $e');
+  }
+}
+
+bool isStandalone() {
+  try {
+    return isStandaloneImpl();
+  } catch (e) {
+    debugPrint('isStandalone: $e');
+    return false;
+  }
+}
+
 void goFullScreen() {
   try {
     goFullScreenImpl();
