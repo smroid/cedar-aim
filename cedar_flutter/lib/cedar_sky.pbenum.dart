@@ -1,37 +1,28 @@
-// This is a generated file - do not edit.
 //
-// Generated from cedar_sky.proto.
-
+//  Generated code. Do not modify.
+//  source: cedar_sky.proto
+//
 // @dart = 3.3
 
 // ignore_for_file: annotate_overrides, camel_case_types, comment_references
-// ignore_for_file: constant_identifier_names
-// ignore_for_file: curly_braces_in_flow_control_structures
-// ignore_for_file: deprecated_member_use_from_same_package, library_prefixes
-// ignore_for_file: non_constant_identifier_names
+// ignore_for_file: constant_identifier_names, library_prefixes
+// ignore_for_file: non_constant_identifier_names, prefer_final_fields
+// ignore_for_file: unnecessary_import, unnecessary_this, unused_import
 
 import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
 class Ordering extends $pb.ProtobufEnum {
-  static const Ordering UNSPECIFIED =
-      Ordering._(0, _omitEnumNames ? '' : 'UNSPECIFIED');
-
+  static const Ordering UNSPECIFIED = Ordering._(0, _omitEnumNames ? '' : 'UNSPECIFIED');
   /// Brightest first.
-  static const Ordering BRIGHTNESS =
-      Ordering._(1, _omitEnumNames ? '' : 'BRIGHTNESS');
-
+  static const Ordering BRIGHTNESS = Ordering._(1, _omitEnumNames ? '' : 'BRIGHTNESS');
   /// Closest first. If no plate solution is available, reverts to brightness
   /// ordering.
-  static const Ordering SKY_LOCATION =
-      Ordering._(2, _omitEnumNames ? '' : 'SKY_LOCATION');
-
+  static const Ordering SKY_LOCATION = Ordering._(2, _omitEnumNames ? '' : 'SKY_LOCATION');
   /// Highest first. If observer geolocation is unknown, reverts to brightness
   /// ordering.
-  static const Ordering ELEVATION =
-      Ordering._(3, _omitEnumNames ? '' : 'ELEVATION');
-
+  static const Ordering ELEVATION = Ordering._(3, _omitEnumNames ? '' : 'ELEVATION');
   /// Ordered by hour angle from the observer's local meridian, sweeping
   /// eastward starting at the anti-meridian (hour angle 180 degrees -- the
   /// seam) through the meridian (hour angle 0) and on to just short of the
@@ -39,10 +30,9 @@ class Ordering extends $pb.ProtobufEnum {
   /// observing marathons: west-most (setting soonest) objects first, working
   /// eastward toward what has the most time left before setting. If observer
   /// geolocation is unknown, reverts to brightness ordering.
-  static const Ordering HOUR_ANGLE =
-      Ordering._(4, _omitEnumNames ? '' : 'HOUR_ANGLE');
+  static const Ordering HOUR_ANGLE = Ordering._(4, _omitEnumNames ? '' : 'HOUR_ANGLE');
 
-  static const $core.List<Ordering> values = <Ordering>[
+  static const $core.List<Ordering> values = <Ordering> [
     UNSPECIFIED,
     BRIGHTNESS,
     SKY_LOCATION,
@@ -50,13 +40,11 @@ class Ordering extends $pb.ProtobufEnum {
     HOUR_ANGLE,
   ];
 
-  static final $core.List<Ordering?> _byValue =
-      $pb.ProtobufEnum.$_initByValueList(values, 4);
-  static Ordering? valueOf($core.int value) =>
-      value < 0 || value >= _byValue.length ? null : _byValue[value];
+  static final $core.Map<$core.int, Ordering> _byValue = $pb.ProtobufEnum.initByValue(values);
+  static Ordering? valueOf($core.int value) => _byValue[value];
 
-  const Ordering._(super.value, super.name);
+  const Ordering._(super.v, super.n);
 }
 
-const $core.bool _omitEnumNames =
-    $core.bool.fromEnvironment('protobuf.omit_enum_names');
+
+const _omitEnumNames = $core.bool.fromEnvironment('protobuf.omit_enum_names');

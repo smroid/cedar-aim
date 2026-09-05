@@ -1,14 +1,13 @@
-// This is a generated file - do not edit.
 //
-// Generated from cedar_common.proto.
-
+//  Generated code. Do not modify.
+//  source: cedar_common.proto
+//
 // @dart = 3.3
 
 // ignore_for_file: annotate_overrides, camel_case_types, comment_references
-// ignore_for_file: constant_identifier_names
-// ignore_for_file: curly_braces_in_flow_control_structures
-// ignore_for_file: deprecated_member_use_from_same_package, library_prefixes
-// ignore_for_file: non_constant_identifier_names
+// ignore_for_file: constant_identifier_names, library_prefixes
+// ignore_for_file: non_constant_identifier_names, prefer_final_fields
+// ignore_for_file: unnecessary_import, unnecessary_this, unused_import
 
 import 'dart:core' as $core;
 
@@ -22,56 +21,54 @@ class CelestialCoord extends $pb.GeneratedMessage {
     $core.double? dec,
     $core.double? epoch,
   }) {
-    final result = create();
-    if (ra != null) result.ra = ra;
-    if (dec != null) result.dec = dec;
-    if (epoch != null) result.epoch = epoch;
-    return result;
+    final $result = create();
+    if (ra != null) {
+      $result.ra = ra;
+    }
+    if (dec != null) {
+      $result.dec = dec;
+    }
+    if (epoch != null) {
+      $result.epoch = epoch;
+    }
+    return $result;
   }
+  CelestialCoord._() : super();
+  factory CelestialCoord.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory CelestialCoord.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
 
-  CelestialCoord._();
-
-  factory CelestialCoord.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory CelestialCoord.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'CelestialCoord',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar_common'),
-      createEmptyInstance: create)
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'CelestialCoord', package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar_common'), createEmptyInstance: create)
     ..a<$core.double>(1, _omitFieldNames ? '' : 'ra', $pb.PbFieldType.OD)
     ..a<$core.double>(2, _omitFieldNames ? '' : 'dec', $pb.PbFieldType.OD)
     ..a<$core.double>(3, _omitFieldNames ? '' : 'epoch', $pb.PbFieldType.OD)
-    ..hasRequiredFields = false;
+    ..hasRequiredFields = false
+  ;
 
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
   CelestialCoord clone() => CelestialCoord()..mergeFromMessage(this);
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  CelestialCoord copyWith(void Function(CelestialCoord) updates) =>
-      super.copyWith((message) => updates(message as CelestialCoord))
-          as CelestialCoord;
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  CelestialCoord copyWith(void Function(CelestialCoord) updates) => super.copyWith((message) => updates(message as CelestialCoord)) as CelestialCoord;
 
-  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static CelestialCoord create() => CelestialCoord._();
-  @$core.override
   CelestialCoord createEmptyInstance() => create();
-  static $pb.PbList<CelestialCoord> createRepeated() =>
-      $pb.PbList<CelestialCoord>();
+  static $pb.PbList<CelestialCoord> createRepeated() => $pb.PbList<CelestialCoord>();
   @$core.pragma('dart2js:noInline')
-  static CelestialCoord getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<CelestialCoord>(create);
+  static CelestialCoord getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<CelestialCoord>(create);
   static CelestialCoord? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.double get ra => $_getN(0);
   @$pb.TagNumber(1)
-  set ra($core.double value) => $_setDouble(0, value);
+  set ra($core.double v) { $_setDouble(0, v); }
   @$pb.TagNumber(1)
   $core.bool hasRa() => $_has(0);
   @$pb.TagNumber(1)
@@ -80,7 +77,7 @@ class CelestialCoord extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $core.double get dec => $_getN(1);
   @$pb.TagNumber(2)
-  set dec($core.double value) => $_setDouble(1, value);
+  set dec($core.double v) { $_setDouble(1, v); }
   @$pb.TagNumber(2)
   $core.bool hasDec() => $_has(1);
   @$pb.TagNumber(2)
@@ -91,7 +88,7 @@ class CelestialCoord extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   $core.double get epoch => $_getN(2);
   @$pb.TagNumber(3)
-  set epoch($core.double value) => $_setDouble(2, value);
+  set epoch($core.double v) { $_setDouble(2, v); }
   @$pb.TagNumber(3)
   $core.bool hasEpoch() => $_has(2);
   @$pb.TagNumber(3)
@@ -104,56 +101,54 @@ class HorizonCoord extends $pb.GeneratedMessage {
     $core.double? azimuth,
     $core.double? epoch,
   }) {
-    final result = create();
-    if (altitude != null) result.altitude = altitude;
-    if (azimuth != null) result.azimuth = azimuth;
-    if (epoch != null) result.epoch = epoch;
-    return result;
+    final $result = create();
+    if (altitude != null) {
+      $result.altitude = altitude;
+    }
+    if (azimuth != null) {
+      $result.azimuth = azimuth;
+    }
+    if (epoch != null) {
+      $result.epoch = epoch;
+    }
+    return $result;
   }
+  HorizonCoord._() : super();
+  factory HorizonCoord.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory HorizonCoord.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
 
-  HorizonCoord._();
-
-  factory HorizonCoord.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory HorizonCoord.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'HorizonCoord',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar_common'),
-      createEmptyInstance: create)
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'HorizonCoord', package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar_common'), createEmptyInstance: create)
     ..a<$core.double>(1, _omitFieldNames ? '' : 'altitude', $pb.PbFieldType.OD)
     ..a<$core.double>(2, _omitFieldNames ? '' : 'azimuth', $pb.PbFieldType.OD)
     ..a<$core.double>(3, _omitFieldNames ? '' : 'epoch', $pb.PbFieldType.OD)
-    ..hasRequiredFields = false;
+    ..hasRequiredFields = false
+  ;
 
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
   HorizonCoord clone() => HorizonCoord()..mergeFromMessage(this);
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  HorizonCoord copyWith(void Function(HorizonCoord) updates) =>
-      super.copyWith((message) => updates(message as HorizonCoord))
-          as HorizonCoord;
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  HorizonCoord copyWith(void Function(HorizonCoord) updates) => super.copyWith((message) => updates(message as HorizonCoord)) as HorizonCoord;
 
-  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static HorizonCoord create() => HorizonCoord._();
-  @$core.override
   HorizonCoord createEmptyInstance() => create();
-  static $pb.PbList<HorizonCoord> createRepeated() =>
-      $pb.PbList<HorizonCoord>();
+  static $pb.PbList<HorizonCoord> createRepeated() => $pb.PbList<HorizonCoord>();
   @$core.pragma('dart2js:noInline')
-  static HorizonCoord getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<HorizonCoord>(create);
+  static HorizonCoord getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<HorizonCoord>(create);
   static HorizonCoord? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.double get altitude => $_getN(0);
   @$pb.TagNumber(1)
-  set altitude($core.double value) => $_setDouble(0, value);
+  set altitude($core.double v) { $_setDouble(0, v); }
   @$pb.TagNumber(1)
   $core.bool hasAltitude() => $_has(0);
   @$pb.TagNumber(1)
@@ -162,7 +157,7 @@ class HorizonCoord extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $core.double get azimuth => $_getN(1);
   @$pb.TagNumber(2)
-  set azimuth($core.double value) => $_setDouble(1, value);
+  set azimuth($core.double v) { $_setDouble(1, v); }
   @$pb.TagNumber(2)
   $core.bool hasAzimuth() => $_has(1);
   @$pb.TagNumber(2)
@@ -173,14 +168,13 @@ class HorizonCoord extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   $core.double get epoch => $_getN(2);
   @$pb.TagNumber(3)
-  set epoch($core.double value) => $_setDouble(2, value);
+  set epoch($core.double v) { $_setDouble(2, v); }
   @$pb.TagNumber(3)
   $core.bool hasEpoch() => $_has(2);
   @$pb.TagNumber(3)
   void clearEpoch() => $_clearField(3);
 }
 
-const $core.bool _omitFieldNames =
-    $core.bool.fromEnvironment('protobuf.omit_field_names');
-const $core.bool _omitMessageNames =
-    $core.bool.fromEnvironment('protobuf.omit_message_names');
+
+const _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');
+const _omitMessageNames = $core.bool.fromEnvironment('protobuf.omit_message_names');

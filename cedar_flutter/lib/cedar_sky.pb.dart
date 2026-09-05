@@ -1,14 +1,13 @@
-// This is a generated file - do not edit.
 //
-// Generated from cedar_sky.proto.
-
+//  Generated code. Do not modify.
+//  source: cedar_sky.proto
+//
 // @dart = 3.3
 
 // ignore_for_file: annotate_overrides, camel_case_types, comment_references
-// ignore_for_file: constant_identifier_names
-// ignore_for_file: curly_braces_in_flow_control_structures
-// ignore_for_file: deprecated_member_use_from_same_package, library_prefixes
-// ignore_for_file: non_constant_identifier_names
+// ignore_for_file: constant_identifier_names, library_prefixes
+// ignore_for_file: non_constant_identifier_names, prefer_final_fields
+// ignore_for_file: unnecessary_import, unnecessary_this, unused_import
 
 import 'dart:core' as $core;
 
@@ -34,72 +33,71 @@ class QueryCatalogRequest extends $pb.GeneratedMessage {
     $core.int? limitResult,
     $core.String? textSearch,
   }) {
-    final result = create();
-    if (catalogEntryMatch != null) result.catalogEntryMatch = catalogEntryMatch;
-    if (maxDistance != null) result.maxDistance = maxDistance;
-    if (minElevation != null) result.minElevation = minElevation;
-    if (decrowdDistance != null) result.decrowdDistance = decrowdDistance;
-    if (ordering != null) result.ordering = ordering;
-    if (limitResult != null) result.limitResult = limitResult;
-    if (textSearch != null) result.textSearch = textSearch;
-    return result;
+    final $result = create();
+    if (catalogEntryMatch != null) {
+      $result.catalogEntryMatch = catalogEntryMatch;
+    }
+    if (maxDistance != null) {
+      $result.maxDistance = maxDistance;
+    }
+    if (minElevation != null) {
+      $result.minElevation = minElevation;
+    }
+    if (decrowdDistance != null) {
+      $result.decrowdDistance = decrowdDistance;
+    }
+    if (ordering != null) {
+      $result.ordering = ordering;
+    }
+    if (limitResult != null) {
+      $result.limitResult = limitResult;
+    }
+    if (textSearch != null) {
+      $result.textSearch = textSearch;
+    }
+    return $result;
   }
+  QueryCatalogRequest._() : super();
+  factory QueryCatalogRequest.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory QueryCatalogRequest.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
 
-  QueryCatalogRequest._();
-
-  factory QueryCatalogRequest.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory QueryCatalogRequest.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'QueryCatalogRequest',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar_sky'),
-      createEmptyInstance: create)
-    ..aOM<CatalogEntryMatch>(1, _omitFieldNames ? '' : 'catalogEntryMatch',
-        subBuilder: CatalogEntryMatch.create)
-    ..a<$core.double>(
-        2, _omitFieldNames ? '' : 'maxDistance', $pb.PbFieldType.OD)
-    ..a<$core.double>(
-        3, _omitFieldNames ? '' : 'minElevation', $pb.PbFieldType.OD)
-    ..a<$core.double>(
-        5, _omitFieldNames ? '' : 'decrowdDistance', $pb.PbFieldType.OD)
-    ..e<Ordering>(6, _omitFieldNames ? '' : 'ordering', $pb.PbFieldType.OE,
-        defaultOrMaker: Ordering.UNSPECIFIED,
-        valueOf: Ordering.valueOf,
-        enumValues: Ordering.values)
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'QueryCatalogRequest', package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar_sky'), createEmptyInstance: create)
+    ..aOM<CatalogEntryMatch>(1, _omitFieldNames ? '' : 'catalogEntryMatch', subBuilder: CatalogEntryMatch.create)
+    ..a<$core.double>(2, _omitFieldNames ? '' : 'maxDistance', $pb.PbFieldType.OD)
+    ..a<$core.double>(3, _omitFieldNames ? '' : 'minElevation', $pb.PbFieldType.OD)
+    ..a<$core.double>(5, _omitFieldNames ? '' : 'decrowdDistance', $pb.PbFieldType.OD)
+    ..e<Ordering>(6, _omitFieldNames ? '' : 'ordering', $pb.PbFieldType.OE, defaultOrMaker: Ordering.UNSPECIFIED, valueOf: Ordering.valueOf, enumValues: Ordering.values)
     ..a<$core.int>(7, _omitFieldNames ? '' : 'limitResult', $pb.PbFieldType.O3)
     ..aOS(8, _omitFieldNames ? '' : 'textSearch')
-    ..hasRequiredFields = false;
+    ..hasRequiredFields = false
+  ;
 
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
   QueryCatalogRequest clone() => QueryCatalogRequest()..mergeFromMessage(this);
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  QueryCatalogRequest copyWith(void Function(QueryCatalogRequest) updates) =>
-      super.copyWith((message) => updates(message as QueryCatalogRequest))
-          as QueryCatalogRequest;
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  QueryCatalogRequest copyWith(void Function(QueryCatalogRequest) updates) => super.copyWith((message) => updates(message as QueryCatalogRequest)) as QueryCatalogRequest;
 
-  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static QueryCatalogRequest create() => QueryCatalogRequest._();
-  @$core.override
   QueryCatalogRequest createEmptyInstance() => create();
-  static $pb.PbList<QueryCatalogRequest> createRepeated() =>
-      $pb.PbList<QueryCatalogRequest>();
+  static $pb.PbList<QueryCatalogRequest> createRepeated() => $pb.PbList<QueryCatalogRequest>();
   @$core.pragma('dart2js:noInline')
-  static QueryCatalogRequest getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<QueryCatalogRequest>(create);
+  static QueryCatalogRequest getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<QueryCatalogRequest>(create);
   static QueryCatalogRequest? _defaultInstance;
 
   /// Constraints relative to information about the sky objects themselves.
   @$pb.TagNumber(1)
   CatalogEntryMatch get catalogEntryMatch => $_getN(0);
   @$pb.TagNumber(1)
-  set catalogEntryMatch(CatalogEntryMatch value) => $_setField(1, value);
+  set catalogEntryMatch(CatalogEntryMatch v) { $_setField(1, v); }
   @$pb.TagNumber(1)
   $core.bool hasCatalogEntryMatch() => $_has(0);
   @$pb.TagNumber(1)
@@ -112,7 +110,7 @@ class QueryCatalogRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $core.double get maxDistance => $_getN(1);
   @$pb.TagNumber(2)
-  set maxDistance($core.double value) => $_setDouble(1, value);
+  set maxDistance($core.double v) { $_setDouble(1, v); }
   @$pb.TagNumber(2)
   $core.bool hasMaxDistance() => $_has(1);
   @$pb.TagNumber(2)
@@ -123,7 +121,7 @@ class QueryCatalogRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   $core.double get minElevation => $_getN(2);
   @$pb.TagNumber(3)
-  set minElevation($core.double value) => $_setDouble(2, value);
+  set minElevation($core.double v) { $_setDouble(2, v); }
   @$pb.TagNumber(3)
   $core.bool hasMinElevation() => $_has(2);
   @$pb.TagNumber(3)
@@ -135,7 +133,7 @@ class QueryCatalogRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(5)
   $core.double get decrowdDistance => $_getN(3);
   @$pb.TagNumber(5)
-  set decrowdDistance($core.double value) => $_setDouble(3, value);
+  set decrowdDistance($core.double v) { $_setDouble(3, v); }
   @$pb.TagNumber(5)
   $core.bool hasDecrowdDistance() => $_has(3);
   @$pb.TagNumber(5)
@@ -144,7 +142,7 @@ class QueryCatalogRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(6)
   Ordering get ordering => $_getN(4);
   @$pb.TagNumber(6)
-  set ordering(Ordering value) => $_setField(6, value);
+  set ordering(Ordering v) { $_setField(6, v); }
   @$pb.TagNumber(6)
   $core.bool hasOrdering() => $_has(4);
   @$pb.TagNumber(6)
@@ -154,7 +152,7 @@ class QueryCatalogRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(7)
   $core.int get limitResult => $_getIZ(5);
   @$pb.TagNumber(7)
-  set limitResult($core.int value) => $_setSignedInt32(5, value);
+  set limitResult($core.int v) { $_setSignedInt32(5, v); }
   @$pb.TagNumber(7)
   $core.bool hasLimitResult() => $_has(5);
   @$pb.TagNumber(7)
@@ -171,7 +169,7 @@ class QueryCatalogRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(8)
   $core.String get textSearch => $_getSZ(6);
   @$pb.TagNumber(8)
-  set textSearch($core.String value) => $_setString(6, value);
+  set textSearch($core.String v) { $_setString(6, v); }
   @$pb.TagNumber(8)
   $core.bool hasTextSearch() => $_has(6);
   @$pb.TagNumber(8)
@@ -187,56 +185,56 @@ class CatalogEntryMatch extends $pb.GeneratedMessage {
     $core.bool? matchCatalogLabel,
     $core.bool? matchObjectTypeLabel,
   }) {
-    final result = create();
-    if (faintestMagnitude != null) result.faintestMagnitude = faintestMagnitude;
-    if (catalogLabel != null) result.catalogLabel.addAll(catalogLabel);
-    if (objectTypeLabel != null) result.objectTypeLabel.addAll(objectTypeLabel);
-    if (matchCatalogLabel != null) result.matchCatalogLabel = matchCatalogLabel;
-    if (matchObjectTypeLabel != null)
-      result.matchObjectTypeLabel = matchObjectTypeLabel;
-    return result;
+    final $result = create();
+    if (faintestMagnitude != null) {
+      $result.faintestMagnitude = faintestMagnitude;
+    }
+    if (catalogLabel != null) {
+      $result.catalogLabel.addAll(catalogLabel);
+    }
+    if (objectTypeLabel != null) {
+      $result.objectTypeLabel.addAll(objectTypeLabel);
+    }
+    if (matchCatalogLabel != null) {
+      $result.matchCatalogLabel = matchCatalogLabel;
+    }
+    if (matchObjectTypeLabel != null) {
+      $result.matchObjectTypeLabel = matchObjectTypeLabel;
+    }
+    return $result;
   }
+  CatalogEntryMatch._() : super();
+  factory CatalogEntryMatch.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory CatalogEntryMatch.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
 
-  CatalogEntryMatch._();
-
-  factory CatalogEntryMatch.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory CatalogEntryMatch.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'CatalogEntryMatch',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar_sky'),
-      createEmptyInstance: create)
-    ..a<$core.int>(
-        1, _omitFieldNames ? '' : 'faintestMagnitude', $pb.PbFieldType.O3)
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'CatalogEntryMatch', package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar_sky'), createEmptyInstance: create)
+    ..a<$core.int>(1, _omitFieldNames ? '' : 'faintestMagnitude', $pb.PbFieldType.O3)
     ..pPS(2, _omitFieldNames ? '' : 'catalogLabel')
     ..pPS(3, _omitFieldNames ? '' : 'objectTypeLabel')
     ..aOB(4, _omitFieldNames ? '' : 'matchCatalogLabel')
     ..aOB(5, _omitFieldNames ? '' : 'matchObjectTypeLabel')
-    ..hasRequiredFields = false;
+    ..hasRequiredFields = false
+  ;
 
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
   CatalogEntryMatch clone() => CatalogEntryMatch()..mergeFromMessage(this);
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  CatalogEntryMatch copyWith(void Function(CatalogEntryMatch) updates) =>
-      super.copyWith((message) => updates(message as CatalogEntryMatch))
-          as CatalogEntryMatch;
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  CatalogEntryMatch copyWith(void Function(CatalogEntryMatch) updates) => super.copyWith((message) => updates(message as CatalogEntryMatch)) as CatalogEntryMatch;
 
-  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static CatalogEntryMatch create() => CatalogEntryMatch._();
-  @$core.override
   CatalogEntryMatch createEmptyInstance() => create();
-  static $pb.PbList<CatalogEntryMatch> createRepeated() =>
-      $pb.PbList<CatalogEntryMatch>();
+  static $pb.PbList<CatalogEntryMatch> createRepeated() => $pb.PbList<CatalogEntryMatch>();
   @$core.pragma('dart2js:noInline')
-  static CatalogEntryMatch getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<CatalogEntryMatch>(create);
+  static CatalogEntryMatch getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<CatalogEntryMatch>(create);
   static CatalogEntryMatch? _defaultInstance;
 
   /// Limiting magnitude. If provided, objects fainter than the limit are
@@ -244,7 +242,7 @@ class CatalogEntryMatch extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $core.int get faintestMagnitude => $_getIZ(0);
   @$pb.TagNumber(1)
-  set faintestMagnitude($core.int value) => $_setSignedInt32(0, value);
+  set faintestMagnitude($core.int v) { $_setSignedInt32(0, v); }
   @$pb.TagNumber(1)
   $core.bool hasFaintestMagnitude() => $_has(0);
   @$pb.TagNumber(1)
@@ -263,7 +261,7 @@ class CatalogEntryMatch extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   $core.bool get matchCatalogLabel => $_getBF(3);
   @$pb.TagNumber(4)
-  set matchCatalogLabel($core.bool value) => $_setBool(3, value);
+  set matchCatalogLabel($core.bool v) { $_setBool(3, v); }
   @$pb.TagNumber(4)
   $core.bool hasMatchCatalogLabel() => $_has(3);
   @$pb.TagNumber(4)
@@ -273,7 +271,7 @@ class CatalogEntryMatch extends $pb.GeneratedMessage {
   @$pb.TagNumber(5)
   $core.bool get matchObjectTypeLabel => $_getBF(4);
   @$pb.TagNumber(5)
-  set matchObjectTypeLabel($core.bool value) => $_setBool(4, value);
+  set matchObjectTypeLabel($core.bool v) { $_setBool(4, v); }
   @$pb.TagNumber(5)
   $core.bool hasMatchObjectTypeLabel() => $_has(4);
   @$pb.TagNumber(5)
@@ -285,52 +283,44 @@ class QueryCatalogResponse extends $pb.GeneratedMessage {
     $core.Iterable<SelectedCatalogEntry>? entries,
     $core.int? truncatedCount,
   }) {
-    final result = create();
-    if (entries != null) result.entries.addAll(entries);
-    if (truncatedCount != null) result.truncatedCount = truncatedCount;
-    return result;
+    final $result = create();
+    if (entries != null) {
+      $result.entries.addAll(entries);
+    }
+    if (truncatedCount != null) {
+      $result.truncatedCount = truncatedCount;
+    }
+    return $result;
   }
+  QueryCatalogResponse._() : super();
+  factory QueryCatalogResponse.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory QueryCatalogResponse.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
 
-  QueryCatalogResponse._();
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'QueryCatalogResponse', package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar_sky'), createEmptyInstance: create)
+    ..pc<SelectedCatalogEntry>(1, _omitFieldNames ? '' : 'entries', $pb.PbFieldType.PM, subBuilder: SelectedCatalogEntry.create)
+    ..a<$core.int>(2, _omitFieldNames ? '' : 'truncatedCount', $pb.PbFieldType.O3)
+    ..hasRequiredFields = false
+  ;
 
-  factory QueryCatalogResponse.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory QueryCatalogResponse.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  QueryCatalogResponse clone() => QueryCatalogResponse()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  QueryCatalogResponse copyWith(void Function(QueryCatalogResponse) updates) => super.copyWith((message) => updates(message as QueryCatalogResponse)) as QueryCatalogResponse;
 
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'QueryCatalogResponse',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar_sky'),
-      createEmptyInstance: create)
-    ..pc<SelectedCatalogEntry>(
-        1, _omitFieldNames ? '' : 'entries', $pb.PbFieldType.PM,
-        subBuilder: SelectedCatalogEntry.create)
-    ..a<$core.int>(
-        2, _omitFieldNames ? '' : 'truncatedCount', $pb.PbFieldType.O3)
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  QueryCatalogResponse clone() =>
-      QueryCatalogResponse()..mergeFromMessage(this);
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  QueryCatalogResponse copyWith(void Function(QueryCatalogResponse) updates) =>
-      super.copyWith((message) => updates(message as QueryCatalogResponse))
-          as QueryCatalogResponse;
-
-  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static QueryCatalogResponse create() => QueryCatalogResponse._();
-  @$core.override
   QueryCatalogResponse createEmptyInstance() => create();
-  static $pb.PbList<QueryCatalogResponse> createRepeated() =>
-      $pb.PbList<QueryCatalogResponse>();
+  static $pb.PbList<QueryCatalogResponse> createRepeated() => $pb.PbList<QueryCatalogResponse>();
   @$core.pragma('dart2js:noInline')
-  static QueryCatalogResponse getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<QueryCatalogResponse>(create);
+  static QueryCatalogResponse getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<QueryCatalogResponse>(create);
   static QueryCatalogResponse? _defaultInstance;
 
   /// The catalog entries that satisfy the QueryCatalogRequest criteria.
@@ -343,7 +333,7 @@ class QueryCatalogResponse extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $core.int get truncatedCount => $_getIZ(1);
   @$pb.TagNumber(2)
-  set truncatedCount($core.int value) => $_setSignedInt32(1, value);
+  set truncatedCount($core.int v) { $_setSignedInt32(1, v); }
   @$pb.TagNumber(2)
   $core.bool hasTruncatedCount() => $_has(1);
   @$pb.TagNumber(2)
@@ -358,67 +348,62 @@ class SelectedCatalogEntry extends $pb.GeneratedMessage {
     $core.double? altitude,
     $core.double? azimuth,
   }) {
-    final result = create();
-    if (entry != null) result.entry = entry;
-    if (dedupedEntries != null) result.dedupedEntries.addAll(dedupedEntries);
-    if (decrowdedEntries != null)
-      result.decrowdedEntries.addAll(decrowdedEntries);
-    if (altitude != null) result.altitude = altitude;
-    if (azimuth != null) result.azimuth = azimuth;
-    return result;
+    final $result = create();
+    if (entry != null) {
+      $result.entry = entry;
+    }
+    if (dedupedEntries != null) {
+      $result.dedupedEntries.addAll(dedupedEntries);
+    }
+    if (decrowdedEntries != null) {
+      $result.decrowdedEntries.addAll(decrowdedEntries);
+    }
+    if (altitude != null) {
+      $result.altitude = altitude;
+    }
+    if (azimuth != null) {
+      $result.azimuth = azimuth;
+    }
+    return $result;
   }
+  SelectedCatalogEntry._() : super();
+  factory SelectedCatalogEntry.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory SelectedCatalogEntry.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
 
-  SelectedCatalogEntry._();
-
-  factory SelectedCatalogEntry.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory SelectedCatalogEntry.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'SelectedCatalogEntry',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar_sky'),
-      createEmptyInstance: create)
-    ..aOM<CatalogEntry>(1, _omitFieldNames ? '' : 'entry',
-        subBuilder: CatalogEntry.create)
-    ..pc<CatalogEntry>(
-        2, _omitFieldNames ? '' : 'dedupedEntries', $pb.PbFieldType.PM,
-        subBuilder: CatalogEntry.create)
-    ..pc<CatalogEntry>(
-        3, _omitFieldNames ? '' : 'decrowdedEntries', $pb.PbFieldType.PM,
-        subBuilder: CatalogEntry.create)
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'SelectedCatalogEntry', package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar_sky'), createEmptyInstance: create)
+    ..aOM<CatalogEntry>(1, _omitFieldNames ? '' : 'entry', subBuilder: CatalogEntry.create)
+    ..pc<CatalogEntry>(2, _omitFieldNames ? '' : 'dedupedEntries', $pb.PbFieldType.PM, subBuilder: CatalogEntry.create)
+    ..pc<CatalogEntry>(3, _omitFieldNames ? '' : 'decrowdedEntries', $pb.PbFieldType.PM, subBuilder: CatalogEntry.create)
     ..a<$core.double>(4, _omitFieldNames ? '' : 'altitude', $pb.PbFieldType.OD)
     ..a<$core.double>(5, _omitFieldNames ? '' : 'azimuth', $pb.PbFieldType.OD)
-    ..hasRequiredFields = false;
+    ..hasRequiredFields = false
+  ;
 
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  SelectedCatalogEntry clone() =>
-      SelectedCatalogEntry()..mergeFromMessage(this);
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  SelectedCatalogEntry copyWith(void Function(SelectedCatalogEntry) updates) =>
-      super.copyWith((message) => updates(message as SelectedCatalogEntry))
-          as SelectedCatalogEntry;
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  SelectedCatalogEntry clone() => SelectedCatalogEntry()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  SelectedCatalogEntry copyWith(void Function(SelectedCatalogEntry) updates) => super.copyWith((message) => updates(message as SelectedCatalogEntry)) as SelectedCatalogEntry;
 
-  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static SelectedCatalogEntry create() => SelectedCatalogEntry._();
-  @$core.override
   SelectedCatalogEntry createEmptyInstance() => create();
-  static $pb.PbList<SelectedCatalogEntry> createRepeated() =>
-      $pb.PbList<SelectedCatalogEntry>();
+  static $pb.PbList<SelectedCatalogEntry> createRepeated() => $pb.PbList<SelectedCatalogEntry>();
   @$core.pragma('dart2js:noInline')
-  static SelectedCatalogEntry getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<SelectedCatalogEntry>(create);
+  static SelectedCatalogEntry getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<SelectedCatalogEntry>(create);
   static SelectedCatalogEntry? _defaultInstance;
 
   @$pb.TagNumber(1)
   CatalogEntry get entry => $_getN(0);
   @$pb.TagNumber(1)
-  set entry(CatalogEntry value) => $_setField(1, value);
+  set entry(CatalogEntry v) { $_setField(1, v); }
   @$pb.TagNumber(1)
   $core.bool hasEntry() => $_has(0);
   @$pb.TagNumber(1)
@@ -426,15 +411,15 @@ class SelectedCatalogEntry extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   CatalogEntry ensureEntry() => $_ensure(0);
 
-  /// The object's other designations, if any. A single object is often
-  /// catalogued more than once -- M31 and NGC0224 name the same galaxy -- and
-  /// `entry` above is whichever designation the catalog holds the object's
-  /// physical data under. Each entry here names that same object as some other
-  /// catalog knows it, and may carry its own common name, notes, object type
-  /// and magnitude, as that catalog gave them.
+  ///  The object's other designations, if any. A single object is often
+  ///  catalogued more than once -- M31 and NGC0224 name the same galaxy -- and
+  ///  `entry` above is whichever designation the catalog holds the object's
+  ///  physical data under. Each entry here names that same object as some other
+  ///  catalog knows it, and may carry its own common name, notes, object type
+  ///  and magnitude, as that catalog gave them.
   ///
-  /// Deciding which designation to show is up to the client: `entry` is not
-  /// necessarily the most recognizable of them.
+  ///  Deciding which designation to show is up to the client: `entry` is not
+  ///  necessarily the most recognizable of them.
   @$pb.TagNumber(2)
   $pb.PbList<CatalogEntry> get dedupedEntries => $_getList(1);
 
@@ -447,7 +432,7 @@ class SelectedCatalogEntry extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   $core.double get altitude => $_getN(3);
   @$pb.TagNumber(4)
-  set altitude($core.double value) => $_setDouble(3, value);
+  set altitude($core.double v) { $_setDouble(3, v); }
   @$pb.TagNumber(4)
   $core.bool hasAltitude() => $_has(3);
   @$pb.TagNumber(4)
@@ -457,7 +442,7 @@ class SelectedCatalogEntry extends $pb.GeneratedMessage {
   @$pb.TagNumber(5)
   $core.double get azimuth => $_getN(4);
   @$pb.TagNumber(5)
-  set azimuth($core.double value) => $_setDouble(4, value);
+  set azimuth($core.double v) { $_setDouble(4, v); }
   @$pb.TagNumber(5)
   $core.bool hasAzimuth() => $_has(4);
   @$pb.TagNumber(5)
@@ -469,53 +454,50 @@ class SkyEvent extends $pb.GeneratedMessage {
     $0.Timestamp? time,
     $core.double? value,
   }) {
-    final result = create();
-    if (time != null) result.time = time;
-    if (value != null) result.value = value;
-    return result;
+    final $result = create();
+    if (time != null) {
+      $result.time = time;
+    }
+    if (value != null) {
+      $result.value = value;
+    }
+    return $result;
   }
+  SkyEvent._() : super();
+  factory SkyEvent.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory SkyEvent.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
 
-  SkyEvent._();
-
-  factory SkyEvent.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory SkyEvent.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'SkyEvent',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar_sky'),
-      createEmptyInstance: create)
-    ..aOM<$0.Timestamp>(1, _omitFieldNames ? '' : 'time',
-        subBuilder: $0.Timestamp.create)
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'SkyEvent', package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar_sky'), createEmptyInstance: create)
+    ..aOM<$0.Timestamp>(1, _omitFieldNames ? '' : 'time', subBuilder: $0.Timestamp.create)
     ..a<$core.double>(2, _omitFieldNames ? '' : 'value', $pb.PbFieldType.OD)
-    ..hasRequiredFields = false;
+    ..hasRequiredFields = false
+  ;
 
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
   SkyEvent clone() => SkyEvent()..mergeFromMessage(this);
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  SkyEvent copyWith(void Function(SkyEvent) updates) =>
-      super.copyWith((message) => updates(message as SkyEvent)) as SkyEvent;
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  SkyEvent copyWith(void Function(SkyEvent) updates) => super.copyWith((message) => updates(message as SkyEvent)) as SkyEvent;
 
-  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static SkyEvent create() => SkyEvent._();
-  @$core.override
   SkyEvent createEmptyInstance() => create();
   static $pb.PbList<SkyEvent> createRepeated() => $pb.PbList<SkyEvent>();
   @$core.pragma('dart2js:noInline')
-  static SkyEvent getDefault() =>
-      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<SkyEvent>(create);
+  static SkyEvent getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<SkyEvent>(create);
   static SkyEvent? _defaultInstance;
 
   @$pb.TagNumber(1)
   $0.Timestamp get time => $_getN(0);
   @$pb.TagNumber(1)
-  set time($0.Timestamp value) => $_setField(1, value);
+  set time($0.Timestamp v) { $_setField(1, v); }
   @$pb.TagNumber(1)
   $core.bool hasTime() => $_has(0);
   @$pb.TagNumber(1)
@@ -529,23 +511,23 @@ class SkyEvent extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $core.double get value => $_getN(1);
   @$pb.TagNumber(2)
-  set value($core.double value) => $_setDouble(1, value);
+  set value($core.double v) { $_setDouble(1, v); }
   @$pb.TagNumber(2)
   $core.bool hasValue() => $_has(1);
   @$pb.TagNumber(2)
   void clearValue() => $_clearField(2);
 }
 
-/// Rise, set, and culmination times for an object, relative to the time the
-/// containing CatalogEntry was computed. prev_*/next_* are the nearest such
-/// event strictly before/after that time.
+///  Rise, set, and culmination times for an object, relative to the time the
+///  containing CatalogEntry was computed. prev_*/next_* are the nearest such
+///  event strictly before/after that time.
 ///
-/// prev_rise/next_rise and prev_set/next_set are omitted together: absent iff
-/// the object is circumpolar (never sets) or never rises, as determined by
-/// the object's declination, the observer's latitude, and the horizon
-/// altitude used for the rise/set computation. prev_culmination/
-/// next_culmination are always present; upper culmination (meridian
-/// crossing) occurs regardless of whether the object rises/sets.
+///  prev_rise/next_rise and prev_set/next_set are omitted together: absent iff
+///  the object is circumpolar (never sets) or never rises, as determined by
+///  the object's declination, the observer's latitude, and the horizon
+///  altitude used for the rise/set computation. prev_culmination/
+///  next_culmination are always present; upper culmination (meridian
+///  crossing) occurs regardless of whether the object rises/sets.
 class RiseSetCulmination extends $pb.GeneratedMessage {
   factory RiseSetCulmination({
     SkyEvent? prevRise,
@@ -555,68 +537,66 @@ class RiseSetCulmination extends $pb.GeneratedMessage {
     SkyEvent? prevCulmination,
     SkyEvent? nextCulmination,
   }) {
-    final result = create();
-    if (prevRise != null) result.prevRise = prevRise;
-    if (nextRise != null) result.nextRise = nextRise;
-    if (prevSet != null) result.prevSet = prevSet;
-    if (nextSet != null) result.nextSet = nextSet;
-    if (prevCulmination != null) result.prevCulmination = prevCulmination;
-    if (nextCulmination != null) result.nextCulmination = nextCulmination;
-    return result;
+    final $result = create();
+    if (prevRise != null) {
+      $result.prevRise = prevRise;
+    }
+    if (nextRise != null) {
+      $result.nextRise = nextRise;
+    }
+    if (prevSet != null) {
+      $result.prevSet = prevSet;
+    }
+    if (nextSet != null) {
+      $result.nextSet = nextSet;
+    }
+    if (prevCulmination != null) {
+      $result.prevCulmination = prevCulmination;
+    }
+    if (nextCulmination != null) {
+      $result.nextCulmination = nextCulmination;
+    }
+    return $result;
   }
+  RiseSetCulmination._() : super();
+  factory RiseSetCulmination.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory RiseSetCulmination.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
 
-  RiseSetCulmination._();
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'RiseSetCulmination', package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar_sky'), createEmptyInstance: create)
+    ..aOM<SkyEvent>(1, _omitFieldNames ? '' : 'prevRise', subBuilder: SkyEvent.create)
+    ..aOM<SkyEvent>(2, _omitFieldNames ? '' : 'nextRise', subBuilder: SkyEvent.create)
+    ..aOM<SkyEvent>(3, _omitFieldNames ? '' : 'prevSet', subBuilder: SkyEvent.create)
+    ..aOM<SkyEvent>(4, _omitFieldNames ? '' : 'nextSet', subBuilder: SkyEvent.create)
+    ..aOM<SkyEvent>(5, _omitFieldNames ? '' : 'prevCulmination', subBuilder: SkyEvent.create)
+    ..aOM<SkyEvent>(6, _omitFieldNames ? '' : 'nextCulmination', subBuilder: SkyEvent.create)
+    ..hasRequiredFields = false
+  ;
 
-  factory RiseSetCulmination.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory RiseSetCulmination.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'RiseSetCulmination',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar_sky'),
-      createEmptyInstance: create)
-    ..aOM<SkyEvent>(1, _omitFieldNames ? '' : 'prevRise',
-        subBuilder: SkyEvent.create)
-    ..aOM<SkyEvent>(2, _omitFieldNames ? '' : 'nextRise',
-        subBuilder: SkyEvent.create)
-    ..aOM<SkyEvent>(3, _omitFieldNames ? '' : 'prevSet',
-        subBuilder: SkyEvent.create)
-    ..aOM<SkyEvent>(4, _omitFieldNames ? '' : 'nextSet',
-        subBuilder: SkyEvent.create)
-    ..aOM<SkyEvent>(5, _omitFieldNames ? '' : 'prevCulmination',
-        subBuilder: SkyEvent.create)
-    ..aOM<SkyEvent>(6, _omitFieldNames ? '' : 'nextCulmination',
-        subBuilder: SkyEvent.create)
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
   RiseSetCulmination clone() => RiseSetCulmination()..mergeFromMessage(this);
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  RiseSetCulmination copyWith(void Function(RiseSetCulmination) updates) =>
-      super.copyWith((message) => updates(message as RiseSetCulmination))
-          as RiseSetCulmination;
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  RiseSetCulmination copyWith(void Function(RiseSetCulmination) updates) => super.copyWith((message) => updates(message as RiseSetCulmination)) as RiseSetCulmination;
 
-  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static RiseSetCulmination create() => RiseSetCulmination._();
-  @$core.override
   RiseSetCulmination createEmptyInstance() => create();
-  static $pb.PbList<RiseSetCulmination> createRepeated() =>
-      $pb.PbList<RiseSetCulmination>();
+  static $pb.PbList<RiseSetCulmination> createRepeated() => $pb.PbList<RiseSetCulmination>();
   @$core.pragma('dart2js:noInline')
-  static RiseSetCulmination getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<RiseSetCulmination>(create);
+  static RiseSetCulmination getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<RiseSetCulmination>(create);
   static RiseSetCulmination? _defaultInstance;
 
   @$pb.TagNumber(1)
   SkyEvent get prevRise => $_getN(0);
   @$pb.TagNumber(1)
-  set prevRise(SkyEvent value) => $_setField(1, value);
+  set prevRise(SkyEvent v) { $_setField(1, v); }
   @$pb.TagNumber(1)
   $core.bool hasPrevRise() => $_has(0);
   @$pb.TagNumber(1)
@@ -627,7 +607,7 @@ class RiseSetCulmination extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   SkyEvent get nextRise => $_getN(1);
   @$pb.TagNumber(2)
-  set nextRise(SkyEvent value) => $_setField(2, value);
+  set nextRise(SkyEvent v) { $_setField(2, v); }
   @$pb.TagNumber(2)
   $core.bool hasNextRise() => $_has(1);
   @$pb.TagNumber(2)
@@ -638,7 +618,7 @@ class RiseSetCulmination extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   SkyEvent get prevSet => $_getN(2);
   @$pb.TagNumber(3)
-  set prevSet(SkyEvent value) => $_setField(3, value);
+  set prevSet(SkyEvent v) { $_setField(3, v); }
   @$pb.TagNumber(3)
   $core.bool hasPrevSet() => $_has(2);
   @$pb.TagNumber(3)
@@ -649,7 +629,7 @@ class RiseSetCulmination extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   SkyEvent get nextSet => $_getN(3);
   @$pb.TagNumber(4)
-  set nextSet(SkyEvent value) => $_setField(4, value);
+  set nextSet(SkyEvent v) { $_setField(4, v); }
   @$pb.TagNumber(4)
   $core.bool hasNextSet() => $_has(3);
   @$pb.TagNumber(4)
@@ -660,7 +640,7 @@ class RiseSetCulmination extends $pb.GeneratedMessage {
   @$pb.TagNumber(5)
   SkyEvent get prevCulmination => $_getN(4);
   @$pb.TagNumber(5)
-  set prevCulmination(SkyEvent value) => $_setField(5, value);
+  set prevCulmination(SkyEvent v) { $_setField(5, v); }
   @$pb.TagNumber(5)
   $core.bool hasPrevCulmination() => $_has(4);
   @$pb.TagNumber(5)
@@ -671,7 +651,7 @@ class RiseSetCulmination extends $pb.GeneratedMessage {
   @$pb.TagNumber(6)
   SkyEvent get nextCulmination => $_getN(5);
   @$pb.TagNumber(6)
-  set nextCulmination(SkyEvent value) => $_setField(6, value);
+  set nextCulmination(SkyEvent v) { $_setField(6, v); }
   @$pb.TagNumber(6)
   $core.bool hasNextCulmination() => $_has(5);
   @$pb.TagNumber(6)
@@ -693,69 +673,76 @@ class CatalogEntry extends $pb.GeneratedMessage {
     $core.String? notes,
     RiseSetCulmination? riseSetCulmination,
   }) {
-    final result = create();
-    if (catalogLabel != null) result.catalogLabel = catalogLabel;
-    if (catalogEntry != null) result.catalogEntry = catalogEntry;
-    if (coord != null) result.coord = coord;
-    if (constellation != null) result.constellation = constellation;
-    if (objectType != null) result.objectType = objectType;
-    if (magnitude != null) result.magnitude = magnitude;
-    if (angularSize != null) result.angularSize = angularSize;
-    if (commonName != null) result.commonName = commonName;
-    if (notes != null) result.notes = notes;
-    if (riseSetCulmination != null)
-      result.riseSetCulmination = riseSetCulmination;
-    return result;
+    final $result = create();
+    if (catalogLabel != null) {
+      $result.catalogLabel = catalogLabel;
+    }
+    if (catalogEntry != null) {
+      $result.catalogEntry = catalogEntry;
+    }
+    if (coord != null) {
+      $result.coord = coord;
+    }
+    if (constellation != null) {
+      $result.constellation = constellation;
+    }
+    if (objectType != null) {
+      $result.objectType = objectType;
+    }
+    if (magnitude != null) {
+      $result.magnitude = magnitude;
+    }
+    if (angularSize != null) {
+      $result.angularSize = angularSize;
+    }
+    if (commonName != null) {
+      $result.commonName = commonName;
+    }
+    if (notes != null) {
+      $result.notes = notes;
+    }
+    if (riseSetCulmination != null) {
+      $result.riseSetCulmination = riseSetCulmination;
+    }
+    return $result;
   }
+  CatalogEntry._() : super();
+  factory CatalogEntry.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory CatalogEntry.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
 
-  CatalogEntry._();
-
-  factory CatalogEntry.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory CatalogEntry.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'CatalogEntry',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar_sky'),
-      createEmptyInstance: create)
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'CatalogEntry', package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar_sky'), createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'catalogLabel')
     ..aOS(2, _omitFieldNames ? '' : 'catalogEntry')
-    ..aOM<$1.CelestialCoord>(3, _omitFieldNames ? '' : 'coord',
-        subBuilder: $1.CelestialCoord.create)
-    ..aOM<Constellation>(4, _omitFieldNames ? '' : 'constellation',
-        subBuilder: Constellation.create)
-    ..aOM<ObjectType>(5, _omitFieldNames ? '' : 'objectType',
-        subBuilder: ObjectType.create)
+    ..aOM<$1.CelestialCoord>(3, _omitFieldNames ? '' : 'coord', subBuilder: $1.CelestialCoord.create)
+    ..aOM<Constellation>(4, _omitFieldNames ? '' : 'constellation', subBuilder: Constellation.create)
+    ..aOM<ObjectType>(5, _omitFieldNames ? '' : 'objectType', subBuilder: ObjectType.create)
     ..a<$core.double>(6, _omitFieldNames ? '' : 'magnitude', $pb.PbFieldType.OD)
     ..aOS(7, _omitFieldNames ? '' : 'angularSize')
     ..aOS(8, _omitFieldNames ? '' : 'commonName')
     ..aOS(9, _omitFieldNames ? '' : 'notes')
-    ..aOM<RiseSetCulmination>(10, _omitFieldNames ? '' : 'riseSetCulmination',
-        subBuilder: RiseSetCulmination.create)
-    ..hasRequiredFields = false;
+    ..aOM<RiseSetCulmination>(10, _omitFieldNames ? '' : 'riseSetCulmination', subBuilder: RiseSetCulmination.create)
+    ..hasRequiredFields = false
+  ;
 
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
   CatalogEntry clone() => CatalogEntry()..mergeFromMessage(this);
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  CatalogEntry copyWith(void Function(CatalogEntry) updates) =>
-      super.copyWith((message) => updates(message as CatalogEntry))
-          as CatalogEntry;
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  CatalogEntry copyWith(void Function(CatalogEntry) updates) => super.copyWith((message) => updates(message as CatalogEntry)) as CatalogEntry;
 
-  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static CatalogEntry create() => CatalogEntry._();
-  @$core.override
   CatalogEntry createEmptyInstance() => create();
-  static $pb.PbList<CatalogEntry> createRepeated() =>
-      $pb.PbList<CatalogEntry>();
+  static $pb.PbList<CatalogEntry> createRepeated() => $pb.PbList<CatalogEntry>();
   @$core.pragma('dart2js:noInline')
-  static CatalogEntry getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<CatalogEntry>(create);
+  static CatalogEntry getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<CatalogEntry>(create);
   static CatalogEntry? _defaultInstance;
 
   /// These two fields combine to be globally unique entry label, e.g. 'M51',
@@ -763,7 +750,7 @@ class CatalogEntry extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $core.String get catalogLabel => $_getSZ(0);
   @$pb.TagNumber(1)
-  set catalogLabel($core.String value) => $_setString(0, value);
+  set catalogLabel($core.String v) { $_setString(0, v); }
   @$pb.TagNumber(1)
   $core.bool hasCatalogLabel() => $_has(0);
   @$pb.TagNumber(1)
@@ -772,7 +759,7 @@ class CatalogEntry extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $core.String get catalogEntry => $_getSZ(1);
   @$pb.TagNumber(2)
-  set catalogEntry($core.String value) => $_setString(1, value);
+  set catalogEntry($core.String v) { $_setString(1, v); }
   @$pb.TagNumber(2)
   $core.bool hasCatalogEntry() => $_has(1);
   @$pb.TagNumber(2)
@@ -781,7 +768,7 @@ class CatalogEntry extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   $1.CelestialCoord get coord => $_getN(2);
   @$pb.TagNumber(3)
-  set coord($1.CelestialCoord value) => $_setField(3, value);
+  set coord($1.CelestialCoord v) { $_setField(3, v); }
   @$pb.TagNumber(3)
   $core.bool hasCoord() => $_has(2);
   @$pb.TagNumber(3)
@@ -792,7 +779,7 @@ class CatalogEntry extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   Constellation get constellation => $_getN(3);
   @$pb.TagNumber(4)
-  set constellation(Constellation value) => $_setField(4, value);
+  set constellation(Constellation v) { $_setField(4, v); }
   @$pb.TagNumber(4)
   $core.bool hasConstellation() => $_has(3);
   @$pb.TagNumber(4)
@@ -803,7 +790,7 @@ class CatalogEntry extends $pb.GeneratedMessage {
   @$pb.TagNumber(5)
   ObjectType get objectType => $_getN(4);
   @$pb.TagNumber(5)
-  set objectType(ObjectType value) => $_setField(5, value);
+  set objectType(ObjectType v) { $_setField(5, v); }
   @$pb.TagNumber(5)
   $core.bool hasObjectType() => $_has(4);
   @$pb.TagNumber(5)
@@ -814,7 +801,7 @@ class CatalogEntry extends $pb.GeneratedMessage {
   @$pb.TagNumber(6)
   $core.double get magnitude => $_getN(5);
   @$pb.TagNumber(6)
-  set magnitude($core.double value) => $_setDouble(5, value);
+  set magnitude($core.double v) { $_setDouble(5, v); }
   @$pb.TagNumber(6)
   $core.bool hasMagnitude() => $_has(5);
   @$pb.TagNumber(6)
@@ -823,7 +810,7 @@ class CatalogEntry extends $pb.GeneratedMessage {
   @$pb.TagNumber(7)
   $core.String get angularSize => $_getSZ(6);
   @$pb.TagNumber(7)
-  set angularSize($core.String value) => $_setString(6, value);
+  set angularSize($core.String v) { $_setString(6, v); }
   @$pb.TagNumber(7)
   $core.bool hasAngularSize() => $_has(6);
   @$pb.TagNumber(7)
@@ -832,7 +819,7 @@ class CatalogEntry extends $pb.GeneratedMessage {
   @$pb.TagNumber(8)
   $core.String get commonName => $_getSZ(7);
   @$pb.TagNumber(8)
-  set commonName($core.String value) => $_setString(7, value);
+  set commonName($core.String v) { $_setString(7, v); }
   @$pb.TagNumber(8)
   $core.bool hasCommonName() => $_has(7);
   @$pb.TagNumber(8)
@@ -841,7 +828,7 @@ class CatalogEntry extends $pb.GeneratedMessage {
   @$pb.TagNumber(9)
   $core.String get notes => $_getSZ(8);
   @$pb.TagNumber(9)
-  set notes($core.String value) => $_setString(8, value);
+  set notes($core.String v) { $_setString(8, v); }
   @$pb.TagNumber(9)
   $core.bool hasNotes() => $_has(8);
   @$pb.TagNumber(9)
@@ -854,7 +841,7 @@ class CatalogEntry extends $pb.GeneratedMessage {
   @$pb.TagNumber(10)
   RiseSetCulmination get riseSetCulmination => $_getN(9);
   @$pb.TagNumber(10)
-  set riseSetCulmination(RiseSetCulmination value) => $_setField(10, value);
+  set riseSetCulmination(RiseSetCulmination v) { $_setField(10, v); }
   @$pb.TagNumber(10)
   $core.bool hasRiseSetCulmination() => $_has(9);
   @$pb.TagNumber(10)
@@ -872,62 +859,66 @@ class CatalogDescription extends $pb.GeneratedMessage {
     $core.String? copyright,
     $core.String? license,
   }) {
-    final result = create();
-    if (label != null) result.label = label;
-    if (name != null) result.name = name;
-    if (description != null) result.description = description;
-    if (source != null) result.source = source;
-    if (copyright != null) result.copyright = copyright;
-    if (license != null) result.license = license;
-    return result;
+    final $result = create();
+    if (label != null) {
+      $result.label = label;
+    }
+    if (name != null) {
+      $result.name = name;
+    }
+    if (description != null) {
+      $result.description = description;
+    }
+    if (source != null) {
+      $result.source = source;
+    }
+    if (copyright != null) {
+      $result.copyright = copyright;
+    }
+    if (license != null) {
+      $result.license = license;
+    }
+    return $result;
   }
+  CatalogDescription._() : super();
+  factory CatalogDescription.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory CatalogDescription.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
 
-  CatalogDescription._();
-
-  factory CatalogDescription.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory CatalogDescription.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'CatalogDescription',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar_sky'),
-      createEmptyInstance: create)
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'CatalogDescription', package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar_sky'), createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'label')
     ..aOS(2, _omitFieldNames ? '' : 'name')
     ..aOS(3, _omitFieldNames ? '' : 'description')
     ..aOS(4, _omitFieldNames ? '' : 'source')
     ..aOS(5, _omitFieldNames ? '' : 'copyright')
     ..aOS(6, _omitFieldNames ? '' : 'license')
-    ..hasRequiredFields = false;
+    ..hasRequiredFields = false
+  ;
 
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
   CatalogDescription clone() => CatalogDescription()..mergeFromMessage(this);
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  CatalogDescription copyWith(void Function(CatalogDescription) updates) =>
-      super.copyWith((message) => updates(message as CatalogDescription))
-          as CatalogDescription;
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  CatalogDescription copyWith(void Function(CatalogDescription) updates) => super.copyWith((message) => updates(message as CatalogDescription)) as CatalogDescription;
 
-  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static CatalogDescription create() => CatalogDescription._();
-  @$core.override
   CatalogDescription createEmptyInstance() => create();
-  static $pb.PbList<CatalogDescription> createRepeated() =>
-      $pb.PbList<CatalogDescription>();
+  static $pb.PbList<CatalogDescription> createRepeated() => $pb.PbList<CatalogDescription>();
   @$core.pragma('dart2js:noInline')
-  static CatalogDescription getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<CatalogDescription>(create);
+  static CatalogDescription getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<CatalogDescription>(create);
   static CatalogDescription? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get label => $_getSZ(0);
   @$pb.TagNumber(1)
-  set label($core.String value) => $_setString(0, value);
+  set label($core.String v) { $_setString(0, v); }
   @$pb.TagNumber(1)
   $core.bool hasLabel() => $_has(0);
   @$pb.TagNumber(1)
@@ -936,7 +927,7 @@ class CatalogDescription extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $core.String get name => $_getSZ(1);
   @$pb.TagNumber(2)
-  set name($core.String value) => $_setString(1, value);
+  set name($core.String v) { $_setString(1, v); }
   @$pb.TagNumber(2)
   $core.bool hasName() => $_has(1);
   @$pb.TagNumber(2)
@@ -945,7 +936,7 @@ class CatalogDescription extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   $core.String get description => $_getSZ(2);
   @$pb.TagNumber(3)
-  set description($core.String value) => $_setString(2, value);
+  set description($core.String v) { $_setString(2, v); }
   @$pb.TagNumber(3)
   $core.bool hasDescription() => $_has(2);
   @$pb.TagNumber(3)
@@ -954,7 +945,7 @@ class CatalogDescription extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   $core.String get source => $_getSZ(3);
   @$pb.TagNumber(4)
-  set source($core.String value) => $_setString(3, value);
+  set source($core.String v) { $_setString(3, v); }
   @$pb.TagNumber(4)
   $core.bool hasSource() => $_has(3);
   @$pb.TagNumber(4)
@@ -963,7 +954,7 @@ class CatalogDescription extends $pb.GeneratedMessage {
   @$pb.TagNumber(5)
   $core.String get copyright => $_getSZ(4);
   @$pb.TagNumber(5)
-  set copyright($core.String value) => $_setString(4, value);
+  set copyright($core.String v) { $_setString(4, v); }
   @$pb.TagNumber(5)
   $core.bool hasCopyright() => $_has(4);
   @$pb.TagNumber(5)
@@ -972,7 +963,7 @@ class CatalogDescription extends $pb.GeneratedMessage {
   @$pb.TagNumber(6)
   $core.String get license => $_getSZ(5);
   @$pb.TagNumber(6)
-  set license($core.String value) => $_setString(5, value);
+  set license($core.String v) { $_setString(5, v); }
   @$pb.TagNumber(6)
   $core.bool hasLicense() => $_has(5);
   @$pb.TagNumber(6)
@@ -983,52 +974,40 @@ class CatalogDescriptionResponse extends $pb.GeneratedMessage {
   factory CatalogDescriptionResponse({
     $core.Iterable<CatalogDescription>? catalogDescriptions,
   }) {
-    final result = create();
-    if (catalogDescriptions != null)
-      result.catalogDescriptions.addAll(catalogDescriptions);
-    return result;
+    final $result = create();
+    if (catalogDescriptions != null) {
+      $result.catalogDescriptions.addAll(catalogDescriptions);
+    }
+    return $result;
   }
+  CatalogDescriptionResponse._() : super();
+  factory CatalogDescriptionResponse.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory CatalogDescriptionResponse.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
 
-  CatalogDescriptionResponse._();
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'CatalogDescriptionResponse', package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar_sky'), createEmptyInstance: create)
+    ..pc<CatalogDescription>(1, _omitFieldNames ? '' : 'catalogDescriptions', $pb.PbFieldType.PM, subBuilder: CatalogDescription.create)
+    ..hasRequiredFields = false
+  ;
 
-  factory CatalogDescriptionResponse.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory CatalogDescriptionResponse.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  CatalogDescriptionResponse clone() => CatalogDescriptionResponse()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  CatalogDescriptionResponse copyWith(void Function(CatalogDescriptionResponse) updates) => super.copyWith((message) => updates(message as CatalogDescriptionResponse)) as CatalogDescriptionResponse;
 
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'CatalogDescriptionResponse',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar_sky'),
-      createEmptyInstance: create)
-    ..pc<CatalogDescription>(
-        1, _omitFieldNames ? '' : 'catalogDescriptions', $pb.PbFieldType.PM,
-        subBuilder: CatalogDescription.create)
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  CatalogDescriptionResponse clone() =>
-      CatalogDescriptionResponse()..mergeFromMessage(this);
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  CatalogDescriptionResponse copyWith(
-          void Function(CatalogDescriptionResponse) updates) =>
-      super.copyWith(
-              (message) => updates(message as CatalogDescriptionResponse))
-          as CatalogDescriptionResponse;
-
-  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static CatalogDescriptionResponse create() => CatalogDescriptionResponse._();
-  @$core.override
   CatalogDescriptionResponse createEmptyInstance() => create();
-  static $pb.PbList<CatalogDescriptionResponse> createRepeated() =>
-      $pb.PbList<CatalogDescriptionResponse>();
+  static $pb.PbList<CatalogDescriptionResponse> createRepeated() => $pb.PbList<CatalogDescriptionResponse>();
   @$core.pragma('dart2js:noInline')
-  static CatalogDescriptionResponse getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<CatalogDescriptionResponse>(create);
+  static CatalogDescriptionResponse getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<CatalogDescriptionResponse>(create);
   static CatalogDescriptionResponse? _defaultInstance;
 
   @$pb.TagNumber(1)
@@ -1040,52 +1019,50 @@ class ObjectType extends $pb.GeneratedMessage {
     $core.String? label,
     $core.String? broadCategory,
   }) {
-    final result = create();
-    if (label != null) result.label = label;
-    if (broadCategory != null) result.broadCategory = broadCategory;
-    return result;
+    final $result = create();
+    if (label != null) {
+      $result.label = label;
+    }
+    if (broadCategory != null) {
+      $result.broadCategory = broadCategory;
+    }
+    return $result;
   }
+  ObjectType._() : super();
+  factory ObjectType.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory ObjectType.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
 
-  ObjectType._();
-
-  factory ObjectType.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory ObjectType.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'ObjectType',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar_sky'),
-      createEmptyInstance: create)
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'ObjectType', package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar_sky'), createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'label')
     ..aOS(2, _omitFieldNames ? '' : 'broadCategory')
-    ..hasRequiredFields = false;
+    ..hasRequiredFields = false
+  ;
 
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
   ObjectType clone() => ObjectType()..mergeFromMessage(this);
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ObjectType copyWith(void Function(ObjectType) updates) =>
-      super.copyWith((message) => updates(message as ObjectType)) as ObjectType;
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  ObjectType copyWith(void Function(ObjectType) updates) => super.copyWith((message) => updates(message as ObjectType)) as ObjectType;
 
-  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static ObjectType create() => ObjectType._();
-  @$core.override
   ObjectType createEmptyInstance() => create();
   static $pb.PbList<ObjectType> createRepeated() => $pb.PbList<ObjectType>();
   @$core.pragma('dart2js:noInline')
-  static ObjectType getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<ObjectType>(create);
+  static ObjectType getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<ObjectType>(create);
   static ObjectType? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get label => $_getSZ(0);
   @$pb.TagNumber(1)
-  set label($core.String value) => $_setString(0, value);
+  set label($core.String v) { $_setString(0, v); }
   @$pb.TagNumber(1)
   $core.bool hasLabel() => $_has(0);
   @$pb.TagNumber(1)
@@ -1094,7 +1071,7 @@ class ObjectType extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $core.String get broadCategory => $_getSZ(1);
   @$pb.TagNumber(2)
-  set broadCategory($core.String value) => $_setString(1, value);
+  set broadCategory($core.String v) { $_setString(1, v); }
   @$pb.TagNumber(2)
   $core.bool hasBroadCategory() => $_has(1);
   @$pb.TagNumber(2)
@@ -1105,48 +1082,40 @@ class ObjectTypeResponse extends $pb.GeneratedMessage {
   factory ObjectTypeResponse({
     $core.Iterable<ObjectType>? objectTypes,
   }) {
-    final result = create();
-    if (objectTypes != null) result.objectTypes.addAll(objectTypes);
-    return result;
+    final $result = create();
+    if (objectTypes != null) {
+      $result.objectTypes.addAll(objectTypes);
+    }
+    return $result;
   }
+  ObjectTypeResponse._() : super();
+  factory ObjectTypeResponse.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory ObjectTypeResponse.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
 
-  ObjectTypeResponse._();
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'ObjectTypeResponse', package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar_sky'), createEmptyInstance: create)
+    ..pc<ObjectType>(1, _omitFieldNames ? '' : 'objectTypes', $pb.PbFieldType.PM, subBuilder: ObjectType.create)
+    ..hasRequiredFields = false
+  ;
 
-  factory ObjectTypeResponse.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory ObjectTypeResponse.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'ObjectTypeResponse',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar_sky'),
-      createEmptyInstance: create)
-    ..pc<ObjectType>(
-        1, _omitFieldNames ? '' : 'objectTypes', $pb.PbFieldType.PM,
-        subBuilder: ObjectType.create)
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
   ObjectTypeResponse clone() => ObjectTypeResponse()..mergeFromMessage(this);
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ObjectTypeResponse copyWith(void Function(ObjectTypeResponse) updates) =>
-      super.copyWith((message) => updates(message as ObjectTypeResponse))
-          as ObjectTypeResponse;
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  ObjectTypeResponse copyWith(void Function(ObjectTypeResponse) updates) => super.copyWith((message) => updates(message as ObjectTypeResponse)) as ObjectTypeResponse;
 
-  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static ObjectTypeResponse create() => ObjectTypeResponse._();
-  @$core.override
   ObjectTypeResponse createEmptyInstance() => create();
-  static $pb.PbList<ObjectTypeResponse> createRepeated() =>
-      $pb.PbList<ObjectTypeResponse>();
+  static $pb.PbList<ObjectTypeResponse> createRepeated() => $pb.PbList<ObjectTypeResponse>();
   @$core.pragma('dart2js:noInline')
-  static ObjectTypeResponse getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<ObjectTypeResponse>(create);
+  static ObjectTypeResponse getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<ObjectTypeResponse>(create);
   static ObjectTypeResponse? _defaultInstance;
 
   @$pb.TagNumber(1)
@@ -1158,54 +1127,50 @@ class Constellation extends $pb.GeneratedMessage {
     $core.String? label,
     $core.String? name,
   }) {
-    final result = create();
-    if (label != null) result.label = label;
-    if (name != null) result.name = name;
-    return result;
+    final $result = create();
+    if (label != null) {
+      $result.label = label;
+    }
+    if (name != null) {
+      $result.name = name;
+    }
+    return $result;
   }
+  Constellation._() : super();
+  factory Constellation.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory Constellation.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
 
-  Constellation._();
-
-  factory Constellation.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory Constellation.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'Constellation',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar_sky'),
-      createEmptyInstance: create)
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'Constellation', package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar_sky'), createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'label')
     ..aOS(2, _omitFieldNames ? '' : 'name')
-    ..hasRequiredFields = false;
+    ..hasRequiredFields = false
+  ;
 
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
   Constellation clone() => Constellation()..mergeFromMessage(this);
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  Constellation copyWith(void Function(Constellation) updates) =>
-      super.copyWith((message) => updates(message as Constellation))
-          as Constellation;
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  Constellation copyWith(void Function(Constellation) updates) => super.copyWith((message) => updates(message as Constellation)) as Constellation;
 
-  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static Constellation create() => Constellation._();
-  @$core.override
   Constellation createEmptyInstance() => create();
-  static $pb.PbList<Constellation> createRepeated() =>
-      $pb.PbList<Constellation>();
+  static $pb.PbList<Constellation> createRepeated() => $pb.PbList<Constellation>();
   @$core.pragma('dart2js:noInline')
-  static Constellation getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<Constellation>(create);
+  static Constellation getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Constellation>(create);
   static Constellation? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get label => $_getSZ(0);
   @$pb.TagNumber(1)
-  set label($core.String value) => $_setString(0, value);
+  set label($core.String v) { $_setString(0, v); }
   @$pb.TagNumber(1)
   $core.bool hasLabel() => $_has(0);
   @$pb.TagNumber(1)
@@ -1214,7 +1179,7 @@ class Constellation extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $core.String get name => $_getSZ(1);
   @$pb.TagNumber(2)
-  set name($core.String value) => $_setString(1, value);
+  set name($core.String v) { $_setString(1, v); }
   @$pb.TagNumber(2)
   $core.bool hasName() => $_has(1);
   @$pb.TagNumber(2)
@@ -1225,50 +1190,40 @@ class ConstellationResponse extends $pb.GeneratedMessage {
   factory ConstellationResponse({
     $core.Iterable<Constellation>? constellations,
   }) {
-    final result = create();
-    if (constellations != null) result.constellations.addAll(constellations);
-    return result;
+    final $result = create();
+    if (constellations != null) {
+      $result.constellations.addAll(constellations);
+    }
+    return $result;
   }
+  ConstellationResponse._() : super();
+  factory ConstellationResponse.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory ConstellationResponse.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
 
-  ConstellationResponse._();
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'ConstellationResponse', package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar_sky'), createEmptyInstance: create)
+    ..pc<Constellation>(1, _omitFieldNames ? '' : 'constellations', $pb.PbFieldType.PM, subBuilder: Constellation.create)
+    ..hasRequiredFields = false
+  ;
 
-  factory ConstellationResponse.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory ConstellationResponse.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  ConstellationResponse clone() => ConstellationResponse()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  ConstellationResponse copyWith(void Function(ConstellationResponse) updates) => super.copyWith((message) => updates(message as ConstellationResponse)) as ConstellationResponse;
 
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'ConstellationResponse',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar_sky'),
-      createEmptyInstance: create)
-    ..pc<Constellation>(
-        1, _omitFieldNames ? '' : 'constellations', $pb.PbFieldType.PM,
-        subBuilder: Constellation.create)
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ConstellationResponse clone() =>
-      ConstellationResponse()..mergeFromMessage(this);
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ConstellationResponse copyWith(
-          void Function(ConstellationResponse) updates) =>
-      super.copyWith((message) => updates(message as ConstellationResponse))
-          as ConstellationResponse;
-
-  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static ConstellationResponse create() => ConstellationResponse._();
-  @$core.override
   ConstellationResponse createEmptyInstance() => create();
-  static $pb.PbList<ConstellationResponse> createRepeated() =>
-      $pb.PbList<ConstellationResponse>();
+  static $pb.PbList<ConstellationResponse> createRepeated() => $pb.PbList<ConstellationResponse>();
   @$core.pragma('dart2js:noInline')
-  static ConstellationResponse getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<ConstellationResponse>(create);
+  static ConstellationResponse getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<ConstellationResponse>(create);
   static ConstellationResponse? _defaultInstance;
 
   @$pb.TagNumber(1)
@@ -1280,54 +1235,50 @@ class CatalogEntryKey extends $pb.GeneratedMessage {
     $core.String? catLabel,
     $core.String? entry,
   }) {
-    final result = create();
-    if (catLabel != null) result.catLabel = catLabel;
-    if (entry != null) result.entry = entry;
-    return result;
+    final $result = create();
+    if (catLabel != null) {
+      $result.catLabel = catLabel;
+    }
+    if (entry != null) {
+      $result.entry = entry;
+    }
+    return $result;
   }
+  CatalogEntryKey._() : super();
+  factory CatalogEntryKey.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory CatalogEntryKey.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
 
-  CatalogEntryKey._();
-
-  factory CatalogEntryKey.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory CatalogEntryKey.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'CatalogEntryKey',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar_sky'),
-      createEmptyInstance: create)
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'CatalogEntryKey', package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar_sky'), createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'catLabel')
     ..aOS(2, _omitFieldNames ? '' : 'entry')
-    ..hasRequiredFields = false;
+    ..hasRequiredFields = false
+  ;
 
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
   CatalogEntryKey clone() => CatalogEntryKey()..mergeFromMessage(this);
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  CatalogEntryKey copyWith(void Function(CatalogEntryKey) updates) =>
-      super.copyWith((message) => updates(message as CatalogEntryKey))
-          as CatalogEntryKey;
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  CatalogEntryKey copyWith(void Function(CatalogEntryKey) updates) => super.copyWith((message) => updates(message as CatalogEntryKey)) as CatalogEntryKey;
 
-  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static CatalogEntryKey create() => CatalogEntryKey._();
-  @$core.override
   CatalogEntryKey createEmptyInstance() => create();
-  static $pb.PbList<CatalogEntryKey> createRepeated() =>
-      $pb.PbList<CatalogEntryKey>();
+  static $pb.PbList<CatalogEntryKey> createRepeated() => $pb.PbList<CatalogEntryKey>();
   @$core.pragma('dart2js:noInline')
-  static CatalogEntryKey getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<CatalogEntryKey>(create);
+  static CatalogEntryKey getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<CatalogEntryKey>(create);
   static CatalogEntryKey? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get catLabel => $_getSZ(0);
   @$pb.TagNumber(1)
-  set catLabel($core.String value) => $_setString(0, value);
+  set catLabel($core.String v) { $_setString(0, v); }
   @$pb.TagNumber(1)
   $core.bool hasCatLabel() => $_has(0);
   @$pb.TagNumber(1)
@@ -1337,14 +1288,13 @@ class CatalogEntryKey extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $core.String get entry => $_getSZ(1);
   @$pb.TagNumber(2)
-  set entry($core.String value) => $_setString(1, value);
+  set entry($core.String v) { $_setString(1, v); }
   @$pb.TagNumber(2)
   $core.bool hasEntry() => $_has(1);
   @$pb.TagNumber(2)
   void clearEntry() => $_clearField(2);
 }
 
-const $core.bool _omitFieldNames =
-    $core.bool.fromEnvironment('protobuf.omit_field_names');
-const $core.bool _omitMessageNames =
-    $core.bool.fromEnvironment('protobuf.omit_message_names');
+
+const _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');
+const _omitMessageNames = $core.bool.fromEnvironment('protobuf.omit_message_names');
