@@ -182,14 +182,16 @@ const CatalogEntry$json = {
     {'1': 'constellation', '3': 4, '4': 1, '5': 11, '6': '.cedar_sky.Constellation', '9': 0, '10': 'constellation', '17': true},
     {'1': 'object_type', '3': 5, '4': 1, '5': 11, '6': '.cedar_sky.ObjectType', '10': 'objectType'},
     {'1': 'magnitude', '3': 6, '4': 1, '5': 1, '9': 1, '10': 'magnitude', '17': true},
-    {'1': 'angular_size', '3': 7, '4': 1, '5': 9, '9': 2, '10': 'angularSize', '17': true},
-    {'1': 'common_name', '3': 8, '4': 1, '5': 9, '9': 3, '10': 'commonName', '17': true},
-    {'1': 'notes', '3': 9, '4': 1, '5': 9, '9': 4, '10': 'notes', '17': true},
-    {'1': 'rise_set_culmination', '3': 10, '4': 1, '5': 11, '6': '.cedar_sky.RiseSetCulmination', '9': 5, '10': 'riseSetCulmination', '17': true},
+    {'1': 'dim_mag', '3': 11, '4': 1, '5': 1, '9': 2, '10': 'dimMag', '17': true},
+    {'1': 'angular_size', '3': 7, '4': 1, '5': 9, '9': 3, '10': 'angularSize', '17': true},
+    {'1': 'common_name', '3': 8, '4': 1, '5': 9, '9': 4, '10': 'commonName', '17': true},
+    {'1': 'notes', '3': 9, '4': 1, '5': 9, '9': 5, '10': 'notes', '17': true},
+    {'1': 'rise_set_culmination', '3': 10, '4': 1, '5': 11, '6': '.cedar_sky.RiseSetCulmination', '9': 6, '10': 'riseSetCulmination', '17': true},
   ],
   '8': [
     {'1': '_constellation'},
     {'1': '_magnitude'},
+    {'1': '_dim_mag'},
     {'1': '_angular_size'},
     {'1': '_common_name'},
     {'1': '_notes'},
@@ -204,12 +206,13 @@ final $typed_data.Uint8List catalogEntryDescriptor = $convert.base64Decode(
     'X2NvbW1vbi5DZWxlc3RpYWxDb29yZFIFY29vcmQSQwoNY29uc3RlbGxhdGlvbhgEIAEoCzIYLm'
     'NlZGFyX3NreS5Db25zdGVsbGF0aW9uSABSDWNvbnN0ZWxsYXRpb26IAQESNgoLb2JqZWN0X3R5'
     'cGUYBSABKAsyFS5jZWRhcl9za3kuT2JqZWN0VHlwZVIKb2JqZWN0VHlwZRIhCgltYWduaXR1ZG'
-    'UYBiABKAFIAVIJbWFnbml0dWRliAEBEiYKDGFuZ3VsYXJfc2l6ZRgHIAEoCUgCUgthbmd1bGFy'
-    'U2l6ZYgBARIkCgtjb21tb25fbmFtZRgIIAEoCUgDUgpjb21tb25OYW1liAEBEhkKBW5vdGVzGA'
-    'kgASgJSARSBW5vdGVziAEBElQKFHJpc2Vfc2V0X2N1bG1pbmF0aW9uGAogASgLMh0uY2VkYXJf'
-    'c2t5LlJpc2VTZXRDdWxtaW5hdGlvbkgFUhJyaXNlU2V0Q3VsbWluYXRpb26IAQFCEAoOX2Nvbn'
-    'N0ZWxsYXRpb25CDAoKX21hZ25pdHVkZUIPCg1fYW5ndWxhcl9zaXplQg4KDF9jb21tb25fbmFt'
-    'ZUIICgZfbm90ZXNCFwoVX3Jpc2Vfc2V0X2N1bG1pbmF0aW9u');
+    'UYBiABKAFIAVIJbWFnbml0dWRliAEBEhwKB2RpbV9tYWcYCyABKAFIAlIGZGltTWFniAEBEiYK'
+    'DGFuZ3VsYXJfc2l6ZRgHIAEoCUgDUgthbmd1bGFyU2l6ZYgBARIkCgtjb21tb25fbmFtZRgIIA'
+    'EoCUgEUgpjb21tb25OYW1liAEBEhkKBW5vdGVzGAkgASgJSAVSBW5vdGVziAEBElQKFHJpc2Vf'
+    'c2V0X2N1bG1pbmF0aW9uGAogASgLMh0uY2VkYXJfc2t5LlJpc2VTZXRDdWxtaW5hdGlvbkgGUh'
+    'JyaXNlU2V0Q3VsbWluYXRpb26IAQFCEAoOX2NvbnN0ZWxsYXRpb25CDAoKX21hZ25pdHVkZUIK'
+    'CghfZGltX21hZ0IPCg1fYW5ndWxhcl9zaXplQg4KDF9jb21tb25fbmFtZUIICgZfbm90ZXNCFw'
+    'oVX3Jpc2Vfc2V0X2N1bG1pbmF0aW9u');
 
 @$core.Deprecated('Use catalogDescriptionDescriptor instead')
 const CatalogDescription$json = {

@@ -672,6 +672,7 @@ class CatalogEntry extends $pb.GeneratedMessage {
     $core.String? commonName,
     $core.String? notes,
     RiseSetCulmination? riseSetCulmination,
+    $core.double? dimMag,
   }) {
     final $result = create();
     if (catalogLabel != null) {
@@ -704,6 +705,9 @@ class CatalogEntry extends $pb.GeneratedMessage {
     if (riseSetCulmination != null) {
       $result.riseSetCulmination = riseSetCulmination;
     }
+    if (dimMag != null) {
+      $result.dimMag = dimMag;
+    }
     return $result;
   }
   CatalogEntry._() : super();
@@ -721,6 +725,7 @@ class CatalogEntry extends $pb.GeneratedMessage {
     ..aOS(8, _omitFieldNames ? '' : 'commonName')
     ..aOS(9, _omitFieldNames ? '' : 'notes')
     ..aOM<RiseSetCulmination>(10, _omitFieldNames ? '' : 'riseSetCulmination', subBuilder: RiseSetCulmination.create)
+    ..a<$core.double>(11, _omitFieldNames ? '' : 'dimMag', $pb.PbFieldType.OD)
     ..hasRequiredFields = false
   ;
 
@@ -848,6 +853,18 @@ class CatalogEntry extends $pb.GeneratedMessage {
   void clearRiseSetCulmination() => $_clearField(10);
   @$pb.TagNumber(10)
   RiseSetCulmination ensureRiseSetCulmination() => $_ensure(9);
+
+  /// if variable (see dim_mag).
+  /// Present together with magnitude only for a variable object: its
+  /// faintest documented state.
+  @$pb.TagNumber(11)
+  $core.double get dimMag => $_getN(10);
+  @$pb.TagNumber(11)
+  set dimMag($core.double v) { $_setDouble(10, v); }
+  @$pb.TagNumber(11)
+  $core.bool hasDimMag() => $_has(10);
+  @$pb.TagNumber(11)
+  void clearDimMag() => $_clearField(11);
 }
 
 class CatalogDescription extends $pb.GeneratedMessage {
