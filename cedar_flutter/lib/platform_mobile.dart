@@ -395,9 +395,24 @@ Future<CedarClient> getClientImpl() async {
   return _client!;
 }
 
+bool _isMobileFullScreen = false;
+
+bool isFullScreenImpl() => _isMobileFullScreen;
+
+void toggleFullScreenImpl() {
+  if (_isMobileFullScreen) {
+    cancelFullScreenImpl();
+  } else {
+    goFullScreenImpl();
+  }
+}
+
+bool isStandaloneImpl() => false;
+
 void goFullScreenImpl() {
   try {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
+    _isMobileFullScreen = true;
   } catch (e) {
     debugPrint('Could not enter full screen with setEnabledSystemUIMode: $e');
   }
@@ -407,6 +422,7 @@ void cancelFullScreenImpl() {
   try {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
         overlays: [SystemUiOverlay.top, SystemUiOverlay.bottom]);
+    _isMobileFullScreen = false;
   } catch (e) {
     debugPrint('Could not exit full screen with setEnabledSystemUIMode: $e');
   }
