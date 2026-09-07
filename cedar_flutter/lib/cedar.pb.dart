@@ -577,6 +577,7 @@ class WiFiAccessPoint extends $pb.GeneratedMessage {
     $core.String? ssid,
     $core.String? psk,
     $core.int? channel,
+    $core.bool? enabled,
   }) {
     final $result = create();
     if (ssid != null) {
@@ -588,6 +589,9 @@ class WiFiAccessPoint extends $pb.GeneratedMessage {
     if (channel != null) {
       $result.channel = channel;
     }
+    if (enabled != null) {
+      $result.enabled = enabled;
+    }
     return $result;
   }
   WiFiAccessPoint._() : super();
@@ -598,6 +602,7 @@ class WiFiAccessPoint extends $pb.GeneratedMessage {
     ..aOS(1, _omitFieldNames ? '' : 'ssid')
     ..aOS(2, _omitFieldNames ? '' : 'psk')
     ..a<$core.int>(3, _omitFieldNames ? '' : 'channel', $pb.PbFieldType.O3)
+    ..aOB(4, _omitFieldNames ? '' : 'enabled')
     ..hasRequiredFields = false
   ;
 
@@ -648,6 +653,15 @@ class WiFiAccessPoint extends $pb.GeneratedMessage {
   $core.bool hasChannel() => $_has(2);
   @$pb.TagNumber(3)
   void clearChannel() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.bool get enabled => $_getBF(3);
+  @$pb.TagNumber(4)
+  set enabled($core.bool v) { $_setBool(3, v); }
+  @$pb.TagNumber(4)
+  $core.bool hasEnabled() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearEnabled() => $_clearField(4);
 }
 
 /// Number of current client connections.
