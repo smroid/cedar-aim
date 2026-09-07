@@ -43,6 +43,11 @@ const _networkChannel = MethodChannel('cedar/network');
 String _btUuid = "4e5d4c88-2965-423f-9111-28a506720760";
 
 String _wifiAddress = "cedar.local";
+
+// The device the app is currently using (or would use) to reach the server.
+// A WiFi device has a null name and an IP/hostname address; a Bluetooth
+// device has a non-null name and a MAC address. Defaults to WiFi; updated by
+// setActiveDeviceImpl() when the user selects a device.
 CedarDevice _activeDevice = CedarDevice(address: _wifiAddress);
 
 String wifiDeviceAddressImpl() => _wifiAddress;
@@ -121,6 +126,32 @@ Future<String> resolveCedarHostImpl() async {
 int btReconnectFailuresImpl() => _btReconnectFailures;
 bool isBluetoothInUseImpl() => _btDeviceSelected;
 bool btTargetUnbondedImpl() => _btTargetUnbonded;
+
+// Live query of whether the phone's OS is currently bonded, over Bluetooth,
+// to the device at [address] (independent of the current transport, so it
+// works even while connected over WiFi). Fails closed: returns false if
+// [address] is empty, or if the bond-state query fails or times out. This is
+// intentionally stricter than _isTargetDeviceBonded() (which fails open for
+// reconnect leniency), because callers use this to gate actions that require a
+// confirmed Bluetooth fallback.
+Future<bool> isBtDeviceBondedImpl(String address) async {
+  if (address.isEmpty) {
+    return false;
+  }
+  try {
+    final bondedDevices = await FlutterBlueClassic()
+        .bondedDevices
+        .timeout(const Duration(seconds: 3), onTimeout: () => null);
+    if (bondedDevices == null) {
+      return false;
+    }
+    return bondedDevices.any((d) =>
+        d.address == address && d.bondState == BluetoothBondState.bonded);
+  } catch (e) {
+    debugPrint('Error checking bond state for $address: $e');
+    return false;
+  }
+}
 
 void rpcSucceededImpl() {
   if (_btReconnectFailures > 0) {
@@ -557,10 +588,20 @@ Future<List<CedarDevice>> getBluetoothDevicesImpl() async {
 
 Future<void> setActiveDeviceImpl(CedarDevice device) async {
   if (Platform.isAndroid) {
+    // Only reset the reconnect backoff when the user actually switches to a
+    // different device. Re-selecting the currently-active device (e.g. tapping
+    // it again in the connection recovery dialog while a reconnect is already
+    // churning) must preserve _btReconnectFailures/_lastBtAttemptTime so the
+    // reconnect cooldown stays in effect — otherwise we defeat the cooldown and
+    // re-page an already-struggling link.
+    final sameDevice = device.address == _activeDevice.address &&
+        device.name == _activeDevice.name;
     _activeDevice = device;
     _btDeviceSelected = device.name != null;
-    _btReconnectFailures = 0;
-    _btTargetUnbonded = false;
+    if (!sameDevice) {
+      _btReconnectFailures = 0;
+      _btTargetUnbonded = false;
+    }
 
     // Clean up any existing connection.
     await cleanupImpl();
@@ -624,9 +665,16 @@ Future<void> _establishBluetoothConnection(String addr) async {
     }
     _requestedBtOn = false;
 
+    // Connect timeout must comfortably exceed how long the server can take to
+    // accept an RFCOMM connection. Right after the WiFi AP is disabled, the
+    // shared WiFi/BT radio settles and the server has been observed to take
+    // ~12s to accept. A too-short timeout abandons a connection that then
+    // succeeds server-side but is left with no client driving it, so the
+    // server's RFCOMM-write watchdog reaps it ~30s later — dragging recovery
+    // out across several failed attempts.
     _bluetoothConnection = await flutterBlue
         .connect(addr, uuid: _btUuid)
-        .timeout(const Duration(seconds: 5), onTimeout: () {
+        .timeout(const Duration(seconds: 20), onTimeout: () {
       throw TimeoutException('Bluetooth connection timed out');
     });
 

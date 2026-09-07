@@ -20,6 +20,7 @@ bool isIOSImpl() {
 int btReconnectFailuresImpl() => 0;
 bool isBluetoothInUseImpl() => false;
 bool btTargetUnbondedImpl() => false;
+Future<bool> isBtDeviceBondedImpl(String address) async => false;
 void btTeardownImpl() {}
 
 void rpcSucceededImpl() {

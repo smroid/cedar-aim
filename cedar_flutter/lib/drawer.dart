@@ -659,37 +659,6 @@ class CedarDrawer extends StatelessWidget {
         if (controller.connectionMenuExpanded) ...[
           SizedBox(height: _kDrawerSpacingCondensed * textScaleFactor(controller.context)),
 
-          // Bluetooth management.
-          Padding(
-            padding: const EdgeInsets.only(left: 16),
-            child: Align(
-              alignment: Alignment.topLeft,
-              child: TextButton.icon(
-                  label: _scaledText("Control pairing on ${controller.productName}"),
-                  icon: const Icon(Icons.bluetooth_searching),
-                  onPressed: () {
-                    controller.closeDrawer();
-                    _controlBluetoothPairing(controller.context, controller.productName);
-                  }),
-            ),
-          ),
-          SizedBox(height: _kDrawerSpacingCondensed * textScaleFactor(controller.context)),
-          Padding(
-            padding: const EdgeInsets.only(left: 16),
-            child: Align(
-              alignment: Alignment.topLeft,
-              child: TextButton.icon(
-                  label: _scaledText("Devices paired to ${controller.productName}"),
-                  icon: const Icon(Icons.bluetooth),
-                  onPressed: () {
-                    controller.closeDrawer();
-                    Navigator.push(controller.context,
-                        MaterialPageRoute(builder: (context) => const BluetoothScreen()));
-                  }),
-            ),
-          ),
-          SizedBox(height: _kDrawerSpacingCondensed * textScaleFactor(controller.context)),
-
           // WiFi button.
           if (controller.wifiAccessPointDialog != null) ...[
             Padding(
@@ -707,6 +676,22 @@ class CedarDrawer extends StatelessWidget {
             ),
             SizedBox(height: _kDrawerSpacingCondensed * textScaleFactor(controller.context)),
           ],
+
+          // Bluetooth button.
+          Padding(
+            padding: const EdgeInsets.only(left: 16),
+            child: Align(
+              alignment: Alignment.topLeft,
+              child: TextButton.icon(
+                  label: _scaledText("Bluetooth"),
+                  icon: const Icon(Icons.bluetooth),
+                  onPressed: () {
+                    controller.closeDrawer();
+                    _bluetoothDialog(controller.context, controller.productName);
+                  }),
+            ),
+          ),
+          SizedBox(height: _kDrawerSpacingCondensed * textScaleFactor(controller.context)),
 
           // Connections status button.
           Padding(
@@ -815,15 +800,171 @@ Future<void> openBluetoothSettings() async {
   }
 }
 
-/// Control Bluetooth pairing mode on the Cedar server.
-Future<void> _controlBluetoothPairing(BuildContext context, String productName) async {
+/// Shows a dialog with Bluetooth-related actions: controlling pairing mode
+/// and viewing/removing paired devices. Styled to match the WiFi dialog
+/// (a bordered black overlay rather than a Material AlertDialog).
+Future<void> _bluetoothDialog(BuildContext context, String productName) async {
   if (!context.mounted) {
-     return;
+    return;
+  }
+  // Outer context, used to re-open this dialog after a sub-flow returns.
+  final outerContext = context;
+  final color = Theme.of(context).colorScheme.primary;
+  final width = 220.0 * textScaleFactor(context);
+  OverlayEntry? dialogOverlayEntry;
+
+  // Removes this dialog, runs [action] (a sub-flow whose UI must appear above
+  // this dialog), then re-opens this dialog (so its pairing status refreshes)
+  // if [action] returns true. The dialog is a raw OverlayEntry, so sub-flow
+  // dialogs/routes would otherwise render beneath it; removing it first avoids
+  // that.
+  Future<void> runSubFlow(Future<bool> Function() action) async {
+    dialogOverlayEntry?.remove();
+    final reopen = await action();
+    if (reopen && outerContext.mounted) {
+      _bluetoothDialog(outerContext, productName);
+    }
+  }
+
+  // Current Bluetooth pairing status (Android only). Null while still being
+  // determined; otherwise a human-readable status line.
+  String? pairingStatus;
+
+  Text scaledText(String str) {
+    return Text(
+      str,
+      textScaler: textScaler(context),
+      style: TextStyle(color: color, fontWeight: FontWeight.normal),
+    );
+  }
+
+  // Determines whether this device is paired to the server over Bluetooth,
+  // and if so its name, updating the status row when done.
+  Future<void> refreshPairingStatus() async {
+    if (!isAndroid()) {
+      return;
+    }
+    String status = "Not paired to $productName";
+    try {
+      final client = await getClient();
+      final nameResponse = await client.getBluetoothName(
+          cedar_rpc.EmptyMessage(),
+          options: CallOptions(timeout: const Duration(seconds: 5)));
+      if (await isBtDeviceBonded(nameResponse.address)) {
+        final name = nameResponse.name.isNotEmpty
+            ? nameResponse.name
+            : productName;
+        status = "Paired to $name";
+      }
+    } catch (e) {
+      debugPrint('Error determining Bluetooth pairing status: $e');
+    }
+    pairingStatus = status;
+    dialogOverlayEntry?.markNeedsBuild();
+  }
+
+  if (isAndroid()) {
+    pairingStatus = "Checking pairing status…";
+    refreshPairingStatus();
+  }
+
+  dialogOverlayEntry = OverlayEntry(
+    builder: (BuildContext context) {
+      return GestureDetector(
+        onTap: () => dialogOverlayEntry!.remove(),
+        child: Material(
+          color: Colors.black87,
+          child: DefaultTextStyle.merge(
+            style: const TextStyle(fontFamilyFallback: ['Roboto']),
+            child: Center(
+              child: GestureDetector(
+                onTap: () {
+                  // Stop tap propagation to prevent dialog dismissal.
+                },
+                child: Container(
+                  width: width,
+                  padding: const EdgeInsets.fromLTRB(10, 5, 10, 10),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: color),
+                    color: Colors.black,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [scaledText("Bluetooth")]),
+                      const SizedBox(height: 10),
+                      if (pairingStatus != null) ...[
+                        Align(
+                          alignment: Alignment.topLeft,
+                          child: scaledText(pairingStatus!),
+                        ),
+                        const SizedBox(height: 10),
+                      ],
+                      Align(
+                        alignment: Alignment.topLeft,
+                        child: TextButton.icon(
+                          icon: Icon(Icons.bluetooth_searching, color: color),
+                          label: scaledText('Control pairing on $productName'),
+                          onPressed: () {
+                            runSubFlow(() => _controlBluetoothPairing(
+                                outerContext, productName));
+                          },
+                        ),
+                      ),
+                      Align(
+                        alignment: Alignment.topLeft,
+                        child: TextButton.icon(
+                          icon: Icon(Icons.devices, color: color),
+                          label: scaledText('Devices paired to $productName'),
+                          onPressed: () {
+                            runSubFlow(() async {
+                              await Navigator.push(
+                                  outerContext,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const BluetoothScreen()));
+                              return true;
+                            });
+                          },
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      ElevatedButton(
+                        onPressed: () => dialogOverlayEntry!.remove(),
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white10),
+                        child: scaledText("Close"),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+    },
+  );
+
+  Overlay.of(context).insert(dialogOverlayEntry);
+}
+
+/// Control Bluetooth pairing mode on the Cedar server. Returns true if the
+/// caller should re-open the Bluetooth dialog afterward (cancel or error), or
+/// false if pairing was enabled or disabled — in those cases a snackbar is
+/// shown (and, for enable, the user is directed to OS Bluetooth settings), so
+/// re-showing the dialog would cover the snackbar and be in the way.
+Future<bool> _controlBluetoothPairing(BuildContext context, String productName) async {
+  if (!context.mounted) {
+     return true;
   }
   try {
     final client = await getClient();
     if (!context.mounted) {
-      return;
+      return true;
     }
     // Show a dialog to select enable or disable.
     final choice = await showDialog<String>(
@@ -902,7 +1043,7 @@ Future<void> _controlBluetoothPairing(BuildContext context, String productName) 
       },
     );
     if (choice == 'cancel' || !context.mounted) {
-      return;
+      return true;
     }
     if (choice == 'disable') {
       // Disable pairing.
@@ -915,7 +1056,8 @@ Future<void> _controlBluetoothPairing(BuildContext context, String productName) 
           SnackBar(content: Text('Pairing disabled on $productName')),
         );
       }
-      return;
+      // Don't re-open the Bluetooth dialog — it would cover the snackbar.
+      return false;
     }
     // 'enable' selected. Show dialog for forever option
     bool forever = false;
@@ -962,7 +1104,8 @@ Future<void> _controlBluetoothPairing(BuildContext context, String productName) 
       },
     );
     if (enableForever == null || !context.mounted) {
-      return;
+      // User cancelled the enable confirmation — return to the Bluetooth dialog.
+      return true;
     }
     // Get the device's Bluetooth name to show in the confirmation message.
     final nameResponse = await client.getBluetoothName(cedar_rpc.EmptyMessage(),
@@ -994,6 +1137,9 @@ Future<void> _controlBluetoothPairing(BuildContext context, String productName) 
         ),
       );
     }
+    // Pairing was enabled — the user should go to OS Bluetooth settings, so
+    // don't re-open the Bluetooth dialog.
+    return false;
   } catch (e) {
     debugPrint('Error controlling Bluetooth pairing: $e');
     if (context.mounted) {
@@ -1002,4 +1148,5 @@ Future<void> _controlBluetoothPairing(BuildContext context, String productName) 
       );
     }
   }
+  return true;
 }

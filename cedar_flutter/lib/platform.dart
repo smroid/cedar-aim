@@ -163,6 +163,18 @@ int btReconnectFailures() => btReconnectFailuresImpl();
 bool isBluetoothInUse() => isBluetoothInUseImpl();
 void btTeardown() => btTeardownImpl();
 
+/// Returns true only if the device's OS confirms it is currently bonded, over
+/// Bluetooth, to the Bluetooth device at [address] (e.g. the server's own
+/// Bluetooth adapter address, from the GetBluetoothName RPC). This makes a
+/// live query of the device's Bluetooth bond state independent of the current
+/// transport, so it can be used to gate actions (like disabling a WiFi access
+/// point) that require a working Bluetooth fallback even when currently
+/// connected over WiFi. Returns false (fails closed) if the bond state can't
+/// be confirmed, e.g. on web, if [address] is empty, or if the query fails or
+/// times out.
+Future<bool> isBtDeviceBonded(String address) =>
+    isBtDeviceBondedImpl(address);
+
 // True once we detect the currently-selected BT device is no longer bonded
 // (e.g. unpaired from Android Bluetooth settings).
 bool btTargetUnbonded() => btTargetUnbondedImpl();
