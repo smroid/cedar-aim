@@ -33,6 +33,7 @@ class CedarDrawerController {
   final bool demoMode;
   final List<String> demoFiles;
   final bool systemMenuExpanded;
+  final bool connectionMenuExpanded;
   final String demoFile;
   final bool isDIY;
   final bool badServerState;
@@ -57,6 +58,7 @@ class CedarDrawerController {
   final void Function(bool) setExpert;
   final void Function(bool) setDemoMode;
   final Function(bool) setSystemMenuExpanded;
+  final Function(bool) setConnectionMenuExpanded;
   final VoidCallback onStateChanged;
   final VoidCallback closeDrawer;
 
@@ -77,6 +79,7 @@ class CedarDrawerController {
     required this.demoMode,
     required this.demoFiles,
     required this.systemMenuExpanded,
+    required this.connectionMenuExpanded,
     required this.demoFile,
     required this.isDIY,
     required this.badServerState,
@@ -99,6 +102,7 @@ class CedarDrawerController {
     required this.setExpert,
     required this.setDemoMode,
     required this.setSystemMenuExpanded,
+    required this.setConnectionMenuExpanded,
     required this.onStateChanged,
     required this.closeDrawer,
     required this.context,
@@ -181,6 +185,7 @@ class CedarDrawer extends StatelessWidget {
           );
         },
         child: TextButton.icon(
+          style: TextButton.styleFrom(disabledForegroundColor: primaryColor),
           label: _scaledText("Check for Update"),
           icon: const Icon(Icons.system_update_alt),
           onPressed: null, // Handled by GestureDetector.
@@ -622,7 +627,36 @@ class CedarDrawer extends StatelessWidget {
                   }),
             ),
           ),
+          SizedBox(height: _kDrawerSpacingCondensed * textScaleFactor(controller.context)),
 
+          // Restart Cedar Server button.
+          if (_buildRestartServerButton() != null) ...[
+            Padding(
+              padding: const EdgeInsets.only(left: 16),
+              child: _buildRestartServerButton()!,
+            ),
+            SizedBox(height: _kDrawerSpacingCondensed * textScaleFactor(controller.context)),
+          ],
+        ],
+      ],
+
+      // Connection submenu (advanced only).
+      if (controller.advanced) ...[
+        SizedBox(height: _kDrawerSpacing * textScaleFactor(controller.context)),
+        Align(
+          alignment: Alignment.topLeft,
+          child: TextButton.icon(
+              label: _scaledText("Connection"),
+              icon: controller.connectionMenuExpanded
+                  ? const Icon(Icons.expand_less)
+                  : const Icon(Icons.expand_more),
+              onPressed: () {
+                controller.setConnectionMenuExpanded(!controller.connectionMenuExpanded);
+              }),
+        ),
+
+        // Connection submenu items.
+        if (controller.connectionMenuExpanded) ...[
           SizedBox(height: _kDrawerSpacingCondensed * textScaleFactor(controller.context)),
 
           // Bluetooth management.
@@ -671,16 +705,6 @@ class CedarDrawer extends StatelessWidget {
                     }),
               ),
             ),
-            SizedBox(height: _kDrawerSpacingCondensed * textScaleFactor(controller.context)),
-          ],
-
-          // Restart Cedar Server button.
-          if (_buildRestartServerButton() != null) ...[
-            Padding(
-              padding: const EdgeInsets.only(left: 16),
-              child: _buildRestartServerButton()!,
-            ),
-            SizedBox(height: _kDrawerSpacingCondensed * textScaleFactor(controller.context)),
           ],
         ],
       ],

@@ -632,6 +632,7 @@ class MyHomePageState extends State<MyHomePage> {
   bool expert = false;
   bool showDetectedStars = false;
   bool _systemMenuExpanded = false;
+  bool _connectionMenuExpanded = false;
   bool _rightHanded = true;
   String _productName = 'Cedar Box';
   bool _canAlign = false;
@@ -2778,6 +2779,7 @@ class MyHomePageState extends State<MyHomePage> {
         demoMode: _demoMode,
         demoFiles: _demoFiles,
         systemMenuExpanded: _systemMenuExpanded,
+        connectionMenuExpanded: _connectionMenuExpanded,
         demoFile: _demoFile,
         isDIY: isDIY,
         badServerState: !healthy,
@@ -2851,6 +2853,11 @@ class MyHomePageState extends State<MyHomePage> {
         setSystemMenuExpanded: (value) {
           setState(() {
             _systemMenuExpanded = value;
+          });
+        },
+        setConnectionMenuExpanded: (value) {
+          setState(() {
+            _connectionMenuExpanded = value;
           });
         },
         onStateChanged: () => setState(() {}),
