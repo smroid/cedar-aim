@@ -705,7 +705,23 @@ class CedarDrawer extends StatelessWidget {
                     }),
               ),
             ),
+            SizedBox(height: _kDrawerSpacingCondensed * textScaleFactor(controller.context)),
           ],
+
+          // Connections status button.
+          Padding(
+            padding: const EdgeInsets.only(left: 16),
+            child: Align(
+              alignment: Alignment.topLeft,
+              child: TextButton.icon(
+                  label: _scaledText("Connections"),
+                  icon: const Icon(Icons.compare_arrows),
+                  onPressed: () {
+                    connectionsDialog(controller.context,
+                        controller.homePageState.serverInformation!.connectionStatus);
+                  }),
+            ),
+          ),
         ],
       ],
 

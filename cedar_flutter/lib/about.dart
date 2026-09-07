@@ -241,16 +241,6 @@ Widget systemInfo(MyHomePageState state) {
               child: _scaledText("view"),
             ),
           ]),
-          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-            _scaledText("Connections"),
-            TextButton(
-              style: _viewButtonStyle,
-              onPressed: () {
-                connectionsDialog(serverInfo.connectionStatus);
-              },
-              child: _scaledText("view"),
-            ),
-          ]),
           _sectionDividerSpacing,
           Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -674,7 +664,8 @@ String _formatConnectionCount(int count) {
   return "$count connected";
 }
 
-void connectionsDialog(dynamic connectionStatus) {
+void connectionsDialog(BuildContext context, dynamic connectionStatus) {
+  _context = context;
   OverlayEntry? dialogOverlayEntry;
 
   List<Widget> rows = [];
