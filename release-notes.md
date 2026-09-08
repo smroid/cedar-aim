@@ -1,5 +1,38 @@
 # Cedar Aim Release Notes
 
+## 1.2.6 (build 32)
+
+Changes since 1.2.4 (build 30).
+
+### Drawer and connection management
+
+- Reorganized the drawer: connection-related items (WiFi, Bluetooth pairing,
+  paired devices, connection status) are now grouped under a new "Connection"
+  sub-menu, below System.
+- Bluetooth pairing control and paired-device management are now reached via
+  a single "Bluetooth" item that opens a dialog, instead of two separate
+  top-level items.
+- The Bluetooth dialog now shows this device's current pairing status
+  (Android only).
+- Moved the "Connections" (active client count) view from the About screen
+  into the Connection sub-menu, and clarified that it shows clients
+  connected to the device, not this app's own connection.
+- Added a connection status line (Android only) showing whether this device
+  is currently connected via WiFi or Bluetooth. Tapping it opens a dialog to
+  switch transports, or to pair over Bluetooth if not already paired.
+  Switching to WiFi from Bluetooth re-enables the WiFi access point if
+  needed, with a confirmation warning that you may need to reconnect to it
+  in your mobile device's WiFi settings.
+
+### Bluetooth reliability
+
+- Fixed a bug where reconnecting to the same Bluetooth device (e.g. from the
+  connection recovery dialog) could reset the reconnect backoff and cause
+  more aggressive, less reliable re-pairing attempts.
+- Increased the Bluetooth connection timeout so a slow-but-successful
+  connection (e.g. right after the WiFi access point is disabled) is no
+  longer abandoned and orphaned.
+
 ## 1.2.4 (build 30)
 
 Changes since 1.2.3 (build 29).
