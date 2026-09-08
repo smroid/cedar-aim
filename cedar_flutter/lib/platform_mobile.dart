@@ -399,14 +399,6 @@ bool _isMobileFullScreen = false;
 
 bool isFullScreenImpl() => _isMobileFullScreen;
 
-void toggleFullScreenImpl() {
-  if (_isMobileFullScreen) {
-    cancelFullScreenImpl();
-  } else {
-    goFullScreenImpl();
-  }
-}
-
 bool isStandaloneImpl() => false;
 
 void goFullScreenImpl() {

@@ -61,14 +61,6 @@ bool isFullScreenImpl() {
   }
 }
 
-void toggleFullScreenImpl() {
-  if (isFullScreenImpl()) {
-    cancelFullScreenImpl();
-  } else {
-    goFullScreenImpl();
-  }
-}
-
 // Detects standalone/fullscreen display mode (installed PWA / Home Screen).
 bool isStandaloneImpl() {
   try {

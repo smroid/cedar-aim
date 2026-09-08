@@ -36,8 +36,6 @@ Future<CedarClient> getClientImpl() async {
 
 bool isFullScreenImpl() => false;
 
-void toggleFullScreenImpl() {}
-
 bool isStandaloneImpl() => false;
 
 void goFullScreenImpl() {

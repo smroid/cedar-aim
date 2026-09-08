@@ -84,7 +84,11 @@ bool isFullScreen() {
 
 void toggleFullScreen() {
   try {
-    toggleFullScreenImpl();
+    if (isFullScreen()) {
+      cancelFullScreen();
+    } else {
+      goFullScreen();
+    }
   } catch (e) {
     debugPrint('toggleFullScreen: $e');
   }
