@@ -664,11 +664,18 @@ String _formatConnectionCount(int count) {
   return "$count connected";
 }
 
-void connectionsDialog(BuildContext context, dynamic connectionStatus) {
+void connectionsDialog(
+    BuildContext context, String productName, dynamic connectionStatus) {
   _context = context;
   OverlayEntry? dialogOverlayEntry;
 
   List<Widget> rows = [];
+
+  // Header explaining that these are incoming client connections to the
+  // device (as opposed to this app's own connection).
+  rows.add(_scaledText("Clients connected to $productName:"));
+  rows.add(_sectionHeaderSpacing);
+  final headerRowCount = rows.length;
 
   if (connectionStatus.cedarWifi > 0) {
     rows.add(Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -731,9 +738,9 @@ void connectionsDialog(BuildContext context, dynamic connectionStatus) {
     ]));
   }
 
-  if (rows.isEmpty) {
+  if (rows.length == headerRowCount) {
     rows.add(Text(
-      "No active connections",
+      "No clients connected",
       textScaler: textScaler(_context),
       style: TextStyle(color: Theme.of(_context).colorScheme.primary),
     ));
