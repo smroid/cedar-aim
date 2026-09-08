@@ -957,7 +957,73 @@ Future<void> _bluetoothDialog(BuildContext context, String productName) async {
                     children: [
                       Row(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          children: [scaledText("Bluetooth")]),
+                          children: [scaledText("Bluetooth Pairing")]),
+                      if (isIOS()) ...[
+                        const SizedBox(height: 4),
+                        TextButton(
+                          style: TextButton.styleFrom(
+                              padding: EdgeInsets.zero,
+                              minimumSize: Size.zero,
+                              tapTargetSize: MaterialTapTargetSize.shrinkWrap),
+                          onPressed: () {
+                            runSubFlow(() async {
+                              await showDialog<void>(
+                                context: outerContext,
+                                builder: (BuildContext dialogContext) {
+                                  final dialogColor =
+                                      Theme.of(dialogContext).colorScheme.primary;
+                                  Text dialogScaledText(String str, {double fontSize = 13}) {
+                                    return Text(
+                                      str,
+                                      textScaler: textScaler(dialogContext),
+                                      style: TextStyle(color: dialogColor, fontSize: fontSize),
+                                    );
+                                  }
+                                  final scrollController = ScrollController();
+                                  return AlertDialog(
+                                    title: dialogScaledText('About Bluetooth Pairing',
+                                        fontSize: 18),
+                                    content: SizedBox(
+                                      width: double.maxFinite,
+                                      child: Scrollbar(
+                                        thumbVisibility: true,
+                                        controller: scrollController,
+                                        child: SingleChildScrollView(
+                                          controller: scrollController,
+                                          child: dialogScaledText(
+                                              '$productName can communicate over '
+                                              'Bluetooth with Android devices, but '
+                                              'not your iOS device.\n\n'
+                                              'This item is available on your iOS '
+                                              'device to control $productName\'s '
+                                              'Bluetooth pairing with Android '
+                                              'devices.'),
+                                        ),
+                                      ),
+                                    ),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () =>
+                                            Navigator.pop(dialogContext),
+                                        child: dialogScaledText('OK'),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                              return true;
+                            });
+                          },
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(Icons.help_outline, size: 16, color: color),
+                              const SizedBox(width: 4),
+                              scaledText('About'),
+                            ],
+                          ),
+                        ),
+                      ],
                       const SizedBox(height: 10),
                       if (pairingStatus != null) ...[
                         Align(
@@ -1236,56 +1302,8 @@ Future<bool> _controlBluetoothPairing(BuildContext context, String productName) 
         return AlertDialog(
           title: Text('Control $productName Bluetooth Pairing',
               style: TextStyle(color: color)),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text('Enable or disable pairing on $productName?',
-                  style: TextStyle(color: color)),
-              if (isIOS()) ...[
-                const SizedBox(height: 8),
-                TextButton(
-                  style: TextButton.styleFrom(
-                      padding: EdgeInsets.zero,
-                      minimumSize: Size.zero,
-                      tapTargetSize: MaterialTapTargetSize.shrinkWrap),
-                  onPressed: () {
-                    showDialog<void>(
-                      context: dialogContext,
-                      builder: (BuildContext context) {
-                        final color = Theme.of(context).colorScheme.primary;
-                        return AlertDialog(
-                          title: Text('About Bluetooth Pairing',
-                              style: TextStyle(color: color)),
-                          content: Text(
-                              '$productName can communicate over Bluetooth '
-                              'with Android devices, but not your iOS device.\n\n'
-                              'This item is available on your iOS device to '
-                              'control $productName\'s Bluetooth pairing with '
-                              'Android devices.',
-                              style: TextStyle(color: color)),
-                          actions: [
-                            TextButton(
-                              onPressed: () => Navigator.pop(context),
-                              child: Text('OK', style: TextStyle(color: color)),
-                            ),
-                          ],
-                        );
-                      },
-                    );
-                  },
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(Icons.help_outline, size: 16, color: color),
-                      const SizedBox(width: 4),
-                      Text('About', style: TextStyle(color: color)),
-                    ],
-                  ),
-                ),
-              ],
-            ],
-          ),
+          content: Text('Enable or disable pairing on $productName?',
+              style: TextStyle(color: color)),
           actions: rightButtons,
         );
       },
