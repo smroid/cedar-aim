@@ -13,6 +13,7 @@ import 'package:cedar_flutter/bluetooth.dart';
 import 'package:cedar_flutter/cedar.pbgrpc.dart' as cedar_rpc;
 import 'package:cedar_flutter/client_main.dart';
 import 'package:cedar_flutter/geolocation.dart';
+import 'package:cedar_flutter/overlay_popup.dart';
 import 'package:cedar_flutter/server_log.dart';
 import 'package:cedar_flutter/settings.dart';
 import 'package:cedar_flutter/shutdown_dialog.dart';
@@ -659,6 +660,45 @@ class CedarDrawer extends StatelessWidget {
         if (controller.connectionMenuExpanded) ...[
           SizedBox(height: _kDrawerSpacingCondensed * textScaleFactor(controller.context)),
 
+          // Connection status line (Android only — iOS can't communicate with
+          // the server over Bluetooth, so there is no transport to toggle).
+          if (isAndroid()) ...[
+            Padding(
+              padding: const EdgeInsets.only(left: 16),
+              child: Align(
+                alignment: Alignment.topLeft,
+                child: TextButton.icon(
+                    icon: Icon(
+                        isBluetoothInUse() ? Icons.bluetooth : Icons.wifi),
+                    label: _scaledText(controller.badServerState
+                        ? "Not connected to ${controller.productName}"
+                        : "Connected to ${controller.productName} via "
+                            "${isBluetoothInUse() ? 'Bluetooth' : 'WiFi'}"),
+                    onPressed: () {
+                      controller.closeDrawer();
+                      final serverInfo =
+                          controller.homePageState.serverInformation;
+                      final hasWifiInfo =
+                          serverInfo != null && serverInfo.hasWifiAccessPoint();
+                      final wifiSsid =
+                          hasWifiInfo ? serverInfo.wifiAccessPoint.ssid : null;
+                      // Older servers don't report enabled state; assume
+                      // enabled so we don't warn unnecessarily.
+                      final wifiEnabled = !hasWifiInfo ||
+                          !serverInfo.wifiAccessPoint.hasEnabled() ||
+                          serverInfo.wifiAccessPoint.enabled;
+                      _connectionTransportDialog(
+                          controller.context,
+                          controller.productName,
+                          controller.initiateAction,
+                          wifiSsid,
+                          wifiEnabled);
+                    }),
+              ),
+            ),
+            SizedBox(height: _kDrawerSpacingCondensed * textScaleFactor(controller.context)),
+          ],
+
           // WiFi button.
           if (controller.wifiAccessPointDialog != null) ...[
             Padding(
@@ -699,10 +739,12 @@ class CedarDrawer extends StatelessWidget {
             child: Align(
               alignment: Alignment.topLeft,
               child: TextButton.icon(
-                  label: _scaledText("Connections"),
+                  label: _scaledText("Connections to ${controller.productName}"),
                   icon: const Icon(Icons.compare_arrows),
                   onPressed: () {
-                    connectionsDialog(controller.context,
+                    connectionsDialog(
+                        controller.context,
+                        controller.productName,
                         controller.homePageState.serverInformation!.connectionStatus);
                   }),
             ),
@@ -800,6 +842,40 @@ Future<void> openBluetoothSettings() async {
   }
 }
 
+
+/// Result of checking whether this device is paired with the server over
+/// Bluetooth: whether it's bonded, and (if so) the server's Bluetooth
+/// address and name.
+class _BtPairingStatus {
+  final bool bonded;
+  final String address;
+  final String name;
+  _BtPairingStatus({required this.bonded, required this.address, required this.name});
+}
+
+/// Determines whether this device is paired with the server over Bluetooth,
+/// by asking the server for its own Bluetooth adapter address/name and
+/// checking the phone's OS bond list for that address.
+Future<_BtPairingStatus> _checkHopperBluetoothPairing(String productName) async {
+  String address = '';
+  String name = productName;
+  bool bonded = false;
+  try {
+    final client = await getClient();
+    final nameResponse = await client.getBluetoothName(
+        cedar_rpc.EmptyMessage(),
+        options: CallOptions(timeout: const Duration(seconds: 5)));
+    address = nameResponse.address;
+    bonded = await isBtDeviceBonded(address);
+    if (bonded && nameResponse.name.isNotEmpty) {
+      name = nameResponse.name;
+    }
+  } catch (e) {
+    debugPrint('Error determining Bluetooth pairing status: $e');
+  }
+  return _BtPairingStatus(bonded: bonded, address: address, name: name);
+}
+
 /// Shows a dialog with Bluetooth-related actions: controlling pairing mode
 /// and viewing/removing paired devices. Styled to match the WiFi dialog
 /// (a bordered black overlay rather than a Material AlertDialog).
@@ -844,22 +920,9 @@ Future<void> _bluetoothDialog(BuildContext context, String productName) async {
     if (!isAndroid()) {
       return;
     }
-    String status = "Not paired to $productName";
-    try {
-      final client = await getClient();
-      final nameResponse = await client.getBluetoothName(
-          cedar_rpc.EmptyMessage(),
-          options: CallOptions(timeout: const Duration(seconds: 5)));
-      if (await isBtDeviceBonded(nameResponse.address)) {
-        final name = nameResponse.name.isNotEmpty
-            ? nameResponse.name
-            : productName;
-        status = "Paired to $name";
-      }
-    } catch (e) {
-      debugPrint('Error determining Bluetooth pairing status: $e');
-    }
-    pairingStatus = status;
+    final result = await _checkHopperBluetoothPairing(productName);
+    pairingStatus =
+        result.bonded ? "Paired to ${result.name}" : "Not paired to $productName";
     dialogOverlayEntry?.markNeedsBuild();
   }
 
@@ -931,6 +994,191 @@ Future<void> _bluetoothDialog(BuildContext context, String productName) async {
                           },
                         ),
                       ),
+                      const SizedBox(height: 10),
+                      ElevatedButton(
+                        onPressed: () => dialogOverlayEntry!.remove(),
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white10),
+                        child: scaledText("Close"),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+    },
+  );
+
+  Overlay.of(context).insert(dialogOverlayEntry);
+}
+
+/// Shows a dialog to switch the active transport (WiFi or Bluetooth) used to
+/// talk to the server, or to pair over Bluetooth if not already paired.
+/// Android only — iOS can't communicate with the server over Bluetooth.
+Future<void> _connectionTransportDialog(
+    BuildContext context,
+    String productName,
+    Future<void> Function(cedar_rpc.ActionRequest) initiateAction,
+    String? wifiSsid,
+    bool wifiEnabled) async {
+  if (!context.mounted) {
+    return;
+  }
+  final outerContext = context;
+  final color = Theme.of(context).colorScheme.primary;
+  final width = 240.0 * textScaleFactor(context);
+  OverlayEntry? dialogOverlayEntry;
+
+  // Null while still being determined.
+  _BtPairingStatus? pairing;
+
+  Text scaledText(String str) {
+    return Text(
+      str,
+      textScaler: textScaler(context),
+      style: TextStyle(color: color, fontWeight: FontWeight.normal),
+    );
+  }
+
+  Future<void> refreshPairingStatus() async {
+    pairing = await _checkHopperBluetoothPairing(productName);
+    dialogOverlayEntry?.markNeedsBuild();
+  }
+
+  Future<void> selectWifi() async {
+    // If the WiFi access point is currently disabled, we're about to
+    // re-enable it. Warn the user they may need to reconnect to it in their
+    // mobile device's WiFi settings, since re-enabling the AP doesn't
+    // automatically reconnect a phone that's forgotten or moved on from it.
+    // Let them cancel rather than proceeding unexpectedly.
+    if (!wifiEnabled) {
+      final proceed = await confirmOverlay(
+          outerContext,
+          "Enabling $productName's WiFi access point. You might need to "
+          "reconnect to its WiFi network in your mobile device's WiFi "
+          "settings. Proceed?",
+          above: dialogOverlayEntry);
+      if (!proceed || !outerContext.mounted) {
+        return;
+      }
+    }
+
+    // Ask the server to bring its WiFi access point up before switching —
+    // sent over the current transport (Bluetooth), so it must happen before
+    // setActiveDevice() switches us away from it. Best-effort.
+    try {
+      await initiateAction(cedar_rpc.ActionRequest(wifiEnabled: true));
+    } catch (e) {
+      debugPrint('Error requesting WiFi enable: $e');
+    }
+    await setActiveDevice(wifiDevice());
+    dialogOverlayEntry?.remove();
+  }
+
+  Future<void> selectBluetooth() async {
+    final status = pairing;
+    if (status == null || !status.bonded) {
+      return;
+    }
+    await setActiveDevice(
+        CedarDevice(address: status.address, name: status.name));
+    dialogOverlayEntry?.remove();
+  }
+
+  void pairThenRefresh() {
+    dialogOverlayEntry?.remove();
+    // _controlBluetoothPairing returns false when pairing was actually
+    // enabled/disabled (a snackbar is shown in that case) — don't reopen this
+    // dialog then, or it would cover the snackbar. Only reopen on cancel/error.
+    _controlBluetoothPairing(outerContext, productName).then((reopen) {
+      if (reopen && outerContext.mounted) {
+        _connectionTransportDialog(outerContext, productName, initiateAction,
+            wifiSsid, wifiEnabled);
+      }
+    });
+  }
+
+  refreshPairingStatus();
+
+  dialogOverlayEntry = OverlayEntry(
+    builder: (BuildContext context) {
+      return GestureDetector(
+        onTap: () => dialogOverlayEntry!.remove(),
+        child: Material(
+          color: Colors.black87,
+          child: DefaultTextStyle.merge(
+            style: const TextStyle(fontFamilyFallback: ['Roboto']),
+            child: Center(
+              child: GestureDetector(
+                onTap: () {
+                  // Stop tap propagation to prevent dialog dismissal.
+                },
+                child: Container(
+                  width: width,
+                  padding: const EdgeInsets.fromLTRB(10, 5, 10, 10),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: color),
+                    color: Colors.black,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [scaledText("Connection")]),
+                      const SizedBox(height: 10),
+
+                      // WiFi option.
+                      Align(
+                        alignment: Alignment.topLeft,
+                        child: TextButton.icon(
+                          icon: Icon(
+                              isBluetoothInUse() ? Icons.wifi : Icons.check,
+                              color: color),
+                          label: scaledText(
+                              wifiSsid != null ? "WiFi ($wifiSsid)" : "WiFi"),
+                          onPressed:
+                              isBluetoothInUse() ? () => selectWifi() : null,
+                        ),
+                      ),
+
+                      // Bluetooth option, or pairing affordance.
+                      if (pairing == null) ...[
+                        Align(
+                          alignment: Alignment.topLeft,
+                          child: scaledText("Checking Bluetooth pairing…"),
+                        ),
+                      ] else if (pairing!.bonded) ...[
+                        Align(
+                          alignment: Alignment.topLeft,
+                          child: TextButton.icon(
+                            icon: Icon(
+                                isBluetoothInUse()
+                                    ? Icons.check
+                                    : Icons.bluetooth,
+                                color: color),
+                            label: scaledText("Bluetooth (${pairing!.name})"),
+                            onPressed: isBluetoothInUse()
+                                ? null
+                                : () => selectBluetooth(),
+                          ),
+                        ),
+                      ] else ...[
+                        Align(
+                          alignment: Alignment.topLeft,
+                          child: TextButton.icon(
+                            icon: Icon(Icons.bluetooth_disabled, color: color),
+                            label: scaledText(
+                                "Not paired with $productName over Bluetooth — tap to pair"),
+                            onPressed: pairThenRefresh,
+                          ),
+                        ),
+                      ],
+
                       const SizedBox(height: 10),
                       ElevatedButton(
                         onPressed: () => dialogOverlayEntry!.remove(),
