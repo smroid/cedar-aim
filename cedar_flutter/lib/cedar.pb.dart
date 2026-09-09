@@ -245,7 +245,7 @@ class ServerInformation extends $pb.GeneratedMessage {
   @$pb.TagNumber(9)
   CameraModel ensureCamera() => $_ensure(8);
 
-  /// WiFi hotspot info.
+  /// Wifi hotspot info.
   @$pb.TagNumber(10)
   WiFiAccessPoint get wifiAccessPoint => $_getN(9);
   @$pb.TagNumber(10)
@@ -571,7 +571,7 @@ class ImuState extends $pb.GeneratedMessage {
   void clearAngleRateZ() => $_clearField(6);
 }
 
-/// Information about the WiFi access point that Cedar server puts up.
+/// Information about the Wifi access point that Cedar server puts up.
 class WiFiAccessPoint extends $pb.GeneratedMessage {
   factory WiFiAccessPoint({
     $core.String? ssid,
@@ -4452,7 +4452,7 @@ class ActionRequest extends $pb.GeneratedMessage {
   $2.CelestialCoord ensureInitiateSlew() => $_ensure(5);
 
   /// Update ssid, psk, and/or channel setting for Cedar server's
-  /// WiFi access point.
+  /// Wifi access point.
   @$pb.TagNumber(7)
   WiFiAccessPoint get updateWifiAccessPoint => $_getN(6);
   @$pb.TagNumber(7)
@@ -4542,7 +4542,7 @@ class ActionRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(14)
   void clearResetHotPixelMap() => $_clearField(14);
 
-  /// Enables or disables the WiFi access point. When disabled, the AP is
+  /// Enables or disables the Wifi access point. When disabled, the AP is
   /// brought down until explicitly re-enabled or the server reboots. Useful
   /// after switching to Bluetooth.
   @$pb.TagNumber(15)
@@ -4974,6 +4974,129 @@ class RemoveBondRequest extends $pb.GeneratedMessage {
   $core.bool hasAddress() => $_has(0);
   @$pb.TagNumber(1)
   void clearAddress() => $_clearField(1);
+}
+
+class WifiNetwork extends $pb.GeneratedMessage {
+  factory WifiNetwork({
+    $core.String? ssid,
+    $core.int? signalStrength,
+    $core.bool? secured,
+  }) {
+    final $result = create();
+    if (ssid != null) {
+      $result.ssid = ssid;
+    }
+    if (signalStrength != null) {
+      $result.signalStrength = signalStrength;
+    }
+    if (secured != null) {
+      $result.secured = secured;
+    }
+    return $result;
+  }
+  WifiNetwork._() : super();
+  factory WifiNetwork.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory WifiNetwork.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'WifiNetwork', package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'), createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'ssid')
+    ..a<$core.int>(2, _omitFieldNames ? '' : 'signalStrength', $pb.PbFieldType.O3)
+    ..aOB(3, _omitFieldNames ? '' : 'secured')
+    ..hasRequiredFields = false
+  ;
+
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  WifiNetwork clone() => WifiNetwork()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  WifiNetwork copyWith(void Function(WifiNetwork) updates) => super.copyWith((message) => updates(message as WifiNetwork)) as WifiNetwork;
+
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static WifiNetwork create() => WifiNetwork._();
+  WifiNetwork createEmptyInstance() => create();
+  static $pb.PbList<WifiNetwork> createRepeated() => $pb.PbList<WifiNetwork>();
+  @$core.pragma('dart2js:noInline')
+  static WifiNetwork getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<WifiNetwork>(create);
+  static WifiNetwork? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get ssid => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set ssid($core.String v) { $_setString(0, v); }
+  @$pb.TagNumber(1)
+  $core.bool hasSsid() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearSsid() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.int get signalStrength => $_getIZ(1);
+  @$pb.TagNumber(2)
+  set signalStrength($core.int v) { $_setSignedInt32(1, v); }
+  @$pb.TagNumber(2)
+  $core.bool hasSignalStrength() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearSignalStrength() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.bool get secured => $_getBF(2);
+  @$pb.TagNumber(3)
+  set secured($core.bool v) { $_setBool(2, v); }
+  @$pb.TagNumber(3)
+  $core.bool hasSecured() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearSecured() => $_clearField(3);
+}
+
+class WifiScanResponse extends $pb.GeneratedMessage {
+  factory WifiScanResponse({
+    $core.Iterable<WifiNetwork>? networks,
+  }) {
+    final $result = create();
+    if (networks != null) {
+      $result.networks.addAll(networks);
+    }
+    return $result;
+  }
+  WifiScanResponse._() : super();
+  factory WifiScanResponse.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory WifiScanResponse.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'WifiScanResponse', package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'), createEmptyInstance: create)
+    ..pc<WifiNetwork>(1, _omitFieldNames ? '' : 'networks', $pb.PbFieldType.PM, subBuilder: WifiNetwork.create)
+    ..hasRequiredFields = false
+  ;
+
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  WifiScanResponse clone() => WifiScanResponse()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  WifiScanResponse copyWith(void Function(WifiScanResponse) updates) => super.copyWith((message) => updates(message as WifiScanResponse)) as WifiScanResponse;
+
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static WifiScanResponse create() => WifiScanResponse._();
+  WifiScanResponse createEmptyInstance() => create();
+  static $pb.PbList<WifiScanResponse> createRepeated() => $pb.PbList<WifiScanResponse>();
+  @$core.pragma('dart2js:noInline')
+  static WifiScanResponse getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<WifiScanResponse>(create);
+  static WifiScanResponse? _defaultInstance;
+
+  /// Strongest signal first.
+  @$pb.TagNumber(1)
+  $pb.PbList<WifiNetwork> get networks => $_getList(0);
 }
 
 class SetPairingModeRequest extends $pb.GeneratedMessage {

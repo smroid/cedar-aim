@@ -99,6 +99,10 @@ class CedarClient extends $grpc.Client {
       '/cedar.Cedar/RemoveBond',
       ($0.RemoveBondRequest value) => value.writeToBuffer(),
       ($core.List<$core.int> value) => $0.EmptyMessage.fromBuffer(value));
+  static final _$scanWifi = $grpc.ClientMethod<$0.EmptyMessage, $0.WifiScanResponse>(
+      '/cedar.Cedar/ScanWifi',
+      ($0.EmptyMessage value) => value.writeToBuffer(),
+      ($core.List<$core.int> value) => $0.WifiScanResponse.fromBuffer(value));
   static final _$convertToHorizon = $grpc.ClientMethod<$2.CelestialCoord, $2.HorizonCoord>(
       '/cedar.Cedar/ConvertToHorizon',
       ($2.CelestialCoord value) => value.writeToBuffer(),
@@ -188,6 +192,10 @@ class CedarClient extends $grpc.Client {
 
   $grpc.ResponseFuture<$0.EmptyMessage> removeBond($0.RemoveBondRequest request, {$grpc.CallOptions? options}) {
     return $createUnaryCall(_$removeBond, request, options: options);
+  }
+
+  $grpc.ResponseFuture<$0.WifiScanResponse> scanWifi($0.EmptyMessage request, {$grpc.CallOptions? options}) {
+    return $createUnaryCall(_$scanWifi, request, options: options);
   }
 
   $grpc.ResponseFuture<$2.HorizonCoord> convertToHorizon($2.CelestialCoord request, {$grpc.CallOptions? options}) {
@@ -337,6 +345,13 @@ abstract class CedarServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $0.RemoveBondRequest.fromBuffer(value),
         ($0.EmptyMessage value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.EmptyMessage, $0.WifiScanResponse>(
+        'ScanWifi',
+        scanWifi_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.EmptyMessage.fromBuffer(value),
+        ($0.WifiScanResponse value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$2.CelestialCoord, $2.HorizonCoord>(
         'ConvertToHorizon',
         convertToHorizon_Pre,
@@ -429,6 +444,10 @@ abstract class CedarServiceBase extends $grpc.Service {
     return removeBond($call, await $request);
   }
 
+  $async.Future<$0.WifiScanResponse> scanWifi_Pre($grpc.ServiceCall $call, $async.Future<$0.EmptyMessage> $request) async {
+    return scanWifi($call, await $request);
+  }
+
   $async.Future<$2.HorizonCoord> convertToHorizon_Pre($grpc.ServiceCall $call, $async.Future<$2.CelestialCoord> $request) async {
     return convertToHorizon($call, await $request);
   }
@@ -456,6 +475,7 @@ abstract class CedarServiceBase extends $grpc.Service {
   $async.Future<$0.EmptyMessage> setPairingMode($grpc.ServiceCall call, $0.SetPairingModeRequest request);
   $async.Future<$0.GetBondedDevicesResponse> getBondedDevices($grpc.ServiceCall call, $0.EmptyMessage request);
   $async.Future<$0.EmptyMessage> removeBond($grpc.ServiceCall call, $0.RemoveBondRequest request);
+  $async.Future<$0.WifiScanResponse> scanWifi($grpc.ServiceCall call, $0.EmptyMessage request);
   $async.Future<$2.HorizonCoord> convertToHorizon($grpc.ServiceCall call, $2.CelestialCoord request);
   $async.Future<$2.CelestialCoord> convertToCelestial($grpc.ServiceCall call, $2.HorizonCoord request);
 }

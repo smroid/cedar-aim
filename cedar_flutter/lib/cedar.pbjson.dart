@@ -1209,6 +1209,38 @@ const RemoveBondRequest$json = {
 final $typed_data.Uint8List removeBondRequestDescriptor = $convert.base64Decode(
     'ChFSZW1vdmVCb25kUmVxdWVzdBIYCgdhZGRyZXNzGAEgASgJUgdhZGRyZXNz');
 
+@$core.Deprecated('Use wifiNetworkDescriptor instead')
+const WifiNetwork$json = {
+  '1': 'WifiNetwork',
+  '2': [
+    {'1': 'ssid', '3': 1, '4': 1, '5': 9, '10': 'ssid'},
+    {'1': 'signal_strength', '3': 2, '4': 1, '5': 5, '9': 0, '10': 'signalStrength', '17': true},
+    {'1': 'secured', '3': 3, '4': 1, '5': 8, '10': 'secured'},
+  ],
+  '8': [
+    {'1': '_signal_strength'},
+  ],
+};
+
+/// Descriptor for `WifiNetwork`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List wifiNetworkDescriptor = $convert.base64Decode(
+    'CgtXaWZpTmV0d29yaxISCgRzc2lkGAEgASgJUgRzc2lkEiwKD3NpZ25hbF9zdHJlbmd0aBgCIA'
+    'EoBUgAUg5zaWduYWxTdHJlbmd0aIgBARIYCgdzZWN1cmVkGAMgASgIUgdzZWN1cmVkQhIKEF9z'
+    'aWduYWxfc3RyZW5ndGg=');
+
+@$core.Deprecated('Use wifiScanResponseDescriptor instead')
+const WifiScanResponse$json = {
+  '1': 'WifiScanResponse',
+  '2': [
+    {'1': 'networks', '3': 1, '4': 3, '5': 11, '6': '.cedar.WifiNetwork', '10': 'networks'},
+  ],
+};
+
+/// Descriptor for `WifiScanResponse`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List wifiScanResponseDescriptor = $convert.base64Decode(
+    'ChBXaWZpU2NhblJlc3BvbnNlEi4KCG5ldHdvcmtzGAEgAygLMhIuY2VkYXIuV2lmaU5ldHdvcm'
+    'tSCG5ldHdvcmtz');
+
 @$core.Deprecated('Use setPairingModeRequestDescriptor instead')
 const SetPairingModeRequest$json = {
   '1': 'SetPairingModeRequest',
