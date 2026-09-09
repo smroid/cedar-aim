@@ -430,7 +430,7 @@ bool _isMobileFullScreen = false;
 
 bool isFullScreenImpl() => _isMobileFullScreen;
 
-bool isStandaloneImpl() => false;
+bool isStandaloneImpl() => true;  // Disable full screen button.
 
 void goFullScreenImpl() {
   try {
