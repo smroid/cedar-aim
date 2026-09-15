@@ -102,6 +102,11 @@ ThemeData _nightVisionTheme() {
       dividerTheme: DividerThemeData(
         color: pureRed,
       ),
+      scrollbarTheme: ScrollbarThemeData(
+        thumbColor: WidgetStateProperty.all(darkRed),
+        trackColor: WidgetStateProperty.all(veryDarkRed),
+        trackBorderColor: WidgetStateProperty.all(darkRed),
+      ),
       useMaterial3: true);
 }
 
