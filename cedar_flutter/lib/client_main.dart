@@ -721,16 +721,26 @@ class MyHomePageState extends State<MyHomePage> {
   bool _isPipMode = false;
   bool _isFullScreen = false;
 
+  bool _systemUiOverlaysVisible = false;
+
   @override
   void initState() {
     super.initState();
     _isFullScreen = isFullScreen();
+    setSystemUiChangeListener((visible) {
+      if (mounted) {
+        setState(() {
+          _systemUiOverlaysVisible = visible;
+        });
+      }
+    });
     _initPipConfiguration();
     preloadDeviceSelection();
   }
 
   @override
   void dispose() {
+    setSystemUiChangeListener(null);
     pip.unregisterStateChangedObserver();
     pip.dispose();
     cleanup();
@@ -1683,10 +1693,30 @@ class MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  // Hidden in PWA/standalone mode where browser bars are already removed.
+  // Hidden in PWA/standalone mode where browser bars are already removed,
+  // and on mobile, where the app is always fullscreen. Exception: on
+  // Android, if the system status/navigation bars get swiped back into
+  // view while we're nominally fullscreen, show the button as a visible
+  // way back to fullscreen (rather than relying on the non-discoverable
+  // long-press on the main display).
   Widget _fullscreenButton() {
-    if (isStandalone()) {
+    if (isStandalone() && !_systemUiOverlaysVisible) {
       return const SizedBox.shrink();
+    }
+    // While the Android system bars are swiped into view, the button always
+    // means "go back to fullscreen", regardless of our nominal _isFullScreen
+    // state (which hasn't changed).
+    if (_systemUiOverlaysVisible) {
+      return IconButton(
+        icon: const Icon(Icons.fullscreen),
+        tooltip: "Fullscreen",
+        onPressed: () {
+          goFullScreen();
+          setState(() {
+            _isFullScreen = isFullScreen();
+          });
+        },
+      );
     }
     return IconButton(
       icon: Icon(_isFullScreen ? Icons.fullscreen_exit : Icons.fullscreen),

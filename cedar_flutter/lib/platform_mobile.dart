@@ -432,10 +432,41 @@ bool isFullScreenImpl() => _isMobileFullScreen;
 
 bool isStandaloneImpl() => true;  // Disable full screen button.
 
+// On Android, swiping from the top/bottom edge can reveal the system status
+// and/or navigation bars while we're still in immersive mode. SystemChrome's
+// system UI change callback fires for this case, so we track it separately and
+// let callers (e.g. to show a fullscreen button as a way back) react to it.
+bool _systemUiOverlaysVisible = false;
+void Function(bool)? _systemUiChangeListener;
+bool _systemUiCallbackRegistered = false;
+
+void _ensureSystemUiCallbackRegistered() {
+  if (_systemUiCallbackRegistered || !Platform.isAndroid) {
+    return;
+  }
+  _systemUiCallbackRegistered = true;
+  SystemChrome.setSystemUIChangeCallback((systemOverlaysAreVisible) async {
+    _systemUiOverlaysVisible = systemOverlaysAreVisible && _isMobileFullScreen;
+    _systemUiChangeListener?.call(_systemUiOverlaysVisible);
+  });
+}
+
+bool isSystemUiOverlaysVisibleImpl() => _systemUiOverlaysVisible;
+
+void setSystemUiChangeListenerImpl(void Function(bool)? listener) {
+  _systemUiChangeListener = listener;
+  _ensureSystemUiCallbackRegistered();
+}
+
 void goFullScreenImpl() {
   try {
+    _ensureSystemUiCallbackRegistered();
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
     _isMobileFullScreen = true;
+    if (_systemUiOverlaysVisible) {
+      _systemUiOverlaysVisible = false;
+      _systemUiChangeListener?.call(false);
+    }
   } catch (e) {
     debugPrint('Could not enter full screen with setEnabledSystemUIMode: $e');
   }
@@ -446,6 +477,10 @@ void cancelFullScreenImpl() {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
         overlays: [SystemUiOverlay.top, SystemUiOverlay.bottom]);
     _isMobileFullScreen = false;
+    if (_systemUiOverlaysVisible) {
+      _systemUiOverlaysVisible = false;
+      _systemUiChangeListener?.call(false);
+    }
   } catch (e) {
     debugPrint('Could not exit full screen with setEnabledSystemUIMode: $e');
   }

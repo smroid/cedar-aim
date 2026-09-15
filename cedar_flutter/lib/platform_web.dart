@@ -3,9 +3,7 @@
 
 // Web-based impl for platform-specific functions.
 
-// ignore_for_file: avoid_web_libraries_in_flutter
-import 'dart:html';
-import 'dart:js' as js;
+import 'package:web/web.dart' as web;
 
 import 'package:cedar_flutter/cedar.pbgrpc.dart';
 import 'package:cedar_flutter/platform.dart' show CedarDevice;
@@ -26,9 +24,9 @@ bool isAndroidImpl() {
 
 // iPadOS 13+ reports as MacIntel, distinguished by multi-touch support.
 bool isIOSImpl() {
-  final ua = window.navigator.userAgent;
-  final platform = window.navigator.platform ?? '';
-  final maxTouchPoints = window.navigator.maxTouchPoints ?? 0;
+  final ua = web.window.navigator.userAgent;
+  final platform = web.window.navigator.platform;
+  final maxTouchPoints = web.window.navigator.maxTouchPoints;
   return RegExp(r'iPad|iPhone|iPod').hasMatch(ua) ||
       (platform == 'MacIntel' && maxTouchPoints > 1);
 }
@@ -56,7 +54,7 @@ Future<CedarClient> getClientImpl() async {
 
 bool isFullScreenImpl() {
   try {
-    return document.fullscreenElement != null;
+    return web.document.fullscreenElement != null;
   } catch (_) {
     return false;
   }
@@ -65,17 +63,21 @@ bool isFullScreenImpl() {
 // Detects standalone/fullscreen display mode (installed PWA / Home Screen).
 bool isStandaloneImpl() {
   try {
-    return window.matchMedia('(display-mode: standalone)').matches ||
-        window.matchMedia('(display-mode: fullscreen)').matches;
+    return web.window.matchMedia('(display-mode: standalone)').matches ||
+        web.window.matchMedia('(display-mode: fullscreen)').matches;
   } catch (_) {
     return false;
   }
 }
 
+bool isSystemUiOverlaysVisibleImpl() => false;
+
+void setSystemUiChangeListenerImpl(void Function(bool)? listener) {}
+
 void goFullScreenImpl() {
   try {
-    if (document.fullscreenEnabled ?? false) {
-      document.documentElement?.requestFullscreen();
+    if (web.document.fullscreenEnabled) {
+      web.document.documentElement?.requestFullscreen();
     } else {
       debugPrint("Fullscreen not enabled.");
     }
@@ -86,8 +88,8 @@ void goFullScreenImpl() {
 
 void cancelFullScreenImpl() {
   try {
-    if (document.fullscreenEnabled ?? false) {
-      document.exitFullscreen();
+    if (web.document.fullscreenEnabled) {
+      web.document.exitFullscreen();
     } else {
       debugPrint("Fullscreen not enabled.");
     }
@@ -119,7 +121,7 @@ bool canExitAppImpl() {
 }
 
 void exitAppImpl() {
-  js.context.callMethod('close');
+  web.window.close();
 }
 
 

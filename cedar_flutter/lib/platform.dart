@@ -103,6 +103,27 @@ bool isStandalone() {
   }
 }
 
+// True (Android only) when the system status/navigation bars have been
+// swiped back into view while we're still nominally in fullscreen mode.
+bool systemUiOverlaysVisible() {
+  try {
+    return isSystemUiOverlaysVisibleImpl();
+  } catch (e) {
+    debugPrint('systemUiOverlaysVisible: $e');
+    return false;
+  }
+}
+
+// Registers a callback invoked whenever systemUiOverlaysVisible() changes.
+// Pass null to unregister. No-op on platforms other than Android.
+void setSystemUiChangeListener(void Function(bool)? listener) {
+  try {
+    setSystemUiChangeListenerImpl(listener);
+  } catch (e) {
+    debugPrint('setSystemUiChangeListener: $e');
+  }
+}
+
 void goFullScreen() {
   try {
     goFullScreenImpl();

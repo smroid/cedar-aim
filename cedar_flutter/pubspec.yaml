@@ -62,6 +62,7 @@ dependencies:
   device_info_plus: ^12.3.0
   open_settings_plus: ^0.4.0
   gal: ^2.3.3
+  web: ^1.1.0
 
 dev_dependencies:
   flutter_test:

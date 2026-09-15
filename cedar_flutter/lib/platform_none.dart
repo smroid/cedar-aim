@@ -39,6 +39,10 @@ bool isFullScreenImpl() => false;
 
 bool isStandaloneImpl() => false;
 
+bool isSystemUiOverlaysVisibleImpl() => false;
+
+void setSystemUiChangeListenerImpl(void Function(bool)? listener) {}
+
 void goFullScreenImpl() {
   throw UnimplementedError("No impl in platform_none");
 }
