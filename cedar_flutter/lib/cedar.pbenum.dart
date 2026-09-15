@@ -58,6 +58,52 @@ class ImuTrackerState extends $pb.ProtobufEnum {
   const ImuTrackerState._(super.v, super.n);
 }
 
+class WifiMode extends $pb.ProtobufEnum {
+  static const WifiMode WIFI_MODE_UNKNOWN = WifiMode._(0, _omitEnumNames ? '' : 'WIFI_MODE_UNKNOWN');
+  static const WifiMode WIFI_MODE_ACCESS_POINT = WifiMode._(1, _omitEnumNames ? '' : 'WIFI_MODE_ACCESS_POINT');
+  static const WifiMode WIFI_MODE_CLIENT = WifiMode._(2, _omitEnumNames ? '' : 'WIFI_MODE_CLIENT');
+  static const WifiMode WIFI_MODE_INACTIVE = WifiMode._(3, _omitEnumNames ? '' : 'WIFI_MODE_INACTIVE');
+
+  static const $core.List<WifiMode> values = <WifiMode> [
+    WIFI_MODE_UNKNOWN,
+    WIFI_MODE_ACCESS_POINT,
+    WIFI_MODE_CLIENT,
+    WIFI_MODE_INACTIVE,
+  ];
+
+  static final $core.Map<$core.int, WifiMode> _byValue = $pb.ProtobufEnum.initByValue(values);
+  static WifiMode? valueOf($core.int value) => _byValue[value];
+
+  const WifiMode._(super.v, super.n);
+}
+
+/// Progress/outcome of the most recent attempt to join an outside Wifi
+/// network (see SetWifiMode). Cedar-aim polls this via ServerInformation to
+/// drive its "connecting..." UI, since SetWifiMode returns before the join
+/// completes.
+class WifiClientState extends $pb.ProtobufEnum {
+  static const WifiClientState WIFI_CLIENT_STATE_UNKNOWN = WifiClientState._(0, _omitEnumNames ? '' : 'WIFI_CLIENT_STATE_UNKNOWN');
+  static const WifiClientState WIFI_CLIENT_STATE_CONNECTING = WifiClientState._(1, _omitEnumNames ? '' : 'WIFI_CLIENT_STATE_CONNECTING');
+  static const WifiClientState WIFI_CLIENT_STATE_CONNECTED = WifiClientState._(2, _omitEnumNames ? '' : 'WIFI_CLIENT_STATE_CONNECTED');
+  /// Association failed; typically a wrong passphrase.
+  static const WifiClientState WIFI_CLIENT_STATE_AUTH_FAILED = WifiClientState._(3, _omitEnumNames ? '' : 'WIFI_CLIENT_STATE_AUTH_FAILED');
+  /// Associated but did not obtain an IP address before timing out.
+  static const WifiClientState WIFI_CLIENT_STATE_NO_IP = WifiClientState._(4, _omitEnumNames ? '' : 'WIFI_CLIENT_STATE_NO_IP');
+
+  static const $core.List<WifiClientState> values = <WifiClientState> [
+    WIFI_CLIENT_STATE_UNKNOWN,
+    WIFI_CLIENT_STATE_CONNECTING,
+    WIFI_CLIENT_STATE_CONNECTED,
+    WIFI_CLIENT_STATE_AUTH_FAILED,
+    WIFI_CLIENT_STATE_NO_IP,
+  ];
+
+  static final $core.Map<$core.int, WifiClientState> _byValue = $pb.ProtobufEnum.initByValue(values);
+  static WifiClientState? valueOf($core.int value) => _byValue[value];
+
+  const WifiClientState._(super.v, super.n);
+}
+
 class OperatingMode extends $pb.ProtobufEnum {
   static const OperatingMode MODE_UNSPECIFIED = OperatingMode._(0, _omitEnumNames ? '' : 'MODE_UNSPECIFIED');
   /// Mode supporting establishment of camera focus and boresight alignment of

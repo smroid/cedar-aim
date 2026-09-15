@@ -45,6 +45,41 @@ final $typed_data.Uint8List imuTrackerStateDescriptor = $convert.base64Decode(
     'Cg9JbXVUcmFja2VyU3RhdGUSGQoVVFJBQ0tFUl9TVEFURV9VTktOT1dOEAASDgoKTU9USU9OTE'
     'VTUxABEgoKBk1PVklORxACEggKBExPU1QQAw==');
 
+@$core.Deprecated('Use wifiModeDescriptor instead')
+const WifiMode$json = {
+  '1': 'WifiMode',
+  '2': [
+    {'1': 'WIFI_MODE_UNKNOWN', '2': 0},
+    {'1': 'WIFI_MODE_ACCESS_POINT', '2': 1},
+    {'1': 'WIFI_MODE_CLIENT', '2': 2},
+    {'1': 'WIFI_MODE_INACTIVE', '2': 3},
+  ],
+};
+
+/// Descriptor for `WifiMode`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List wifiModeDescriptor = $convert.base64Decode(
+    'CghXaWZpTW9kZRIVChFXSUZJX01PREVfVU5LTk9XThAAEhoKFldJRklfTU9ERV9BQ0NFU1NfUE'
+    '9JTlQQARIUChBXSUZJX01PREVfQ0xJRU5UEAISFgoSV0lGSV9NT0RFX0lOQUNUSVZFEAM=');
+
+@$core.Deprecated('Use wifiClientStateDescriptor instead')
+const WifiClientState$json = {
+  '1': 'WifiClientState',
+  '2': [
+    {'1': 'WIFI_CLIENT_STATE_UNKNOWN', '2': 0},
+    {'1': 'WIFI_CLIENT_STATE_CONNECTING', '2': 1},
+    {'1': 'WIFI_CLIENT_STATE_CONNECTED', '2': 2},
+    {'1': 'WIFI_CLIENT_STATE_AUTH_FAILED', '2': 3},
+    {'1': 'WIFI_CLIENT_STATE_NO_IP', '2': 4},
+  ],
+};
+
+/// Descriptor for `WifiClientState`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List wifiClientStateDescriptor = $convert.base64Decode(
+    'Cg9XaWZpQ2xpZW50U3RhdGUSHQoZV0lGSV9DTElFTlRfU1RBVEVfVU5LTk9XThAAEiAKHFdJRk'
+    'lfQ0xJRU5UX1NUQVRFX0NPTk5FQ1RJTkcQARIfChtXSUZJX0NMSUVOVF9TVEFURV9DT05ORUNU'
+    'RUQQAhIhCh1XSUZJX0NMSUVOVF9TVEFURV9BVVRIX0ZBSUxFRBADEhsKF1dJRklfQ0xJRU5UX1'
+    'NUQVRFX05PX0lQEAQ=');
+
 @$core.Deprecated('Use operatingModeDescriptor instead')
 const OperatingMode$json = {
   '1': 'OperatingMode',
@@ -171,11 +206,13 @@ const ServerInformation$json = {
     {'1': 'imu', '3': 13, '4': 1, '5': 11, '6': '.cedar.ImuState', '9': 3, '10': 'imu', '17': true},
     {'1': 'imu_angular_speed', '3': 16, '4': 1, '5': 1, '9': 4, '10': 'imuAngularSpeed', '17': true},
     {'1': 'imu_tracker_state', '3': 15, '4': 1, '5': 14, '6': '.cedar.ImuTrackerState', '9': 5, '10': 'imuTrackerState', '17': true},
-    {'1': 'wifi_access_point', '3': 10, '4': 1, '5': 11, '6': '.cedar.WiFiAccessPoint', '9': 6, '10': 'wifiAccessPoint', '17': true},
-    {'1': 'connection_status', '3': 17, '4': 1, '5': 11, '6': '.cedar.ConnectionStatus', '9': 7, '10': 'connectionStatus', '17': true},
+    {'1': 'wifi_mode', '3': 21, '4': 1, '5': 14, '6': '.cedar.WifiMode', '9': 6, '10': 'wifiMode', '17': true},
+    {'1': 'wifi_access_point', '3': 10, '4': 1, '5': 11, '6': '.cedar.WiFiAccessPoint', '9': 7, '10': 'wifiAccessPoint', '17': true},
+    {'1': 'wifi_client', '3': 22, '4': 1, '5': 11, '6': '.cedar.WifiClient', '9': 8, '10': 'wifiClient', '17': true},
+    {'1': 'connection_status', '3': 17, '4': 1, '5': 11, '6': '.cedar.ConnectionStatus', '9': 9, '10': 'connectionStatus', '17': true},
     {'1': 'demo_image_names', '3': 11, '4': 3, '5': 9, '10': 'demoImageNames'},
-    {'1': 'system_load_average', '3': 18, '4': 1, '5': 2, '9': 8, '10': 'systemLoadAverage', '17': true},
-    {'1': 'cedar_load_average', '3': 20, '4': 1, '5': 2, '9': 9, '10': 'cedarLoadAverage', '17': true},
+    {'1': 'system_load_average', '3': 18, '4': 1, '5': 2, '9': 10, '10': 'systemLoadAverage', '17': true},
+    {'1': 'cedar_load_average', '3': 20, '4': 1, '5': 2, '9': 11, '10': 'cedarLoadAverage', '17': true},
   ],
   '8': [
     {'1': '_cpu_core_count'},
@@ -184,7 +221,9 @@ const ServerInformation$json = {
     {'1': '_imu'},
     {'1': '_imu_angular_speed'},
     {'1': '_imu_tracker_state'},
+    {'1': '_wifi_mode'},
     {'1': '_wifi_access_point'},
+    {'1': '_wifi_client'},
     {'1': '_connection_status'},
     {'1': '_system_load_average'},
     {'1': '_cedar_load_average'},
@@ -205,16 +244,18 @@ final $typed_data.Uint8List serverInformationDescriptor = $convert.base64Decode(
     'ltdV9tb2RlbBgOIAEoCUgCUghpbXVNb2RlbIgBARImCgNpbXUYDSABKAsyDy5jZWRhci5JbXVT'
     'dGF0ZUgDUgNpbXWIAQESLwoRaW11X2FuZ3VsYXJfc3BlZWQYECABKAFIBFIPaW11QW5ndWxhcl'
     'NwZWVkiAEBEkcKEWltdV90cmFja2VyX3N0YXRlGA8gASgOMhYuY2VkYXIuSW11VHJhY2tlclN0'
-    'YXRlSAVSD2ltdVRyYWNrZXJTdGF0ZYgBARJHChF3aWZpX2FjY2Vzc19wb2ludBgKIAEoCzIWLm'
-    'NlZGFyLldpRmlBY2Nlc3NQb2ludEgGUg93aWZpQWNjZXNzUG9pbnSIAQESSQoRY29ubmVjdGlv'
-    'bl9zdGF0dXMYESABKAsyFy5jZWRhci5Db25uZWN0aW9uU3RhdHVzSAdSEGNvbm5lY3Rpb25TdG'
-    'F0dXOIAQESKAoQZGVtb19pbWFnZV9uYW1lcxgLIAMoCVIOZGVtb0ltYWdlTmFtZXMSMwoTc3lz'
-    'dGVtX2xvYWRfYXZlcmFnZRgSIAEoAkgIUhFzeXN0ZW1Mb2FkQXZlcmFnZYgBARIxChJjZWRhcl'
-    '9sb2FkX2F2ZXJhZ2UYFCABKAJICVIQY2VkYXJMb2FkQXZlcmFnZYgBAUIRCg9fY3B1X2NvcmVf'
-    'Y291bnRCCQoHX2NhbWVyYUIMCgpfaW11X21vZGVsQgYKBF9pbXVCFAoSX2ltdV9hbmd1bGFyX3'
-    'NwZWVkQhQKEl9pbXVfdHJhY2tlcl9zdGF0ZUIUChJfd2lmaV9hY2Nlc3NfcG9pbnRCFAoSX2Nv'
-    'bm5lY3Rpb25fc3RhdHVzQhYKFF9zeXN0ZW1fbG9hZF9hdmVyYWdlQhUKE19jZWRhcl9sb2FkX2'
-    'F2ZXJhZ2U=');
+    'YXRlSAVSD2ltdVRyYWNrZXJTdGF0ZYgBARIxCgl3aWZpX21vZGUYFSABKA4yDy5jZWRhci5XaW'
+    'ZpTW9kZUgGUgh3aWZpTW9kZYgBARJHChF3aWZpX2FjY2Vzc19wb2ludBgKIAEoCzIWLmNlZGFy'
+    'LldpRmlBY2Nlc3NQb2ludEgHUg93aWZpQWNjZXNzUG9pbnSIAQESNwoLd2lmaV9jbGllbnQYFi'
+    'ABKAsyES5jZWRhci5XaWZpQ2xpZW50SAhSCndpZmlDbGllbnSIAQESSQoRY29ubmVjdGlvbl9z'
+    'dGF0dXMYESABKAsyFy5jZWRhci5Db25uZWN0aW9uU3RhdHVzSAlSEGNvbm5lY3Rpb25TdGF0dX'
+    'OIAQESKAoQZGVtb19pbWFnZV9uYW1lcxgLIAMoCVIOZGVtb0ltYWdlTmFtZXMSMwoTc3lzdGVt'
+    'X2xvYWRfYXZlcmFnZRgSIAEoAkgKUhFzeXN0ZW1Mb2FkQXZlcmFnZYgBARIxChJjZWRhcl9sb2'
+    'FkX2F2ZXJhZ2UYFCABKAJIC1IQY2VkYXJMb2FkQXZlcmFnZYgBAUIRCg9fY3B1X2NvcmVfY291'
+    'bnRCCQoHX2NhbWVyYUIMCgpfaW11X21vZGVsQgYKBF9pbXVCFAoSX2ltdV9hbmd1bGFyX3NwZW'
+    'VkQhQKEl9pbXVfdHJhY2tlcl9zdGF0ZUIMCgpfd2lmaV9tb2RlQhQKEl93aWZpX2FjY2Vzc19w'
+    'b2ludEIOCgxfd2lmaV9jbGllbnRCFAoSX2Nvbm5lY3Rpb25fc3RhdHVzQhYKFF9zeXN0ZW1fbG'
+    '9hZF9hdmVyYWdlQhUKE19jZWRhcl9sb2FkX2F2ZXJhZ2U=');
 
 @$core.Deprecated('Use cameraModelDescriptor instead')
 const CameraModel$json = {
@@ -279,6 +320,27 @@ final $typed_data.Uint8List wiFiAccessPointDescriptor = $convert.base64Decode(
     'gBUgNwc2uIAQESHQoHY2hhbm5lbBgDIAEoBUgCUgdjaGFubmVsiAEBEh0KB2VuYWJsZWQYBCAB'
     'KAhIA1IHZW5hYmxlZIgBAUIHCgVfc3NpZEIGCgRfcHNrQgoKCF9jaGFubmVsQgoKCF9lbmFibG'
     'Vk');
+
+@$core.Deprecated('Use wifiClientDescriptor instead')
+const WifiClient$json = {
+  '1': 'WifiClient',
+  '2': [
+    {'1': 'ssid', '3': 1, '4': 1, '5': 9, '9': 0, '10': 'ssid', '17': true},
+    {'1': 'state', '3': 2, '4': 1, '5': 14, '6': '.cedar.WifiClientState', '9': 1, '10': 'state', '17': true},
+    {'1': 'ip_address', '3': 3, '4': 1, '5': 9, '9': 2, '10': 'ipAddress', '17': true},
+  ],
+  '8': [
+    {'1': '_ssid'},
+    {'1': '_state'},
+    {'1': '_ip_address'},
+  ],
+};
+
+/// Descriptor for `WifiClient`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List wifiClientDescriptor = $convert.base64Decode(
+    'CgpXaWZpQ2xpZW50EhcKBHNzaWQYASABKAlIAFIEc3NpZIgBARIxCgVzdGF0ZRgCIAEoDjIWLm'
+    'NlZGFyLldpZmlDbGllbnRTdGF0ZUgBUgVzdGF0ZYgBARIiCgppcF9hZGRyZXNzGAMgASgJSAJS'
+    'CWlwQWRkcmVzc4gBAUIHCgVfc3NpZEIICgZfc3RhdGVCDQoLX2lwX2FkZHJlc3M=');
 
 @$core.Deprecated('Use connectionStatusDescriptor instead')
 const ConnectionStatus$json = {
@@ -1059,7 +1121,16 @@ const ActionRequest$json = {
     {'1': 'calibrate_dark_frame', '3': 13, '4': 1, '5': 8, '9': 12, '10': 'calibrateDarkFrame', '17': true},
     {'1': 'reset_hot_pixel_map', '3': 14, '4': 1, '5': 8, '9': 13, '10': 'resetHotPixelMap', '17': true},
     {'1': 'crash_server', '3': 12, '4': 1, '5': 8, '9': 14, '10': 'crashServer', '17': true},
-    {'1': 'wifi_enabled', '3': 15, '4': 1, '5': 8, '9': 15, '10': 'wifiEnabled', '17': true},
+    {
+      '1': 'wifi_enabled',
+      '3': 15,
+      '4': 1,
+      '5': 8,
+      '8': {'3': true},
+      '9': 15,
+      '10': 'wifiEnabled',
+      '17': true,
+    },
   ],
   '8': [
     {'1': '_cancel_calibration'},
@@ -1099,14 +1170,14 @@ final $typed_data.Uint8List actionRequestDescriptor = $convert.base64Decode(
     'lsaWdodEZvY3VzUmVnaW9uiAEBEjUKFGNhbGlicmF0ZV9kYXJrX2ZyYW1lGA0gASgISAxSEmNh'
     'bGlicmF0ZURhcmtGcmFtZYgBARIyChNyZXNldF9ob3RfcGl4ZWxfbWFwGA4gASgISA1SEHJlc2'
     'V0SG90UGl4ZWxNYXCIAQESJgoMY3Jhc2hfc2VydmVyGAwgASgISA5SC2NyYXNoU2VydmVyiAEB'
-    'EiYKDHdpZmlfZW5hYmxlZBgPIAEoCEgPUgt3aWZpRW5hYmxlZIgBAUIVChNfY2FuY2VsX2NhbG'
-    'licmF0aW9uQhQKEl9jYXB0dXJlX2JvcmVzaWdodEIWChRfZGVzaWduYXRlX2JvcmVzaWdodEIS'
-    'ChBfc2h1dGRvd25fc2VydmVyQhEKD19yZXN0YXJ0X3NlcnZlckIQCg5faW5pdGlhdGVfc2xld0'
-    'IXChVfaW5pdGlhdGVfc2xld19hbHRfYXpCDAoKX3N0b3Bfc2xld0INCgtfc2F2ZV9pbWFnZUIb'
-    'ChlfdXBkYXRlX3dpZmlfYWNjZXNzX3BvaW50QhgKFl9jbGVhcl9kb250X3Nob3dfaXRlbXNCIg'
-    'ogX2Rlc2lnbmF0ZV9kYXlsaWdodF9mb2N1c19yZWdpb25CFwoVX2NhbGlicmF0ZV9kYXJrX2Zy'
-    'YW1lQhYKFF9yZXNldF9ob3RfcGl4ZWxfbWFwQg8KDV9jcmFzaF9zZXJ2ZXJCDwoNX3dpZmlfZW'
-    '5hYmxlZA==');
+    'EioKDHdpZmlfZW5hYmxlZBgPIAEoCEICGAFID1ILd2lmaUVuYWJsZWSIAQFCFQoTX2NhbmNlbF'
+    '9jYWxpYnJhdGlvbkIUChJfY2FwdHVyZV9ib3Jlc2lnaHRCFgoUX2Rlc2lnbmF0ZV9ib3Jlc2ln'
+    'aHRCEgoQX3NodXRkb3duX3NlcnZlckIRCg9fcmVzdGFydF9zZXJ2ZXJCEAoOX2luaXRpYXRlX3'
+    'NsZXdCFwoVX2luaXRpYXRlX3NsZXdfYWx0X2F6QgwKCl9zdG9wX3NsZXdCDQoLX3NhdmVfaW1h'
+    'Z2VCGwoZX3VwZGF0ZV93aWZpX2FjY2Vzc19wb2ludEIYChZfY2xlYXJfZG9udF9zaG93X2l0ZW'
+    '1zQiIKIF9kZXNpZ25hdGVfZGF5bGlnaHRfZm9jdXNfcmVnaW9uQhcKFV9jYWxpYnJhdGVfZGFy'
+    'a19mcmFtZUIWChRfcmVzZXRfaG90X3BpeGVsX21hcEIPCg1fY3Jhc2hfc2VydmVyQg8KDV93aW'
+    'ZpX2VuYWJsZWQ=');
 
 @$core.Deprecated('Use serverLogRequestDescriptor instead')
 const ServerLogRequest$json = {
@@ -1254,6 +1325,26 @@ const SetPairingModeRequest$json = {
 final $typed_data.Uint8List setPairingModeRequestDescriptor = $convert.base64Decode(
     'ChVTZXRQYWlyaW5nTW9kZVJlcXVlc3QSGAoHZW5hYmxlZBgBIAEoCFIHZW5hYmxlZBIYCgdmb3'
     'JldmVyGAIgASgIUgdmb3JldmVy');
+
+@$core.Deprecated('Use setWifiModeRequestDescriptor instead')
+const SetWifiModeRequest$json = {
+  '1': 'SetWifiModeRequest',
+  '2': [
+    {'1': 'mode', '3': 1, '4': 1, '5': 14, '6': '.cedar.WifiMode', '10': 'mode'},
+    {'1': 'client_ssid', '3': 2, '4': 1, '5': 9, '9': 0, '10': 'clientSsid', '17': true},
+    {'1': 'client_psk', '3': 3, '4': 1, '5': 9, '9': 1, '10': 'clientPsk', '17': true},
+  ],
+  '8': [
+    {'1': '_client_ssid'},
+    {'1': '_client_psk'},
+  ],
+};
+
+/// Descriptor for `SetWifiModeRequest`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List setWifiModeRequestDescriptor = $convert.base64Decode(
+    'ChJTZXRXaWZpTW9kZVJlcXVlc3QSIwoEbW9kZRgBIAEoDjIPLmNlZGFyLldpZmlNb2RlUgRtb2'
+    'RlEiQKC2NsaWVudF9zc2lkGAIgASgJSABSCmNsaWVudFNzaWSIAQESIgoKY2xpZW50X3BzaxgD'
+    'IAEoCUgBUgljbGllbnRQc2uIAQFCDgoMX2NsaWVudF9zc2lkQg0KC19jbGllbnRfcHNr');
 
 @$core.Deprecated('Use imageRequestDescriptor instead')
 const ImageRequest$json = {

@@ -46,6 +46,8 @@ class ServerInformation extends $pb.GeneratedMessage {
     $core.double? systemLoadAverage,
     $core.int? cpuCoreCount,
     $core.double? cedarLoadAverage,
+    WifiMode? wifiMode,
+    WifiClient? wifiClient,
   }) {
     final $result = create();
     if (productName != null) {
@@ -108,6 +110,12 @@ class ServerInformation extends $pb.GeneratedMessage {
     if (cedarLoadAverage != null) {
       $result.cedarLoadAverage = cedarLoadAverage;
     }
+    if (wifiMode != null) {
+      $result.wifiMode = wifiMode;
+    }
+    if (wifiClient != null) {
+      $result.wifiClient = wifiClient;
+    }
     return $result;
   }
   ServerInformation._() : super();
@@ -135,6 +143,8 @@ class ServerInformation extends $pb.GeneratedMessage {
     ..a<$core.double>(18, _omitFieldNames ? '' : 'systemLoadAverage', $pb.PbFieldType.OF)
     ..a<$core.int>(19, _omitFieldNames ? '' : 'cpuCoreCount', $pb.PbFieldType.O3)
     ..a<$core.double>(20, _omitFieldNames ? '' : 'cedarLoadAverage', $pb.PbFieldType.OF)
+    ..e<WifiMode>(21, _omitFieldNames ? '' : 'wifiMode', $pb.PbFieldType.OE, defaultOrMaker: WifiMode.WIFI_MODE_UNKNOWN, valueOf: WifiMode.valueOf, enumValues: WifiMode.values)
+    ..aOM<WifiClient>(22, _omitFieldNames ? '' : 'wifiClient', subBuilder: WifiClient.create)
     ..hasRequiredFields = false
   ;
 
@@ -245,7 +255,7 @@ class ServerInformation extends $pb.GeneratedMessage {
   @$pb.TagNumber(9)
   CameraModel ensureCamera() => $_ensure(8);
 
-  /// Wifi hotspot info.
+  /// Wifi hotspot info, relevant when wifi_mode is WIFI_MODE_ACCESS_POINT.
   @$pb.TagNumber(10)
   WiFiAccessPoint get wifiAccessPoint => $_getN(9);
   @$pb.TagNumber(10)
@@ -355,6 +365,28 @@ class ServerInformation extends $pb.GeneratedMessage {
   $core.bool hasCedarLoadAverage() => $_has(19);
   @$pb.TagNumber(20)
   void clearCedarLoadAverage() => $_clearField(20);
+
+  /// Cedar's current Wifi mode of operation.
+  @$pb.TagNumber(21)
+  WifiMode get wifiMode => $_getN(20);
+  @$pb.TagNumber(21)
+  set wifiMode(WifiMode v) { $_setField(21, v); }
+  @$pb.TagNumber(21)
+  $core.bool hasWifiMode() => $_has(20);
+  @$pb.TagNumber(21)
+  void clearWifiMode() => $_clearField(21);
+
+  /// Wifi client status, relevant when wifi_mode is WIFI_MODE_CLIENT.
+  @$pb.TagNumber(22)
+  WifiClient get wifiClient => $_getN(21);
+  @$pb.TagNumber(22)
+  set wifiClient(WifiClient v) { $_setField(22, v); }
+  @$pb.TagNumber(22)
+  $core.bool hasWifiClient() => $_has(21);
+  @$pb.TagNumber(22)
+  void clearWifiClient() => $_clearField(22);
+  @$pb.TagNumber(22)
+  WifiClient ensureWifiClient() => $_ensure(21);
 }
 
 class CameraModel extends $pb.GeneratedMessage {
@@ -571,7 +603,8 @@ class ImuState extends $pb.GeneratedMessage {
   void clearAngleRateZ() => $_clearField(6);
 }
 
-/// Information about the Wifi access point that Cedar server puts up.
+/// Information about the Wifi access point that Cedar server puts up when
+/// WifiMode is WIFI_MODE_ACCESS_POINT.
 class WiFiAccessPoint extends $pb.GeneratedMessage {
   factory WiFiAccessPoint({
     $core.String? ssid,
@@ -662,6 +695,90 @@ class WiFiAccessPoint extends $pb.GeneratedMessage {
   $core.bool hasEnabled() => $_has(3);
   @$pb.TagNumber(4)
   void clearEnabled() => $_clearField(4);
+}
+
+/// Information about the outside Wifi access point that Cedar connects to when
+/// WifiMode is WIFI_MODE_CLIENT.
+class WifiClient extends $pb.GeneratedMessage {
+  factory WifiClient({
+    $core.String? ssid,
+    WifiClientState? state,
+    $core.String? ipAddress,
+  }) {
+    final $result = create();
+    if (ssid != null) {
+      $result.ssid = ssid;
+    }
+    if (state != null) {
+      $result.state = state;
+    }
+    if (ipAddress != null) {
+      $result.ipAddress = ipAddress;
+    }
+    return $result;
+  }
+  WifiClient._() : super();
+  factory WifiClient.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory WifiClient.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'WifiClient', package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'), createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'ssid')
+    ..e<WifiClientState>(2, _omitFieldNames ? '' : 'state', $pb.PbFieldType.OE, defaultOrMaker: WifiClientState.WIFI_CLIENT_STATE_UNKNOWN, valueOf: WifiClientState.valueOf, enumValues: WifiClientState.values)
+    ..aOS(3, _omitFieldNames ? '' : 'ipAddress')
+    ..hasRequiredFields = false
+  ;
+
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  WifiClient clone() => WifiClient()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  WifiClient copyWith(void Function(WifiClient) updates) => super.copyWith((message) => updates(message as WifiClient)) as WifiClient;
+
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static WifiClient create() => WifiClient._();
+  WifiClient createEmptyInstance() => create();
+  static $pb.PbList<WifiClient> createRepeated() => $pb.PbList<WifiClient>();
+  @$core.pragma('dart2js:noInline')
+  static WifiClient getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<WifiClient>(create);
+  static WifiClient? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get ssid => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set ssid($core.String v) { $_setString(0, v); }
+  @$pb.TagNumber(1)
+  $core.bool hasSsid() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearSsid() => $_clearField(1);
+
+  /// State of the join to `ssid`. Note the passphrase is never reported back.
+  @$pb.TagNumber(2)
+  WifiClientState get state => $_getN(1);
+  @$pb.TagNumber(2)
+  set state(WifiClientState v) { $_setField(2, v); }
+  @$pb.TagNumber(2)
+  $core.bool hasState() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearState() => $_clearField(2);
+
+  /// IPv4 address assigned on `ssid`, present once state is
+  /// WIFI_CLIENT_STATE_CONNECTED. This is how a client reconnects to Cedar
+  /// over the joined network.
+  @$pb.TagNumber(3)
+  $core.String get ipAddress => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set ipAddress($core.String v) { $_setString(2, v); }
+  @$pb.TagNumber(3)
+  $core.bool hasIpAddress() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearIpAddress() => $_clearField(3);
 }
 
 /// Number of current client connections.
@@ -4277,6 +4394,7 @@ class ActionRequest extends $pb.GeneratedMessage {
     $core.bool? crashServer,
     $core.bool? calibrateDarkFrame,
     $core.bool? resetHotPixelMap,
+  @$core.Deprecated('This field is deprecated.')
     $core.bool? wifiEnabled,
     $2.HorizonCoord? initiateSlewAltAz,
   }) {
@@ -4324,6 +4442,7 @@ class ActionRequest extends $pb.GeneratedMessage {
       $result.resetHotPixelMap = resetHotPixelMap;
     }
     if (wifiEnabled != null) {
+      // ignore: deprecated_member_use_from_same_package
       $result.wifiEnabled = wifiEnabled;
     }
     if (initiateSlewAltAz != null) {
@@ -4542,15 +4661,23 @@ class ActionRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(14)
   void clearResetHotPixelMap() => $_clearField(14);
 
-  /// Enables or disables the Wifi access point. When disabled, the AP is
-  /// brought down until explicitly re-enabled or the server reboots. Useful
-  /// after switching to Bluetooth.
+  ///  Enables or disables the Wifi access point. When disabled, the AP is
+  ///  brought down until explicitly re-enabled or the server reboots. Useful
+  ///  after switching to Bluetooth.
+  ///
+  ///  Deprecated: cannot express client mode. Use the SetWifiMode RPC instead
+  ///  (true here is equivalent to WIFI_MODE_ACCESS_POINT, false to
+  ///  WIFI_MODE_INACTIVE). Still honored for older clients.
+  @$core.Deprecated('This field is deprecated.')
   @$pb.TagNumber(15)
   $core.bool get wifiEnabled => $_getBF(14);
+  @$core.Deprecated('This field is deprecated.')
   @$pb.TagNumber(15)
   set wifiEnabled($core.bool v) { $_setBool(14, v); }
+  @$core.Deprecated('This field is deprecated.')
   @$pb.TagNumber(15)
   $core.bool hasWifiEnabled() => $_has(14);
+  @$core.Deprecated('This field is deprecated.')
   @$pb.TagNumber(15)
   void clearWifiEnabled() => $_clearField(15);
 
@@ -5164,6 +5291,86 @@ class SetPairingModeRequest extends $pb.GeneratedMessage {
   $core.bool hasForever() => $_has(1);
   @$pb.TagNumber(2)
   void clearForever() => $_clearField(2);
+}
+
+class SetWifiModeRequest extends $pb.GeneratedMessage {
+  factory SetWifiModeRequest({
+    WifiMode? mode,
+    $core.String? clientSsid,
+    $core.String? clientPsk,
+  }) {
+    final $result = create();
+    if (mode != null) {
+      $result.mode = mode;
+    }
+    if (clientSsid != null) {
+      $result.clientSsid = clientSsid;
+    }
+    if (clientPsk != null) {
+      $result.clientPsk = clientPsk;
+    }
+    return $result;
+  }
+  SetWifiModeRequest._() : super();
+  factory SetWifiModeRequest.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory SetWifiModeRequest.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'SetWifiModeRequest', package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'), createEmptyInstance: create)
+    ..e<WifiMode>(1, _omitFieldNames ? '' : 'mode', $pb.PbFieldType.OE, defaultOrMaker: WifiMode.WIFI_MODE_UNKNOWN, valueOf: WifiMode.valueOf, enumValues: WifiMode.values)
+    ..aOS(2, _omitFieldNames ? '' : 'clientSsid')
+    ..aOS(3, _omitFieldNames ? '' : 'clientPsk')
+    ..hasRequiredFields = false
+  ;
+
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  SetWifiModeRequest clone() => SetWifiModeRequest()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  SetWifiModeRequest copyWith(void Function(SetWifiModeRequest) updates) => super.copyWith((message) => updates(message as SetWifiModeRequest)) as SetWifiModeRequest;
+
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static SetWifiModeRequest create() => SetWifiModeRequest._();
+  SetWifiModeRequest createEmptyInstance() => create();
+  static $pb.PbList<SetWifiModeRequest> createRepeated() => $pb.PbList<SetWifiModeRequest>();
+  @$core.pragma('dart2js:noInline')
+  static SetWifiModeRequest getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<SetWifiModeRequest>(create);
+  static SetWifiModeRequest? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  WifiMode get mode => $_getN(0);
+  @$pb.TagNumber(1)
+  set mode(WifiMode v) { $_setField(1, v); }
+  @$pb.TagNumber(1)
+  $core.bool hasMode() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearMode() => $_clearField(1);
+
+  /// Required when mode is WIFI_MODE_CLIENT: the network to join. Ignored for
+  /// other modes.
+  @$pb.TagNumber(2)
+  $core.String get clientSsid => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set clientSsid($core.String v) { $_setString(1, v); }
+  @$pb.TagNumber(2)
+  $core.bool hasClientSsid() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearClientSsid() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.String get clientPsk => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set clientPsk($core.String v) { $_setString(2, v); }
+  @$pb.TagNumber(3)
+  $core.bool hasClientPsk() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearClientPsk() => $_clearField(3);
 }
 
 class ImageRequest extends $pb.GeneratedMessage {

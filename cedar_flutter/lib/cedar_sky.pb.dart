@@ -821,6 +821,11 @@ class CatalogEntry extends $pb.GeneratedMessage {
   @$pb.TagNumber(7)
   void clearAngularSize() => $_clearField(7);
 
+  /// Albireo, Horsehead, Crab Nebula, etc. May be a comma-separated list of
+  /// more than one known name for the object (e.g. "Al Sufi's Cluster,
+  /// Brocchi's Cluster, Coathanger"). A display too small to show the whole
+  /// string might show only the text before the first comma; full text
+  /// search matches on every name in the list regardless.
   @$pb.TagNumber(8)
   $core.String get commonName => $_getSZ(7);
   @$pb.TagNumber(8)
