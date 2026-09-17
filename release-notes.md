@@ -1,5 +1,27 @@
 # Cedar Aim Release Notes
 
+## 1.2.7 (build 33)
+
+Changes since 1.2.6 (build 32).
+
+### Fullscreen (web and Android)
+
+- Added a fullscreen toggle button on web, mirrored opposite the drawer
+  button, hidden automatically in standalone/PWA mode where browser bars
+  are already removed.
+- Added an iOS/iPadOS guidance dialog on web: since WebKit blocks the
+  Fullscreen API there, the app now guides users to Add to Home Screen
+  for edge-to-edge display instead.
+- On Android, if the system status/navigation bar is swiped into view
+  while the app is fullscreen, the fullscreen button now reappears as a
+  way back to fullscreen, instead of requiring a long-press on the main
+  display.
+
+### Night vision theme
+
+- Fixed scroll bar thumbs showing in the default (non-red) color instead
+  of the night vision theme's red palette.
+
 ## 1.2.6 (build 32)
 
 Changes since 1.2.4 (build 30).
