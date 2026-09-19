@@ -15,6 +15,7 @@ import 'package:protobuf/protobuf.dart' as $pb;
 
 import 'cedar.pbenum.dart';
 import 'cedar_common.pb.dart' as $2;
+import 'cedar_common.pbenum.dart' as $2;
 import 'cedar_sky.pb.dart' as $1;
 import 'cedar_sky.pbenum.dart' as $1;
 import 'google/protobuf/duration.pb.dart' as $4;
@@ -46,7 +47,7 @@ class ServerInformation extends $pb.GeneratedMessage {
     $core.double? systemLoadAverage,
     $core.int? cpuCoreCount,
     $core.double? cedarLoadAverage,
-    WifiMode? wifiMode,
+    $2.WifiMode? wifiMode,
     WifiClient? wifiClient,
   }) {
     final $result = create();
@@ -143,7 +144,7 @@ class ServerInformation extends $pb.GeneratedMessage {
     ..a<$core.double>(18, _omitFieldNames ? '' : 'systemLoadAverage', $pb.PbFieldType.OF)
     ..a<$core.int>(19, _omitFieldNames ? '' : 'cpuCoreCount', $pb.PbFieldType.O3)
     ..a<$core.double>(20, _omitFieldNames ? '' : 'cedarLoadAverage', $pb.PbFieldType.OF)
-    ..e<WifiMode>(21, _omitFieldNames ? '' : 'wifiMode', $pb.PbFieldType.OE, defaultOrMaker: WifiMode.WIFI_MODE_UNKNOWN, valueOf: WifiMode.valueOf, enumValues: WifiMode.values)
+    ..e<$2.WifiMode>(21, _omitFieldNames ? '' : 'wifiMode', $pb.PbFieldType.OE, defaultOrMaker: $2.WifiMode.WIFI_MODE_UNKNOWN, valueOf: $2.WifiMode.valueOf, enumValues: $2.WifiMode.values)
     ..aOM<WifiClient>(22, _omitFieldNames ? '' : 'wifiClient', subBuilder: WifiClient.create)
     ..hasRequiredFields = false
   ;
@@ -368,9 +369,9 @@ class ServerInformation extends $pb.GeneratedMessage {
 
   /// Cedar's current Wifi mode of operation.
   @$pb.TagNumber(21)
-  WifiMode get wifiMode => $_getN(20);
+  $2.WifiMode get wifiMode => $_getN(20);
   @$pb.TagNumber(21)
-  set wifiMode(WifiMode v) { $_setField(21, v); }
+  set wifiMode($2.WifiMode v) { $_setField(21, v); }
   @$pb.TagNumber(21)
   $core.bool hasWifiMode() => $_has(20);
   @$pb.TagNumber(21)
@@ -5295,7 +5296,7 @@ class SetPairingModeRequest extends $pb.GeneratedMessage {
 
 class SetWifiModeRequest extends $pb.GeneratedMessage {
   factory SetWifiModeRequest({
-    WifiMode? mode,
+    $2.WifiMode? mode,
     $core.String? clientSsid,
     $core.String? clientPsk,
   }) {
@@ -5316,7 +5317,7 @@ class SetWifiModeRequest extends $pb.GeneratedMessage {
   factory SetWifiModeRequest.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'SetWifiModeRequest', package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'), createEmptyInstance: create)
-    ..e<WifiMode>(1, _omitFieldNames ? '' : 'mode', $pb.PbFieldType.OE, defaultOrMaker: WifiMode.WIFI_MODE_UNKNOWN, valueOf: WifiMode.valueOf, enumValues: WifiMode.values)
+    ..e<$2.WifiMode>(1, _omitFieldNames ? '' : 'mode', $pb.PbFieldType.OE, defaultOrMaker: $2.WifiMode.WIFI_MODE_UNKNOWN, valueOf: $2.WifiMode.valueOf, enumValues: $2.WifiMode.values)
     ..aOS(2, _omitFieldNames ? '' : 'clientSsid')
     ..aOS(3, _omitFieldNames ? '' : 'clientPsk')
     ..hasRequiredFields = false
@@ -5344,9 +5345,9 @@ class SetWifiModeRequest extends $pb.GeneratedMessage {
   static SetWifiModeRequest? _defaultInstance;
 
   @$pb.TagNumber(1)
-  WifiMode get mode => $_getN(0);
+  $2.WifiMode get mode => $_getN(0);
   @$pb.TagNumber(1)
-  set mode(WifiMode v) { $_setField(1, v); }
+  set mode($2.WifiMode v) { $_setField(1, v); }
   @$pb.TagNumber(1)
   $core.bool hasMode() => $_has(0);
   @$pb.TagNumber(1)

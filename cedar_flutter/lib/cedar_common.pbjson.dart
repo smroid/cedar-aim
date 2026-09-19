@@ -13,6 +13,22 @@ import 'dart:convert' as $convert;
 import 'dart:core' as $core;
 import 'dart:typed_data' as $typed_data;
 
+@$core.Deprecated('Use wifiModeDescriptor instead')
+const WifiMode$json = {
+  '1': 'WifiMode',
+  '2': [
+    {'1': 'WIFI_MODE_UNKNOWN', '2': 0},
+    {'1': 'WIFI_MODE_ACCESS_POINT', '2': 1},
+    {'1': 'WIFI_MODE_CLIENT', '2': 2},
+    {'1': 'WIFI_MODE_INACTIVE', '2': 3},
+  ],
+};
+
+/// Descriptor for `WifiMode`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List wifiModeDescriptor = $convert.base64Decode(
+    'CghXaWZpTW9kZRIVChFXSUZJX01PREVfVU5LTk9XThAAEhoKFldJRklfTU9ERV9BQ0NFU1NfUE'
+    '9JTlQQARIUChBXSUZJX01PREVfQ0xJRU5UEAISFgoSV0lGSV9NT0RFX0lOQUNUSVZFEAM=');
+
 @$core.Deprecated('Use celestialCoordDescriptor instead')
 const CelestialCoord$json = {
   '1': 'CelestialCoord',

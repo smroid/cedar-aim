@@ -58,25 +58,6 @@ class ImuTrackerState extends $pb.ProtobufEnum {
   const ImuTrackerState._(super.v, super.n);
 }
 
-class WifiMode extends $pb.ProtobufEnum {
-  static const WifiMode WIFI_MODE_UNKNOWN = WifiMode._(0, _omitEnumNames ? '' : 'WIFI_MODE_UNKNOWN');
-  static const WifiMode WIFI_MODE_ACCESS_POINT = WifiMode._(1, _omitEnumNames ? '' : 'WIFI_MODE_ACCESS_POINT');
-  static const WifiMode WIFI_MODE_CLIENT = WifiMode._(2, _omitEnumNames ? '' : 'WIFI_MODE_CLIENT');
-  static const WifiMode WIFI_MODE_INACTIVE = WifiMode._(3, _omitEnumNames ? '' : 'WIFI_MODE_INACTIVE');
-
-  static const $core.List<WifiMode> values = <WifiMode> [
-    WIFI_MODE_UNKNOWN,
-    WIFI_MODE_ACCESS_POINT,
-    WIFI_MODE_CLIENT,
-    WIFI_MODE_INACTIVE,
-  ];
-
-  static final $core.Map<$core.int, WifiMode> _byValue = $pb.ProtobufEnum.initByValue(values);
-  static WifiMode? valueOf($core.int value) => _byValue[value];
-
-  const WifiMode._(super.v, super.n);
-}
-
 /// Progress/outcome of the most recent attempt to join an outside Wifi
 /// network (see SetWifiMode). Cedar-aim polls this via ServerInformation to
 /// drive its "connecting..." UI, since SetWifiMode returns before the join

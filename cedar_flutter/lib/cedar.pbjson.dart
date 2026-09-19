@@ -45,22 +45,6 @@ final $typed_data.Uint8List imuTrackerStateDescriptor = $convert.base64Decode(
     'Cg9JbXVUcmFja2VyU3RhdGUSGQoVVFJBQ0tFUl9TVEFURV9VTktOT1dOEAASDgoKTU9USU9OTE'
     'VTUxABEgoKBk1PVklORxACEggKBExPU1QQAw==');
 
-@$core.Deprecated('Use wifiModeDescriptor instead')
-const WifiMode$json = {
-  '1': 'WifiMode',
-  '2': [
-    {'1': 'WIFI_MODE_UNKNOWN', '2': 0},
-    {'1': 'WIFI_MODE_ACCESS_POINT', '2': 1},
-    {'1': 'WIFI_MODE_CLIENT', '2': 2},
-    {'1': 'WIFI_MODE_INACTIVE', '2': 3},
-  ],
-};
-
-/// Descriptor for `WifiMode`. Decode as a `google.protobuf.EnumDescriptorProto`.
-final $typed_data.Uint8List wifiModeDescriptor = $convert.base64Decode(
-    'CghXaWZpTW9kZRIVChFXSUZJX01PREVfVU5LTk9XThAAEhoKFldJRklfTU9ERV9BQ0NFU1NfUE'
-    '9JTlQQARIUChBXSUZJX01PREVfQ0xJRU5UEAISFgoSV0lGSV9NT0RFX0lOQUNUSVZFEAM=');
-
 @$core.Deprecated('Use wifiClientStateDescriptor instead')
 const WifiClientState$json = {
   '1': 'WifiClientState',
@@ -206,7 +190,7 @@ const ServerInformation$json = {
     {'1': 'imu', '3': 13, '4': 1, '5': 11, '6': '.cedar.ImuState', '9': 3, '10': 'imu', '17': true},
     {'1': 'imu_angular_speed', '3': 16, '4': 1, '5': 1, '9': 4, '10': 'imuAngularSpeed', '17': true},
     {'1': 'imu_tracker_state', '3': 15, '4': 1, '5': 14, '6': '.cedar.ImuTrackerState', '9': 5, '10': 'imuTrackerState', '17': true},
-    {'1': 'wifi_mode', '3': 21, '4': 1, '5': 14, '6': '.cedar.WifiMode', '9': 6, '10': 'wifiMode', '17': true},
+    {'1': 'wifi_mode', '3': 21, '4': 1, '5': 14, '6': '.cedar_common.WifiMode', '9': 6, '10': 'wifiMode', '17': true},
     {'1': 'wifi_access_point', '3': 10, '4': 1, '5': 11, '6': '.cedar.WiFiAccessPoint', '9': 7, '10': 'wifiAccessPoint', '17': true},
     {'1': 'wifi_client', '3': 22, '4': 1, '5': 11, '6': '.cedar.WifiClient', '9': 8, '10': 'wifiClient', '17': true},
     {'1': 'connection_status', '3': 17, '4': 1, '5': 11, '6': '.cedar.ConnectionStatus', '9': 9, '10': 'connectionStatus', '17': true},
@@ -244,18 +228,18 @@ final $typed_data.Uint8List serverInformationDescriptor = $convert.base64Decode(
     'ltdV9tb2RlbBgOIAEoCUgCUghpbXVNb2RlbIgBARImCgNpbXUYDSABKAsyDy5jZWRhci5JbXVT'
     'dGF0ZUgDUgNpbXWIAQESLwoRaW11X2FuZ3VsYXJfc3BlZWQYECABKAFIBFIPaW11QW5ndWxhcl'
     'NwZWVkiAEBEkcKEWltdV90cmFja2VyX3N0YXRlGA8gASgOMhYuY2VkYXIuSW11VHJhY2tlclN0'
-    'YXRlSAVSD2ltdVRyYWNrZXJTdGF0ZYgBARIxCgl3aWZpX21vZGUYFSABKA4yDy5jZWRhci5XaW'
-    'ZpTW9kZUgGUgh3aWZpTW9kZYgBARJHChF3aWZpX2FjY2Vzc19wb2ludBgKIAEoCzIWLmNlZGFy'
-    'LldpRmlBY2Nlc3NQb2ludEgHUg93aWZpQWNjZXNzUG9pbnSIAQESNwoLd2lmaV9jbGllbnQYFi'
-    'ABKAsyES5jZWRhci5XaWZpQ2xpZW50SAhSCndpZmlDbGllbnSIAQESSQoRY29ubmVjdGlvbl9z'
-    'dGF0dXMYESABKAsyFy5jZWRhci5Db25uZWN0aW9uU3RhdHVzSAlSEGNvbm5lY3Rpb25TdGF0dX'
-    'OIAQESKAoQZGVtb19pbWFnZV9uYW1lcxgLIAMoCVIOZGVtb0ltYWdlTmFtZXMSMwoTc3lzdGVt'
-    'X2xvYWRfYXZlcmFnZRgSIAEoAkgKUhFzeXN0ZW1Mb2FkQXZlcmFnZYgBARIxChJjZWRhcl9sb2'
-    'FkX2F2ZXJhZ2UYFCABKAJIC1IQY2VkYXJMb2FkQXZlcmFnZYgBAUIRCg9fY3B1X2NvcmVfY291'
-    'bnRCCQoHX2NhbWVyYUIMCgpfaW11X21vZGVsQgYKBF9pbXVCFAoSX2ltdV9hbmd1bGFyX3NwZW'
-    'VkQhQKEl9pbXVfdHJhY2tlcl9zdGF0ZUIMCgpfd2lmaV9tb2RlQhQKEl93aWZpX2FjY2Vzc19w'
-    'b2ludEIOCgxfd2lmaV9jbGllbnRCFAoSX2Nvbm5lY3Rpb25fc3RhdHVzQhYKFF9zeXN0ZW1fbG'
-    '9hZF9hdmVyYWdlQhUKE19jZWRhcl9sb2FkX2F2ZXJhZ2U=');
+    'YXRlSAVSD2ltdVRyYWNrZXJTdGF0ZYgBARI4Cgl3aWZpX21vZGUYFSABKA4yFi5jZWRhcl9jb2'
+    '1tb24uV2lmaU1vZGVIBlIId2lmaU1vZGWIAQESRwoRd2lmaV9hY2Nlc3NfcG9pbnQYCiABKAsy'
+    'Fi5jZWRhci5XaUZpQWNjZXNzUG9pbnRIB1IPd2lmaUFjY2Vzc1BvaW50iAEBEjcKC3dpZmlfY2'
+    'xpZW50GBYgASgLMhEuY2VkYXIuV2lmaUNsaWVudEgIUgp3aWZpQ2xpZW50iAEBEkkKEWNvbm5l'
+    'Y3Rpb25fc3RhdHVzGBEgASgLMhcuY2VkYXIuQ29ubmVjdGlvblN0YXR1c0gJUhBjb25uZWN0aW'
+    '9uU3RhdHVziAEBEigKEGRlbW9faW1hZ2VfbmFtZXMYCyADKAlSDmRlbW9JbWFnZU5hbWVzEjMK'
+    'E3N5c3RlbV9sb2FkX2F2ZXJhZ2UYEiABKAJIClIRc3lzdGVtTG9hZEF2ZXJhZ2WIAQESMQoSY2'
+    'VkYXJfbG9hZF9hdmVyYWdlGBQgASgCSAtSEGNlZGFyTG9hZEF2ZXJhZ2WIAQFCEQoPX2NwdV9j'
+    'b3JlX2NvdW50QgkKB19jYW1lcmFCDAoKX2ltdV9tb2RlbEIGCgRfaW11QhQKEl9pbXVfYW5ndW'
+    'xhcl9zcGVlZEIUChJfaW11X3RyYWNrZXJfc3RhdGVCDAoKX3dpZmlfbW9kZUIUChJfd2lmaV9h'
+    'Y2Nlc3NfcG9pbnRCDgoMX3dpZmlfY2xpZW50QhQKEl9jb25uZWN0aW9uX3N0YXR1c0IWChRfc3'
+    'lzdGVtX2xvYWRfYXZlcmFnZUIVChNfY2VkYXJfbG9hZF9hdmVyYWdl');
 
 @$core.Deprecated('Use cameraModelDescriptor instead')
 const CameraModel$json = {
@@ -1330,7 +1314,7 @@ final $typed_data.Uint8List setPairingModeRequestDescriptor = $convert.base64Dec
 const SetWifiModeRequest$json = {
   '1': 'SetWifiModeRequest',
   '2': [
-    {'1': 'mode', '3': 1, '4': 1, '5': 14, '6': '.cedar.WifiMode', '10': 'mode'},
+    {'1': 'mode', '3': 1, '4': 1, '5': 14, '6': '.cedar_common.WifiMode', '10': 'mode'},
     {'1': 'client_ssid', '3': 2, '4': 1, '5': 9, '9': 0, '10': 'clientSsid', '17': true},
     {'1': 'client_psk', '3': 3, '4': 1, '5': 9, '9': 1, '10': 'clientPsk', '17': true},
   ],
@@ -1342,9 +1326,10 @@ const SetWifiModeRequest$json = {
 
 /// Descriptor for `SetWifiModeRequest`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List setWifiModeRequestDescriptor = $convert.base64Decode(
-    'ChJTZXRXaWZpTW9kZVJlcXVlc3QSIwoEbW9kZRgBIAEoDjIPLmNlZGFyLldpZmlNb2RlUgRtb2'
-    'RlEiQKC2NsaWVudF9zc2lkGAIgASgJSABSCmNsaWVudFNzaWSIAQESIgoKY2xpZW50X3BzaxgD'
-    'IAEoCUgBUgljbGllbnRQc2uIAQFCDgoMX2NsaWVudF9zc2lkQg0KC19jbGllbnRfcHNr');
+    'ChJTZXRXaWZpTW9kZVJlcXVlc3QSKgoEbW9kZRgBIAEoDjIWLmNlZGFyX2NvbW1vbi5XaWZpTW'
+    '9kZVIEbW9kZRIkCgtjbGllbnRfc3NpZBgCIAEoCUgAUgpjbGllbnRTc2lkiAEBEiIKCmNsaWVu'
+    'dF9wc2sYAyABKAlIAVIJY2xpZW50UHNriAEBQg4KDF9jbGllbnRfc3NpZEINCgtfY2xpZW50X3'
+    'Bzaw==');
 
 @$core.Deprecated('Use imageRequestDescriptor instead')
 const ImageRequest$json = {

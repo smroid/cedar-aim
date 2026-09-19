@@ -15,6 +15,8 @@ import 'package:protobuf/protobuf.dart' as $pb;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
+export 'cedar_common.pbenum.dart';
+
 class CelestialCoord extends $pb.GeneratedMessage {
   factory CelestialCoord({
     $core.double? ra,
