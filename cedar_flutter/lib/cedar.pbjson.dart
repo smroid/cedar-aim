@@ -52,8 +52,9 @@ const WifiClientState$json = {
     {'1': 'WIFI_CLIENT_STATE_UNKNOWN', '2': 0},
     {'1': 'WIFI_CLIENT_STATE_CONNECTING', '2': 1},
     {'1': 'WIFI_CLIENT_STATE_CONNECTED', '2': 2},
-    {'1': 'WIFI_CLIENT_STATE_AUTH_FAILED', '2': 3},
-    {'1': 'WIFI_CLIENT_STATE_NO_IP', '2': 4},
+    {'1': 'WIFI_CLIENT_STATE_NETWORK_NOT_FOUND', '2': 3},
+    {'1': 'WIFI_CLIENT_STATE_AUTH_FAILED', '2': 4},
+    {'1': 'WIFI_CLIENT_STATE_NO_IP', '2': 5},
   ],
 };
 
@@ -61,8 +62,8 @@ const WifiClientState$json = {
 final $typed_data.Uint8List wifiClientStateDescriptor = $convert.base64Decode(
     'Cg9XaWZpQ2xpZW50U3RhdGUSHQoZV0lGSV9DTElFTlRfU1RBVEVfVU5LTk9XThAAEiAKHFdJRk'
     'lfQ0xJRU5UX1NUQVRFX0NPTk5FQ1RJTkcQARIfChtXSUZJX0NMSUVOVF9TVEFURV9DT05ORUNU'
-    'RUQQAhIhCh1XSUZJX0NMSUVOVF9TVEFURV9BVVRIX0ZBSUxFRBADEhsKF1dJRklfQ0xJRU5UX1'
-    'NUQVRFX05PX0lQEAQ=');
+    'RUQQAhInCiNXSUZJX0NMSUVOVF9TVEFURV9ORVRXT1JLX05PVF9GT1VORBADEiEKHVdJRklfQ0'
+    'xJRU5UX1NUQVRFX0FVVEhfRkFJTEVEEAQSGwoXV0lGSV9DTElFTlRfU1RBVEVfTk9fSVAQBQ==');
 
 @$core.Deprecated('Use operatingModeDescriptor instead')
 const OperatingMode$json = {
@@ -1317,10 +1318,12 @@ const SetWifiModeRequest$json = {
     {'1': 'mode', '3': 1, '4': 1, '5': 14, '6': '.cedar_common.WifiMode', '10': 'mode'},
     {'1': 'client_ssid', '3': 2, '4': 1, '5': 9, '9': 0, '10': 'clientSsid', '17': true},
     {'1': 'client_psk', '3': 3, '4': 1, '5': 9, '9': 1, '10': 'clientPsk', '17': true},
+    {'1': 'client_join_timeout', '3': 4, '4': 1, '5': 11, '6': '.google.protobuf.Duration', '9': 2, '10': 'clientJoinTimeout', '17': true},
   ],
   '8': [
     {'1': '_client_ssid'},
     {'1': '_client_psk'},
+    {'1': '_client_join_timeout'},
   ],
 };
 
@@ -1328,8 +1331,9 @@ const SetWifiModeRequest$json = {
 final $typed_data.Uint8List setWifiModeRequestDescriptor = $convert.base64Decode(
     'ChJTZXRXaWZpTW9kZVJlcXVlc3QSKgoEbW9kZRgBIAEoDjIWLmNlZGFyX2NvbW1vbi5XaWZpTW'
     '9kZVIEbW9kZRIkCgtjbGllbnRfc3NpZBgCIAEoCUgAUgpjbGllbnRTc2lkiAEBEiIKCmNsaWVu'
-    'dF9wc2sYAyABKAlIAVIJY2xpZW50UHNriAEBQg4KDF9jbGllbnRfc3NpZEINCgtfY2xpZW50X3'
-    'Bzaw==');
+    'dF9wc2sYAyABKAlIAVIJY2xpZW50UHNriAEBEk4KE2NsaWVudF9qb2luX3RpbWVvdXQYBCABKA'
+    'syGS5nb29nbGUucHJvdG9idWYuRHVyYXRpb25IAlIRY2xpZW50Sm9pblRpbWVvdXSIAQFCDgoM'
+    'X2NsaWVudF9zc2lkQg0KC19jbGllbnRfcHNrQhYKFF9jbGllbnRfam9pbl90aW1lb3V0');
 
 @$core.Deprecated('Use imageRequestDescriptor instead')
 const ImageRequest$json = {

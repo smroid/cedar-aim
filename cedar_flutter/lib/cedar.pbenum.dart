@@ -66,15 +66,18 @@ class WifiClientState extends $pb.ProtobufEnum {
   static const WifiClientState WIFI_CLIENT_STATE_UNKNOWN = WifiClientState._(0, _omitEnumNames ? '' : 'WIFI_CLIENT_STATE_UNKNOWN');
   static const WifiClientState WIFI_CLIENT_STATE_CONNECTING = WifiClientState._(1, _omitEnumNames ? '' : 'WIFI_CLIENT_STATE_CONNECTING');
   static const WifiClientState WIFI_CLIENT_STATE_CONNECTED = WifiClientState._(2, _omitEnumNames ? '' : 'WIFI_CLIENT_STATE_CONNECTED');
+  /// The network was not found on the air.
+  static const WifiClientState WIFI_CLIENT_STATE_NETWORK_NOT_FOUND = WifiClientState._(3, _omitEnumNames ? '' : 'WIFI_CLIENT_STATE_NETWORK_NOT_FOUND');
   /// Association failed; typically a wrong passphrase.
-  static const WifiClientState WIFI_CLIENT_STATE_AUTH_FAILED = WifiClientState._(3, _omitEnumNames ? '' : 'WIFI_CLIENT_STATE_AUTH_FAILED');
+  static const WifiClientState WIFI_CLIENT_STATE_AUTH_FAILED = WifiClientState._(4, _omitEnumNames ? '' : 'WIFI_CLIENT_STATE_AUTH_FAILED');
   /// Associated but did not obtain an IP address before timing out.
-  static const WifiClientState WIFI_CLIENT_STATE_NO_IP = WifiClientState._(4, _omitEnumNames ? '' : 'WIFI_CLIENT_STATE_NO_IP');
+  static const WifiClientState WIFI_CLIENT_STATE_NO_IP = WifiClientState._(5, _omitEnumNames ? '' : 'WIFI_CLIENT_STATE_NO_IP');
 
   static const $core.List<WifiClientState> values = <WifiClientState> [
     WIFI_CLIENT_STATE_UNKNOWN,
     WIFI_CLIENT_STATE_CONNECTING,
     WIFI_CLIENT_STATE_CONNECTED,
+    WIFI_CLIENT_STATE_NETWORK_NOT_FOUND,
     WIFI_CLIENT_STATE_AUTH_FAILED,
     WIFI_CLIENT_STATE_NO_IP,
   ];

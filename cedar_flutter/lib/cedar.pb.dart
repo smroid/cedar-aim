@@ -5299,6 +5299,7 @@ class SetWifiModeRequest extends $pb.GeneratedMessage {
     $2.WifiMode? mode,
     $core.String? clientSsid,
     $core.String? clientPsk,
+    $4.Duration? clientJoinTimeout,
   }) {
     final $result = create();
     if (mode != null) {
@@ -5310,6 +5311,9 @@ class SetWifiModeRequest extends $pb.GeneratedMessage {
     if (clientPsk != null) {
       $result.clientPsk = clientPsk;
     }
+    if (clientJoinTimeout != null) {
+      $result.clientJoinTimeout = clientJoinTimeout;
+    }
     return $result;
   }
   SetWifiModeRequest._() : super();
@@ -5320,6 +5324,7 @@ class SetWifiModeRequest extends $pb.GeneratedMessage {
     ..e<$2.WifiMode>(1, _omitFieldNames ? '' : 'mode', $pb.PbFieldType.OE, defaultOrMaker: $2.WifiMode.WIFI_MODE_UNKNOWN, valueOf: $2.WifiMode.valueOf, enumValues: $2.WifiMode.values)
     ..aOS(2, _omitFieldNames ? '' : 'clientSsid')
     ..aOS(3, _omitFieldNames ? '' : 'clientPsk')
+    ..aOM<$4.Duration>(4, _omitFieldNames ? '' : 'clientJoinTimeout', subBuilder: $4.Duration.create)
     ..hasRequiredFields = false
   ;
 
@@ -5364,6 +5369,8 @@ class SetWifiModeRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   void clearClientSsid() => $_clearField(2);
 
+  /// Passphrase for client_ssid. Omit (or leave empty) to join an open
+  /// network. Ignored for modes other than WIFI_MODE_CLIENT.
   @$pb.TagNumber(3)
   $core.String get clientPsk => $_getSZ(2);
   @$pb.TagNumber(3)
@@ -5372,6 +5379,19 @@ class SetWifiModeRequest extends $pb.GeneratedMessage {
   $core.bool hasClientPsk() => $_has(2);
   @$pb.TagNumber(3)
   void clearClientPsk() => $_clearField(3);
+
+  /// How long to keep trying to join client_ssid before giving up. Omit to
+  /// make a single attempt. Ignored for modes other than WIFI_MODE_CLIENT.
+  @$pb.TagNumber(4)
+  $4.Duration get clientJoinTimeout => $_getN(3);
+  @$pb.TagNumber(4)
+  set clientJoinTimeout($4.Duration v) { $_setField(4, v); }
+  @$pb.TagNumber(4)
+  $core.bool hasClientJoinTimeout() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearClientJoinTimeout() => $_clearField(4);
+  @$pb.TagNumber(4)
+  $4.Duration ensureClientJoinTimeout() => $_ensure(3);
 }
 
 class ImageRequest extends $pb.GeneratedMessage {
