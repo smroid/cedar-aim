@@ -49,6 +49,7 @@ class ServerInformation extends $pb.GeneratedMessage {
     $core.double? cedarLoadAverage,
     $2.WifiMode? wifiMode,
     WifiClient? wifiClient,
+    $core.String? deviceName,
   }) {
     final $result = create();
     if (productName != null) {
@@ -117,6 +118,9 @@ class ServerInformation extends $pb.GeneratedMessage {
     if (wifiClient != null) {
       $result.wifiClient = wifiClient;
     }
+    if (deviceName != null) {
+      $result.deviceName = deviceName;
+    }
     return $result;
   }
   ServerInformation._() : super();
@@ -146,6 +150,7 @@ class ServerInformation extends $pb.GeneratedMessage {
     ..a<$core.double>(20, _omitFieldNames ? '' : 'cedarLoadAverage', $pb.PbFieldType.OF)
     ..e<$2.WifiMode>(21, _omitFieldNames ? '' : 'wifiMode', $pb.PbFieldType.OE, defaultOrMaker: $2.WifiMode.WIFI_MODE_UNKNOWN, valueOf: $2.WifiMode.valueOf, enumValues: $2.WifiMode.values)
     ..aOM<WifiClient>(22, _omitFieldNames ? '' : 'wifiClient', subBuilder: WifiClient.create)
+    ..aOS(23, _omitFieldNames ? '' : 'deviceName')
     ..hasRequiredFields = false
   ;
 
@@ -388,6 +393,18 @@ class ServerInformation extends $pb.GeneratedMessage {
   void clearWifiClient() => $_clearField(22);
   @$pb.TagNumber(22)
   WifiClient ensureWifiClient() => $_ensure(21);
+
+  /// The name this device is known by: its Wifi access point's SSID, its
+  /// Bluetooth name, and its mDNS name (to which ".local" is appended to
+  /// reach it by name).
+  @$pb.TagNumber(23)
+  $core.String get deviceName => $_getSZ(22);
+  @$pb.TagNumber(23)
+  set deviceName($core.String v) { $_setString(22, v); }
+  @$pb.TagNumber(23)
+  $core.bool hasDeviceName() => $_has(22);
+  @$pb.TagNumber(23)
+  void clearDeviceName() => $_clearField(23);
 }
 
 class CameraModel extends $pb.GeneratedMessage {
@@ -5369,8 +5386,10 @@ class SetWifiModeRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   void clearClientSsid() => $_clearField(2);
 
-  /// Passphrase for client_ssid. Omit (or leave empty) to join an open
-  /// network. Ignored for modes other than WIFI_MODE_CLIENT.
+  /// Passphrase for client_ssid. Omit (or leave empty) to reconnect to a
+  /// network already set up, or to join an open network. Supply it to set up
+  /// a new network, or to update a changed passphrase. Ignored for modes
+  /// other than WIFI_MODE_CLIENT.
   @$pb.TagNumber(3)
   $core.String get clientPsk => $_getSZ(2);
   @$pb.TagNumber(3)
