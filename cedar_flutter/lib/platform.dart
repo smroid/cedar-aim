@@ -4,6 +4,7 @@
 import 'package:cedar_flutter/cedar.pbgrpc.dart';
 import 'package:flutter/foundation.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:open_settings_plus/open_settings_plus.dart';
 
 // Functions that have platform-specific implementations.
 
@@ -11,11 +12,45 @@ import 'platform_none.dart'
     if (dart.library.io) 'platform_mobile.dart'
     if (dart.library.html) 'platform_web.dart';
 
-class CedarDevice {
-  final String address; // IP or MAC address
-  final String? name; // null for WiFi
+enum CedarTransport { wifi, bluetooth }
 
-  CedarDevice({required this.address, this.name});
+/// A device the app can connect to, over WiFi or Bluetooth.
+///
+/// [name] is the device's single universal name: it is simultaneously the
+/// WiFi access-point SSID, the Bluetooth advertised name, and the mDNS name
+/// (reached at `<name>.local`). Over WiFi the host is derived from the name
+/// (`<name>.local`) rather than stored, so [name] may be null before we have
+/// ever learned it (first-ever contact); the resolution ladder then falls
+/// back to the AP address / subnet sweep. Over Bluetooth [btMac] holds the
+/// MAC needed to open the link, since it cannot be derived from the name.
+class CedarDevice {
+  final CedarTransport transport;
+  final String? name;
+  final String? btMac; // Set iff transport == bluetooth.
+
+  CedarDevice.wifi({this.name})
+      : transport = CedarTransport.wifi,
+        btMac = null;
+
+  CedarDevice.bluetooth({required this.name, required String this.btMac})
+      : transport = CedarTransport.bluetooth;
+
+  bool get isWifi => transport == CedarTransport.wifi;
+  bool get isBluetooth => transport == CedarTransport.bluetooth;
+
+  /// Stable identity key for equality/tracking (was the old `address`).
+  /// For BT that is the MAC; for WiFi the name (or empty when unknown).
+  String get key => btMac ?? name ?? '';
+
+  @override
+  bool operator ==(Object other) =>
+      other is CedarDevice &&
+      other.transport == transport &&
+      other.name == name &&
+      other.btMac == btMac;
+
+  @override
+  int get hashCode => Object.hash(transport, name, btMac);
 }
 
 /// Thrown by getClient() when a Bluetooth reconnect is in progress (either an
@@ -253,13 +288,91 @@ Future<void> setActiveDevice(CedarDevice device) async {
   await setActiveDeviceImpl(device);
 }
 
-/// Resolves 'cedar.local', caching the result. Falls back to 192.168.4.1
-/// if mDNS fails. Subsequent calls return the cached result immediately.
-Future<String> resolveCedarHost() async {
+/// Resolves the address to reach the device over WiFi, caching the result.
+/// Returns null if nothing is reachable; callers must handle that rather than
+/// assuming a usable address.
+Future<String?> resolveCedarHost() async {
   return resolveCedarHostImpl();
 }
 
-/// The CedarDevice representing the WiFi transport (name is null, marking it
-/// as WiFi rather than Bluetooth). Used to let the user manually switch back
-/// to WiFi, e.g. from the connection recovery dialog.
-CedarDevice wifiDevice() => CedarDevice(address: wifiDeviceAddressImpl());
+/// Injects a resolver and cache-reset callback to use in place of DIY's
+/// fixed-AP default. Pass null for both to restore the default.
+void setCedarHostResolver(
+        Future<String?> Function()? resolver, void Function()? reset) =>
+    setCedarHostResolverImpl(resolver, reset);
+
+/// The CedarDevice representing the WiFi transport. Used to switch to WiFi,
+/// e.g. from the connection recovery dialog. Carries the last-known device
+/// name if we have one (so it resolves `<name>.local`); otherwise the
+/// resolution ladder handles first-contact via the AP address / subnet sweep.
+CedarDevice wifiDevice() => CedarDevice.wifi(name: wifiDeviceNameImpl());
+
+/// Persists the device's WiFi mode (and client SSID for client mode) so the
+/// connection-recovery dialog's "use wifi" can resume the right mode. The
+/// passphrase is never stored — the server remembers it.
+Future<void> persistServerWifiMode(
+        {required bool isClient, String? clientSsid}) =>
+    persistServerWifiModeImpl(isClient: isClient, clientSsid: clientSsid);
+
+/// Reads the persisted device WiFi mode for recovery resume. Defaults to
+/// access-point (isClient == false) when nothing has been stored.
+Future<({bool isClient, String? clientSsid})> readServerWifiMode() =>
+    readServerWifiModeImpl();
+
+/// The short model name of the phone/tablet running the app (e.g. "Pixel 8",
+/// "iPhone", "iPad"), for disambiguating "this device" from the Cedar device in
+/// UI text. Returns "" if unavailable; callers should have a generic fallback.
+Future<String> deviceModel() => deviceModelImpl();
+
+/// Discards the cached WiFi host so the next connect re-runs the resolution
+/// ladder. Call when the user explicitly asks to reconnect (e.g. "Retry")
+/// after the device may have moved to a new address (e.g. a client-mode join,
+/// where it leaves the AP's 192.168.4.1 for a DHCP address).
+void resetWifiResolution() => resetWifiResolutionImpl();
+
+/// Opens the phone's WiFi settings screen (so the user can join the network the
+/// device is switching to). Best-effort; failures are logged, not thrown.
+///
+/// On Android this reliably opens the WiFi settings pane directly. On iOS,
+/// Apple provides no public API to deep-link to the WiFi pane specifically;
+/// the private App-Prefs:WIFI URL scheme this used to rely on is rejected by
+/// modern iOS versions and falls back to this app's own settings page
+/// (app-settings:), not general Settings. We use settings() (App-prefs:)
+/// instead, which reliably opens the top-level Settings app; see
+/// [wifiSettingsLabel] for UI copy that matches this.
+Future<void> openWifiSettings() async {
+  try {
+    await switch (OpenSettingsPlus.shared) {
+      OpenSettingsPlusAndroid settings => settings.wifi(),
+      OpenSettingsPlusIOS settings => settings.settings(),
+      _ => throw Exception('Platform not supported'),
+    };
+  } catch (e) {
+    debugPrint('openWifiSettings error: $e');
+  }
+}
+
+/// Label for the button/link that calls [openWifiSettings], reflecting what
+/// the platform actually navigates to: Android goes straight to the WiFi
+/// pane, iOS can only reach the general Settings app.
+String get wifiSettingsLabel => isIOS() ? 'Settings' : 'WiFi Settings';
+
+/// Whether the phone offers a direct link to personal-hotspot / tethering
+/// settings. True on iOS (dedicated screen); false on Android, which has no
+/// reliable deep link — callers should not offer hotspot navigation there
+/// (dumping the user in WiFi settings instead would be misleading).
+bool get canOpenHotspotSettings => OpenSettingsPlus.shared is OpenSettingsPlusIOS;
+
+/// Opens the phone's personal-hotspot settings so the user can turn on the
+/// hotspot the device is about to join. Only meaningful when
+/// [canOpenHotspotSettings] is true. Best-effort; failures are logged.
+Future<void> openHotspotSettings() async {
+  try {
+    await switch (OpenSettingsPlus.shared) {
+      OpenSettingsPlusIOS settings => settings.personalHotspot(),
+      _ => throw Exception('Hotspot settings not available on this platform'),
+    };
+  } catch (e) {
+    debugPrint('openHotspotSettings error: $e');
+  }
+}

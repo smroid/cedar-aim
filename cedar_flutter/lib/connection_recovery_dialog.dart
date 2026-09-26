@@ -40,19 +40,6 @@ class ConnectionRecoveryConfig {
   });
 }
 
-/// Opens the device's WiFi settings.
-Future<void> _openWiFiSettings() async {
-  try {
-    await switch (OpenSettingsPlus.shared) {
-      OpenSettingsPlusAndroid settings => settings.wifi(),
-      OpenSettingsPlusIOS settings => settings.wifi(),
-      _ => throw Exception('Platform not supported'),
-    };
-  } catch (e) {
-    debugPrint('Error opening WiFi settings: $e');
-  }
-}
-
 /// Opens the device's Bluetooth settings.
 Future<void> _openBluetoothSettings() async {
   try {
@@ -154,7 +141,7 @@ Widget _buildDeviceSection(
       color: primaryColor,
     ),
     items: currentDevices.map((device) {
-      final label = device.name ?? device.address;
+      final label = device.name ?? device.key;
       return DropdownMenuItem<CedarDevice>(
         value: device,
         child: Text(
@@ -322,9 +309,9 @@ Future<void> showConnectionRecoveryDialog({
               if (hasSettingsAccess)
                 TextButton.icon(
                   icon: const Icon(Icons.wifi_find),
-                  label: const Text('WiFi Settings'),
+                  label: Text(wifiSettingsLabel),
                   onPressed: () async {
-                    await _openWiFiSettings();
+                    await openWifiSettings();
                   },
                 ),
 
@@ -347,14 +334,17 @@ Future<void> showConnectionRecoveryDialog({
                     showDialog(
                       context: dialogContext,
                       builder: (context) => AlertDialog(
-                        title: const Text('Connection Error'),
+                        title: Text('Connection Error',
+                            style: TextStyle(color: primaryColor)),
                         content: SingleChildScrollView(
-                          child: SelectableText(config.errorMessage!),
+                          child: SelectableText(config.errorMessage!,
+                              style: TextStyle(color: primaryColor)),
                         ),
                         actions: [
                           TextButton(
                             onPressed: () => Navigator.pop(context),
-                            child: const Text('OK'),
+                            child: Text('OK',
+                                style: TextStyle(color: primaryColor)),
                           ),
                         ],
                       ),
@@ -378,10 +368,16 @@ Future<void> showConnectionRecoveryDialog({
               // The connection retry logic will attempt reconnection when the
               // dialog is closed.
 
-              // Dismiss button — the connection retry logic attempts
-              // reconnection when the dialog closes, so this reads as "Retry".
+              // Reset WiFi resolution first: an explicit Retry is the user's
+              // signal that something may have changed (e.g. they switched the
+              // device to client mode and their phone to that network), so the
+              // next connect should re-resolve rather than reuse the stale
+              // cached address.
               TextButton(
-                onPressed: () => Navigator.pop(dialogContext),
+                onPressed: () {
+                  resetWifiResolution();
+                  Navigator.pop(dialogContext);
+                },
                 child: const Text('Retry'),
               ),
             ],

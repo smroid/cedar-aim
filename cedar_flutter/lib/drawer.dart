@@ -54,6 +54,11 @@ class CedarDrawerController {
   final Future<void> Function() crashServer;
   final Future<void> Function() restartCedarServer;
   final Future<void> Function(cedar_rpc.ActionRequest) initiateAction;
+
+  // Resumes the device's last WiFi mode (AP or client). Used to bring WiFi up
+  // when switching transport from Bluetooth back to WiFi.
+  final Future<String?> Function() resumeLastWifiMode;
+
   final Future<void> Function(cedar_rpc.Preferences) updatePreferences;
   final void Function(bool) setAdvanced;
   final void Function(bool) setExpert;
@@ -98,6 +103,7 @@ class CedarDrawerController {
     required this.crashServer,
     required this.restartCedarServer,
     required this.initiateAction,
+    required this.resumeLastWifiMode,
     required this.updatePreferences,
     required this.setAdvanced,
     required this.setExpert,
@@ -691,6 +697,7 @@ class CedarDrawer extends StatelessWidget {
                           controller.context,
                           controller.productName,
                           controller.initiateAction,
+                          controller.resumeLastWifiMode,
                           wifiSsid,
                           wifiEnabled);
                     }),
@@ -1088,6 +1095,7 @@ Future<void> _connectionTransportDialog(
     BuildContext context,
     String productName,
     Future<void> Function(cedar_rpc.ActionRequest) initiateAction,
+    Future<String?> Function() resumeLastWifiMode,
     String? wifiSsid,
     bool wifiEnabled) async {
   if (!context.mounted) {
@@ -1132,11 +1140,11 @@ Future<void> _connectionTransportDialog(
       }
     }
 
-    // Ask the server to bring its WiFi access point up before switching —
-    // sent over the current transport (Bluetooth), so it must happen before
-    // setActiveDevice() switches us away from it. Best-effort.
+    // Ask the server to bring WiFi up (resuming its last mode) before
+    // switching — sent over the current transport (Bluetooth), so it must
+    // happen before setActiveDevice() switches us away from it. Best-effort.
     try {
-      await initiateAction(cedar_rpc.ActionRequest(wifiEnabled: true));
+      await resumeLastWifiMode();
     } catch (e) {
       debugPrint('Error requesting WiFi enable: $e');
     }
@@ -1150,7 +1158,7 @@ Future<void> _connectionTransportDialog(
       return;
     }
     await setActiveDevice(
-        CedarDevice(address: status.address, name: status.name));
+        CedarDevice.bluetooth(name: status.name, btMac: status.address));
     dialogOverlayEntry?.remove();
   }
 
@@ -1162,7 +1170,7 @@ Future<void> _connectionTransportDialog(
     _controlBluetoothPairing(outerContext, productName).then((reopen) {
       if (reopen && outerContext.mounted) {
         _connectionTransportDialog(outerContext, productName, initiateAction,
-            wifiSsid, wifiEnabled);
+            resumeLastWifiMode, wifiSsid, wifiEnabled);
       }
     });
   }
