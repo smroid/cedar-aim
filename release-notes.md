@@ -1,5 +1,21 @@
 # Cedar Aim Release Notes
 
+## 1.3.0 (build 34)
+
+Changes since 1.2.7 (build 33).
+
+### WiFi connection handling
+
+- Reworked how the app finds and reconnects to the device over WiFi: device
+  identity and transport (WiFi vs. Bluetooth) are now tracked more reliably,
+  with automatic one-time migration of existing saved settings.
+- Added a `setCedarHostResolver` mechanism so products built on Cedar Aim
+  (such as Hopper) can supply their own device-discovery logic. DIY Cedar
+  itself is unaffected: it continues to use the device's fixed access-point
+  address.
+- Fixed several cases where the app could stall while reconnecting instead
+  of promptly reporting a connection failure.
+
 ## 1.2.7 (build 33)
 
 Changes since 1.2.6 (build 32).
