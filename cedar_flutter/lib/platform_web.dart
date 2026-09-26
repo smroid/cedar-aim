@@ -150,8 +150,8 @@ Future<String?> resolveCedarHostImpl() async {
   return 'cedar.local'; // Web doesn't need mDNS fallback.
 }
 
-void setCedarHostResolverImpl(
-    Future<String?> Function()? resolver, void Function()? reset) {
+void setCedarHostResolverImpl(Future<String?> Function()? resolver,
+    void Function()? reset, String? Function()? diagnostic) {
   // No-op: web has nothing to inject a resolver into.
 }
 

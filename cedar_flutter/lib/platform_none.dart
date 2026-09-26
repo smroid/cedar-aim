@@ -101,8 +101,8 @@ Future<String?> resolveCedarHostImpl() async {
   throw UnimplementedError("No impl in platform_none");
 }
 
-void setCedarHostResolverImpl(
-    Future<String?> Function()? resolver, void Function()? reset) {
+void setCedarHostResolverImpl(Future<String?> Function()? resolver,
+    void Function()? reset, String? Function()? diagnostic) {
   throw UnimplementedError("No impl in platform_none");
 }
 

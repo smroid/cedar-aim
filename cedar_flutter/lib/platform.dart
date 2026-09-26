@@ -295,11 +295,13 @@ Future<String?> resolveCedarHost() async {
   return resolveCedarHostImpl();
 }
 
-/// Injects a resolver and cache-reset callback to use in place of DIY's
-/// fixed-AP default. Pass null for both to restore the default.
-void setCedarHostResolver(
-        Future<String?> Function()? resolver, void Function()? reset) =>
-    setCedarHostResolverImpl(resolver, reset);
+/// Injects a resolver to use in place of DIY's fixed-AP default, along with
+/// its supporting callbacks: [reset] clears the resolver's own cache (called
+/// when the user explicitly asks to reconnect), and [diagnostic] optionally
+/// supplies extra context for why the most recent resolution failed.
+void setCedarHostResolver(Future<String?> Function()? resolver,
+        void Function()? reset, String? Function()? diagnostic) =>
+    setCedarHostResolverImpl(resolver, reset, diagnostic);
 
 /// The CedarDevice representing the WiFi transport. Used to switch to WiFi,
 /// e.g. from the connection recovery dialog. Carries the last-known device

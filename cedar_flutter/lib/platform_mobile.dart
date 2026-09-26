@@ -163,10 +163,15 @@ Future<String?> Function()? _cedarHostResolver;
 // resolver to re-resolve, not just this file's cache.
 void Function()? _cedarHostResolutionReset;
 
-void setCedarHostResolverImpl(
-    Future<String?> Function()? resolver, void Function()? reset) {
+// Paired with _cedarHostResolver: supplies extra context for why the last
+// resolution failed, appended to getClient()'s connection-failure message.
+String? Function()? _cedarHostResolutionDiagnostic;
+
+void setCedarHostResolverImpl(Future<String?> Function()? resolver,
+    void Function()? reset, String? Function()? diagnostic) {
   _cedarHostResolver = resolver;
   _cedarHostResolutionReset = reset;
+  _cedarHostResolutionDiagnostic = diagnostic;
 }
 
 /// Resolves the address to reach the device over WiFi, caching the result.
@@ -558,7 +563,9 @@ Future<CedarClient> getClientImpl() async {
     try {
       final resolved = await resolveCedarHostImpl();
       if (resolved == null) {
-        throw Exception('No reachable Cedar address on this network');
+        final hint = _cedarHostResolutionDiagnostic?.call();
+        throw Exception('No reachable Cedar address on this network'
+            '${hint != null ? '. $hint' : ''}');
       }
       addressToTry = resolved;
 
