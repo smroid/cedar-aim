@@ -1189,6 +1189,8 @@ class MyHomePageState extends State<MyHomePage> {
         if (_inhibitRefresh) {
           _prevFrameId = response.frameId;
           _prevSolutionId = response.solutionId != 0 ? response.solutionId : null;
+          // Keep information live for the Connections dialog.
+          serverInformation = response.serverInformation;
         } else {
           _paintPending = true;
           setState(() {
@@ -1247,6 +1249,8 @@ class MyHomePageState extends State<MyHomePage> {
     if (_inhibitRefresh) {
       _prevFrameId = response.frameId;
       _prevSolutionId = response.solutionId != 0 ? response.solutionId : null;
+      // Keep information live for the Connections dialog.
+      serverInformation = response.serverInformation;
     } else {
       _paintPending = true;
       setState(() {

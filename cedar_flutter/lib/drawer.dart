@@ -752,7 +752,7 @@ class CedarDrawer extends StatelessWidget {
                     connectionsDialog(
                         controller.context,
                         controller.productName,
-                        controller.homePageState.serverInformation!.connectionStatus);
+                        controller.homePageState);
                   }),
             ),
           ),

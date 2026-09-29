@@ -664,91 +664,114 @@ String _formatConnectionCount(int count) {
   return "$count connected";
 }
 
+// Renders connected Cedar app clients by their device model (e.g. "iPhone",
+// "Moto G5, Pixel 8"), falling back to "connected" for clients that didn't
+// send one (e.g. the web client, or an older app version).
+String _formatClientLabels(dynamic clients) {
+  final labels = clients
+      .map((c) => c.deviceModel.isNotEmpty ? c.deviceModel as String : "connected")
+      .toList();
+  return labels.join(", ");
+}
+
 void connectionsDialog(
-    BuildContext context, String productName, dynamic connectionStatus) {
+    BuildContext context, String productName, MyHomePageState state) {
   _context = context;
   OverlayEntry? dialogOverlayEntry;
 
-  List<Widget> rows = [];
-
-  // Header explaining that these are incoming client connections to the
-  // device (as opposed to this app's own connection).
-  rows.add(_scaledText("Clients connected to $productName:"));
-  rows.add(_sectionHeaderSpacing);
-  final headerRowCount = rows.length;
-
-  if (connectionStatus.cedarWifi > 0) {
-    rows.add(Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      _scaledText("Cedar WiFi:"),
-      _dialogRowSpacing,
-      Expanded(
-          child: Text(
-        _formatConnectionCount(connectionStatus.cedarWifi),
-        textAlign: TextAlign.right,
-        style: _dialogTextStyle(),
-      )),
-    ]));
-  }
-
-  if (connectionStatus.cedarBluetooth > 0) {
-    if (rows.isNotEmpty) {
-      rows.add(_dialogItemSpacing);
-    }
-    rows.add(Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      _scaledText("Cedar Bluetooth:"),
-      _dialogRowSpacing,
-      Expanded(
-          child: Text(
-        _formatConnectionCount(connectionStatus.cedarBluetooth),
-        textAlign: TextAlign.right,
-        style: _dialogTextStyle(),
-      )),
-    ]));
-  }
-
-  if (connectionStatus.lx200Wifi > 0) {
-    if (rows.isNotEmpty) {
-      rows.add(_dialogItemSpacing);
-    }
-    rows.add(Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      _scaledText("LX200 WiFi:"),
-      _dialogRowSpacing,
-      Expanded(
-          child: Text(
-        _formatConnectionCount(connectionStatus.lx200Wifi),
-        textAlign: TextAlign.right,
-        style: _dialogTextStyle(),
-      )),
-    ]));
-  }
-
-  if (connectionStatus.lx200Bluetooth > 0) {
-    if (rows.isNotEmpty) {
-      rows.add(_dialogItemSpacing);
-    }
-    rows.add(Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      _scaledText("LX200 Bluetooth:"),
-      _dialogRowSpacing,
-      Expanded(
-          child: Text(
-        _formatConnectionCount(connectionStatus.lx200Bluetooth),
-        textAlign: TextAlign.right,
-        style: _dialogTextStyle(),
-      )),
-    ]));
-  }
-
-  if (rows.length == headerRowCount) {
-    rows.add(Text(
-      "No clients connected",
-      textScaler: textScaler(_context),
-      style: TextStyle(color: Theme.of(_context).colorScheme.primary),
-    ));
-  }
+  // Live-refresh while open: connectionStatus is read from `state` on every
+  // build below, but nothing else triggers a rebuild of this overlay, so
+  // without this timer the list would only update the next time the dialog
+  // is reopened.
+  final refreshTimer = Timer.periodic(const Duration(seconds: 1), (_) {
+    dialogOverlayEntry?.markNeedsBuild();
+  });
 
   dialogOverlayEntry = OverlayEntry(builder: (BuildContext context) {
+    final connectionStatus = state.serverInformation?.connectionStatus;
+
+    List<Widget> rows = [];
+
+    // Header explaining that these are incoming client connections to the
+    // device (as opposed to this app's own connection).
+    rows.add(_scaledText("Clients connected to $productName:"));
+    rows.add(_sectionHeaderSpacing);
+    final headerRowCount = rows.length;
+
+    if (connectionStatus != null) {
+      if (connectionStatus.cedarWifiClients.isNotEmpty) {
+        rows.add(Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          _scaledText("Cedar WiFi:"),
+          _dialogRowSpacing,
+          Expanded(
+              child: Text(
+            _formatClientLabels(connectionStatus.cedarWifiClients),
+            textAlign: TextAlign.right,
+            style: _dialogTextStyle(),
+          )),
+        ]));
+      }
+
+      if (connectionStatus.cedarBluetoothClients.isNotEmpty) {
+        if (rows.isNotEmpty) {
+          rows.add(_dialogItemSpacing);
+        }
+        rows.add(Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          _scaledText("Cedar Bluetooth:"),
+          _dialogRowSpacing,
+          Expanded(
+              child: Text(
+            _formatClientLabels(connectionStatus.cedarBluetoothClients),
+            textAlign: TextAlign.right,
+            style: _dialogTextStyle(),
+          )),
+        ]));
+      }
+
+      if (connectionStatus.lx200Wifi > 0) {
+        if (rows.isNotEmpty) {
+          rows.add(_dialogItemSpacing);
+        }
+        rows.add(Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          _scaledText("LX200 WiFi:"),
+          _dialogRowSpacing,
+          Expanded(
+              child: Text(
+            _formatConnectionCount(connectionStatus.lx200Wifi),
+            textAlign: TextAlign.right,
+            style: _dialogTextStyle(),
+          )),
+        ]));
+      }
+
+      if (connectionStatus.lx200Bluetooth > 0) {
+        if (rows.isNotEmpty) {
+          rows.add(_dialogItemSpacing);
+        }
+        rows.add(Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          _scaledText("LX200 Bluetooth:"),
+          _dialogRowSpacing,
+          Expanded(
+              child: Text(
+            _formatConnectionCount(connectionStatus.lx200Bluetooth),
+            textAlign: TextAlign.right,
+            style: _dialogTextStyle(),
+          )),
+        ]));
+      }
+    }
+
+    if (rows.length == headerRowCount) {
+      rows.add(Text(
+        "No clients connected",
+        textScaler: textScaler(_context),
+        style: TextStyle(color: Theme.of(_context).colorScheme.primary),
+      ));
+    }
+
     return GestureDetector(
       onTap: () {
+        refreshTimer.cancel();
         dialogOverlayEntry!.remove();
       },
       child: Material(
@@ -756,15 +779,18 @@ void connectionsDialog(
         child: DefaultTextStyle.merge(
             style: const TextStyle(fontFamilyFallback: ['Roboto']),
             child: Center(
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 400),
-                child: Container(
-                  padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
-                  decoration: _dialogDecoration(),
-                  child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: rows),
+              child: GestureDetector(
+                onTap: () {}, // Swallow taps so they don't dismiss the popup.
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 400),
+                  child: Container(
+                    padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
+                    decoration: _dialogDecoration(),
+                    child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: rows),
+                  ),
                 ),
               ),
             )),
