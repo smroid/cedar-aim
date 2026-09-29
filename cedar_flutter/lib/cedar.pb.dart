@@ -799,19 +799,25 @@ class WifiClient extends $pb.GeneratedMessage {
   void clearIpAddress() => $_clearField(3);
 }
 
-/// Number of current client connections.
+/// Information about client connections.
 class ConnectionStatus extends $pb.GeneratedMessage {
   factory ConnectionStatus({
+  @$core.Deprecated('This field is deprecated.')
     $core.int? cedarWifi,
+  @$core.Deprecated('This field is deprecated.')
     $core.int? cedarBluetooth,
     $core.int? lx200Wifi,
     $core.int? lx200Bluetooth,
+    $core.Iterable<ClientConnection>? cedarWifiClients,
+    $core.Iterable<ClientConnection>? cedarBluetoothClients,
   }) {
     final $result = create();
     if (cedarWifi != null) {
+      // ignore: deprecated_member_use_from_same_package
       $result.cedarWifi = cedarWifi;
     }
     if (cedarBluetooth != null) {
+      // ignore: deprecated_member_use_from_same_package
       $result.cedarBluetooth = cedarBluetooth;
     }
     if (lx200Wifi != null) {
@@ -819,6 +825,12 @@ class ConnectionStatus extends $pb.GeneratedMessage {
     }
     if (lx200Bluetooth != null) {
       $result.lx200Bluetooth = lx200Bluetooth;
+    }
+    if (cedarWifiClients != null) {
+      $result.cedarWifiClients.addAll(cedarWifiClients);
+    }
+    if (cedarBluetoothClients != null) {
+      $result.cedarBluetoothClients.addAll(cedarBluetoothClients);
     }
     return $result;
   }
@@ -831,6 +843,8 @@ class ConnectionStatus extends $pb.GeneratedMessage {
     ..a<$core.int>(2, _omitFieldNames ? '' : 'cedarBluetooth', $pb.PbFieldType.O3)
     ..a<$core.int>(3, _omitFieldNames ? '' : 'lx200Wifi', $pb.PbFieldType.O3)
     ..a<$core.int>(4, _omitFieldNames ? '' : 'lx200Bluetooth', $pb.PbFieldType.O3)
+    ..pc<ClientConnection>(5, _omitFieldNames ? '' : 'cedarWifiClients', $pb.PbFieldType.PM, subBuilder: ClientConnection.create)
+    ..pc<ClientConnection>(6, _omitFieldNames ? '' : 'cedarBluetoothClients', $pb.PbFieldType.PM, subBuilder: ClientConnection.create)
     ..hasRequiredFields = false
   ;
 
@@ -856,21 +870,30 @@ class ConnectionStatus extends $pb.GeneratedMessage {
   static ConnectionStatus? _defaultInstance;
 
   /// Number of cedar_server clients.
+  /// Deprecated: use cedar_wifi_clients/cedar_bluetooth_clients instead.
+  @$core.Deprecated('This field is deprecated.')
   @$pb.TagNumber(1)
   $core.int get cedarWifi => $_getIZ(0);
+  @$core.Deprecated('This field is deprecated.')
   @$pb.TagNumber(1)
   set cedarWifi($core.int v) { $_setSignedInt32(0, v); }
+  @$core.Deprecated('This field is deprecated.')
   @$pb.TagNumber(1)
   $core.bool hasCedarWifi() => $_has(0);
+  @$core.Deprecated('This field is deprecated.')
   @$pb.TagNumber(1)
   void clearCedarWifi() => $_clearField(1);
 
+  @$core.Deprecated('This field is deprecated.')
   @$pb.TagNumber(2)
   $core.int get cedarBluetooth => $_getIZ(1);
+  @$core.Deprecated('This field is deprecated.')
   @$pb.TagNumber(2)
   set cedarBluetooth($core.int v) { $_setSignedInt32(1, v); }
+  @$core.Deprecated('This field is deprecated.')
   @$pb.TagNumber(2)
   $core.bool hasCedarBluetooth() => $_has(1);
+  @$core.Deprecated('This field is deprecated.')
   @$pb.TagNumber(2)
   void clearCedarBluetooth() => $_clearField(2);
 
@@ -892,6 +915,83 @@ class ConnectionStatus extends $pb.GeneratedMessage {
   $core.bool hasLx200Bluetooth() => $_has(3);
   @$pb.TagNumber(4)
   void clearLx200Bluetooth() => $_clearField(4);
+
+  /// Per-client detail for cedar_server clients; length equals the
+  /// corresponding count above.
+  @$pb.TagNumber(5)
+  $pb.PbList<ClientConnection> get cedarWifiClients => $_getList(4);
+
+  @$pb.TagNumber(6)
+  $pb.PbList<ClientConnection> get cedarBluetoothClients => $_getList(5);
+}
+
+class ClientConnection extends $pb.GeneratedMessage {
+  factory ClientConnection({
+    $core.String? deviceModel,
+    $core.String? address,
+  }) {
+    final $result = create();
+    if (deviceModel != null) {
+      $result.deviceModel = deviceModel;
+    }
+    if (address != null) {
+      $result.address = address;
+    }
+    return $result;
+  }
+  ClientConnection._() : super();
+  factory ClientConnection.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory ClientConnection.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'ClientConnection', package: const $pb.PackageName(_omitMessageNames ? '' : 'cedar'), createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'deviceModel')
+    ..aOS(2, _omitFieldNames ? '' : 'address')
+    ..hasRequiredFields = false
+  ;
+
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  ClientConnection clone() => ClientConnection()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  ClientConnection copyWith(void Function(ClientConnection) updates) => super.copyWith((message) => updates(message as ClientConnection)) as ClientConnection;
+
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ClientConnection create() => ClientConnection._();
+  ClientConnection createEmptyInstance() => create();
+  static $pb.PbList<ClientConnection> createRepeated() => $pb.PbList<ClientConnection>();
+  @$core.pragma('dart2js:noInline')
+  static ClientConnection getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<ClientConnection>(create);
+  static ClientConnection? _defaultInstance;
+
+  /// Device model reported by the client via gRPC metadata. Omitted if the
+  /// client didn't send it (e.g. web client, or an app build that predates
+  /// this feature).
+  @$pb.TagNumber(1)
+  $core.String get deviceModel => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set deviceModel($core.String v) { $_setString(0, v); }
+  @$pb.TagNumber(1)
+  $core.bool hasDeviceModel() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearDeviceModel() => $_clearField(1);
+
+  /// The client's network address: IP:port for a Wifi connection, Bluetooth
+  /// address:channel for a Bluetooth connection.
+  @$pb.TagNumber(2)
+  $core.String get address => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set address($core.String v) { $_setString(1, v); }
+  @$pb.TagNumber(2)
+  $core.bool hasAddress() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearAddress() => $_clearField(2);
 }
 
 class FixedSettings extends $pb.GeneratedMessage {

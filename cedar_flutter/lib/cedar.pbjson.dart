@@ -334,18 +334,56 @@ final $typed_data.Uint8List wifiClientDescriptor = $convert.base64Decode(
 const ConnectionStatus$json = {
   '1': 'ConnectionStatus',
   '2': [
-    {'1': 'cedar_wifi', '3': 1, '4': 1, '5': 5, '10': 'cedarWifi'},
-    {'1': 'cedar_bluetooth', '3': 2, '4': 1, '5': 5, '10': 'cedarBluetooth'},
+    {
+      '1': 'cedar_wifi',
+      '3': 1,
+      '4': 1,
+      '5': 5,
+      '8': {'3': true},
+      '10': 'cedarWifi',
+    },
+    {
+      '1': 'cedar_bluetooth',
+      '3': 2,
+      '4': 1,
+      '5': 5,
+      '8': {'3': true},
+      '10': 'cedarBluetooth',
+    },
     {'1': 'lx200_wifi', '3': 3, '4': 1, '5': 5, '10': 'lx200Wifi'},
     {'1': 'lx200_bluetooth', '3': 4, '4': 1, '5': 5, '10': 'lx200Bluetooth'},
+    {'1': 'cedar_wifi_clients', '3': 5, '4': 3, '5': 11, '6': '.cedar.ClientConnection', '10': 'cedarWifiClients'},
+    {'1': 'cedar_bluetooth_clients', '3': 6, '4': 3, '5': 11, '6': '.cedar.ClientConnection', '10': 'cedarBluetoothClients'},
   ],
 };
 
 /// Descriptor for `ConnectionStatus`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List connectionStatusDescriptor = $convert.base64Decode(
-    'ChBDb25uZWN0aW9uU3RhdHVzEh0KCmNlZGFyX3dpZmkYASABKAVSCWNlZGFyV2lmaRInCg9jZW'
-    'Rhcl9ibHVldG9vdGgYAiABKAVSDmNlZGFyQmx1ZXRvb3RoEh0KCmx4MjAwX3dpZmkYAyABKAVS'
-    'CWx4MjAwV2lmaRInCg9seDIwMF9ibHVldG9vdGgYBCABKAVSDmx4MjAwQmx1ZXRvb3Ro');
+    'ChBDb25uZWN0aW9uU3RhdHVzEiEKCmNlZGFyX3dpZmkYASABKAVCAhgBUgljZWRhcldpZmkSKw'
+    'oPY2VkYXJfYmx1ZXRvb3RoGAIgASgFQgIYAVIOY2VkYXJCbHVldG9vdGgSHQoKbHgyMDBfd2lm'
+    'aRgDIAEoBVIJbHgyMDBXaWZpEicKD2x4MjAwX2JsdWV0b290aBgEIAEoBVIObHgyMDBCbHVldG'
+    '9vdGgSRQoSY2VkYXJfd2lmaV9jbGllbnRzGAUgAygLMhcuY2VkYXIuQ2xpZW50Q29ubmVjdGlv'
+    'blIQY2VkYXJXaWZpQ2xpZW50cxJPChdjZWRhcl9ibHVldG9vdGhfY2xpZW50cxgGIAMoCzIXLm'
+    'NlZGFyLkNsaWVudENvbm5lY3Rpb25SFWNlZGFyQmx1ZXRvb3RoQ2xpZW50cw==');
+
+@$core.Deprecated('Use clientConnectionDescriptor instead')
+const ClientConnection$json = {
+  '1': 'ClientConnection',
+  '2': [
+    {'1': 'device_model', '3': 1, '4': 1, '5': 9, '9': 0, '10': 'deviceModel', '17': true},
+    {'1': 'address', '3': 2, '4': 1, '5': 9, '9': 1, '10': 'address', '17': true},
+  ],
+  '8': [
+    {'1': '_device_model'},
+    {'1': '_address'},
+  ],
+};
+
+/// Descriptor for `ClientConnection`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List clientConnectionDescriptor = $convert.base64Decode(
+    'ChBDbGllbnRDb25uZWN0aW9uEiYKDGRldmljZV9tb2RlbBgBIAEoCUgAUgtkZXZpY2VNb2RlbI'
+    'gBARIdCgdhZGRyZXNzGAIgASgJSAFSB2FkZHJlc3OIAQFCDwoNX2RldmljZV9tb2RlbEIKCghf'
+    'YWRkcmVzcw==');
 
 @$core.Deprecated('Use fixedSettingsDescriptor instead')
 const FixedSettings$json = {
