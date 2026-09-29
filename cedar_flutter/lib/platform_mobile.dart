@@ -61,6 +61,38 @@ Future<String> deviceModelImpl() async {
   return _deviceModel;
 }
 
+// gRPC metadata header carrying this device's model (e.g. "Pixel 8",
+// "iPhone"), so cedar-server can list connected Cedar app clients by name in
+// connection_status instead of just a count. Sent on every RPC via
+// _ClientIdInterceptor below.
+const String _clientDeviceModelHeader = 'x-cedar-client-device-model';
+
+// Attaches the device-model header to every unary/streaming call on the
+// channel, so call sites don't need to set it individually.
+class _ClientIdInterceptor extends ClientInterceptor {
+  @override
+  ResponseFuture<R> interceptUnary<Q, R>(ClientMethod<Q, R> method, Q request,
+      CallOptions options, ClientUnaryInvoker<Q, R> invoker) {
+    return invoker(method, request, options.mergedWith(_idCallOptions()));
+  }
+
+  @override
+  ResponseStream<R> interceptStreaming<Q, R>(
+      ClientMethod<Q, R> method,
+      Stream<Q> requests,
+      CallOptions options,
+      ClientStreamingInvoker<Q, R> invoker) {
+    return invoker(method, requests, options.mergedWith(_idCallOptions()));
+  }
+
+  CallOptions _idCallOptions() {
+    if (_deviceModel.isEmpty) {
+      return CallOptions();
+    }
+    return CallOptions(metadata: {_clientDeviceModelHeader: _deviceModel});
+  }
+}
+
 const _networkChannel = MethodChannel('cedar/network');
 
 // UUID for Cedar control channel defined in cedar-server
@@ -534,6 +566,7 @@ Future<CedarClient> getClientImpl() async {
     // If we now have a live link with a proxy port, (re)build the client.
     if (_bluetoothConnection?.isConnected == true && _activeProxyPort != null) {
       await _channel?.shutdown();
+      await deviceModelImpl();
       _channel = ClientChannel(
         InternetAddress.loopbackIPv4.address,
         port: _activeProxyPort!,
@@ -541,7 +574,7 @@ Future<CedarClient> getClientImpl() async {
           credentials: ChannelCredentials.insecure(),
         ),
       );
-      _client = CedarClient(_channel!);
+      _client = CedarClient(_channel!, interceptors: [_ClientIdInterceptor()]);
       return _client!;
     }
     // Not connected yet (still cooling down, or attempt failed). Signal the
@@ -569,8 +602,9 @@ Future<CedarClient> getClientImpl() async {
       }
       addressToTry = resolved;
 
+      await deviceModelImpl();
       _channel = ClientChannel(addressToTry, port: cedarWifiPort, options: _options);
-      _client = CedarClient(_channel!);
+      _client = CedarClient(_channel!, interceptors: [_ClientIdInterceptor()]);
 
       // Test the WiFi connection before returning. Use getFrame() since it's
       // been available in all server versions (unlike newer RPCs).
