@@ -5,6 +5,7 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:math';
 
+import 'package:cedar_flutter/cedar.pb.dart' as cedar_rpc;
 import 'package:cedar_flutter/client_main.dart';
 import 'package:cedar_flutter/dark_calibration_dialog.dart';
 import 'package:cedar_flutter/platform.dart';
@@ -301,7 +302,7 @@ Widget calibrationInfo(MyHomePageState state) {
             _dialogSectionSpacing,
             GestureDetector(
               onLongPress: () {
-                imuCalibrationDialog(serverInfo, calData);
+                imuCalibrationDialog(state, serverInfo, calData);
               },
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1053,14 +1054,24 @@ void cameraDialog(MyHomePageState state, dynamic serverInfo, dynamic calData) {
   });
 }
 
-void imuCalibrationDialog(dynamic serverInfo, dynamic calData) {
+void imuCalibrationDialog(
+    MyHomePageState state, dynamic serverInfo, dynamic calData) {
   OverlayEntry? dialogOverlayEntry;
+
+  void closeDialog() {
+    dialogOverlayEntry?.remove();
+    dialogOverlayEntry = null;
+  }
+
+  Future<void> resetImuCalibration() async {
+    closeDialog();
+    await state.initiateAction(
+        cedar_rpc.ActionRequest(resetImuCalibration: true));
+  }
 
   dialogOverlayEntry = OverlayEntry(builder: (BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        dialogOverlayEntry!.remove();
-      },
+      onTap: closeDialog,
       child: Material(
         color: Colors.black54,
         child: DefaultTextStyle.merge(
@@ -1169,6 +1180,14 @@ void imuCalibrationDialog(dynamic serverInfo, dynamic calData) {
                               style: _dialogTextStyle(),
                             )),
                           ]),
+                      _dialogSectionSpacing,
+                      Center(
+                        child: TextButton(
+                          style: _viewButtonStyle,
+                          onPressed: resetImuCalibration,
+                          child: _scaledText("Reset"),
+                        ),
+                      ),
                     ]),
               ),
             )),
@@ -1176,5 +1195,5 @@ void imuCalibrationDialog(dynamic serverInfo, dynamic calData) {
     );
   });
 
-  Overlay.of(_context).insert(dialogOverlayEntry);
+  Overlay.of(_context).insert(dialogOverlayEntry!);
 }
