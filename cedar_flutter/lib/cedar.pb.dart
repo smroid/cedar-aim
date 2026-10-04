@@ -4515,6 +4515,7 @@ class ActionRequest extends $pb.GeneratedMessage {
   @$core.Deprecated('This field is deprecated.')
     $core.bool? wifiEnabled,
     $2.HorizonCoord? initiateSlewAltAz,
+    $core.bool? resetImuCalibration,
   }) {
     final $result = create();
     if (captureBoresight != null) {
@@ -4566,6 +4567,9 @@ class ActionRequest extends $pb.GeneratedMessage {
     if (initiateSlewAltAz != null) {
       $result.initiateSlewAltAz = initiateSlewAltAz;
     }
+    if (resetImuCalibration != null) {
+      $result.resetImuCalibration = resetImuCalibration;
+    }
     return $result;
   }
   ActionRequest._() : super();
@@ -4589,6 +4593,7 @@ class ActionRequest extends $pb.GeneratedMessage {
     ..aOB(14, _omitFieldNames ? '' : 'resetHotPixelMap')
     ..aOB(15, _omitFieldNames ? '' : 'wifiEnabled')
     ..aOM<$2.HorizonCoord>(16, _omitFieldNames ? '' : 'initiateSlewAltAz', subBuilder: $2.HorizonCoord.create)
+    ..aOB(17, _omitFieldNames ? '' : 'resetImuCalibration')
     ..hasRequiredFields = false
   ;
 
@@ -4812,6 +4817,17 @@ class ActionRequest extends $pb.GeneratedMessage {
   void clearInitiateSlewAltAz() => $_clearField(16);
   @$pb.TagNumber(16)
   $2.HorizonCoord ensureInitiateSlewAltAz() => $_ensure(15);
+
+  /// Discards all IMU calibration state (gyro zero bias, gyro-to-camera
+  /// transform, and all accumulated tracking data).
+  @$pb.TagNumber(17)
+  $core.bool get resetImuCalibration => $_getBF(16);
+  @$pb.TagNumber(17)
+  set resetImuCalibration($core.bool v) { $_setBool(16, v); }
+  @$pb.TagNumber(17)
+  $core.bool hasResetImuCalibration() => $_has(16);
+  @$pb.TagNumber(17)
+  void clearResetImuCalibration() => $_clearField(17);
 }
 
 class ServerLogRequest extends $pb.GeneratedMessage {

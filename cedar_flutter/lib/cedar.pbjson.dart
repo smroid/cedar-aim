@@ -1157,6 +1157,7 @@ const ActionRequest$json = {
       '10': 'wifiEnabled',
       '17': true,
     },
+    {'1': 'reset_imu_calibration', '3': 17, '4': 1, '5': 8, '9': 16, '10': 'resetImuCalibration', '17': true},
   ],
   '8': [
     {'1': '_cancel_calibration'},
@@ -1175,6 +1176,7 @@ const ActionRequest$json = {
     {'1': '_reset_hot_pixel_map'},
     {'1': '_crash_server'},
     {'1': '_wifi_enabled'},
+    {'1': '_reset_imu_calibration'},
   ],
 };
 
@@ -1196,14 +1198,15 @@ final $typed_data.Uint8List actionRequestDescriptor = $convert.base64Decode(
     'lsaWdodEZvY3VzUmVnaW9uiAEBEjUKFGNhbGlicmF0ZV9kYXJrX2ZyYW1lGA0gASgISAxSEmNh'
     'bGlicmF0ZURhcmtGcmFtZYgBARIyChNyZXNldF9ob3RfcGl4ZWxfbWFwGA4gASgISA1SEHJlc2'
     'V0SG90UGl4ZWxNYXCIAQESJgoMY3Jhc2hfc2VydmVyGAwgASgISA5SC2NyYXNoU2VydmVyiAEB'
-    'EioKDHdpZmlfZW5hYmxlZBgPIAEoCEICGAFID1ILd2lmaUVuYWJsZWSIAQFCFQoTX2NhbmNlbF'
-    '9jYWxpYnJhdGlvbkIUChJfY2FwdHVyZV9ib3Jlc2lnaHRCFgoUX2Rlc2lnbmF0ZV9ib3Jlc2ln'
-    'aHRCEgoQX3NodXRkb3duX3NlcnZlckIRCg9fcmVzdGFydF9zZXJ2ZXJCEAoOX2luaXRpYXRlX3'
-    'NsZXdCFwoVX2luaXRpYXRlX3NsZXdfYWx0X2F6QgwKCl9zdG9wX3NsZXdCDQoLX3NhdmVfaW1h'
-    'Z2VCGwoZX3VwZGF0ZV93aWZpX2FjY2Vzc19wb2ludEIYChZfY2xlYXJfZG9udF9zaG93X2l0ZW'
-    '1zQiIKIF9kZXNpZ25hdGVfZGF5bGlnaHRfZm9jdXNfcmVnaW9uQhcKFV9jYWxpYnJhdGVfZGFy'
-    'a19mcmFtZUIWChRfcmVzZXRfaG90X3BpeGVsX21hcEIPCg1fY3Jhc2hfc2VydmVyQg8KDV93aW'
-    'ZpX2VuYWJsZWQ=');
+    'EioKDHdpZmlfZW5hYmxlZBgPIAEoCEICGAFID1ILd2lmaUVuYWJsZWSIAQESNwoVcmVzZXRfaW'
+    '11X2NhbGlicmF0aW9uGBEgASgISBBSE3Jlc2V0SW11Q2FsaWJyYXRpb26IAQFCFQoTX2NhbmNl'
+    'bF9jYWxpYnJhdGlvbkIUChJfY2FwdHVyZV9ib3Jlc2lnaHRCFgoUX2Rlc2lnbmF0ZV9ib3Jlc2'
+    'lnaHRCEgoQX3NodXRkb3duX3NlcnZlckIRCg9fcmVzdGFydF9zZXJ2ZXJCEAoOX2luaXRpYXRl'
+    'X3NsZXdCFwoVX2luaXRpYXRlX3NsZXdfYWx0X2F6QgwKCl9zdG9wX3NsZXdCDQoLX3NhdmVfaW'
+    '1hZ2VCGwoZX3VwZGF0ZV93aWZpX2FjY2Vzc19wb2ludEIYChZfY2xlYXJfZG9udF9zaG93X2l0'
+    'ZW1zQiIKIF9kZXNpZ25hdGVfZGF5bGlnaHRfZm9jdXNfcmVnaW9uQhcKFV9jYWxpYnJhdGVfZG'
+    'Fya19mcmFtZUIWChRfcmVzZXRfaG90X3BpeGVsX21hcEIPCg1fY3Jhc2hfc2VydmVyQg8KDV93'
+    'aWZpX2VuYWJsZWRCGAoWX3Jlc2V0X2ltdV9jYWxpYnJhdGlvbg==');
 
 @$core.Deprecated('Use serverLogRequestDescriptor instead')
 const ServerLogRequest$json = {
