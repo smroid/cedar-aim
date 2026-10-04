@@ -1,5 +1,19 @@
 # Cedar Aim Release Notes
 
+## 1.3.1 (build 35)
+
+Changes since 1.3.0 (build 34).
+
+### IMU calibration
+
+- Added a Reset button to the IMU calibration display.
+
+### Connections
+
+- The Connections dialog now shows each connected client's device model
+  (e.g. "iPhone", "Moto G5, Pixel 8") instead of just a count, for clients
+  that report one.
+
 ## 1.3.0 (build 34)
 
 Changes since 1.2.7 (build 33).
