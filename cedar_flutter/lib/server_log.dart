@@ -23,7 +23,9 @@ class AppLogCallbacks {
   });
 }
 
-Future<void> _sendLogToSupport(String logContent, String subject) async {
+Future<void> _sendLogToSupport(
+    BuildContext context, String logContent, String subject) async {
+  final box = context.findRenderObject() as RenderBox?;
   final dir = await getTemporaryDirectory();
   final filename = '${subject.replaceAll(' ', '_')}.txt';
   final file = File('${dir.path}/$filename');
@@ -32,6 +34,8 @@ Future<void> _sendLogToSupport(String logContent, String subject) async {
     [XFile(file.path, mimeType: 'text/plain')],
     subject: subject,
     text: 'Please send this log (attached) to support@cs-astro.com.',
+    sharePositionOrigin:
+        box == null ? null : box.localToGlobal(Offset.zero) & box.size,
   );
 }
 
@@ -96,7 +100,8 @@ class ServerLogPopUp extends StatelessWidget {
           TextButton.icon(
             icon: const Icon(Icons.email_outlined),
             label: const Text('Send to support'),
-            onPressed: () => _sendLogToSupport(_content, '$_productName log'),
+            onPressed: () =>
+                _sendLogToSupport(context, _content, '$_productName log'),
           ),
       ],
     );
@@ -164,8 +169,8 @@ class AppLogPopUp extends StatelessWidget {
           TextButton.icon(
             icon: const Icon(Icons.email_outlined),
             label: const Text('Send to support'),
-            onPressed: () =>
-                _sendLogToSupport(_callbacks.getForSending(), 'Cedar Aim log'),
+            onPressed: () => _sendLogToSupport(
+                context, _callbacks.getForSending(), 'Cedar Aim log'),
           ),
       ],
     );

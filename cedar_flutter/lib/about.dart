@@ -470,7 +470,9 @@ void processorOsDialog(
 
 OverlayEntry? _cpuUsageReportOverlayEntry;
 
-Future<void> _sendCpuUsageReportToSupport(String report) async {
+Future<void> _sendCpuUsageReportToSupport(
+    BuildContext context, String report) async {
+  final box = context.findRenderObject() as RenderBox?;
   final timestamp =
       DateFormat('yyyy-MM-dd_HH-mm-ss').format(DateTime.now());
   final subject = 'cedar_cpu_usage_$timestamp';
@@ -481,6 +483,8 @@ Future<void> _sendCpuUsageReportToSupport(String report) async {
     [XFile(file.path, mimeType: 'text/plain')],
     subject: subject,
     text: 'Please send this CPU usage report (attached) to support@cs-astro.com.',
+    sharePositionOrigin:
+        box == null ? null : box.localToGlobal(Offset.zero) & box.size,
   );
 }
 
@@ -547,7 +551,8 @@ Future<void> _showCpuUsageReport(MyHomePageState state) async {
                                 icon: const Icon(Icons.email_outlined),
                                 label: _scaledText("Send to support"),
                                 onPressed: () {
-                                  _sendCpuUsageReportToSupport(report);
+                                  _sendCpuUsageReportToSupport(
+                                      context, report);
                                 },
                               ),
                             ),
