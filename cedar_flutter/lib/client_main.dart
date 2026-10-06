@@ -123,7 +123,7 @@ const Duration _getFrameRpcTimeoutBt = Duration(seconds: 10);
 const int _btReconnectFailureThreshold = 3;
 
 // Timeout for non-frame RPCs, chosen for the active transport (BT is slower).
-Duration _rpcTimeoutForTransport() =>
+Duration rpcTimeoutForTransport() =>
     isBluetoothInUse() ? _rpcTimeoutBt : _rpcTimeout;
 
 // Whether the connection dialog should be shown, given how long it's been
@@ -206,7 +206,7 @@ Future<void> clearObserverLocation() async {
     final request = cedar_rpc.EmptyMessage();
     await client.clearObserverLocation(
       request,
-      options: CallOptions(timeout: _rpcTimeoutForTransport()),
+      options: CallOptions(timeout: rpcTimeoutForTransport()),
     );
     debugPrint('Observer location cleared successfully');
   } catch (e) {
@@ -1115,7 +1115,7 @@ class MyHomePageState extends State<MyHomePage> {
     try {
       final c = await getClient();
       await c.updateFixedSettings(request,
-          options: CallOptions(timeout: _rpcTimeoutForTransport()));
+          options: CallOptions(timeout: rpcTimeoutForTransport()));
     } catch (e) {
       notifyRpcFailed('updateFixedSettings error', e);
     }
@@ -1149,7 +1149,7 @@ class MyHomePageState extends State<MyHomePage> {
     try {
       final c = await getClient();
       await c.updateOperationSettings(request,
-          options: CallOptions(timeout: _rpcTimeoutForTransport()));
+          options: CallOptions(timeout: rpcTimeoutForTransport()));
     } catch (e) {
       notifyRpcFailed('updateOperationSettings error', e);
     }
@@ -1406,7 +1406,7 @@ class MyHomePageState extends State<MyHomePage> {
     try {
       final c = await getClient();
       await c.initiateAction(request,
-          options: CallOptions(timeout: _rpcTimeoutForTransport()));
+          options: CallOptions(timeout: rpcTimeoutForTransport()));
       return null;
     } catch (e) {
       if (!_isSemanticGrpcError(e)) {
@@ -1492,7 +1492,7 @@ class MyHomePageState extends State<MyHomePage> {
     try {
       final c = await getClient();
       final infoResult = await c.getServerLog(request,
-          options: CallOptions(timeout: _rpcTimeoutForTransport()));
+          options: CallOptions(timeout: rpcTimeoutForTransport()));
       return infoResult.logContent;
     } catch (e) {
       notifyRpcFailed('getServerLogs error', e);
@@ -1505,7 +1505,7 @@ class MyHomePageState extends State<MyHomePage> {
     try {
       final c = await getClient();
       final result = await c.getCpuUsageReport(request,
-          options: CallOptions(timeout: _rpcTimeoutForTransport()));
+          options: CallOptions(timeout: rpcTimeoutForTransport()));
       return result.report;
     } catch (e) {
       notifyRpcFailed('getCpuUsageReport error', e);
@@ -1525,7 +1525,7 @@ class MyHomePageState extends State<MyHomePage> {
     try {
       final c = await getClient();
       return await c.convertToHorizon(coord,
-          options: CallOptions(timeout: _rpcTimeoutForTransport()));
+          options: CallOptions(timeout: rpcTimeoutForTransport()));
     } catch (e) {
       notifyRpcFailed('convertToHorizon error', e);
       return null;
@@ -1540,7 +1540,7 @@ class MyHomePageState extends State<MyHomePage> {
     try {
       final c = await getClient();
       return await c.convertToCelestial(coord,
-          options: CallOptions(timeout: _rpcTimeoutForTransport()));
+          options: CallOptions(timeout: rpcTimeoutForTransport()));
     } catch (e) {
       notifyRpcFailed('convertToCelestial error', e);
       return null;
@@ -1585,7 +1585,7 @@ class MyHomePageState extends State<MyHomePage> {
       }
       final c = await getClient();
       final stream = c.getImage(request,
-          options: CallOptions(timeout: _rpcTimeoutForTransport()));
+          options: CallOptions(timeout: rpcTimeoutForTransport()));
       final bytes = BytesBuilder(copy: false);
       DateTime? acquireTime;
       double? exposureMs;
@@ -1672,7 +1672,7 @@ class MyHomePageState extends State<MyHomePage> {
     try {
       final c = await getClient();
       await c.setWifiMode(request,
-          options: CallOptions(timeout: _rpcTimeoutForTransport()));
+          options: CallOptions(timeout: rpcTimeoutForTransport()));
     } catch (e) {
       notifyRpcFailed('setWifiMode error', e);
       return e.toString();
@@ -1692,7 +1692,7 @@ class MyHomePageState extends State<MyHomePage> {
     try {
       final c = await getClient();
       final newPrefs = await c.updatePreferences(changedPrefs,
-          options: CallOptions(timeout: _rpcTimeoutForTransport()));
+          options: CallOptions(timeout: rpcTimeoutForTransport()));
       setState(() {
         preferences = newPrefs;
         if (newPrefs.nightVisionTheme) {
