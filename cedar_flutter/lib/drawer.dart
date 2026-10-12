@@ -11,6 +11,7 @@ import 'package:sprintf/sprintf.dart';
 import 'package:cedar_flutter/about.dart';
 import 'package:cedar_flutter/bluetooth.dart';
 import 'package:cedar_flutter/cedar.pbgrpc.dart' as cedar_rpc;
+import 'package:cedar_flutter/cedar_common.pb.dart' as cedar_common;
 import 'package:cedar_flutter/client_main.dart';
 import 'package:cedar_flutter/geolocation.dart';
 import 'package:cedar_flutter/overlay_popup.dart';
@@ -684,13 +685,22 @@ class CedarDrawer extends StatelessWidget {
                       controller.closeDrawer();
                       final serverInfo =
                           controller.homePageState.serverInformation;
+                      final isClient = serverInfo != null &&
+                          serverInfo.wifiMode ==
+                              cedar_common.WifiMode.WIFI_MODE_CLIENT;
                       final hasWifiInfo =
                           serverInfo != null && serverInfo.hasWifiAccessPoint();
-                      final wifiSsid =
-                          hasWifiInfo ? serverInfo.wifiAccessPoint.ssid : null;
+                      // Show the network actually in use: the device's own
+                      // hotspot SSID in AP mode, or the joined network's SSID
+                      // in client mode.
+                      final wifiSsid = isClient
+                          ? serverInfo.wifiClient.ssid
+                          : (hasWifiInfo ? serverInfo.wifiAccessPoint.ssid : null);
                       // Older servers don't report enabled state; assume
-                      // enabled so we don't warn unnecessarily.
-                      final wifiEnabled = !hasWifiInfo ||
+                      // enabled so we don't warn unnecessarily. Only relevant
+                      // in AP mode — client mode has no "enabled" concept.
+                      final wifiEnabled = isClient ||
+                          !hasWifiInfo ||
                           !serverInfo.wifiAccessPoint.hasEnabled() ||
                           serverInfo.wifiAccessPoint.enabled;
                       _connectionTransportDialog(

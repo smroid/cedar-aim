@@ -1635,9 +1635,22 @@ class MyHomePageState extends State<MyHomePage> {
   }
 
   // Resumes whatever WiFi mode the device was last put in (access point or
-  // client), used when the user asks to (re)connect over WiFi. Defaults to
-  // access point when nothing is stored.
+  // client), used when the user asks to (re)connect over WiFi. Prefers the
+  // device's own live-reported mode (from the current connection, over
+  // whichever transport) since it reflects reality even if a previous
+  // setWifiMode() call failed to persist (e.g. dropped mid-handoff between
+  // transports); falls back to the locally-persisted mode if the device
+  // hasn't reported in yet this session. Defaults to access point if neither
+  // is available.
   Future<String?> resumeLastWifiMode() async {
+    final reportedMode = serverInformation?.wifiMode;
+    if (reportedMode == cedar_common.WifiMode.WIFI_MODE_CLIENT) {
+      return setWifiMode(cedar_common.WifiMode.WIFI_MODE_CLIENT,
+          ssid: serverInformation!.wifiClient.ssid);
+    }
+    if (reportedMode == cedar_common.WifiMode.WIFI_MODE_ACCESS_POINT) {
+      return setWifiMode(cedar_common.WifiMode.WIFI_MODE_ACCESS_POINT);
+    }
     final last = await readServerWifiMode();
     if (last.isClient && last.clientSsid != null) {
       return setWifiMode(cedar_common.WifiMode.WIFI_MODE_CLIENT,
