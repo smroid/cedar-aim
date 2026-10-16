@@ -53,7 +53,8 @@ typedef DrawCatalogEntriesFunction = void Function(
     Iterable<String>?);
 
 typedef ShowCatalogBrowserFunction = void Function(
-    BuildContext, MyHomePageState);
+    BuildContext, MyHomePageState,
+    {bool startInSearch});
 
 typedef ObjectInfoDialogFunction = void Function(
     MyHomePageState, BuildContext, SelectedCatalogEntry,
@@ -1801,6 +1802,12 @@ class MyHomePageState extends State<MyHomePage> {
           _stopSlew();
         }
         _showCatalogBrowser!(context, this);
+      },
+      onLongPress: () {
+        if (_slewRequest != null) {
+          _stopSlew();
+        }
+        _showCatalogBrowser!(context, this, startInSearch: true);
       },
       child: ColorFiltered(
         colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
