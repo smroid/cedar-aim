@@ -1767,13 +1767,17 @@ class MyHomePageState extends State<MyHomePage> {
   Widget slewReAlignButton({double? fontSize = 14.0}) {
     return OutlinedButton(
         style: OutlinedButton.styleFrom(
-            padding: const EdgeInsets.symmetric(horizontal: 0)),
-        child: Text(
+            padding: EdgeInsets.zero,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12))),
+        child: Transform.translate(offset: Offset(0, -(fontSize ?? 14.0) * 0.2), child: Text(
           textAlign: TextAlign.center,
-          style: TextStyle(fontSize: fontSize),
+          style: TextStyle(
+              fontSize: fontSize,
+              height: 1.1),
           textScaler: textScaler(context),
-          "Re-align",
-        ),
+          "Re\nalign",
+        )),
         onPressed: () {
           _wantAlignFeedback = true;
           _captureBoresight(); // Re-align.
@@ -1934,12 +1938,17 @@ class MyHomePageState extends State<MyHomePage> {
   Widget endGotoButton({double? fontSize = 14.0}) {
     return OutlinedButton(
         style: OutlinedButton.styleFrom(
-            padding: const EdgeInsets.symmetric(horizontal: 0)),
-        child: Text(
-          style: TextStyle(fontSize: fontSize),
-          "End goto",
+            padding: EdgeInsets.zero,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12))),
+        child: Transform.translate(offset: Offset(0, -(fontSize ?? 14.0) * 0.2), child: Text(
+          textAlign: TextAlign.center,
+          style: TextStyle(
+              fontSize: fontSize,
+              height: 1.1),
+          "End\ngoto",
           textScaler: textScaler(context),
-        ),
+        )),
         onPressed: () {
           _stopSlew();
         });

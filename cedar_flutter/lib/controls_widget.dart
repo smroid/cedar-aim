@@ -1,6 +1,8 @@
 // Copyright (c) 2026 Steven Rosenthal smr@dt3.org
 // See LICENSE file in root directory for license terms.
 
+import 'dart:math' as math;
+
 import 'package:cedar_flutter/cedar.pb.dart';
 import 'package:cedar_flutter/settings.dart';
 import 'package:flutter/material.dart';
@@ -92,6 +94,9 @@ class ControlsWidget extends StatelessWidget {
     final textBoxHeight = kInfoTextSize * panelScaleFactor * textScale;
     final buttonWidth = 55 * panelScaleFactor * textScale;
     final buttonHeight = 20 * panelScaleFactor * textScale;
+    // Two-line, more square-ish buttons for End goto / Re-align.
+    final gotoButtonWidth = 40 * panelScaleFactor * textScale;
+    final gotoButtonHeight = 32 * panelScaleFactor * textScale;
     final buttonFont = 11.0 * panelScaleFactor;
     final catalogButtonSize = 40.0 * panelScaleFactor * textScale;
 
@@ -129,8 +134,7 @@ class ControlsWidget extends StatelessWidget {
                             maxLines: 8,
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                                color: color,
-                                fontSize: 12 * panelScaleFactor),
+                                color: color, fontSize: 12 * panelScaleFactor),
                             textScaler: textScaler(context),
                           )))
                   : rowOrColumn(portrait, [
@@ -151,7 +155,63 @@ class ControlsWidget extends StatelessWidget {
                     ]),
         );
 
-    final controlWidgets = <Widget>[
+    // End goto button, occupying the same space as the performance gauge so
+    // that the catalog button stays put when entering/leaving goto. The
+    // re-align button (when shown) floats in the gap between this slot and
+    // the catalog button without affecting layout, so nothing else moves.
+    // [mainExtent] is the panel's extent along its main axis.
+    Widget endGotoSlot(double mainExtent) {
+      final gaugeSize = 45 * panelScaleFactor * textScale;
+      final gaugeWidth = gaugeSize * 1.3; // PerfGauge is size*1.3 x size.
+      final slotWidth = math.max(gotoButtonWidth, gaugeWidth);
+      final showReAlign = canAlign &&
+          boresightImageBytes != null &&
+          !slewRequest!.hasTargetAltAz();
+
+      // Slot and re-align extents along the panel's main axis, measured in
+      // the (possibly rotated) frame of the slot's contents.
+      final slotMain = portrait ? slotWidth : gaugeSize;
+      final reAlignMain = portrait ? gotoButtonWidth : gotoButtonHeight;
+      // Gap between the slot and the catalog button (two evenly spaced items).
+      final gap = mainExtent.isFinite
+          ? math.max(0.0, (mainExtent - slotMain - catalogButtonSize) / 3)
+          : reAlignMain;
+      // The catalog button is on the positive side of the slot's main axis,
+      // except for left-handed portrait where the list order is reversed.
+      final towardPositive = !portrait || rightHanded;
+      final reAlignCenter = towardPositive ? slotMain + gap * 0.45 : -gap * 0.45;
+      final reAlignStart = reAlignCenter - reAlignMain / 2;
+
+      return RotatedBox(
+          quarterTurns: portrait ? 3 : 0,
+          child: SizedBox(
+              width: slotWidth,
+              height: gaugeSize,
+              child: Stack(
+                  clipBehavior: Clip.none,
+                  alignment: Alignment.center,
+                  children: [
+                    SizedBox(
+                        width: gotoButtonWidth,
+                        height: gotoButtonHeight,
+                        child: endGotoButton(fontSize: buttonFont)),
+                    if (showReAlign)
+                      Positioned(
+                          left: portrait
+                              ? reAlignStart
+                              : (slotWidth - gotoButtonWidth) / 2,
+                          top: portrait
+                              ? (gaugeSize - gotoButtonHeight) / 2
+                              : reAlignStart,
+                          width: gotoButtonWidth,
+                          height: gotoButtonHeight,
+                          child: slewReAlignButton(fontSize: buttonFont)),
+                  ])));
+    }
+
+    return LayoutBuilder(builder: (context, constraints) {
+      final mainExtent = constraints.maxHeight;
+      final controlWidgets = <Widget>[
         // Instruction text slot A: shown before buttons in landscape and
         // right-handed portrait (buttons end up on the right after reversal).
         if ((focusAid || (canAlign && slewRequest == null)) &&
@@ -170,163 +230,155 @@ class ControlsWidget extends StatelessWidget {
         // We split the main button block and gauge into two ordered slots.
 
         // Slot A: gauge (mission mode, landscape or right-handed portrait).
-        if (!setupMode && slewRequest == null &&
+        if (!setupMode &&
+            slewRequest == null &&
             (!portrait || rightHanded)) ...[
           RotatedBox(
             quarterTurns: portrait ? 3 : 0,
-            child: perfGauge(45 * panelScaleFactor * textScale, panelScaleFactor),
+            child:
+                perfGauge(45 * panelScaleFactor * textScale, panelScaleFactor),
           ),
+        ],
+        if (!setupMode &&
+            slewRequest != null &&
+            (!portrait || rightHanded)) ...[
+          endGotoSlot(mainExtent),
         ],
 
         // Main control buttons (omitted entirely on DIY mission mode with no
         // visible button, so the gauge centers via spaceEvenly).
-        if (focusAid || canAlign ||
+        if (focusAid ||
+            (canAlign && slewRequest == null) ||
             (!setupMode && showCatalogBrowser)) ...[
-        RotatedBox(
-          quarterTurns: portrait ? 3 : 0,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // Done/Skip button or Exit button.
-              if (skipFocusActive && focusAid) ...[
-                SizedBox(
-                  width: buttonWidth,
-                  height: buttonHeight,
-                  child: OutlinedButton(
-                    onPressed: () {
-                      onSkipFocusUpdate(false);
-                    },
-                    child: Text(
-                      "Exit",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: buttonFont),
-                      textScaler: textScaler(context),
-                    ),
-                  ),
-                ),
-              ] else if (!skipFocus || canAlign || !setupMode) ...[
-                if (slewRequest == null &&
-                    !setupMode &&
-                    !focusAid &&
-                    !canAlign &&
-                    showCatalogBrowser)
-                  catalogButton(catalogButtonSize)
-                else
+          RotatedBox(
+            quarterTurns: portrait ? 3 : 0,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Done/Skip button or Exit button.
+                if (skipFocusActive && focusAid) ...[
                   SizedBox(
                     width: buttonWidth,
                     height: buttonHeight,
-                    child: focusAid
-                        ? focusDoneButton(fontSize: buttonFont)
-                        : (canAlign
-                            ? (slewRequest == null
-                                ? setupAlignSkipOrDoneButton(fontSize: buttonFont)
-                                : (boresightImageBytes != null &&
-                                        !slewRequest.hasTargetAltAz()
-                                    ? slewReAlignButton(fontSize: buttonFont)
-                                    : Container()))
-                            : Container()),
+                    child: OutlinedButton(
+                      onPressed: () {
+                        onSkipFocusUpdate(false);
+                      },
+                      child: Text(
+                        "Exit",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: buttonFont),
+                        textScaler: textScaler(context),
+                      ),
+                    ),
                   ),
-              ],
+                ] else if (!skipFocus || canAlign || !setupMode) ...[
+                  if (!setupMode &&
+                      !focusAid &&
+                      (slewRequest != null || !canAlign) &&
+                      showCatalogBrowser)
+                    catalogButton(catalogButtonSize)
+                  else
+                    SizedBox(
+                      width: buttonWidth,
+                      height: buttonHeight,
+                      child: focusAid
+                          ? focusDoneButton(fontSize: buttonFont)
+                          : (canAlign
+                              ? setupAlignSkipOrDoneButton(fontSize: buttonFont)
+                              : Container()),
+                    ),
+                ],
 
-              // Skip and Day checkboxes (only in setup mode).
-              if (setupMode) ...[
-                Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    SizedBox(height: 5 * panelScaleFactor),
-                    if (!skipFocus || !focusAid) ...[
-                      TextButton.icon(
-                          style: TextButton.styleFrom(
-                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 4 * panelScaleFactor),
-                            iconSize: 18 * panelScaleFactor,
-                          ),
-                          label: scaledText("Day"),
-                          icon: daylightMode
-                              ? const Icon(Icons.check)
-                              : const Icon(Icons.check_box_outline_blank),
-                          onPressed: () async {
-                            onSetDaylightMode(!daylightMode);
-                          }),
+                // Skip and Day checkboxes (only in setup mode).
+                if (setupMode) ...[
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      SizedBox(height: 5 * panelScaleFactor),
+                      if (!skipFocus || !focusAid) ...[
+                        TextButton.icon(
+                            style: TextButton.styleFrom(
+                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 4 * panelScaleFactor),
+                              iconSize: 18 * panelScaleFactor,
+                            ),
+                            label: scaledText("Day"),
+                            icon: daylightMode
+                                ? const Icon(Icons.check)
+                                : const Icon(Icons.check_box_outline_blank),
+                            onPressed: () async {
+                              onSetDaylightMode(!daylightMode);
+                            }),
+                      ],
+                      if (focusAid && !daylightMode && !skipFocusActive) ...[
+                        TextButton.icon(
+                            style: TextButton.styleFrom(
+                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 4 * panelScaleFactor),
+                              iconSize: 18 * panelScaleFactor,
+                            ),
+                            label: scaledText("Skip"),
+                            icon: skipFocus
+                                ? const Icon(Icons.check)
+                                : const Icon(Icons.check_box_outline_blank),
+                            onPressed: () {
+                              onSkipFocusUpdate(!skipFocus);
+                            }),
+                      ] else if (canAlign &&
+                          slewRequest == null &&
+                          !daylightMode &&
+                          !skipFocusActive) ...[
+                        TextButton.icon(
+                            style: TextButton.styleFrom(
+                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 4 * panelScaleFactor),
+                              iconSize: 18 * panelScaleFactor,
+                            ),
+                            label: scaledText("Skip"),
+                            icon: skipAlignment
+                                ? const Icon(Icons.check)
+                                : const Icon(Icons.check_box_outline_blank),
+                            onPressed: () {
+                              onSkipAlignmentUpdate(!skipAlignment);
+                            }),
+                      ],
                     ],
-                    if (focusAid && !daylightMode && !skipFocusActive) ...[
-                      TextButton.icon(
-                          style: TextButton.styleFrom(
-                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 4 * panelScaleFactor),
-                            iconSize: 18 * panelScaleFactor,
-                          ),
-                          label: scaledText("Skip"),
-                          icon: skipFocus
-                              ? const Icon(Icons.check)
-                              : const Icon(Icons.check_box_outline_blank),
-                          onPressed: () {
-                            onSkipFocusUpdate(!skipFocus);
-                          }),
-                    ] else if (canAlign && slewRequest == null &&
-                               !daylightMode && !skipFocusActive) ...[
-                      TextButton.icon(
-                          style: TextButton.styleFrom(
-                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 4 * panelScaleFactor),
-                            iconSize: 18 * panelScaleFactor,
-                          ),
-                          label: scaledText("Skip"),
-                          icon: skipAlignment
-                              ? const Icon(Icons.check)
-                              : const Icon(Icons.check_box_outline_blank),
-                          onPressed: () {
-                            onSkipAlignmentUpdate(!skipAlignment);
-                          }),
-                    ],
-                  ],
-                ),
+                  ),
+                ],
               ],
-            ],
+            ),
           ),
-        ),
         ],
 
         // Instruction text slot B: left-handed portrait only (buttons end up
         // on the left after reversal, instruction text on the right).
         if ((focusAid || (canAlign && slewRequest == null)) &&
-            portrait && !rightHanded) ...[
+            portrait &&
+            !rightHanded) ...[
           instructionText(),
         ],
 
         // Slot B: gauge (mission mode, left-handed portrait only).
-        if (!setupMode && slewRequest == null &&
-            portrait && !rightHanded) ...[
+        if (!setupMode && slewRequest == null && portrait && !rightHanded) ...[
           RotatedBox(
             quarterTurns: 3,
-            child: perfGauge(45 * panelScaleFactor * textScale, panelScaleFactor),
+            child:
+                perfGauge(45 * panelScaleFactor * textScale, panelScaleFactor),
           ),
         ],
-
-        // Catalog button during slew.
-        if (slewRequest != null && !setupMode && showCatalogBrowser) ...[
-          RotatedBox(
-              quarterTurns: portrait ? 3 : 0,
-              child: catalogButton(catalogButtonSize)),
+        if (!setupMode && slewRequest != null && portrait && !rightHanded) ...[
+          endGotoSlot(mainExtent),
         ],
+      ];
 
-        // End goto button.
-        if (slewRequest != null && !setupMode) ...[
-          RotatedBox(
-              quarterTurns: portrait ? 3 : 0,
-              child: SizedBox(
-                  width: buttonWidth,
-                  height: buttonHeight,
-                  child: endGotoButton(fontSize: buttonFont))),
-        ],
-    ];
-
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: portrait ? controlWidgets.reversed.toList() : controlWidgets,
-    );
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: portrait ? controlWidgets.reversed.toList() : controlWidgets,
+      );
+    });
   }
 }
