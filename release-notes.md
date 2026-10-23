@@ -1,5 +1,21 @@
 # Cedar Aim Release Notes
 
+## 1.3.2 (build 36)
+
+Changes since 1.3.1 (build 35).
+
+### Connections
+
+- When the device has joined a WiFi network, the Connection dialog's WiFi
+  label now shows that network's name instead of always showing the device's
+  own hotspot name.
+- When the app reconnects, it now uses the device's reported WiFi mode in
+  preference to the last saved one, which could be out of date.
+
+### Fixes
+
+- Fixed the "Send to support" button on iOS.
+
 ## 1.3.1 (build 35)
 
 Changes since 1.3.0 (build 34).
