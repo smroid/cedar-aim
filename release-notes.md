@@ -1,5 +1,14 @@
 # Cedar Aim Release Notes
 
+## 1.3.3 (build 37)
+
+Changes since 1.3.2 (build 36).
+
+### Fixes
+
+- Fixed the menu closing immediately after opening on iOS.
+- Widened the area along the screen edge where swiping opens the menu.
+
 ## 1.3.2 (build 36)
 
 Changes since 1.3.1 (build 35).
