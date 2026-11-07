@@ -156,57 +156,59 @@ class ControlsWidget extends StatelessWidget {
         );
 
     // End goto button, occupying the same space as the performance gauge so
-    // that the catalog button stays put when entering/leaving goto. The
-    // re-align button (when shown) floats in the gap between this slot and
-    // the catalog button without affecting layout, so nothing else moves.
-    // [mainExtent] is the panel's extent along its main axis.
-    Widget endGotoSlot(double mainExtent) {
-      final gaugeSize = 45 * panelScaleFactor * textScale;
-      final gaugeWidth = gaugeSize * 1.3; // PerfGauge is size*1.3 x size.
-      final slotWidth = math.max(gotoButtonWidth, gaugeWidth);
-      final showReAlign = canAlign &&
-          boresightImageBytes != null &&
-          !slewRequest!.hasTargetAltAz();
-
-      // Slot and re-align extents along the panel's main axis, measured in
-      // the (possibly rotated) frame of the slot's contents.
-      final slotMain = portrait ? slotWidth : gaugeSize;
-      final reAlignMain = portrait ? gotoButtonWidth : gotoButtonHeight;
-      // Gap between the slot and the catalog button (two evenly spaced items).
-      final gap = mainExtent.isFinite
-          ? math.max(0.0, (mainExtent - slotMain - catalogButtonSize) / 3)
-          : reAlignMain;
-      // The catalog button is on the positive side of the slot's main axis,
-      // except for left-handed portrait where the list order is reversed.
-      final towardPositive = !portrait || rightHanded;
-      final reAlignCenter = towardPositive ? slotMain + gap * 0.45 : -gap * 0.45;
-      final reAlignStart = reAlignCenter - reAlignMain / 2;
-
+    // that the catalog button stays put when entering/leaving goto.
+    final gaugeSize = 45 * panelScaleFactor * textScale;
+    final gaugeWidth = gaugeSize * 1.3; // PerfGauge is size*1.3 x size.
+    final slotWidth = math.max(gotoButtonWidth, gaugeWidth);
+    Widget endGotoSlot() {
       return RotatedBox(
           quarterTurns: portrait ? 3 : 0,
           child: SizedBox(
               width: slotWidth,
               height: gaugeSize,
-              child: Stack(
-                  clipBehavior: Clip.none,
-                  alignment: Alignment.center,
-                  children: [
-                    SizedBox(
-                        width: gotoButtonWidth,
-                        height: gotoButtonHeight,
-                        child: endGotoButton(fontSize: buttonFont)),
-                    if (showReAlign)
-                      Positioned(
-                          left: portrait
-                              ? reAlignStart
-                              : (slotWidth - gotoButtonWidth) / 2,
-                          top: portrait
-                              ? (gaugeSize - gotoButtonHeight) / 2
-                              : reAlignStart,
-                          width: gotoButtonWidth,
-                          height: gotoButtonHeight,
-                          child: slewReAlignButton(fontSize: buttonFont)),
-                  ])));
+              child: Center(
+                  child: SizedBox(
+                      width: gotoButtonWidth,
+                      height: gotoButtonHeight,
+                      child: endGotoButton(fontSize: buttonFont)))));
+    }
+
+    // The re-align button floats in the gap between the End goto slot and the
+    // catalog button without affecting layout, so nothing else moves. It is
+    // positioned relative to the whole panel (not the slot) so that it stays
+    // within the hit-test bounds of its parent and remains tappable.
+    // [mainExtent] is the panel's extent along its main axis.
+    Widget? reAlignOverlay(double mainExtent) {
+      final showReAlign = !setupMode &&
+          slewRequest != null &&
+          canAlign &&
+          boresightImageBytes != null &&
+          !slewRequest!.hasTargetAltAz();
+      if (!showReAlign || !mainExtent.isFinite) return null;
+
+      // Extents along the panel's main axis (vertical in this widget's frame).
+      final slotMain = portrait ? slotWidth : gaugeSize;
+      final reAlignMain = portrait ? gotoButtonWidth : gotoButtonHeight;
+      // Gap between items: two items, evenly spaced (three gaps).
+      final gap =
+          math.max(0.0, (mainExtent - slotMain - catalogButtonSize) / 3);
+      // The End goto slot is first in the list (top), except in right-handed
+      // portrait where the list is reversed and it is last (bottom).
+      final slotAtBottom = portrait && rightHanded;
+      final centerY = slotAtBottom
+          ? mainExtent - gap - slotMain - gap * 0.45
+          : gap + slotMain + gap * 0.45;
+      return Positioned(
+          left: 0,
+          right: 0,
+          top: centerY - reAlignMain / 2,
+          child: Center(
+              child: RotatedBox(
+                  quarterTurns: portrait ? 3 : 0,
+                  child: SizedBox(
+                      width: gotoButtonWidth,
+                      height: gotoButtonHeight,
+                      child: slewReAlignButton(fontSize: buttonFont)))));
     }
 
     return LayoutBuilder(builder: (context, constraints) {
@@ -242,7 +244,7 @@ class ControlsWidget extends StatelessWidget {
         if (!setupMode &&
             slewRequest != null &&
             (!portrait || rightHanded)) ...[
-          endGotoSlot(mainExtent),
+          endGotoSlot(),
         ],
 
         // Main control buttons (omitted entirely on DIY mission mode with no
@@ -371,14 +373,18 @@ class ControlsWidget extends StatelessWidget {
           ),
         ],
         if (!setupMode && slewRequest != null && portrait && !rightHanded) ...[
-          endGotoSlot(mainExtent),
+          endGotoSlot(),
         ],
       ];
 
-      return Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: portrait ? controlWidgets.reversed.toList() : controlWidgets,
-      );
+      final reAlign = reAlignOverlay(mainExtent);
+      return Stack(clipBehavior: Clip.none, children: [
+        Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: portrait ? controlWidgets.reversed.toList() : controlWidgets,
+        ),
+        if (reAlign != null) reAlign,
+      ]);
     });
   }
 }
