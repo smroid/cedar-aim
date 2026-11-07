@@ -1,5 +1,13 @@
 # Cedar Aim Release Notes
 
+## 1.3.4 (build 38)
+
+Changes since 1.3.3 (build 37).
+
+### Fixes
+
+- Fixed "Re-align" not responding to taps during a goto.
+
 ## 1.3.3 (build 37)
 
 Changes since 1.3.2 (build 36).
