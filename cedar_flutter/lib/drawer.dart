@@ -473,7 +473,7 @@ class CedarDrawer extends StatelessWidget {
       Align(
           alignment: Alignment.topLeft,
           child: TextButton.icon(
-              label: _scaledText("Shutdown"),
+              label: _scaledText("Shutdown ${controller.productName}"),
               icon: const Icon(Icons.power_settings_new_outlined),
               onPressed: () {
                 controller.closeDrawer();
