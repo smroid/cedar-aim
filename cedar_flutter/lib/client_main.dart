@@ -258,7 +258,11 @@ class MyApp extends StatelessWidget {
       title: "Cedar Aim",
       theme: Provider.of<ThemeModel>(context).currentTheme,
       home: const MyHomePage(title: "Cedar Aim"),
-      builder: (context, child) => Stack(
+      builder: (context, child) => MediaQuery(
+        // Ignore the OS font-size setting; text size is controlled solely by
+        // our own text-size preference (see textScaleFactor()).
+        data: MediaQuery.of(context).copyWith(textScaler: TextScaler.noScaling),
+        child: Stack(
         fit: StackFit.expand,
         children: [
           child!,
@@ -275,6 +279,7 @@ class MyApp extends StatelessWidget {
             child: Listener(behavior: HitTestBehavior.opaque),
           ),
         ],
+        ),
       ),
     );
   }
@@ -942,6 +947,9 @@ class MyHomePageState extends State<MyHomePage> {
     _unlabeledFovCatalogEntries = response.unlabeledCatalogEntries;
     var settingsModel = Provider.of<SettingsModel>(context, listen: false);
     settingsModel.preferencesProto = preferences!.deepCopy();
+    if (_pendingTextSizeIndex != null) {
+      settingsModel.preferencesProto.textSizeIndex = _pendingTextSizeIndex!;
+    }
     settingsModel.opSettingsProto = operationSettings.deepCopy();
     settingsModel.isDIY = isDIY;
     settingsModel.isBasic = isBasic;
@@ -2657,26 +2665,37 @@ class MyHomePageState extends State<MyHomePage> {
     if (preferences == null) {
       return 0;
     }
-    return preferences!.textSizeIndex;
+    return _pendingTextSizeIndex ?? preferences!.textSizeIndex;
   }
 
   void _setTextSizeIndex(int textSizeIndex) {
     textSizeIndex = math.min(textSizeIndex, 1);
     textSizeIndex = math.max(textSizeIndex, -1);
-    if (preferences == null || preferences!.textSizeIndex == textSizeIndex) {
+    if (preferences == null || _getCurrentTextSizeIndex() == textSizeIndex) {
       return;
     }
+    // Apply locally right away so the pinch gives immediate feedback; the
+    // pending value keeps incoming frame responses from reverting it until the
+    // server has accepted the change.
+    _pendingTextSizeIndex = textSizeIndex;
+    Provider.of<SettingsModel>(context, listen: false)
+        .updateTextSize(textSizeIndex);
+    setState(() {});
     // Debounce: pinch gestures fire onScaleUpdate continuously, so wait until
     // the gesture settles before sending the RPC.
     _textSizeDebounceTimer?.cancel();
-    _textSizeDebounceTimer = Timer(const Duration(milliseconds: 300), () {
+    _textSizeDebounceTimer = Timer(const Duration(milliseconds: 300), () async {
       var prefs = cedar_rpc.Preferences();
       prefs.textSizeIndex = textSizeIndex;
-      updatePreferences(prefs);
+      await updatePreferences(prefs);
+      if (_pendingTextSizeIndex == textSizeIndex) {
+        _pendingTextSizeIndex = null;
+      }
     });
   }
 
   int _initialTextSizeIndex = 0;
+  int? _pendingTextSizeIndex;
   Timer? _textSizeDebounceTimer;
 
   // Helper method to calculate display scale and image size
@@ -2911,23 +2930,19 @@ class MyHomePageState extends State<MyHomePage> {
         },
         onScaleUpdate: (details) {
           final scale = details.scale;
+          // Sizes are clamped to three levels, so two steps are only reachable
+          // (and only needed) when starting from an end of the range.
           if (scale > 1.5) {
             _setTextSizeIndex(_initialTextSizeIndex + 2);
-            return;
-          }
-          if (scale > 1.2) {
+          } else if (scale > 1.15) {
             _setTextSizeIndex(_initialTextSizeIndex + 1);
-            return;
-          }
-          if (scale < 0.66) {
+          } else if (scale < 0.66) {
             _setTextSizeIndex(_initialTextSizeIndex - 2);
-            return;
-          }
-          if (scale < 0.83) {
+          } else if (scale < 0.87) {
             _setTextSizeIndex(_initialTextSizeIndex - 1);
-            return;
+          } else {
+            _setTextSizeIndex(_initialTextSizeIndex);
           }
-          _setTextSizeIndex(_initialTextSizeIndex);
         },
         child: RotatedBox(
           quarterTurns: portrait ? 1 : 0,
